@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { mdiMinus, mdiPlus } from '@mdi/js'
+import { mdiMinus, mdiPlus, mdiChevronDown, mdiChevronUp } from '@mdi/js'
 import { getButtonColor } from '@/colors.js'
 import BaseIcon from '@/Components/BaseIcon.vue'
 import AsideMenuList from '@/Components/AsideMenuList.vue'
@@ -16,17 +16,32 @@ const props = defineProps({
   isDropdownList: Boolean
 })
 const itemHref = computed(() => (props.item.route ? route(props.item.route) : props.item.href))
-const activeInactiveStyle = computed(() =>
-  props.item.route && route().current(props.item.route)
-    ? darkModeStore.asideMenuItemActiveStyle
+const activeInactiveStyle = computed(() => {
+   console.log('activeInactiveStyle', props.item.route && route().current(props.item.route))
+   console.log('current route', route().current(props.item.route) );
+  if( props.item.route_list != null && props.item.route_list.includes(route().current(props.item.route)) == true){
+    isDropdownActive.value = true;
+  }
+  if( props.item.group != null && route().current(props.item.route).includes(props.item.group) == true){
+    isDropdownActive.value = true;
+  }
+//    console.log(props.item.route_list.includes(route().current(props.item.route)) );
+  return ((props.item.route && route().current(props.item.route) ) || isDropdownActive.value == true )
+    ? 'aside-menu-item-active font-bold'
     : ''
-)
+})
+const activeMenuInactiveStyle = computed(() => {
+  // console.log('activeInactiveStyle', props.item.route && route().current(props.item.route))
+  return props.item.route && route().current(props.item.route)
+    ? 'bg-aside_menu_item_active'
+    : ''
+})
 const emit = defineEmits(['menu-click'])
 
 const hasColor = computed(() => props.item && props.item.color)
 
 const asideMenuItemActiveStyle = computed(() =>
-  hasColor.value ? '' : 'aside-menu-item-active font-bold'
+  hasColor.value ? '' : 'aside-menu-item-active text-aside_menu_item_active font-bold'
 )
 
 const isDropdownActive = ref(false)
@@ -47,19 +62,28 @@ const menuClick = (event) => {
     isDropdownActive.value = !isDropdownActive.value
   }
 }
+const checkOpenMenu = () => {
+
+}
 </script>
 
 <template>
   <li>
-    <component :is="item.route ? Link : 'a'" :href="itemHref" :target="item.target ?? null" class="flex cursor-pointer"
-      :class="componentClass" @click="menuClick">
-      <BaseIcon v-if="item.icon" :path="item.icon" class="flex-none" :class="activeInactiveStyle" w="w-16" :size="18" />
-      <span class="grow text-ellipsis line-clamp-1" ::class="[{ 'pr-12': !hasDropdown }, activeInactiveStyle]">{{
-        item.label }}</span>
-      <BaseIcon v-if="hasDropdown" :path="isDropdownActive ? mdiMinus : mdiPlus" class="flex-none"
+
+    <component v-if="hasAnyPermission(item.permissions)" :is="item.route ? Link : 'div'" :href="itemHref"
+      v-tooltip="item.label" :target="item.target ?? null" class="flex cursor-pointer"
+      :class="[componentClass, activeInactiveStyle]" @click="menuClick">
+      <BaseIcon v-if="item.icon" :path="item.icon" class="flex-none " :class="activeInactiveStyle" w="w-16" :size="20" />
+      <div v-else class="flex-none p-2" />
+      <span v-if="item.icon" class="grow text-ellipsis line-clamp-1 text-[14px]" ::class="[{ 'pr-12': !hasDropdown }, activeInactiveStyle]">{{
+        item.label }} {{ item.route_list }} </span>
+      <span v-else class="grow text-ellipsis line-clamp-1 text-[12px]" ::class="[{ 'pr-12': !hasDropdown }, activeInactiveStyle]">{{
+        item.label }} {{ item.route_list }} </span>
+      <BaseIcon v-if="hasDropdown" :path="isDropdownActive ? mdiChevronDown : mdiChevronUp" class="flex-none"
         :class="activeInactiveStyle" w="w-12" />
+
     </component>
     <AsideMenuList v-if="hasDropdown" :menu="item.menu"
-      :class="['aside-menu-dropdown', isDropdownActive ? 'block dark:bg-slate-800/50' : 'hidden']" is-dropdown-list />
+      :class="['aside-menu-dropdown', isDropdownActive ? 'block ' : 'hidden']" is-dropdown-list />
   </li>
 </template>

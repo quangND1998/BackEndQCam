@@ -3,6 +3,7 @@ import { ref } from 'vue'
 
 export const useDarkModeStore = defineStore('darkMode', () => {
   const isEnabled = ref(false)
+  const asideMenuItemActiveStyle = ref('aside-menu-item-active font-bold')
 
   function set(payload = null) {
     isEnabled.value = payload !== null ? payload : !isEnabled.value
@@ -25,6 +26,7 @@ export const useDarkModeStore = defineStore('darkMode', () => {
 
   return {
     isEnabled,
+    asideMenuItemActiveStyle,
     set
   }
 })

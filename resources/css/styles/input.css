@@ -1,0 +1,21 @@
+.search-input-wrapper {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.35rem;
+    background-color:white;
+    padding: 2px;
+}
+.search-input-wrapper input[data-search-input=true] {
+    background-color: #ffffff !important;
+    border: 1px solid #f6f9fc;
+}
+.search-input-wrapper .search-icon {
+    color: #868FA0 !important;
+    position: absolute;
+}
+.search-input-wrapper .search-icon.search::after {
+    background: #868FA0 !important;
+}
+.search-input-wrapper .search-icon.shortcut::after {
+
+    background-color: #868FA0 !important;
+}

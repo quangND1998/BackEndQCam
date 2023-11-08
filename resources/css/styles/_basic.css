@@ -1,22 +1,22 @@
 @layer components {
   .style-basic:not(.dark) {
     .aside {
-      @apply bg-gray-800;
+      @apply bg-bg_green_default;
     }
     .aside-scrollbars {
       @apply aside-scrollbars-gray;
     }
     .aside-brand {
-      @apply bg-gray-900 text-white;
+      @apply bg-bg_green text-white;
     }
     .aside-menu-item {
-      @apply text-gray-300 hover:text-white;
+      @apply text-white hover:text-green;
     }
     .aside-menu-item-active {
-      @apply text-white;
+      @apply text-aside_menu_item_active;
     }
     .aside-menu-dropdown {
-      @apply bg-gray-700/50;
+      @apply bg-bg_green_default;
     }
     .navbar-item-label {
       @apply text-black hover:text-blue-500;

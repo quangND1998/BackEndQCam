@@ -77,7 +77,7 @@ const labelClass = computed(() => (props.small && props.icon ? 'px-1' : 'px-2'))
 const componentClass = computed(() => {
   const base = [
     'inline-flex',
-    'justify-center',
+    'justify-start',
     'items-center',
     'whitespace-nowrap',
     'focus:outline-none',
@@ -91,7 +91,7 @@ const componentClass = computed(() => {
   ]
 
   if (!props.label && props.icon) {
-    base.push('p-1')
+    base.push('p-0')
   } else if (props.small) {
     base.push('text-sm', props.roundedFull ? 'px-3 py-1' : 'p-1')
   } else {

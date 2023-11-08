@@ -1,6 +1,7 @@
 /* eslint-env node */
-
+const colors = require("tailwindcss/colors")
 const plugin = require("tailwindcss/plugin");
+
 
 module.exports = {
     content: [
@@ -46,7 +47,30 @@ module.exports = {
                 "fade-out": "fade-out 250ms ease-in-out",
                 "fade-in": "fade-in 250ms ease-in-out",
             },
+
         },
+        colors: {
+            ...colors,
+            bg_green : '#3B5F41',
+            bg_green_default : '#4A7751',
+            bg_green_hover : '#4A7751',
+            bg_green_active : '#4A7751',
+            color_green: '#E1FCEF',
+            color_gray: '#8E8E8E',
+            color_dark_gray: '#333333',
+            color_Orange: '#FF9B00',
+            white : '#FFFFFF',
+            green : '#CFFFBE',
+            black : '#333333',
+            aside_menu_item_active : '#CFFFBE',
+            btn_green: '#25CB2C',
+            color_dark_green: '#14804A',
+            color_dark_red: '#D12953',
+            color_red: '#FAF0F3',
+            color_dark_blue: '#4F5AED',
+            color_blue: '#F0F1FA'
+
+        }
     },
     plugins: [
         require("@tailwindcss/forms"),

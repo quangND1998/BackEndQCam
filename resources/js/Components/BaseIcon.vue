@@ -22,7 +22,7 @@ const props = defineProps({
 
 const spanClass = computed(() => `inline-flex justify-center items-center ${props.w} ${props.h}`)
 
-const iconSize = computed(() => props.size ?? 16)
+const iconSize = computed(() => props.size ?? 24)
 </script>
 
 <template>

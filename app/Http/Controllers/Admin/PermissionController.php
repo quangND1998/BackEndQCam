@@ -9,10 +9,10 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
-    // function __construct()
-    // {
-    //     $this->middleware('role:super-admin');
-    // }
+    function __construct()
+    {
+        $this->middleware('role:super-admin');
+    }
     public function index()
     {
 
@@ -59,4 +59,5 @@ class PermissionController extends Controller
         $permission->delete();
         return redirect()->back()->with('success', `Delete {{$permission->name}} permission successfully`);
     }
+    
 }
