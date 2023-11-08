@@ -21,8 +21,7 @@ import Tooltip from 'primevue/tooltip';
 import "primevue/resources/themes/lara-light-indigo/theme.css";
 
 
-// import VueLazyload from 'vue-lazyload'
-
+import 'maz-ui/css/main.css'
 
 
 

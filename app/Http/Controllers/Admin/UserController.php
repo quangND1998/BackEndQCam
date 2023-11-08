@@ -39,19 +39,14 @@ class UserController extends Controller
             })->paginate(20)->appends($request->search);
             $roles = Role::get();
         } else {
-            $users =  User::with('roles', 'tokens')->where(function ($query) use ($request) {
-                $query->where('name', 'LIKE', '%' . $request->search . '%');
-                $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
-                // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
-            })->where('created_byId', $user->id)->paginate(20)->appends($request->search);
-            $roles = Role::where('name', 'saler')->get();
+           return  abort(403);
         }
         return Inertia::render('Admin/User', compact('filters', 'users', 'roles', 'subadmins'));
     }
 
     public function store(Request $request)
     {
-
+     
         $auth_user = Auth::user();
         $this->validate(
             $request,
@@ -70,11 +65,11 @@ class UserController extends Controller
         $user = User::create($request->all());
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->assignRole($roles);
-        if ($request->created_byId) {
-            $user->created_byId = $request->created_byId;
-        } else {
-            $user->created_byId = $auth_user->id;
-        }
+        // if ($request->created_byId) {
+        //     $user->created_byId = $request->created_byId;
+        // } else {
+        //     $user->created_byId = $auth_user->id;
+        // }
         // $user->created_byId = Auth::user()->id;
         if ($request->password) {
             $user->password = Hash::make($request->password);
@@ -85,14 +80,14 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-
+       
         $user = User::findOrFail($id);
         $this->validate(
             $request,
             [
                 'name' => 'required',
                 'email' => 'required|email|unique:users,email,' . $user->id,
-                // 'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone,' . $user->id,
+                'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone,' . $user->id,
                 'roles' => 'required',
                 // 'time_limit' => 'nullable|date|after:tomorrow',
                 // 'number_device' => 'nullable|numeric|gt:-1',
@@ -104,12 +99,13 @@ class UserController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'phone_number' =>$request->phone_number
         ]);
-        if ($request->created_byId) {
-            $user->created_byId = $request->created_byId;
-        } else {
-            $user->created_byId = Auth::user()->id;
-        }
+        // if ($request->created_byId) {
+        //     $user->created_byId = $request->created_byId;
+        // } else {
+        //     $user->created_byId = Auth::user()->id;
+        // }
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->syncRoles($roles);
         // $user->created_byId = Auth::user()->id;

@@ -1,0 +1,11 @@
+{
+    "name": "Tree",
+    "alias": "tree",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Tree\\app\\Providers\\TreeServiceProvider"
+    ],
+    "files": []
+}
