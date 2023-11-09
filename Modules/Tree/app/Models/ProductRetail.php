@@ -15,14 +15,14 @@ class ProductRetail extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id","id_priority", "name","drescription", 'price'];
-    
+    protected $fillable = ["id", "id_priority", "name", "description", 'price'];
+
     protected static function newFactory(): ProductRetailFactory
     {
         //return ProductRetailFactory::new();
     }
 
-      /**
+    /**
      * Get all of the post's comments.
      */
     public function order_items()

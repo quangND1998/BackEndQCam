@@ -1,6 +1,6 @@
 
 <script setup>
-import { computed, ref, inject, watch, toRef, onMounted, onUnmounted } from 'vue'
+import { computed, ref, inject, watch, toRef, onMounted, onUnmounted, reactive } from 'vue'
 
 import { useForm } from '@inertiajs/vue3';
 import CardBoxModal from '@/Components/CardBoxModal.vue'
@@ -34,6 +34,9 @@ onMounted(() => {
     console.log('mounted!')
 
 })
+const editorConfig = reactive({
+    // The configuration of the editor.
+})
 const editMode = computed(
     {
         get() {
@@ -53,7 +56,13 @@ onMounted(() => {
     emitter.on('editTree', async (data) => {
 
         console.log(data)
-
+        form.name = data.name;
+        form.address = data.address;
+        form.price = data.price;
+        form.state = data.state;
+        form.status = data.status;
+        form.description = data.description;
+        form.user_manual = data.user_manual;
 
     });
 
@@ -125,7 +134,8 @@ const saveTree = () => {
 <template>
     <div>
         <!-- {{ apartment }} -->
-        <CardBoxModal v-model="isModalTree" buttonLabel="Save" has-cancel @confirm="saveTree" button="warning" classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-6/12 z-50 overflow-auto"
+        <CardBoxModal v-model="isModalTree" buttonLabel="Save" has-cancel @confirm="saveTree" button="warning"
+            classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-6/12 z-50 overflow-auto"
             :title="editMode ? 'Update Tree' : 'Create Tree'">
             <div v-if="form.progress" class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
                 <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
@@ -157,8 +167,8 @@ const saveTree = () => {
                             <label class="input w-full" for="recipient-name">
                                 <select id="project"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full">
-                                    <option> Chưa mở bán</option>
-                                    <option> Chưa mở bán</option>
+                                    <option value="public"> Mở bán</option>
+                                    <option value="private"> Chưa mở bán</option>
 
                                 </select>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">state</span>
@@ -192,7 +202,9 @@ const saveTree = () => {
                             <label class="input w-full" for="recipient-name">
                                 <!-- <textarea name="map_cors" id="" rows="5" class="input__field border"
                                     v-model="form.description"></textarea> -->
-                                    <ckeditor :editor="editor" v-model="editorData" aria-setsize="120"  tag-name="textarea" :config="editorConfig" class="h-52 overflow-auto" style="height: 200px !important;"></ckeditor>
+                                <ckeditor :editor="editor" v-model="form.description" aria-setsize="120" tag-name="textarea"
+                                    :config="editorConfig" class="h-52 overflow-auto" style="height: 200px !important;">
+                                </ckeditor>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Mô
                                     tả</span>
                             </label>
@@ -202,13 +214,16 @@ const saveTree = () => {
                             <label class="input w-full" for="recipient-name">
                                 <!-- <textarea name="map_cors" id="" rows="5" class="input__field border"
                                     v-model="form.description"></textarea> -->
-                                    <ckeditor :editor="editor" v-model="editorData"  tag-name="textarea" :config="editorConfig" class="h-52 overflow-auto" style="height: 200px !important;"></ckeditor>
-                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">User manual</span>
+                                <ckeditor :editor="editor" v-model="form.user_manual" tag-name="textarea"
+                                    :config="editorConfig" class="h-52 overflow-auto" style="height: 200px !important;">
+                                </ckeditor>
+                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">User
+                                    manual</span>
                             </label>
                             <InputError class="mt-2" :message="form.errors.description" />
                         </div>
 
-                        
+
                     </div>
                     <div>
                         <div class=" ">
@@ -301,19 +316,22 @@ const saveTree = () => {
     transform: translate(0.25rem, -65%) scale(0.8) !important;
 }
 
-.ck .ck-editor__main{
+.ck .ck-editor__main {
     height: 250px !important;
 }
+
 .ck-editor__editable_inline {
-   
+
     height: 200px !important;
 }
+
 textarea {
-	width: 100%;
-	height: 300px;
-	font-family: monospace;
+    width: 100%;
+    height: 300px;
+    font-family: monospace;
 }
+
 .ckeditor-container {
     height: 300px;
-  }
+}
 </style>

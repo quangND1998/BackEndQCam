@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('history_use_services', function (Blueprint $table) {
             $table->id();
             $table->timestampTz("date")->nullable();
-            $table->longText("drescription")->nullable();
+            $table->longText("description")->nullable();
             $table->string("state")->nullable();
             $table->unsignedBigInteger('product_service_owner_id')->unique()->nullable();
             $table->foreign('product_service_owner_id')->references('id')->on('product_service_owners')->onDelete('cascade');

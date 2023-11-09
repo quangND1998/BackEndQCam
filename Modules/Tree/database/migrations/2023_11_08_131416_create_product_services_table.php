@@ -22,7 +22,7 @@ return new class extends Migration
             $table->bigInteger('price')->nullable();
             $table->integer('number_deliveries')->nullable();
             $table->integer('life_time')->nullable();
-            $table->longText('drescription')->nullable();
+            $table->longText('description')->nullable();
             $table->string('unit')->nullable();
             $table->timestamps();
         });

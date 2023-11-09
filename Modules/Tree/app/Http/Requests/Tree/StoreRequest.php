@@ -17,7 +17,7 @@ class StoreRequest extends FormRequest
             // 'price' => 'numeric|gt:0',
             // 'state' => 'required',
             // 'status' => 'required',
-            // 'drescription' => 'required',
+            // 'description' => 'required',
             // 'user_manual' => 'nullable',
             // 'terms_policy' => 'nullable',
             'images' => 'required',
