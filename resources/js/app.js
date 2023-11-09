@@ -20,8 +20,13 @@ import PrimeVue from 'primevue/config';
 import Tooltip from 'primevue/tooltip';
 import "primevue/resources/themes/lara-light-indigo/theme.css";
 
-import CKEditor from '@ckeditor/ckeditor5-vue';
+// import CKEditor from '@ckeditor/ckeditor5-vue';
+// import { QuillEditor } from '@vueup/vue-quill'
+// import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import 'maz-ui/css/main.css'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+
 
 
 
@@ -36,7 +41,8 @@ createInertiaApp({
             .use(pinia)
             .use(ZiggyVue)
             .use(PrimeVue)
-            .use(CKEditor)
+            .component('QuillEditor', QuillEditor)
+            // .use(CKEditor)
             // .use(VueLazyload)
             .use(VueSweetalert2)
             .directive('tooltip', Tooltip)
