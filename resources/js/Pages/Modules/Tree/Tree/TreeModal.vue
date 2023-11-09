@@ -200,7 +200,8 @@ const saveTree = () => {
                             <label class="input w-full" for="recipient-name">
                                 <!-- <textarea name="map_cors" id="" rows="5" class="input__field border"
                                     v-model="form.description"></textarea> -->
-                                    <ckeditor :editor="editor" v-model="editorData" aria-setsize="120"  tag-name="textarea" :config="editorConfig" class="h-52 overflow-auto" style="height: 200px !important;"></ckeditor>
+                                    <ckeditor :editor="editor" v-model="editorData" aria-setsize="120"  tag-name="textarea" :config="editorConfig"   class="ck-blurred ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline"
+  :style="{ height: '200px' }"></ckeditor>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Mô
                                     tả</span>
                             </label>
@@ -321,7 +322,8 @@ textarea {
 	height: 300px;
 	font-family: monospace;
 }
-.ckeditor-container {
-    height: 300px;
-  }
+.ckeditor-custom-height {
+  height: 200px !important;
+  /* Additional styles if needed */
+}
 </style>
