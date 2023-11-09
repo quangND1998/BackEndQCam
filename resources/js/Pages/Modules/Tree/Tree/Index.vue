@@ -21,6 +21,7 @@ import TreeModal from "./TreeModal.vue";
 import { useTreeStore } from '@/stores/tree.js'
 import { emitter } from '@/composable/useEmitter';
 import Breadcrumb from '@/Components/Breadcrumb.vue';
+import BaseButtons from '@/Components/BaseButtons.vue';
 const store = useTreeStore()
 const props = defineProps({
     land: Object,
@@ -68,43 +69,12 @@ const crumbs = ref([
 
 ])
 
-const save = () => {
-    console.log(form);
-    if (editMode.value == true) {
-        form.put(route("admin.land.update", form.id), {
-            onError: () => {
-                isModalActive.value = true;
-                editMode.value = true;
-            },
-            onSuccess: () => {
-                form.reset("name", "id");
-                isModalActive.value = false;
-                editMode.value = false;
-            },
-        });
-    } else {
-        form.post(route("admin.land.store"), {
-            onError: () => {
-                isModalActive.value = true;
-                editMode.value = false;
-            },
-            onSuccess: () => {
-                form.reset("name", "id");
-                isModalActive.value = false;
-                editMode.value = false;
-            },
-        });
-    }
-
-    // form.id = permission.id;
-    // form.name = permission.name
-};
 
 const Delete = (id) => {
     swal
         .fire({
             title: "Are you sure?",
-            text: "Delete this permission!",
+            text: "Delete this tree!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -114,11 +84,11 @@ const Delete = (id) => {
         .then((result) => {
             if (result.isConfirmed) {
                 console.log(id);
-                form.delete(route("admin.land.delete", id), {
+                form.delete(route("admin.land.tree.destroy", id), {
                     onSuccess: () => {
                         swal.fire(
                             "Deleted!",
-                            "Your permission has been deleted.",
+                            "Your tree has been deleted.",
                             "success"
                         );
                     },
