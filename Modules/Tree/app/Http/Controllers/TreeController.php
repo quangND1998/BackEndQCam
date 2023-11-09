@@ -49,7 +49,7 @@ class TreeController extends Controller
     {
         $tree = Tree::create($request->all());
         foreach ($request->images as $image) {
-            $tree->addMedia($image)->toMediaCollection('images');
+            $tree->addMedia($image)->toMediaCollection('tree_images');
         }
         return back()->with('success', 'Create successfully');
     }

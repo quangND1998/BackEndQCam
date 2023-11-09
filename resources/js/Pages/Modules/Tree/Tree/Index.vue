@@ -7,17 +7,9 @@ import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import {
-    mdiEye,
-    mdiAccountLockOpen,
     mdiPlus,
-    mdiFilter,
-    mdiMagnify,
-    mdiDotsVertical,
-    mdiTrashCanOutline,
-    mdiCodeBlockBrackets,
-    mdiPencil,
-    mdiLandFields
-} from "@mdi/js";
+    mdiFilter, mdiPencilOutline, mdiTrashCan
+} from '@mdi/js'
 import BaseButton from "@/Components/BaseButton.vue";
 
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
@@ -28,9 +20,9 @@ import "vue-search-input/dist/styles.css";
 import TreeModal from "./TreeModal.vue";
 import { useTreeStore } from '@/stores/tree.js'
 import { emitter } from '@/composable/useEmitter';
-
+import Breadcrumb from '@/Components/Breadcrumb.vue';
 const store = useTreeStore()
-defineProps({
+const props = defineProps({
     land: Object,
     trees: Object
 });
@@ -56,12 +48,25 @@ const createTree = (data) => {
     store.changeEditMode(false)
 }
 const edit = (land) => {
-    isModalActive.value = true;
-    editMode.value = true;
-    form.id = land.id;
-    form.name = land.name;
-    form.state = land.state;
+    store.changeisModalTree(true);
+    store.changeEditMode(true);
+    store.setTree(land)
+    emitter.emit('editTree', land)
 };
+
+const crumbs = ref([
+    {
+        route: "admin.land.index",
+        parma: null,
+        name: props.land.name
+    },
+    {
+        route: "admin.land.tree.index",
+        parma: props.land.id,
+        name: "Quản lý cây"
+    },
+
+])
 
 const save = () => {
     console.log(form);
@@ -125,10 +130,10 @@ const Delete = (id) => {
 <template>
     <LayoutAuthenticated>
 
-        <Head title="Lands" />
-
+        <Head title="Tree" />
+        <Breadcrumb :crumbs="crumbs" />
         <SectionMain>
-            <SectionTitleLineWithButton title="Lands" main></SectionTitleLineWithButton>
+            <SectionTitleLineWithButton title="Tree" main></SectionTitleLineWithButton>
 
 
             <CardBoxModal v-model="isModalDangerActive" title="Please confirm" button="danger" has-cancel>
@@ -148,7 +153,39 @@ const Delete = (id) => {
                 </div>
             </div>
             <TreeModal :land="land" />
-
+            <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+                <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="py-3 px-6 text-xs">STT</th>
+                            <th scope="col" class="py-3 px-6 text-xs">name</th>
+                            <!-- <th scope="col" class="py-3 px-6 text-xs">Image</th> -->
+                            <th scope="col" class="py-3 px-6 text-xs">
+                                <span class="sr-only">Edit</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(tree, index) in trees.data" :key="index"
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                                index + 1 }}</th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                                tree.name }}</th>
+                            <!-- <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <img :src="amenitie.image" class="w-20 h-20" />
+                            </th> -->
+                            <td class="py-4 px-6 text-right">
+                                <BaseButtons type="justify-start lg:justify-end" no-wrap>
+                                    <BaseButton color="contrast" :icon="mdiPencilOutline" small @click="edit(tree)"
+                                        type="button" data-toggle="modal" data-target="#exampleModal" />
+                                    <BaseButton color="danger" :icon="mdiTrashCan" small @click="Delete(tree.id)" />
+                                </BaseButtons>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <pagination :links="trees.links" />
         </SectionMain>
     </LayoutAuthenticated>

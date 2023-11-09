@@ -8,7 +8,7 @@ export const useTreeStore = defineStore('tree', () => {
     const changeEditMode = (state) => {
         editMode.value = state
     }
-    const setApartment = (data) => {
+    const setTree = (data) => {
         tree.value = data
 
     }
@@ -21,7 +21,7 @@ export const useTreeStore = defineStore('tree', () => {
         tree,
         isModalTree,
         changeEditMode,
-        setApartment,
+        setTree,
         changeisModalTree
 
     }

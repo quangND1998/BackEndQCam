@@ -48,17 +48,9 @@ const editMode = computed(
 //     form.acreage = apartment.acreage
 // }
 onMounted(() => {
-    emitter.on('editApartment', async (data) => {
+    emitter.on('editTree', async (data) => {
 
-        form.id = data.id
-        form.name = data.name
-        form.description = data.description
-        form.acreage = data.acreage
-        form.price = data.price
-        form.direction = data.direction
-
-        form.status = data.status
-        form.address = data.address
+        console.log(data)
 
 
     });
@@ -66,7 +58,7 @@ onMounted(() => {
 
 })
 onUnmounted(() => {
-    emitter.off('editApartment', listener)
+    emitter.off('editTree', listener)
 })
 const listener = (data) => {
 
@@ -78,7 +70,7 @@ const isModalTree = computed({
     },
     set(value) {
         store.changeisModalTree(value)
-        store.setApartment(null)
+        store.setTree(null)
     }
 
 })

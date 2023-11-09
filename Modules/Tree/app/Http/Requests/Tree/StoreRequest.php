@@ -13,13 +13,13 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'required|unique:trees,name',
-            'address' => 'required',
-            'price' => 'numeric|gt:0',
-            'state' => 'required',
-            'status' => 'required',
-            'drescription' => 'required',
-            'user_manual' => 'nullable',
-            'terms_policy' => 'nullable',
+            // 'address' => 'required',
+            // 'price' => 'numeric|gt:0',
+            // 'state' => 'required',
+            // 'status' => 'required',
+            // 'drescription' => 'required',
+            // 'user_manual' => 'nullable',
+            // 'terms_policy' => 'nullable',
             'images' => 'required',
             'images.*' => 'mimes:jpeg,png,jpg|max:2048',
         ];

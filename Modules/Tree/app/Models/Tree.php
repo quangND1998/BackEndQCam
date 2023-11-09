@@ -35,6 +35,7 @@ class Tree extends Model implements HasMedia
 
     public function images()
     {
-        return $this->getMedia('images');
+        return $this->media()->where('collection_name', 'images');
     }
+    
 }
