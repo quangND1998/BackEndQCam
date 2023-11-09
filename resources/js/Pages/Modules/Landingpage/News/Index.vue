@@ -70,7 +70,7 @@ const save = () => {
                 editMode.value = true;
             },
             onSuccess: () => {
-                form.reset("title", "id");
+                form.reset("id","type","title","short_description","description","state");
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -82,7 +82,7 @@ const save = () => {
                 editMode.value = false;
             },
             onSuccess: () => {
-                form.reset("title", "id");
+                form.reset("id","type","title","short_description","description","state");
                 isModalActive.value = false;
                 editMode.value = false;
             },

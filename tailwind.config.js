@@ -68,7 +68,7 @@ module.exports = {
             color_dark_red: '#D12953',
             color_red: '#FAF0F3',
             color_dark_blue: '#4F5AED',
-            color_blue: '#F0F1FA'
+            color_blue: '#F0F1FA',
 
         }
     },

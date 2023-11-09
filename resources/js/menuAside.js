@@ -105,7 +105,27 @@ export default [{
         icon: mdiFileTreeOutline,
         permissions: ['super-admin'],
     },
-
+    {
+        label: 'Quản lý người dùng',
+        icon: mdiFileTreeOutline,
+        permissions: ['view-user'],
+        route_list: ['customer.index'],
+        menu: [{
+                route: 'customer.index',
+                label: 'Customer',
+                icon: mdiMinus,
+                permissions: ['super-admin'],
+                route_list: null
+            },
+            {
+                route: 'admin.land.index',
+                label: 'Shipper',
+                icon: mdiMinus,
+                permissions: ['super-admin'],
+                route_list: null
+            }
+        ]
+    },
     {
         label: 'SETTINGS',
     },
