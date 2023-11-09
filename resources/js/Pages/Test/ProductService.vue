@@ -153,8 +153,9 @@ const state = reactive({
                             <label class="input w-full" for="recipient-name">
                                 <select id="project" v-model="form.state"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full">
-                                    <option value="public"> Mở bán</option>
-                                    <option value="private"> Chưa mở bán</option>
+                                    <option value="public"> 10 Ngày</option>
+                                    <option value="private"> 5 Tháng</option>
+                                    <option value="private"> 3 Năm</option>
 
                                 </select>
                                 
@@ -196,28 +197,28 @@ const state = reactive({
                         #
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Name
+                        Tên
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Images
+                        Hình ảnh
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Number Tree
+                        Số lượng cây
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        acreage
+                        Diện tích vườn rau
                     </th>
                     <th scope="col" class="px-6 py-3">
                        Lượt Tham quan miễn phí
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Tổng sản lượng
+                        Lượng nông sản
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        price
+                        Giá
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Số lượng giao hàng
+                        Số lần giao hàng
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Thời gian gói hđ
@@ -226,7 +227,7 @@ const state = reactive({
                         Đơn vị
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        drescription
+                        Mô tả
                     </th>
                     <th scope="col" class="px-6 py-3">
                         
@@ -283,7 +284,13 @@ const state = reactive({
                     </td>
                     <td class="px-6 py-4 ">
                         <div class="flex ">
-                      
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" 
+                                    class="sr-only peer">
+                                <div
+                                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                            </label>
                             <Dropdown align="right" width="40" class="ml-5">
                                 <template #trigger>
                                     <span class="inline-flex rounded-md">
