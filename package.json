@@ -29,6 +29,7 @@
         "@fancyapps/ui": "^5.0.24",
         "@vueform/multiselect": "^2.6.3",
         "@vuepic/vue-datepicker": "^7.2.0",
+        "ckeditor-tailwind-reset": "^1.0.5",
         "emittery": "^1.0.1",
         "laravel-echo": "^1.11.3",
         "libphonenumber-js": "^1.10.49",
