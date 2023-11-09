@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
         if (!$isExist) {
             $user1 = User::create([
                 'name' => 'Admin',
+                'username' => 'admin',
                 'email' => 'admin@admin.com',
                 'phone_number' => '0358794449',
                 'password' => bcrypt('Abcd1234')
@@ -31,6 +32,7 @@ class UserSeeder extends Seeder
 
             $user2 = User::create([
                 'name' => 'Admin',
+                'username' => 'quangnd620',
                 'email' => 'quangnd620@wru.vn',
                 'phone_number' => '0989227252',
                 'password' => bcrypt('Abcd1234')

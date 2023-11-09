@@ -31,6 +31,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'phone_number', 'isVerified',  'address', 'date_of_brith', 'cic_number','sex', 'adrress', 'phone_number2', 'date_of_birth'
@@ -87,21 +88,21 @@ class User extends Authenticatable
 
     public function address(){
         return $this->hasOne(Address::class,'user_id');
-    } 
+    }
 
 
     public function reviews(){
         return $this->hasMany(ReviewManagement::class,'user_id');
-    } 
+    }
 
     public function complaints(){
         return $this->hasMany(ComplaintManagement::class,'user_id');
-    } 
+    }
 
 
     public function product_service_owners(){
 
         return $this->belongsToMany(ProductServiceOwner::class, 'product_service_owners', 'user_id', 'product_service_id');
-    
+
     }
 }

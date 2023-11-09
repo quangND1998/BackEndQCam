@@ -30,6 +30,7 @@ import BaseIcon from '@/Components/BaseIcon.vue'
 import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
+
 defineProps({
     lands: Object,
 });

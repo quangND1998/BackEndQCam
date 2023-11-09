@@ -4,6 +4,8 @@ import '../css/main.css';
 import { createPinia } from 'pinia'
 import { useDarkModeStore } from '@/stores/darkMode.js'
 import { useTreeStore } from '@/stores/tree'
+import { useProfileStore } from '@/stores/profile'
+
 import { darkModeKey } from '@/config'
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -56,6 +58,7 @@ createInertiaApp({
 
 const darkModeStore = useDarkModeStore(pinia)
 const treeStore = useTreeStore(pinia)
+const profileStore = useProfileStore(pinia)
 document.documentElement.classList.forEach((token) => {
     if (token.indexOf('style') === 0) {
         document.documentElement.classList.replace(token, `style-basic`)
