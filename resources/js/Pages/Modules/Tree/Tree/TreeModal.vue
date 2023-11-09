@@ -9,9 +9,9 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import { useTreeStore } from '@/stores/tree.js'
 import { emitter } from '@/composable/useEmitter';
+import MazInputPrice from 'maz-ui/components/MazInputPrice'
 
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
 
 
 const swal = inject('$swal')
@@ -47,15 +47,11 @@ const editMode = computed(
         }
     }
 )
-// const apartment = inject('apartment')
-
-// if (apartment) {
-//     form.acreage = apartment.acreage
-// }
+const formattedPrice = ref()
 onMounted(() => {
     emitter.on('editTree', async (data) => {
 
-        console.log(data)
+        form.id = data.id
         form.name = data.name;
         form.address = data.address;
         form.price = data.price;
@@ -107,7 +103,7 @@ const saveTree = () => {
                 editMode.value = true
             },
             onSuccess: () => {
-                form.reset('id', 'image', 'name')
+                form.reset()
                 isModalTree.value = false;
                 editMode.value = false
             }
@@ -120,7 +116,7 @@ const saveTree = () => {
                 editMode.value = false
             },
             onSuccess: () => {
-                form.reset('id', 'image', 'name')
+                form.reset()
                 isModalTree.value = false;
                 editMode.value = false
             },
@@ -168,15 +164,15 @@ const saveTree = () => {
                         </div>
                         <div class="my-4">
                             <label class="input w-full" for="recipient-name">
-                                <input class="input__field border" type="text" placeholder="" v-model="form.name">
+                                <input class="input__field border" type="text" placeholder="" v-model="form.status">
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">
                                     status</span>
                             </label>
-                            <InputError class="mt-2" :message="form.errors.name" />
+                            <InputError class="mt-2" :message="form.errors.status" />
                         </div>
                         <div class="py-4">
                             <label class="input w-full" for="recipient-name">
-                                <select id="project"
+                                <select id="project" v-model="form.state"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full">
                                     <option value="public"> Mở bán</option>
                                     <option value="private"> Chưa mở bán</option>
@@ -184,13 +180,15 @@ const saveTree = () => {
                                 </select>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">state</span>
                             </label>
-                            <InputError class="mt-2" :message="form.errors.address" />
+                            <InputError class="mt-2" :message="form.errors.state" />
                         </div>
                         <div class="py-4">
                             <label class="input w-full" for="recipient-name">
-                                <input class="input__field border" type="number" placeholder="" v-model="form.price">
+
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giá
                                 </span>
+                                <MazInputPrice v-model="form.price" label="Enter your price" currency="VND" locale="vi-VN"
+                                    :min="0" @formatted="formattedPrice = $event" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.price" />
                         </div>
@@ -231,7 +229,7 @@ const saveTree = () => {
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">User
                                     manual</span>
                             </label>
-                            <InputError class="mt-2" :message="form.errors.description" />
+                            <InputError class="mt-2" :message="form.errors.user_manual" />
                         </div>
 
 

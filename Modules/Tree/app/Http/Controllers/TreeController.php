@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use Modules\Tree\app\Http\Requests\Tree\StoreRequest;
 use Modules\Tree\app\Models\Land;
 use Modules\Tree\app\Models\Tree;
+use Illuminate\Support\Str;
 
 class TreeController extends Controller
 {
@@ -45,9 +46,15 @@ class TreeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): RedirectResponse
+    public function store(StoreRequest $request, Land $land): RedirectResponse
     {
         $tree = Tree::create($request->all());
+        if ($tree) {
+            $tree->qr_code = $tree->id . Str::random(10);
+            $tree->land_id = $land->id;
+            $tree->save();
+        }
+
         foreach ($request->images as $image) {
             $tree->addMedia($image)->toMediaCollection('tree_images');
         }
@@ -76,6 +83,13 @@ class TreeController extends Controller
     public function update(Request $request, Tree $tree): RedirectResponse
     {
         $tree->update($request->all());
+        if ($request->hasFile('images')) {
+            $tree->clearMediaCollection('tree_images');
+
+            foreach ($request->images as $image) {
+                $tree->addMedia($image)->toMediaCollection('tree_images');
+            }
+        }
 
         return back()->with('success', 'Update successfully');
     }
@@ -85,6 +99,7 @@ class TreeController extends Controller
      */
     public function destroy(Tree $tree)
     {
+        $tree->clearMediaCollection('tree_images');
         $tree->delete();
         return back()->with('success', 'Delete successfully');
     }

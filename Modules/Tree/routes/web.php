@@ -34,7 +34,7 @@ Route::middleware(['auth'])->group(
                 });
                 Route::prefix('tree')->as('tree.')->group(function () {
                     Route::post('/{tree}/update', [TreeController::class, 'update'])->name('update');
-                    Route::delete('/{tree}/delete', [TreeController::class, 'delete'])->name('delete');
+                    Route::delete('/{tree}/destroy', [TreeController::class, 'destroy'])->name('destroy');
                 });
             });
         });
