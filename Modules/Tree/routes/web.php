@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Tree\app\Http\Controllers\LandController;
+use Modules\Tree\app\Http\Controllers\ProductRetailController;
+use Modules\Tree\app\Http\Controllers\ProductServiceController;
 use Modules\Tree\app\Http\Controllers\TreeController;
 
 /*
@@ -36,6 +38,22 @@ Route::middleware(['auth'])->group(
                     Route::post('/{tree}/update', [TreeController::class, 'update'])->name('update');
                     Route::delete('/{tree}/destroy', [TreeController::class, 'destroy'])->name('destroy');
                 });
+            });
+
+            Route::prefix('product-retails')->as('product-retail.')->group(function () {
+                Route::get('', [ProductRetailController::class, 'index'])->name('index');
+                Route::post('store', [ProductRetailController::class, 'store'])->name('store');
+                Route::post('/{product_retail}/update', [ProductRetailController::class, 'update'])->name('update');
+                Route::delete('/{product_retail}/destroy', [ProductRetailController::class, 'destroy'])->name('destroy');
+                Route::post('/changeStatus', [ProductRetailController::class, 'changeStatus'])->name('changeStatus');
+            });
+
+            Route::prefix('product-services')->as('product-service.')->group(function () {
+                Route::get('', [ProductServiceController::class, 'index'])->name('index');
+                Route::post('store', [ProductServiceController::class, 'store'])->name('store');
+                Route::post('/{product_service}/update', [ProductServiceController::class, 'update'])->name('update');
+                Route::delete('/{product_service}/destroy', [ProductServiceController::class, 'destroy'])->name('destroy');
+                Route::post('/changeStatus', [ProductServiceController::class, 'changeStatus'])->name('changeStatus');
             });
         });
     }

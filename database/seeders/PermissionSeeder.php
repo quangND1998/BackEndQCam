@@ -33,6 +33,11 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'delete-land']);
         Permission::create(['name' => 'update-land']);
 
+        Permission::create(['name' => 'view-product']);
+        Permission::create(['name' => 'create-product']);
+        Permission::create(['name' => 'delete-product']);
+        Permission::create(['name' => 'update-product']);
+
         // customer
         Permission::create(['name' => 'login-app']);
         Permission::create(['name' => 'order']);
@@ -41,6 +46,10 @@ class PermissionSeeder extends Seeder
 
         // shipper & ke toan
         Permission::create(['name' => 'change-state-order']);
+
+
+
+
 
     }
 }

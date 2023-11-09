@@ -130,6 +130,9 @@ const Delete = (id) => {
                             <th scope="col" class="py-3 px-6 text-xs">STT</th>
                             <th scope="col" class="py-3 px-6 text-xs">name</th>
                             <th scope="col" class="py-3 px-6 text-xs">Image</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Giá</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Trang thái</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Tình Trạng cây</th>
                             <th scope="col" class="py-3 px-6 text-xs">
                                 <span class="sr-only">Edit</span>
                             </th>
@@ -142,12 +145,33 @@ const Delete = (id) => {
                                 index + 1 }}</th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                 tree.name }}</th>
+
                             <th scope="row"
                                 class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-wrap">
                                 <img v-for="(image, index) in tree.images" :key="index" :src="image.original_url"
                                     class="w-20 h-20 " />
 
 
+                            </th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <strong>{{
+                                    formatPrice(tree.price) }}</strong></th>
+
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <div class=" flex justify-center">
+                                    <span v-if="tree.state == 'public'"
+                                        class="inline-block whitespace-nowrap rounded-full bg-lime-300 px-[0.65em] py-1 text-center align-baseline text-[1em] font-bold leading-none text-success-700">
+                                        Mở bán
+                                    </span>
+                                    <span v-if="tree.state == 'private'"
+                                        class="inline-block whitespace-nowrap rounded-full bg-red-300 px-[0.65em] py-1 text-center align-baseline text-[1em] font-bold leading-none text-danger-700">
+                                        Chưa Mở bán
+                                    </span>
+                                </div>
+                            </th>
+
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <strong>{{ tree.status }}</strong>
                             </th>
                             <td class="py-4 px-6 text-right">
                                 <BaseButtons type="justify-start lg:justify-end" no-wrap>

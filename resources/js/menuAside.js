@@ -75,15 +75,30 @@ export default [{
         label: 'Quản lý Cây & Gói sản phẩm',
         icon: mdiFileTreeOutline,
         permissions: ['view-user'],
-        route_list: ['admin.land.index'],
+        route_list: ['admin.land.index', 'admin.product-retail.index'],
         menu: [{
-                route: 'admin.land.index',
-                label: 'Lô',
-                icon: mdiMinus,
-                permissions: ['super-admin'],
-                route_list: null
-            },
-
+            route: 'admin.land.index',
+            label: 'Lô',
+            icon: mdiMinus,
+            permissions: ['super-admin'],
+            route_list: null
+        },
+        {
+            route: 'admin.product-retail.index',
+            label: 'Sản phẩm bán lẻ',
+            icon: mdiMinus,
+            permissions: ['super-admin'],
+            route_list: null
+        },
+        {
+            route: 'admin.product-service.index',
+            label: 'Sản phẩm dịch vụ',
+            icon: mdiMinus,
+            permissions: ['super-admin'],
+            route_list: null
+        },
+    
+    
         ]
     },
     {

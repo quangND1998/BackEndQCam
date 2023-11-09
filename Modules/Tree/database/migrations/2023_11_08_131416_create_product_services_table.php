@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('product_services', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('id_priority');
+            $table->bigInteger('id_priority')->nullable();
             $table->string('name')->nullable();
             $table->integer('number_tree')->nullable();
             $table->float('acreage')->nullable();
@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('life_time')->nullable();
             $table->longText('description')->nullable();
             $table->string('unit')->nullable();
+            $table->boolean('status')->default(true)->nullable();
             $table->timestamps();
         });
     }

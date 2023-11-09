@@ -23,52 +23,28 @@ class CustomerDetailController extends Controller
         $customer = User::findOrFail($id);
         return Inertia::render('Modules/Customer/detail/info', compact('customer'));
     }
-
+    public function updateinfo($id)
+    {
+        $customer = User::findOrFail($id);
+        return Inertia::render('Modules/Customer/detail/info', compact('customer'));
+    }
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function products($id)
     {
-        return view('customer::create');
+        $customer = User::with('product_service_owners')->findOrFail($id);
+        return Inertia::render('Modules/Customer/detail/products', compact('customer'));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
+    public function activity($id)
     {
-        //
+        $customer = User::findOrFail($id);
+        return Inertia::render('Modules/Customer/detail/activity', compact('customer'));
     }
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function service($id)
     {
-        return view('customer::show');
+        $customer = User::findOrFail($id);
+        return Inertia::render('Modules/Customer/detail/service', compact('customer'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('customer::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    
 }
