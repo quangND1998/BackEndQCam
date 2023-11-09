@@ -26,12 +26,18 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^40.0.0",
+        "@ckeditor/ckeditor5-vue": "^5.1.0",
         "@fancyapps/ui": "^5.0.24",
         "@vueform/multiselect": "^2.6.3",
         "@vuepic/vue-datepicker": "^7.2.0",
+        "ckeditor-tailwind-reset": "^1.0.5",
+        "@vueup/vue-quill": "^1.2.0",
         "emittery": "^1.0.1",
         "laravel-echo": "^1.11.3",
+        "libphonenumber-js": "^1.10.49",
         "lodash": "^4.17.15",
+        "maz-ui": "^3.22.1",
         "mdb-vue-ui-kit": "^4.1.1",
         "mitt": "^3.0.1",
         "moment": "^2.29.4",
@@ -45,6 +51,7 @@
         "vue-upload-multiple-image": "^1.1.6",
         "vue3-carousel": "^0.3.1",
         "vue3-carousel-3d": "^1.0.4",
-        "vue3-datepicker": "^0.4.0"
+        "vue3-datepicker": "^0.4.0",
+        "vue3-quill": "^0.3.1"
     }
 }

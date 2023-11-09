@@ -31,6 +31,9 @@ import mapValues from "lodash/mapValues";
 import pickBy from "lodash/pickBy";
 import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
+import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
+const phoneNumber = ref()
+const results = ref()
 const props = defineProps({
     subadmins: Array,
     filters: Object,
@@ -116,23 +119,23 @@ const save = () => {
     // form.id = permission.id;
     // form.name = permission.name
 };
-const setActive = ( data, event) => {
+const setActive = (data, event) => {
 
     if (event.target.checked) {
         isActive.value = 1;
-      } else {
+    } else {
         isActive.value = 0;
-      }
-      let query = {
+    }
+    let query = {
         id: data.id,
         active: isActive.value
-      };
-      axios
+    };
+    axios
         .post("users/setActive", query)
-        .then(response => {})
-        .catch(function(error) {
-          // handle error
-          console.log(error);
+        .then(response => { })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
         });
 };
 const Delete = (id) => {
@@ -149,7 +152,7 @@ const Delete = (id) => {
         .then((result) => {
             if (result.isConfirmed) {
                 console.log(id);
-                form.delete(route("users.delete", id), {
+                form.delete(route("users.destroy", id), {
                     onSuccess: () => {
                         swal.fire("Deleted!", "Your role has been deleted.", "success");
                     },
@@ -181,7 +184,7 @@ const Delete = (id) => {
                         <!-- <SearchInput v-model="search" placeholder="Search" aria-label="Search" size="24" @reset="reset"/> -->
                         <search-filter v-model="search" class="mr-4 w-full max-w-md" @reset="reset">
                             <label class="block text-gray-700">Trashed:</label>
-                        </search-filter>
+                        </search-filter> 
                     </div>
                 </div>
                 <div class="right">
@@ -232,8 +235,13 @@ const Delete = (id) => {
                         <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="phone" value="Phone" />
 
-                            <TextInput id="value" v-model="form.phone_number" type="text" class="mt-1 block w-full"
-                                :class="form.errors.phone_number ? 'border-red-500' : ''" autocomplete="name" />
+                            <!-- <TextInput id="value" v-model="form.phone_number" type="text" class="mt-1 block w-full"
+                                :class="form.errors.phone_number ? 'border-red-500' : ''" autocomplete="name" /> -->
+                                {{ form.phone_number }}
+                            <MazPhoneNumberInput v-model="form.phone_number" show-code-on-list
+                                :preferred-countries="['FR', 'BE', 'DE', 'US', 'GB']" :ignored-countries="['AC']"
+                                @update="results = $event" />
+
                             <InputError class="mt-2" :message="form.errors.phone_number" />
                         </div>
                     </div>
@@ -332,8 +340,7 @@ const Delete = (id) => {
                             <th class="py-3 px-6 text-xs">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" value="" class="sr-only peer"
-                                    :checked="user.isActive == 1 ? true : false"
-                                    @change="setActive(user, $event)"/>
+                                        :checked="user.isActive == 1 ? true : false" @change="setActive(user, $event)" />
                                     <div
                                         class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                     </div>

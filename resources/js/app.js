@@ -3,6 +3,8 @@ import '../css/main.css';
 // import Vue from 'vue'
 import { createPinia } from 'pinia'
 import { useDarkModeStore } from '@/stores/darkMode.js'
+import { useTreeStore } from '@/stores/tree'
+import { useProfileStore } from '@/stores/profile'
 
 import { darkModeKey } from '@/config'
 import { createApp, h } from 'vue';
@@ -20,8 +22,12 @@ import PrimeVue from 'primevue/config';
 import Tooltip from 'primevue/tooltip';
 import "primevue/resources/themes/lara-light-indigo/theme.css";
 
-
-// import VueLazyload from 'vue-lazyload'
+// import CKEditor from '@ckeditor/ckeditor5-vue';
+// import { QuillEditor } from '@vueup/vue-quill'
+// import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import 'maz-ui/css/main.css'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 
 
@@ -37,6 +43,8 @@ createInertiaApp({
             .use(pinia)
             .use(ZiggyVue)
             .use(PrimeVue)
+            .component('QuillEditor', QuillEditor)
+            // .use(CKEditor)
             // .use(VueLazyload)
             .use(VueSweetalert2)
             .directive('tooltip', Tooltip)
@@ -49,14 +57,15 @@ createInertiaApp({
 });
 
 const darkModeStore = useDarkModeStore(pinia)
-
+const treeStore = useTreeStore(pinia)
+const profileStore = useProfileStore(pinia)
 document.documentElement.classList.forEach((token) => {
-        if (token.indexOf('style') === 0) {
-            document.documentElement.classList.replace(token, `style-basic`)
-        }
+    if (token.indexOf('style') === 0) {
         document.documentElement.classList.replace(token, `style-basic`)
-    })
-    /* Dark mode */
+    }
+    document.documentElement.classList.replace(token, `style-basic`)
+})
+/* Dark mode */
 if (
     (!localStorage[darkModeKey] && window.matchMedia('(prefers-color-scheme: dark)').matches) ||
     localStorage[darkModeKey] === '1'
