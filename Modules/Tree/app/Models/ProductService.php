@@ -13,14 +13,14 @@ class ProductService extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id","id_priority", "name",'drescription', "number_tree", "acreage", "free_visit", "amount_products_received", 'price', 'number_deliveries' ,"life_time", "unit"	];
-    
+    protected $fillable = ["id", "id_priority", "name", 'description', "number_tree", "acreage", "free_visit", "amount_products_received", 'price', 'number_deliveries', "life_time", "unit"];
+
     protected static function newFactory(): ProductServiceFactory
     {
         //return ProductServiceFactory::new();
     }
 
-      /**
+    /**
      * Get all of the post's comments.
      */
     public function order_items()
@@ -28,7 +28,8 @@ class ProductService extends Model
         return $this->morphMany(OrderItem::class, 'orderitemable');
     }
 
-    public function owners(){
+    public function owners()
+    {
         return $this->belongsToMany(User::class, 'product_service_owners', 'product_service_id', 'user_id');
     }
 }
