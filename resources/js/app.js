@@ -20,7 +20,7 @@ import PrimeVue from 'primevue/config';
 import Tooltip from 'primevue/tooltip';
 import "primevue/resources/themes/lara-light-indigo/theme.css";
 
-
+import CKEditor from '@ckeditor/ckeditor5-vue';
 import 'maz-ui/css/main.css'
 
 
@@ -36,6 +36,7 @@ createInertiaApp({
             .use(pinia)
             .use(ZiggyVue)
             .use(PrimeVue)
+            .use( CKEditor )
             // .use(VueLazyload)
             .use(VueSweetalert2)
             .directive('tooltip', Tooltip)
