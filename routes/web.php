@@ -6,6 +6,8 @@ use Inertia\Inertia;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\TestController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -63,5 +65,6 @@ Route::middleware(['auth'])->group(
             // Route::get('updateDemo', [UserController::class, 'updateDemo'])->name('update-demo');
         });
 
+        Route::get('test', [TestController::class, 'index']);
     }
 );
