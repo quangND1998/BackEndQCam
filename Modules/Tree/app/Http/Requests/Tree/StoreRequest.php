@@ -20,7 +20,8 @@ class StoreRequest extends FormRequest
             'drescription' => 'required',
             'user_manual' => 'nullable',
             'terms_policy' => 'nullable',
-            'images' => 'required|image'
+            'images' => 'required',
+            'images.*' => 'mimes:jpeg,png,jpg|max:2048',
         ];
     }
 

@@ -171,9 +171,9 @@ const Delete = (id) => {
                         <!-- <BaseIcon :path="mdiLandFields" size="160" class="w-full h-40 object-cover" /> -->
                         <!-- </Link> -->
                         <div class="bg-[#D9D9D9] flex justify-between px-2 py-1 items-center">
-                            <!-- <Link :href="route('admin.project.blocks.getFloors', [project.id, block.id])"> -->
+                            <Link :href="route('admin.land.tree.index',  land.id)">
                             <h3 class="text-black text-sm font-medium">{{ land.name }}</h3>
-                            <!-- </Link> -->
+                            </Link>
                             <span v-if="land.state == 'public'"
                                 class="inline-block whitespace-nowrap rounded-full bg-lime-300 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-success-700">
                                 Mở bán

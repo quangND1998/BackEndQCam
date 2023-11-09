@@ -30,7 +30,7 @@ Route::middleware(['auth'])->group(
                 Route::delete('/delete/{land}', [LandController::class, 'delete'])->name('delete');
                 Route::prefix('{land}/trees')->as('tree.')->group(function () {
                     Route::get('all', [TreeController::class, 'index'])->name('index');
-                    Route::get('store', [TreeController::class, 'store'])->name('store');
+                    Route::post('store', [TreeController::class, 'store'])->name('store');
                 });
                 Route::prefix('tree')->as('tree.')->group(function () {
                     Route::post('/{tree}/update', [TreeController::class, 'update'])->name('update');
