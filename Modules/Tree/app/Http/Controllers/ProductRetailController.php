@@ -21,10 +21,14 @@ class ProductRetailController extends Controller
         $this->middleware('permission:update-product', ['only' => ['update']]);
         $this->middleware('permission:delete-product', ['only' => ['destroy']]);
     }
-    public function index()
+    public function index(Request $request)
     {
-        $product_retails = ProductRetail::with('images')->paginate(15);
-        return Inertia::render('', compact('product_retails'));
+        $product_retails = ProductRetail::with('images')->where(function ($query) use ($request) {
+            $query->where('name', 'LIKE', '%' . $request->search . '%');
+            $query->orwhere('code', 'LIKE', '%' . $request->search . '%');
+            // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
+        })->paginate(15);
+        return Inertia::render('Modules/Tree/ProductRetail/Index', compact('product_retails'));
     }
 
     /**
@@ -91,5 +95,13 @@ class ProductRetailController extends Controller
         $product_retail->clearMediaCollection('product_retail_images');
         $product_retail->delete();
         return back()->with('success', 'Delete successfully');
+    }
+
+
+    public function changeStatus(Request $request)
+    {
+        $product_retail = ProductRetail::findOrFail($request->id);
+        $product_retail->update(['status' => $request->status]);
+        return back()->with('success', 'Update Status successfully');
     }
 }

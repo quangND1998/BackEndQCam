@@ -21,7 +21,9 @@ class StoreRequest extends FormRequest
             'number_deliveries' => 'required|numeric|gt:0',
             'life_time' =>  'required|numeric|gt:0',
             'description' => 'required',
-            'unit' => 'required'
+            'unit' => 'required',
+            // 'images' => 'required',
+            // 'images.*' => 'mimes:jpeg,png,jpg|max:2048',
         ];
     }
 
@@ -34,18 +36,18 @@ class StoreRequest extends FormRequest
         // return auth()->user()->can('users.create');
     }
 
-    public function messages()
-    {
-        return [
-            "number_tree.gt" =>  'You have invalid characters in the value getter than 0',
-            "acreage.gt" =>  'You have invalid characters in the value getter than 0',
-            "free_visit.gt" =>  'You have invalid characters in the value getter than 0',
-            "amount_products_received.gt" =>  'You have invalid characters in the value getter than 0',
-            "price.gt" =>  'You have invalid characters in the value getter than 0',
-            "number_deliveries.gt" =>  'You have invalid characters in the value getter than 0',
-            "life_time.gt" =>  'You have invalid characters in the value getter than 0',
+    // public function messages()
+    // {
+    //     return [
+    //         "number_tree.gt" =>  'You have invalid characters in the value getter than 0',
+    //         "acreage.gt" =>  'You have invalid characters in the value getter than 0',
+    //         "free_visit.gt" =>  'You have invalid characters in the value getter than 0',
+    //         "amount_products_received.gt" =>  'You have invalid characters in the value getter than 0',
+    //         "price.gt" =>  'You have invalid characters in the value getter than 0',
+    //         "number_deliveries.gt" =>  'You have invalid characters in the value getter than 0',
+    //         "life_time.gt" =>  'You have invalid characters in the value getter than 0',
 
-            'number_tree.required' => 'The number_tree field is required.',
-        ];
-    }
+    //         'number_tree.required' => 'The number_tree field is required.',
+    //     ];
+    // }
 }

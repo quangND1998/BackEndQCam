@@ -26,83 +26,98 @@ import {
 } from '@mdi/js'
 
 export default [{
-        label: 'MAIN',
+    label: 'MAIN',
+},
+{
+    route: 'dashboard',
+    icon: mdiHomeOutline,
+    label: 'Dashboard',
+    permissions: null,
+    route_list: null
+},
+
+{
+    route: 'profile.show',
+    label: 'Profile',
+    icon: mdiAccountCogOutline,
+    permissions: null,
+    route_list: null
+},
+{
+    label: 'Quản lý phân quyền & User',
+    icon: mdiFileTreeOutline,
+    permissions: ['view-user'],
+    route_list: ['permissions.index', 'roles.index', 'users.index'],
+    menu: [{
+        route: 'permissions.index',
+        label: 'Permissions',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
     },
     {
-        route: 'dashboard',
-        icon: mdiHomeOutline,
-        label: 'Dashboard',
-        permissions: null,
+        route: 'roles.index',
+        label: 'Roles',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'users.index',
+        label: 'Users',
+        icon: mdiMinus,
+        permissions: ['view-user'],
+        route_list: null
+    }
+    ]
+},
+{
+    label: 'Quản lý Cây & Gói sản phẩm',
+    icon: mdiFileTreeOutline,
+    permissions: ['view-user'],
+    route_list: ['admin.land.index', 'admin.product-retail.index'],
+    menu: [{
+        route: 'admin.land.index',
+        label: 'Lô',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.product-retail.index',
+        label: 'Sản phẩm bán lẻ',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.product-service.index',
+        label: 'Sản phẩm dịch vụ',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
         route_list: null
     },
 
-    {
-        route: 'profile.show',
-        label: 'Profile',
-        icon: mdiAccountCogOutline,
-        permissions: null,
-        route_list: null
-    },
-    {
-        label: 'Quản lý phân quyền & User',
-        icon: mdiFileTreeOutline,
-        permissions: ['view-user'],
-        route_list: ['permissions.index', 'roles.index', 'users.index'],
-        menu: [{
-                route: 'permissions.index',
-                label: 'Permissions',
-                icon: mdiMinus,
-                permissions: ['super-admin'],
-                route_list: null
-            },
-            {
-                route: 'roles.index',
-                label: 'Roles',
-                icon: mdiMinus,
-                permissions: ['super-admin'],
-                route_list: null
-            },
-            {
-                route: 'users.index',
-                label: 'Users',
-                icon: mdiMinus,
-                permissions: ['view-user'],
-                route_list: null
-            }
-        ]
-    },
-    {
-        label: 'Quản lý Cây & Gói sản phẩm',
-        icon: mdiFileTreeOutline,
-        permissions: ['view-user'],
-        route_list: ['admin.land.index'],
-        menu: [{
-                route: 'admin.land.index',
-                label: 'Lô',
-                icon: mdiMinus,
-                permissions: ['super-admin'],
-                route_list: null
-            },
 
-        ]
-    },
+    ]
+},
 
-    {
-        label: 'SETTINGS',
-    },
-    {
-        route: 'login',
-        label: 'Notification',
-        icon: mdiBellOutline,
-        permissions: null,
-        route_list: null,
-    },
-    {
-        route: 'login',
-        label: 'Settings',
-        icon: mdiCogOutline,
-        permissions: null,
-        route_list: null,
-    },
+{
+    label: 'SETTINGS',
+},
+{
+    route: 'login',
+    label: 'Notification',
+    icon: mdiBellOutline,
+    permissions: null,
+    route_list: null,
+},
+{
+    route: 'login',
+    label: 'Settings',
+    icon: mdiCogOutline,
+    permissions: null,
+    route_list: null,
+},
 
 ]

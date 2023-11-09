@@ -16,7 +16,7 @@ class ProductService extends Model implements HasMedia
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id", "id_priority", "name", 'description', "number_tree", "acreage", "free_visit", "amount_products_received", 'price', 'number_deliveries', "life_time", "unit"];
+    protected $fillable = ["id", "id_priority", "name", 'status', 'description', "number_tree", "acreage", "free_visit", "amount_products_received", 'price', 'number_deliveries', "life_time", "unit"];
 
     protected static function newFactory(): ProductServiceFactory
     {

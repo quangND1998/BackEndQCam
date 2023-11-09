@@ -15,6 +15,7 @@ class StoreRequest extends FormRequest
             'name' => 'required|unique:product_retails,name',
             'price' => 'required|numeric|gt:0',
             'description' => 'required',
+            // 'status' => 'required',
             'images' => 'required',
             'images.*' => 'mimes:jpeg,png,jpg|max:2048',
         ];
