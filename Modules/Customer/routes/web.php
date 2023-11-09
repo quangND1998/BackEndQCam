@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Customer\app\Http\Controllers\CustomerController;
-
+use Modules\Customer\app\Http\Controllers\CustomerDetailController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,4 +16,10 @@ use Modules\Customer\app\Http\Controllers\CustomerController;
 
 Route::group([], function () {
     Route::resource('customers', CustomerController::class)->names('customer');
+    Route::prefix('customer/{id}')->as('customer.detail.')->group(function () {
+        Route::get('info', [CustomerDetailController::class, 'info'])->name('info');
+        Route::post('products', [CustomerDetailController::class, 'store'])->name('store');
+        Route::put('/activity', [CustomerDetailController::class, 'update'])->name('update');
+        Route::delete('/service', [CustomerDetailController::class, 'delete'])->name('delete');
+    });
 });

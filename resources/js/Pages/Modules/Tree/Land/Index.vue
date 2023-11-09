@@ -138,7 +138,7 @@ const Delete = (id) => {
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-color_green" :icon="mdiPlus" small
+                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
                         @click="
                             isModalActive = true;
                         form.reset();
@@ -165,24 +165,18 @@ const Delete = (id) => {
             <!-- End Modal -->
             <div class="mt-5">
                 <div class="grid sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 gap-4 ">
-                    <div v-for="(land, index) in lands.data" :key="index" class="border rounded-lg">
+                    <div v-for="(land, index) in lands.data" :key="index" class="border border-gray-500">
                         <!-- <Link :href="route('admin.project.blocks.getFloors', [project.id, block.id])"> -->
 
                         <!-- <BaseIcon :path="mdiLandFields" size="160" class="w-full h-40 object-cover" /> -->
                         <!-- </Link> -->
-                        <div class="bg-[#D9D9D9] flex justify-between px-2 py-1 items-center">
-                            <Link :href="route('admin.land.tree.index',  land.id)">
-                            <h3 class="text-black text-sm font-medium">{{ land.name }}</h3>
-                            </Link>
-                            <span v-if="land.state == 'public'"
-                                class="inline-block whitespace-nowrap rounded-full bg-lime-300 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-success-700">
-                                Mở bán
-                            </span>
-                            <span v-if="land.state == 'private'"
-                                class="inline-block whitespace-nowrap rounded-full bg-red-300 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-danger-700">
-                                Chưa Mở bán
-                            </span>
-                            <Dropdown align="right" width="40">
+                        <Link :href="route('admin.land.tree.index',  land.id)">
+                        <div class="bg-[#D9D9D9]  px-2 py-1 items-center cursor-pointer">
+                            <div class="flex justify-between">
+                               
+                                    <h3 class="text-black text-sm font-medium ">{{ land.name }}</h3>
+                               
+                                <Dropdown align="right" width="40" @click.prevent>
                                 <template #trigger>
                                     <span class="inline-flex rounded-md">
                                         <BaseButton class="bg-[#D9D9D9] border-[#D9D9D9]" :icon="mdiDotsVertical" small />
@@ -206,8 +200,22 @@ const Delete = (id) => {
                                     </div>
                                 </template>
                             </Dropdown>
+                            </div>
+                            <div class=" flex justify-center">
+                                <span v-if="land.state == 'public'"
+                                class="inline-block whitespace-nowrap rounded-full bg-lime-300 px-[0.65em] py-1 text-center align-baseline text-[0.75em] font-bold leading-none text-success-700">
+                                Mở bán
+                            </span>
+                            <span v-if="land.state == 'private'"
+                                class="inline-block whitespace-nowrap rounded-full bg-red-300 px-[0.65em] py-1 text-center align-baseline text-[0.75em] font-bold leading-none text-danger-700">
+                                Chưa Mở bán
+                            </span>
+                            </div>
+                            
+                           
 
                         </div>
+                    </Link>
                     </div>
 
                 </div>

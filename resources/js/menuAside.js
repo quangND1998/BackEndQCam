@@ -75,7 +75,7 @@ export default [{
         label: 'Quản lý Cây & Gói sản phẩm',
         icon: mdiFileTreeOutline,
         permissions: ['view-user'],
-        route_list: ['admin.land.index', 'roles.index', 'users.index'],
+        route_list: ['admin.land.index'],
         menu: [{
                 route: 'admin.land.index',
                 label: 'Lô',
@@ -83,20 +83,7 @@ export default [{
                 permissions: ['super-admin'],
                 route_list: null
             },
-            {
-                route: 'roles.index',
-                label: 'Roles',
-                icon: mdiMinus,
-                permissions: ['super-admin'],
-                route_list: null
-            },
-            {
-                route: 'users.index',
-                label: 'Users',
-                icon: mdiMinus,
-                permissions: ['view-user'],
-                route_list: null
-            }
+
         ]
     },
     {

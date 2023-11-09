@@ -9,8 +9,9 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import { useTreeStore } from '@/stores/tree.js'
 import { emitter } from '@/composable/useEmitter';
+import MazInputPrice from 'maz-ui/components/MazInputPrice'
 
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
 
@@ -34,9 +35,9 @@ onMounted(() => {
     console.log('mounted!')
 
 })
-const editorConfig = reactive({
-    // The configuration of the editor.
-})
+// const editorConfig = reactive({
+//     // The configuration of the editor.
+// })
 const editMode = computed(
     {
         get() {
@@ -47,15 +48,11 @@ const editMode = computed(
         }
     }
 )
-// const apartment = inject('apartment')
-
-// if (apartment) {
-//     form.acreage = apartment.acreage
-// }
+const formattedPrice = ref()
 onMounted(() => {
     emitter.on('editTree', async (data) => {
 
-        console.log(data)
+        form.id = data.id
         form.name = data.name;
         form.address = data.address;
         form.price = data.price;
@@ -94,8 +91,9 @@ const props = defineProps({
     land: Object,
 })
 
-const editor = ref(ClassicEditor)
-// const editorData = ref('<p>Content of the editor.</p>')
+
+const editorData = ref('<p>Content of the editor.</p>')
+// const editorConfig = ref({})
 
 const saveTree = () => {
     if (editMode.value == true) {
@@ -106,7 +104,7 @@ const saveTree = () => {
                 editMode.value = true
             },
             onSuccess: () => {
-                form.reset('id', 'image', 'name')
+                form.reset()
                 isModalTree.value = false;
                 editMode.value = false
             }
@@ -119,7 +117,7 @@ const saveTree = () => {
                 editMode.value = false
             },
             onSuccess: () => {
-                form.reset('id', 'image', 'name')
+                form.reset()
                 isModalTree.value = false;
                 editMode.value = false
             },
@@ -127,7 +125,30 @@ const saveTree = () => {
     }
 
 }
+// const editorConfig = {
+//   toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+//   style:['height:200px'],
+//   heading: {
+//     options: [
+//       { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+//       { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+//       // ... add more heading options as needed
+//     ],
+//   },
+// };
 
+const state = reactive({
+    content: '<p>2333</p>',
+    _content: '',
+    editorOption: {
+        placeholder: 'core',
+        modules: {
+           
+        },
+      
+    },
+    disabled: false
+})
 
 </script>
 
@@ -145,7 +166,7 @@ const saveTree = () => {
 
 
                 <div
-                    class="grid  gap-4 my-4 min-[320px]:grid-cols-2 min-[320px]:my-0 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3">
+                    class="grid  gap-4 my-4 min-[320px]:grid-cols-2 min-[320px]:my-0 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
                     <div>
                         <div class="my-4">
                             <label class="input w-full" for="recipient-name">
@@ -157,15 +178,15 @@ const saveTree = () => {
                         </div>
                         <div class="my-4">
                             <label class="input w-full" for="recipient-name">
-                                <input class="input__field border" type="text" placeholder="" v-model="form.name">
+                                <input class="input__field border" type="text" placeholder="" v-model="form.status">
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">
                                     status</span>
                             </label>
-                            <InputError class="mt-2" :message="form.errors.name" />
+                            <InputError class="mt-2" :message="form.errors.status" />
                         </div>
                         <div class="py-4">
                             <label class="input w-full" for="recipient-name">
-                                <select id="project"
+                                <select id="project" v-model="form.state"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full">
                                     <option value="public"> Mở bán</option>
                                     <option value="private"> Chưa mở bán</option>
@@ -173,16 +194,25 @@ const saveTree = () => {
                                 </select>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">state</span>
                             </label>
-                            <InputError class="mt-2" :message="form.errors.address" />
+                            <InputError class="mt-2" :message="form.errors.state" />
                         </div>
                         <div class="py-4">
                             <label class="input w-full" for="recipient-name">
-                                <input class="input__field border" type="number" placeholder="" v-model="form.price">
+
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giá
                                 </span>
+                                <MazInputPrice v-model="form.price" label="Enter your price" currency="VND" locale="vi-VN"
+                                    :min="0" @formatted="formattedPrice = $event" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.price" />
                         </div>
+                       
+
+
+
+                    </div>
+
+                    <div>
                         <div class="py-4">
                             <label class="input w-full" for="recipient-name">
                                 <input class="input__field border" type="text" placeholder="" v-model="form.address">
@@ -191,41 +221,6 @@ const saveTree = () => {
                             </label>
                             <InputError class="mt-2" :message="form.errors.address" />
                         </div>
-
-
-
-                    </div>
-                    <div>
-
-
-                        <div class="my-4">
-                            <label class="input w-full" for="recipient-name">
-                                <!-- <textarea name="map_cors" id="" rows="5" class="input__field border"
-                                    v-model="form.description"></textarea> -->
-                                <ckeditor :editor="editor" v-model="form.description" aria-setsize="120" tag-name="textarea"
-                                    :config="editorConfig" class="h-52 overflow-auto" style="height: 200px !important;">
-                                </ckeditor>
-                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Mô
-                                    tả</span>
-                            </label>
-                            <InputError class="mt-2" :message="form.errors.description" />
-                        </div>
-                        <div class="my-4">
-                            <label class="input w-full" for="recipient-name">
-                                <!-- <textarea name="map_cors" id="" rows="5" class="input__field border"
-                                    v-model="form.description"></textarea> -->
-                                <ckeditor :editor="editor" v-model="form.user_manual" tag-name="textarea"
-                                    :config="editorConfig" class="h-52 overflow-auto" style="height: 200px !important;">
-                                </ckeditor>
-                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">User
-                                    manual</span>
-                            </label>
-                            <InputError class="mt-2" :message="form.errors.description" />
-                        </div>
-
-
-                    </div>
-                    <div>
                         <div class=" ">
                             <InputLabel for="name_amenities" value="Upload Image Layout" />
                             <label for="dropzone-images"
@@ -250,6 +245,28 @@ const saveTree = () => {
                             <InputError class="mt-2" :message="form.errors.images" />
                         </div>
                     </div>
+                    <div>          
+                        <div class="my-4">
+                            <label class="input w-full" for="recipient-name">
+
+                                <quill-editor v-model:value="state.content"></quill-editor>
+                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">User
+                                    manual</span>
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.user_manual" />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="my-4">
+                            <label class="input w-full" for="recipient-name">
+                                <quill-editor v-model:value="state.content"></quill-editor>
+                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Mô
+                                    tả</span>
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.description" />
+                        </div>
+                    </div>
+                   
                 </div>
 
             </div>
@@ -316,22 +333,9 @@ const saveTree = () => {
     transform: translate(0.25rem, -65%) scale(0.8) !important;
 }
 
-.ck .ck-editor__main {
-    height: 250px !important;
-}
 
-.ck-editor__editable_inline {
 
-    height: 200px !important;
-}
-
-textarea {
-    width: 100%;
-    height: 300px;
-    font-family: monospace;
-}
-
-.ckeditor-container {
-    height: 300px;
+.ck-editor__editable {
+    min-height: 200px;
 }
 </style>
