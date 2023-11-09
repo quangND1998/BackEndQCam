@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Landingpage\app\Models\News;
+use Modules\Landingpage\app\Resources\NewsResource;
+
 class NewsController extends Controller
 {
     /**
@@ -19,8 +21,8 @@ class NewsController extends Controller
         $response = [
             'success' => true,
             'message' => "list new public",
-            'activity'    => $activity,
-            'news' => $news
+            'activity'    => NewsResource::collection( $activity),
+            'news' => NewsResource::collection( $news )
         ];
         return response()->json($response, 200);
 

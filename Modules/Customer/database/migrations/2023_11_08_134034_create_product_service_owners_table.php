@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_service_id')->unique()->nullable();
             $table->foreign('product_service_id')->references('id')->on('product_services')->onDelete('cascade');
             $table->timestampTz("time_approve")->nullable();
-            $table->longText("drescription")->nullable();
+            $table->longText("description")->nullable();
             $table->integer("number_deliveries_current")->nullable();
             $table->string("state")->nullable();
             $table->integer("visited_time")->default(0)->nullable();

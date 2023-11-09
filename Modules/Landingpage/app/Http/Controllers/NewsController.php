@@ -85,7 +85,7 @@ class NewsController extends Controller
             'description' => $request->description
         ]);
         if( $request->file('images') != null){
-            $new->media()->delete();
+            $new->clearMediaCollection('news_images');
             foreach ($request->images as $image) {
                 $new->addMedia($image)->toMediaCollection('news_images');
             }
@@ -100,7 +100,7 @@ class NewsController extends Controller
     {
         $new = News::findOrFail($id);
         if($new){
-        $new->media()->delete();
+        $new->clearMediaCollection('news_images');
         $new->delete();
         return back()->with('scuccess', 'Delete successfully');
         }
