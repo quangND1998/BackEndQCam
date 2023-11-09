@@ -170,12 +170,13 @@ const Delete = (id) => {
 
                         <!-- <BaseIcon :path="mdiLandFields" size="160" class="w-full h-40 object-cover" /> -->
                         <!-- </Link> -->
-                        <div class="bg-[#D9D9D9]  px-2 py-1 items-center">
+                        <Link :href="route('admin.land.tree.index',  land.id)">
+                        <div class="bg-[#D9D9D9]  px-2 py-1 items-center cursor-pointer">
                             <div class="flex justify-between">
-                                <Link :href="route('admin.land.tree.index',  land.id)">
-                                    <h3 class="text-black text-sm font-medium">{{ land.name }}</h3>
-                                </Link>
-                                <Dropdown align="right" width="40">
+                               
+                                    <h3 class="text-black text-sm font-medium ">{{ land.name }}</h3>
+                               
+                                <Dropdown align="right" width="40" @click.prevent>
                                 <template #trigger>
                                     <span class="inline-flex rounded-md">
                                         <BaseButton class="bg-[#D9D9D9] border-[#D9D9D9]" :icon="mdiDotsVertical" small />
@@ -214,6 +215,7 @@ const Delete = (id) => {
                            
 
                         </div>
+                    </Link>
                     </div>
 
                 </div>

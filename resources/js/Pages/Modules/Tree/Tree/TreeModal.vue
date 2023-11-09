@@ -34,9 +34,9 @@ onMounted(() => {
     console.log('mounted!')
 
 })
-const editorConfig = reactive({
-    // The configuration of the editor.
-})
+// const editorConfig = reactive({
+//     // The configuration of the editor.
+// })
 const editMode = computed(
     {
         get() {
@@ -95,7 +95,8 @@ const props = defineProps({
 })
 
 const editor = ref(ClassicEditor)
-// const editorData = ref('<p>Content of the editor.</p>')
+const editorData = ref('<p>Content of the editor.</p>')
+const editorConfig = ref({})
 
 const saveTree = () => {
     if (editMode.value == true) {
@@ -127,7 +128,17 @@ const saveTree = () => {
     }
 
 }
-
+// const editorConfig = {
+//   toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+//   style:['height:200px'],
+//   heading: {
+//     options: [
+//       { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+//       { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+//       // ... add more heading options as needed
+//     ],
+//   },
+// };
 
 </script>
 
@@ -202,8 +213,8 @@ const saveTree = () => {
                             <label class="input w-full" for="recipient-name">
                                 <!-- <textarea name="map_cors" id="" rows="5" class="input__field border"
                                     v-model="form.description"></textarea> -->
-                                <ckeditor :editor="editor" v-model="form.description" aria-setsize="120" tag-name="textarea"
-                                    :config="editorConfig" class="h-52 overflow-auto" style="height: 200px !important;">
+                                <ckeditor :editor="editor" v-model="form.description" 
+                                    :config="editorConfig" >
                                 </ckeditor>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Mô
                                     tả</span>
@@ -214,8 +225,8 @@ const saveTree = () => {
                             <label class="input w-full" for="recipient-name">
                                 <!-- <textarea name="map_cors" id="" rows="5" class="input__field border"
                                     v-model="form.description"></textarea> -->
-                                <ckeditor :editor="editor" v-model="form.user_manual" tag-name="textarea"
-                                    :config="editorConfig" class="h-52 overflow-auto" style="height: 200px !important;">
+                                <ckeditor :editor="editor" v-model="form.user_manual" 
+                                    :config="editorConfig" >
                                 </ckeditor>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">User
                                     manual</span>
@@ -316,23 +327,9 @@ const saveTree = () => {
     transform: translate(0.25rem, -65%) scale(0.8) !important;
 }
 
-/* .ck .ck-editor__main {
-    height: 250px !important;
-}
 
-.ck-editor__editable_inline {
-
-    height: 200px !important;
-}
-
-textarea {
-    width: 100%;
-    height: 300px;
-    font-family: monospace;
-} */
 
 .ck-editor__editable {
-    min-height: 500px !important;
-   }
-   .ck-content { height:500px; }
+  min-height: 200px;
+}
 </style>

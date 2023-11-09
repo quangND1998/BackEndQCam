@@ -36,7 +36,7 @@ createInertiaApp({
             .use(pinia)
             .use(ZiggyVue)
             .use(PrimeVue)
-            .use( CKEditor )
+            .use(CKEditor)
             // .use(VueLazyload)
             .use(VueSweetalert2)
             .directive('tooltip', Tooltip)
