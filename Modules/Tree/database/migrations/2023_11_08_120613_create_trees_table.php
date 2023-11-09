@@ -23,6 +23,7 @@ return new class extends Migration
             $table->longText('drescription')->nullable();
             $table->longText('user_manual')->nullable();
             $table->longText('terms_policy')->nullable();
+            $table->unsignedBigInteger('product_service_owner_id')->nullable();
             $table->timestamps();
         });
     }
