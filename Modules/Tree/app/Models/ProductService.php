@@ -5,9 +5,12 @@ namespace Modules\Tree\app\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Tree\Database\factories\ProductServiceFactory;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class ProductService extends Model
+class ProductService extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     use HasFactory;
     protected $table = "product_services";
     /**
@@ -31,5 +34,10 @@ class ProductService extends Model
     public function owners()
     {
         return $this->belongsToMany(User::class, 'product_service_owners', 'product_service_id', 'user_id');
+    }
+
+    public function images()
+    {
+        return $this->media()->where('collection_name', 'product_service_images');
     }
 }

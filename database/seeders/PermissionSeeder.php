@@ -33,5 +33,12 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'delete-land']);
         Permission::create(['name' => 'update-land']);
 
+
+
+
+        Permission::create(['name' => 'view-product']);
+        Permission::create(['name' => 'create-product']);
+        Permission::create(['name' => 'delete-product']);
+        Permission::create(['name' => 'update-product']);
     }
 }

@@ -211,7 +211,7 @@ const state = reactive({
                             </label>
                             <InputError class="mt-2" :message="form.errors.price" />
                         </div>
-                       
+
 
 
 
@@ -250,11 +250,11 @@ const state = reactive({
                             <InputError class="mt-2" :message="form.errors.images" />
                         </div>
                     </div>
-                    <div>          
+                    <div>
                         <div class="my-4">
                             <label class="input w-full" for="recipient-name">
 
-                                <quill-editor v-model:value="state.content"></quill-editor>
+                                <quill-editor v-model="form.user_manual"></quill-editor>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">User
                                     manual</span>
                             </label>
@@ -264,14 +264,14 @@ const state = reactive({
                     <div>
                         <div class="my-4">
                             <label class="input w-full" for="recipient-name">
-                                <quill-editor v-model:value="state.content"></quill-editor>
+                                <quill-editor v-model="state.description"></quill-editor>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Mô
                                     tả</span>
                             </label>
                             <InputError class="mt-2" :message="form.errors.description" />
                         </div>
                     </div>
-                   
+
                 </div>
 
             </div>
