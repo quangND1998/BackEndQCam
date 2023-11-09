@@ -96,7 +96,7 @@ const props = defineProps({
 
 const editor = ref(ClassicEditor)
 const editorData = ref('<p>Content of the editor.</p>')
-const editorConfig = ref({})
+// const editorConfig = ref({})
 
 const saveTree = () => {
     if (editMode.value == true) {
