@@ -3,7 +3,7 @@ import '../css/main.css';
 // import Vue from 'vue'
 import { createPinia } from 'pinia'
 import { useDarkModeStore } from '@/stores/darkMode.js'
-
+import { useTreeStore } from '@/stores/tree'
 import { darkModeKey } from '@/config'
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -48,14 +48,14 @@ createInertiaApp({
 });
 
 const darkModeStore = useDarkModeStore(pinia)
-
+const treeStore = useTreeStore(pinia)
 document.documentElement.classList.forEach((token) => {
-        if (token.indexOf('style') === 0) {
-            document.documentElement.classList.replace(token, `style-basic`)
-        }
+    if (token.indexOf('style') === 0) {
         document.documentElement.classList.replace(token, `style-basic`)
-    })
-    /* Dark mode */
+    }
+    document.documentElement.classList.replace(token, `style-basic`)
+})
+/* Dark mode */
 if (
     (!localStorage[darkModeKey] && window.matchMedia('(prefers-color-scheme: dark)').matches) ||
     localStorage[darkModeKey] === '1'

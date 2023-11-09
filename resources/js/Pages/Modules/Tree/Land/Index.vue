@@ -4,7 +4,7 @@ import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { useForm } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import {
@@ -13,6 +13,11 @@ import {
     mdiPlus,
     mdiFilter,
     mdiMagnify,
+    mdiDotsVertical,
+    mdiTrashCanOutline,
+    mdiCodeBlockBrackets,
+    mdiPencil,
+    mdiLandFields
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -20,8 +25,8 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 // import Multiselect from '@vueform/multiselect'
-
-
+import Dropdown from '@/Components/Dropdown.vue';
+import BaseIcon from '@/Components/BaseIcon.vue'
 import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
 defineProps({
@@ -32,6 +37,7 @@ const swal = inject("$swal");
 const form = useForm({
     id: null,
     name: null,
+    state: null,
 });
 const isModalActive = ref(false);
 const editMode = ref(false);
@@ -54,7 +60,7 @@ const edit = (land) => {
 const save = () => {
     console.log(form);
     if (editMode.value == true) {
-        form.put(route("permissions.update", form.id), {
+        form.put(route("admin.land.update", form.id), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = true;
@@ -66,7 +72,7 @@ const save = () => {
             },
         });
     } else {
-        form.post(route("permissions.store"), {
+        form.post(route("admin.land.store"), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = false;
@@ -97,7 +103,7 @@ const Delete = (id) => {
         .then((result) => {
             if (result.isConfirmed) {
                 console.log(id);
-                form.delete(route("permissions.delete", id), {
+                form.delete(route("admin.land.delete", id), {
                     onSuccess: () => {
                         swal.fire(
                             "Deleted!",
@@ -148,51 +154,65 @@ const Delete = (id) => {
 
                 <InputLabel for="owner" value="Status" />
 
-                <select id="category_project_id" v-model="form.created_byId"
+                <select id="category_project_id" v-model="form.state"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option :value="null">Choose Status</option>
                     <option value="public">Mở bán</option>
                     <option value="private">Chưa mở bán</option>
                 </select>
-                <InputError class="mt-2" :message="form.errors.created_byId" />
+                <InputError class="mt-2" :message="form.errors.state" />
             </CardBoxModal>
             <!-- End Modal -->
-            <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
-                <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="py-3 px-6 text-xs">STT</th>
-                            <th scope="col" class="py-3 px-6 text-xs">name</th>
-                            <th scope="col" class="py-3 px-6 text-xs">
-                                <span class="sr-only">Edit</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(permission, index) in permissions.data" :key="index"
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="py-4 px-6 text-[14px] text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ index + 1 }}
-                            </th>
-                            <th scope="row" class="py-4 px-6 text-[14px] text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ permission.name }}
-                            </th>
-                            <td class="py-4 px-6 text-right">
-                                <button @click="edit(permission)" type="button" data-toggle="modal"
-                                    data-target="#exampleModal"
-                                    class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
-                                    Edit
-                                </button>
-                                <button type="button" @click="Delete(permission.id)"
-                                    class="inline-block px-6 py-2.5 bg-red-500 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-red-600 hover:text-white hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="mt-5">
+                <div class="grid sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 gap-4 ">
+                    <div v-for="(land, index) in lands.data" :key="index" class="border rounded-lg">
+                        <!-- <Link :href="route('admin.project.blocks.getFloors', [project.id, block.id])"> -->
+
+                        <!-- <BaseIcon :path="mdiLandFields" size="160" class="w-full h-40 object-cover" /> -->
+                        <!-- </Link> -->
+                        <div class="bg-[#D9D9D9] flex justify-between px-2 py-1 items-center">
+                            <!-- <Link :href="route('admin.project.blocks.getFloors', [project.id, block.id])"> -->
+                            <h3 class="text-black text-sm font-medium">{{ land.name }}</h3>
+                            <!-- </Link> -->
+                            <span v-if="land.state == 'public'"
+                                class="inline-block whitespace-nowrap rounded-full bg-lime-300 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-success-700">
+                                Mở bán
+                            </span>
+                            <span v-if="land.state == 'private'"
+                                class="inline-block whitespace-nowrap rounded-full bg-red-300 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-danger-700">
+                                Chưa Mở bán
+                            </span>
+                            <Dropdown align="right" width="40">
+                                <template #trigger>
+                                    <span class="inline-flex rounded-md">
+                                        <BaseButton class="bg-[#D9D9D9] border-[#D9D9D9]" :icon="mdiDotsVertical" small />
+                                    </span>
+                                </template>
+
+                                <template #content>
+                                    <div class="w-40">
+                                        <div @click="edit(land)"
+                                            class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+                                            <p class="hover:text-blue-700"> Edit</p>
+                                            <BaseButton :icon="mdiPencil" small class="text-[#2264E5]" type="button"
+                                                data-toggle="modal" data-target="#exampleModal" />
+                                        </div>
+                                        <div @click="Delete(land.id)"
+                                            class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
+                                            <p class="hover:text-red-700"> Delete</p>
+                                            <BaseButton :icon="mdiTrashCanOutline" small class="text-[#D12953]" />
+                                        </div>
+
+                                    </div>
+                                </template>
+                            </Dropdown>
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <pagination :links="permissions.links" />
+            <pagination :links="lands.links" />
         </SectionMain>
     </LayoutAuthenticated>
 </template>

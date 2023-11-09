@@ -6,17 +6,32 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Inertia\Inertia;
+use Modules\Tree\app\Http\Requests\Tree\StoreRequest;
+use Modules\Tree\app\Models\Land;
 use Modules\Tree\app\Models\Tree;
 
 class TreeController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('permission:view-land', ['only' => ['index']]);
+        $this->middleware('permission:create-land', ['only' => ['store']]);
+        $this->middleware('permission:update-land', ['only' => ['update']]);
+        $this->middleware('permission:delete-land', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, Land $land)
     {
-        return Tree::get();
-        return view('tree::index');
+        $trees = Tree::with('images')->where('land_id', $land->id)->where(function ($query) use ($request) {
+            $query->where('name', 'LIKE', '%' . $request->search . '%');
+            $query->orwhere('qr_code', 'LIKE', '%' . $request->search . '%');
+            // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
+        })->paginate(12);
+        return Inertia::render('Modules/Tree/Tree/Index', compact('land', 'trees'));
     }
 
     /**
@@ -30,9 +45,13 @@ class TreeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        //
+        $tree = Tree::create($request->all());
+        foreach ($request->images as $image) {
+            $tree->addMedia($image)->toMediaCollection('images');
+        }
+        return back()->with('success', 'Create successfully');
     }
 
     /**
@@ -54,16 +73,19 @@ class TreeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id): RedirectResponse
+    public function update(Request $request, Tree $tree): RedirectResponse
     {
-        //
+        $tree->update($request->all());
+
+        return back()->with('success', 'Update successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Tree $tree)
     {
-        //
+        $tree->delete();
+        return back()->with('success', 'Delete successfully');
     }
 }

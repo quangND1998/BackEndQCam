@@ -7,14 +7,19 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
+use Modules\Tree\app\Http\Requests\Land\StoreRequest;
+use Modules\Tree\app\Http\Requests\Land\UpdateRequest;
 use Modules\Tree\app\Models\Land;
 
 class LandController extends Controller
 {
 
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('role:super-admin');
+        $this->middleware('permission:view-land', ['only' => ['index']]);
+        $this->middleware('permission:create-land', ['only' => ['store']]);
+        $this->middleware('permission:update-land', ['only' => ['update']]);
+        $this->middleware('permission:delete-land', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -37,9 +42,11 @@ class LandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
-        //
+
+        Land::create($request->all());
+        return back()->with('success', 'Create successfully');
     }
 
     /**
@@ -61,16 +68,18 @@ class LandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id): RedirectResponse
+    public function update(UpdateRequest $request, Land $land): RedirectResponse
     {
-        //
+        $land->update($request->all());
+        return back()->with('success', 'Update successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Land $land)
     {
-        //
+        $land->delete();
+        return back()->with('success', 'Delete successfully');
     }
 }
