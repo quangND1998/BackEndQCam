@@ -26,6 +26,8 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^40.0.0",
+        "@ckeditor/ckeditor5-vue": "^5.1.0",
         "@fancyapps/ui": "^5.0.24",
         "@vueform/multiselect": "^2.6.3",
         "@vuepic/vue-datepicker": "^7.2.0",
