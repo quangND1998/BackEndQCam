@@ -138,7 +138,7 @@ const Delete = (id) => {
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-color_green" :icon="mdiPlus" small
+                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
                         @click="
                             isModalActive = true;
                         form.reset();
