@@ -143,14 +143,9 @@ const state = reactive({
     editorOption: {
         placeholder: 'core',
         modules: {
-            // toolbars: [
-            // custom toolbars options
-            // will override the default configuration
-            // ],
-            // other moudle options here
-            // otherMoudle: {}
+           
         },
-        // more options
+      
     },
     disabled: false
 })
