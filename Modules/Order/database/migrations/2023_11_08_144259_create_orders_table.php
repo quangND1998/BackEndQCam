@@ -32,6 +32,12 @@ return new class extends Migration
             $table->integer('shipping_fee')->nullable();
             //giá phải trả 
             $table->integer('last_price')->nullable();
+            $table->string('name')->nullable();
+            $table->text('specific_address')->nullable();
+            $table->text('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('district')->nullable();
+            $table->string('wards')->nullable();
             $table->text('notes')->nullable();
             $table->text('reason')->nullable();
         });
