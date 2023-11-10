@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use App\Models\User;
+use Carbon\Carbon;
+use Modules\Customer\app\Models\ProductServiceOwner;
+use Modules\Tree\app\Models\ProductService;
 use Spatie\Permission\Models\Role;
 class CustomerController extends Controller
 {
@@ -24,7 +27,7 @@ class CustomerController extends Controller
     {
         $user = Auth::user();
         $filters = $request->all('search');
-        $customers = User::whereHas(
+        $customers = User::with('product_service_owners')->whereHas(
             'roles',
             function ($query) {
                 $query->where('name', 'Customer');
@@ -37,8 +40,9 @@ class CustomerController extends Controller
 
         })->paginate(20)->appends($request->search);
 
+        $product_services = ProductService::where("status",1)->get();
 
-        return Inertia::render('Modules/Customer/index', compact('filters', 'customers'));
+        return Inertia::render('Modules/Customer/index', compact('filters', 'customers','product_services'));
     }
 
     /**
@@ -54,6 +58,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         $this->validate(
             $request,
             [
@@ -62,6 +67,7 @@ class CustomerController extends Controller
                 'email' => 'required|email|unique:users,email',
                 'phone_number' => 'required|unique:users,phone_number|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
                 'password' => 'nullable',
+                'product_service' => 'nullable',
 
             ]
         );
@@ -72,6 +78,20 @@ class CustomerController extends Controller
             $customer->password = Hash::make($request->password);
         }
         $customer->save();
+        if($request->product_service){
+            $product_service = $request->product_service;
+
+            $new_product_owner = new ProductServiceOwner;
+            $new_product_owner->time_approve = $request->time_approve;
+            $new_product_owner->time_end = $request->time_approve->addDays($product_service->life_time);
+
+            $new_product_owner->description = $customer->name. " sử dụng gói " . $request->product_service->name;
+            $new_product_owner->state = "active"; //active, expired, stop
+            $new_product_owner->user_id = $customer->id;
+            $new_product_owner->save();
+            $customer->product_service_owners()->attach($request->product_service);
+            $customer->save();
+        }
         return back()->with('success', 'Create customer successfully');
     }
 

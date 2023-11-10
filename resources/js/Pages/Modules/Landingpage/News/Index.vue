@@ -172,11 +172,18 @@ const Delete = (id) => {
                     <option value="activity">các hoạt động trang trại</option>
                 </select>
 
-                <InputLabel for="owner" value="Mô tả ngắn" />
-                <textarea v-model="form.short_description" class="mt-1 block w-full" required> </textarea>
+                <InputLabel for="name" value="Mô tả ngắnt" />
+                <label class="input w-full" for="recipient-name">
 
-                <InputLabel for="owner" value="Chi tiết bài viết" />
-                <textarea v-model="form.description" class="mt-1 block w-full" required></textarea>
+                    <quill-editor v-model:content="form.short_description" contentType="html"></quill-editor>
+
+                </label>
+                <InputLabel for="name" value="Chi tiết bài viết" />
+                <label class="input w-full" for="recipient-name">
+
+                    <quill-editor v-model:content="form.description" contentType="html"></quill-editor>
+
+                </label>
 
                 <InputLabel for="image" value="Image" />
                 <div class="flex items-center justify-center w-full">

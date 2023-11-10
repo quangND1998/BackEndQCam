@@ -31,12 +31,15 @@ import mapValues from "lodash/mapValues";
 import pickBy from "lodash/pickBy";
 import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
-import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
+
+import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput';
+
 const phoneNumber = ref()
 const results = ref()
 const props = defineProps({
     filters: Object,
     customers: Object,
+    product_services: Object,
 });
 const swal = inject("$swal");
 const form = useForm({
@@ -48,6 +51,8 @@ const form = useForm({
     phone_number: null,
     created_byId: null,
     password: null,
+    product_service: null,
+    time_approve:null,
 });
 const isModalActive = ref(false);
 const isActive = ref(false);
@@ -65,6 +70,7 @@ const edit = (user) => {
     form.username = user.username;
     form.phone_number = user.phone_number;
     form.created_byId = user.created_byId;
+    form.product_service = user.product_service_owners;
 };
 
 watch(
@@ -234,6 +240,19 @@ const Delete = (id) => {
 
                             <InputError class="mt-2" :message="form.errors.phone_number" />
                         </div>
+                    </div>
+                    <div class="flex flex-wrap -mx-3 mb-6">
+                       <div class="w-full md:w-1/2 px-3">
+                            <InputLabel for="owner" value="Gói dịch vụ" />
+                            <select id="category_project_id" v-model="form.product_service" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option v-for="product in product_services" :key="product.id" :value="product">{{ product.name }}</option>
+                            </select>
+                        </div>
+                        <div class="w-full md:w-1/2 px-3">
+                            <!-- <vue-tailwind-datepicker v-model="form.time_approve" required/> -->
+                        </div>
+
                     </div>
                 </div>
             </CardBoxModal>

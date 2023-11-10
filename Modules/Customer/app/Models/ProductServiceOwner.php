@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Customer\Database\factories\ProductServiceOwnerFactory;
+use Modules\Tree\app\Models\ProductService;
 
 class ProductServiceOwner extends Model
 {
@@ -24,8 +25,12 @@ class ProductServiceOwner extends Model
     }
 
 
-    public function product_service_owner()
+    public function product()
     {
-        return $this->belongsTo(ProductServiceOwner::class, 'product_service_owner_id');
+        return $this->belongsTo(ProductService::class, 'product_service_id');
+    }
+    public function customer()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
