@@ -13,34 +13,32 @@ import TextInput from '@/Components/TextInput.vue';
 import SectionTitleLineWithButton from '@/Components/SectionTitleLineWithButton.vue'
 import BaseButtons from '@/Components/BaseButtons.vue';
 import PillTag from '@/Components/PillTag.vue'
+import Multiselect from "@vueform/multiselect";
 import moment from 'moment';
+import { useHelper } from '@/composable/useHelper';
 const props = defineProps({
     customer: Object,
-    products: Object
+    products: Array,
+    trees: Array
 });
+const { multipleSelect } = useHelper();
 const swal = inject('$swal')
 const form = useForm({
-    id: props.customer.id,
-    name: props.customer.name,
-    username: props.customer.username,
-    phone_number: props.customer.phone_number,
-    email: props.customer.email,
-    password: null
-
-
+    id: null,
+    product_service: props.products.length >0 ? props.products[0].id:null,
+    tree: null,
 });
+const totalTree = toRef(props.trees);
 const isModalActive = ref(false)
 const editMode = ref(false)
-const edit = (customer) => {
+const edit = (product_owner) => {
     isModalActive.value = true
     editMode.value = true
-    form.id = customer.id;
-    form.name = customer.name;
-    form.username = customer.username;
-    form.phone_number = customer.phone_number;
-    form.email = customer.email;
-    form.password = customer.password;
-
+    form.id = product_owner.id;
+    form.product_service = product_owner.product.id;
+    form.tree =   multipleSelect(product_owner.trees)
+    console.log(totalTree.value)
+    totalTree.value.concat(product_owner.trees)
 }
 const crumbs = ref([
 
@@ -57,22 +55,46 @@ const crumbs = ref([
 ])
 const save = () => {
 
-    form.put(route("customer.update", form.id), {
-        onError: () => {
-            isModalActive.value = true;
-            editMode.value = true;
-        },
-        onSuccess: () => {
-            form_reset();
-            isModalActive.value = false;
-            editMode.value = false;
-        },
-    });
+    console.log(form);
+    if (editMode.value == true) {
+        form.put(route("customer.detail.products.update", props.customer.id), {
+            onError: () => {
+                isModalActive.value = true;
+                editMode.value = true;
+            },
+            onSuccess: () => {
+                form_reset();
+                isModalActive.value = false;
+                editMode.value = false;
+            },
+        });
+    } else {
+        form
+        .transform((data) => ({
+            ...data,
+            remember: data.remember ? 'on' : '',
+        }))
+        .post(route("customer.detail.products.store", props.customer.id), {
+            onError: () => {
+                isModalActive.value = true;
+                editMode.value = false;
+            },
+            onSuccess: () => {
+                form_reset();
+                isModalActive.value = false;
+                editMode.value = false;
+            },
+        });
+    }
 
-
-    // form.id = permission.id;
-    // form.name = permission.name
 };
+const limit_tree = computed(() =>{
+    console.log('limit_tree',form.product_service)
+    let product_service= props.products.find(e=>e.id == form.product_service);
+
+    return product_service
+}
+);
 </script>
 
 <template>
@@ -80,28 +102,45 @@ const save = () => {
 
         <Head title="Product" />
         <SectionMain>
+
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                 :title="editMode ? 'Chỉnh sửa' : 'Tạo mới'">
                 <div class="p-6 flex-auto">
                     <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <InputLabel for="name" value="Name" />
-                            <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full"
-                                :class="form.errors.name ? 'border-red-500' : ''" required autofocus autocomplete="name" />
-
-                            <InputError class="mt-2" :message="form.errors.name" />
+                        <div class="w-full md:w-1/2 px-3">
+                            <InputLabel for="owner" value="Gói dịch vụ" />
+                            <select id="category_project_id" v-model="form.product_service" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option v-for="product in products" :key="product.id" :value="product.id">{{
+                                    product.name }}</option>
+                            </select>
                         </div>
                         <div class="w-full md:w-1/2 px-3">
-                            <InputLabel for="email" value="Email" />
-                            <TextInput id="email" v-model="form.email" type="email" class="mt-1 block w-full"
-                                :class="form.errors.email ? 'border-red-500' : ''" autocomplete="name" />
-                            <InputError class="mt-2" :message="form.errors.email" />
+                            <InputLabel for="owner" value="Cây" />
+                            <Multiselect v-model="form.tree" mode="tags" :appendNewTag="false" :createTag="false" :limit="limit_tree?.number_tree"
+                                :searchable="true" label="name" valueProp="id" trackBy="name" :options="totalTree.value"
+
+                                class="form-control" :classes="{
+                                    tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-2xl leading-snug outline-none',
+                                    tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2 rtl:pl-0 rtl:pr-2',
+                                    tag: 'bg-red-600 text-white text-xs font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1',
+                                }" />
                         </div>
 
                     </div>
                 </div>
             </CardBoxModal>
             <div class="p-6 flex-auto sm:w-full">
+                <div class="flex justify-between">
+                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
+                            small @click="
+                                isModalActive = true;
+                                form.reset();
+                                reset();
+                            " label="Thêm gói sản phẩm" />
+                </div>
+                {{  totalTree }}
                 <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
                     <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

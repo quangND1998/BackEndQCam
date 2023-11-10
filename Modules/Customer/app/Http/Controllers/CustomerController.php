@@ -29,7 +29,7 @@ class CustomerController extends Controller
     {
         $user = Auth::user();
         $filters = $request->all('search');
-        $customers = User::whereHas(
+        $customers = User::with('product_service_owners.product','product_service_owners.trees')->whereHas(
             'roles',
             function ($query) {
                 $query->where('name', 'Customer');
@@ -60,7 +60,9 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //  return $request;
+       // return $request;
+
+
         $this->validate(
             $request,
             [
@@ -92,12 +94,17 @@ class CustomerController extends Controller
                 $new_product_owner->description = $customer->name . " sử dụng gói " . $product_service->name;
                 $new_product_owner->state = "active"; //active, expired, stop
                 $new_product_owner->user_id = $customer->id;
+                $new_product_owner->product_service_id = $product_service->id;
                 $new_product_owner->save();
-                $customer->product_service_owners()->attach($request->product_service);
+                $trees = Tree::find($request->tree);
+
+                $new_product_owner->trees()->saveMany($trees);
+
                 $customer->save();
             }
+
         }
-        // return back()->with('success', 'Create customer successfully');
+        return back()->with('success', 'Create customer successfully');
     }
     public function checkDay($lif_time, $unit)
     {

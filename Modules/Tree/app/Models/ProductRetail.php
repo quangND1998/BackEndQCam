@@ -6,10 +6,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Order\app\Models\OrderItem;
+use Modules\Order\app\Models\ProductVoucher;
 use Modules\Order\app\Models\Voucher;
 use Modules\Tree\Database\factories\ProductRetailFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class ProductRetail extends Model implements HasMedia
 {
@@ -42,26 +44,31 @@ class ProductRetail extends Model implements HasMedia
     }
 
 
-    public function vouchers(){
+    public function voucher_owner()
+    {
         // return $this->belongsToMany(Voucher::class,'product_voucher', 'product_retail_id','voucher_id');
         return $this->belongsToMany(Voucher::class, 'product_voucher', 'product_retail_id', 'voucher_id');
     }
-
-    public function getHasDiscountAttribute()
+    public function vouchers()
     {
-      
-    //   if(!empty($this->vouchers)){
-    //         $check = Carbon::now()->between($this->discount_start,$this->discount_end);
-    //   }
-    //   return $this->discount;
-      
-     }
-  
-      public function getPriceForSellingAttribute()
-     {
-    //   if($this->HasDiscount) { return ($this->price - ($this->price * $this->discount/100));} ;
-    //   return $this->price;
-  
-     }
-  
+        return $this->hasMany(ProductVoucher::class, 'product_retail_id');
+    }
+
+
+    // public function voucher()
+    // {
+    //     // return $this->belongsToMany(Voucher::class,'product_voucher', 'product_retail_id','voucher_id');
+    //     return $this->hasMany(Voucher::class, 'product_voucher', 'product_retail_id', 'voucher_id');
+    // }
+    public function HasDiscount()
+    {
+    }
+
+    // public function PriceForSelling()
+    // {
+    //     if ($this->HasDiscount) {
+    //         return ($this->price - ($this->price * $this->discount / 100));
+    //     };
+    //     return $this->price;
+    // }
 }

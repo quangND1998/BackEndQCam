@@ -52,7 +52,7 @@ const form = useForm({
     phone_number: null,
     created_byId: null,
     password: null,
-    product_service: null,
+    product_service: props.product_services.length >0 ? props.product_services[0].id:null,
     time_approve: null,
     tree: null,
 });
@@ -72,7 +72,7 @@ const edit = (user) => {
     form.username = user.username;
     form.phone_number = user.phone_number;
     form.created_byId = user.created_byId;
-    form.product_service = user.product_service_owners;
+    form.time_approve = user?.product_service_owners?.time_approve
 };
 
 watch(
@@ -89,6 +89,7 @@ watch(
 );
 
 const reset = () => {
+    editMode.value = false;
     search.value = null;
 };
 const form_reset = () => {
@@ -120,7 +121,7 @@ const save = () => {
                 editMode.value = false;
             },
             onSuccess: () => {
-                // form_reset();
+                form_reset();
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -171,6 +172,33 @@ const Delete = (id) => {
             }
         });
 };
+
+const selected = ref([])
+const selectAll = computed({
+    get() {
+        return props.customers.data
+            ? selected.value.length == props.customers.data
+            : false;
+    },
+    set(value) {
+        var array_selected = [];
+
+        if (value) {
+            props.customers.data.forEach(function (image) {
+                array_selected.push(image.id);
+            });
+        }
+        selected.value = array_selected;
+    }
+});
+
+const limit_tree = computed(() =>{
+    console.log('limit_tree',form.product_service)
+    let product_service= props.product_services.find(e=>e.id == form.product_service);
+
+    return product_service
+}
+);
 </script>
 
 <template>
@@ -193,10 +221,12 @@ const Delete = (id) => {
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                         small @click="
                             isModalActive = true;
-
+                            form.reset();
+                            reset();
                         " label="Create User" />
                 </div>
             </div>
+
             <!-- Modal -->
             <CardBoxModal v-model="isModalDangerActive" title="Please confirm" button="danger" has-cancel>
                 <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
@@ -240,13 +270,17 @@ const Delete = (id) => {
 
                     <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full md:w-1/2 px-3">
-                            <InputLabel for="owner" value="Gói dịch vụ" />
-                            <select id="category_project_id" v-model="form.product_service" required
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option v-for="product in product_services" :key="product.id" :value="product.id">{{
-                                    product.name }}</option>
-                            </select>
+                            <InputLabel for="phone" value="Phone" />
+
+                            <!-- <MazPhoneNumberInput v-model="form.phone_number" show-code-on-list
+                                :preferred-countries="['FR', 'BE', 'DE', 'US', 'GB']" :ignored-countries="['AC']"
+                                @update="results = $event" /> -->
+                            <TextInput id="password" v-model="form.phone_number" type="text" class="mt-1 block w-full"
+                                :class="form.errors.phone_number ? 'border-red-500' : ''" autocomplete="phone_number" />
+
+                            <InputError class="mt-2" :message="form.errors.phone_number" />
                         </div>
+
                         <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="owner" value="Thời gian bắt đầu áp dụng" />
                             <div date-rangepicker class="flex items-center">
@@ -267,21 +301,18 @@ const Delete = (id) => {
                         </div>
 
                     </div>
-                    <div class="flex flex-wrap -mx-3 mb-6">
+                    <div v-if="!editMode" class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full md:w-1/2 px-3">
-                            <InputLabel for="phone" value="Phone" />
-                            {{ form.phone_number }}
-                            <!-- <MazPhoneNumberInput v-model="form.phone_number" show-code-on-list
-                                :preferred-countries="['FR', 'BE', 'DE', 'US', 'GB']" :ignored-countries="['AC']"
-                                @update="results = $event" /> -->
-                            <TextInput id="password" v-model="form.phone_number" type="password" class="mt-1 block w-full"
-                                :class="form.errors.phone_number ? 'border-red-500' : ''" autocomplete="phone_number" />
-
-                            <InputError class="mt-2" :message="form.errors.phone_number" />
+                            <InputLabel for="owner" value="Gói dịch vụ" />
+                            <select id="category_project_id" v-model="form.product_service" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option v-for="product in product_services" :key="product.id" :value="product.id">{{
+                                    product.name }}</option>
+                            </select>
                         </div>
                         <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="owner" value="Cây" />
-                            <Multiselect v-model="form.tree" mode="tags" :appendNewTag="false" :createTag="false"
+                            <Multiselect v-model="form.tree" mode="tags" :appendNewTag="false" :createTag="false" :limit="limit_tree?.number_tree"
                                 :searchable="true" label="name" valueProp="id" trackBy="name" :options="trees"
                                 class="form-control" :classes="{
                                     tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
@@ -293,10 +324,32 @@ const Delete = (id) => {
                     </div>
                 </div>
             </CardBoxModal>
+            <div class="flex justify-end my-3">
+                <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
+                        small @click="
+                            isModalActive = true;
+                        " label="Create User" />
+                         <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
+                        small @click="
+                            isModalActive = true;
+                        " label="Create User" />
+                         <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
+                        small @click="
+                            isModalActive = true;
+                        " label="Create User" />
+            </div>
+            <div v-if="selected>1 ">
+                <p class="text-red-600 text-end">Xóa (5) Customer</p>
+            </div>
             <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
+                            <th scope="col" class="px-6 py-3 flex items-center">
+                        <input type="checkbox" v-model="selectAll"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
+                        #
+                    </th>
                             <th scope="col" class="py-3 px-6 text-xs">STT</th>
                             <th scope="col" class="py-3 px-6 text-xs">name</th>
                             <th scope="col" class="py-3 px-6 text-xs">email</th>
@@ -312,7 +365,10 @@ const Delete = (id) => {
                     <tbody v-if="customers">
                         <tr v-for="(user, index) in customers.data" :key="index"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <input id="default-checkbox" type="checkbox"  v-model="selected" :value="user.id"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                                 {{ index + 1 }}
                             </th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Order\app\Http\Controllers\OrderController;
+use Modules\Order\app\Http\Controllers\VoucherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +18,18 @@ use Modules\Order\app\Http\Controllers\OrderController;
 Route::group([], function () {
     Route::resource('order', OrderController::class)->names('order');
 });
+
+Route::middleware(['auth'])->group(
+    function () {
+        Route::prefix('admin')->as('admin.')->group(function () {
+            Route::prefix('vouchers')->as('voucher.')->group(function () {
+                Route::get('all', [VoucherController::class, 'index'])->name('index');
+                Route::post('', [VoucherController::class, 'store'])->name('store');
+                Route::put('/update/{voucher}', [VoucherController::class, 'update'])->name('update');
+                Route::delete('/delete/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
+
+                Route::get('{voucher}/products', [VoucherController::class, 'voucher_project'])->name('products');
+            });
+        });
+    }
+);

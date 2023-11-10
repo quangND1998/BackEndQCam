@@ -78,7 +78,7 @@ export default [{
         route_list: ['admin.land.index', 'admin.product-retail.index'],
         menu: [{
             route: 'admin.land.index',
-            label: 'Cây trồng',
+            label: 'Lô',
             icon: mdiMinus,
             permissions: ['super-admin'],
             route_list: null

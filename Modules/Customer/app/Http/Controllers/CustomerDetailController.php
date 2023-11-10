@@ -33,24 +33,6 @@ class CustomerDetailController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function products($id)
-    {
-        $customer = User::with('product_service_owners.product')->whereHas('roles', function ($query) {
-                $query->where('name', 'Customer');
-            })->findOrFail($id);
-        // return $customer;
-        $products = ProductService::where("status", 1)->get();
-        return Inertia::render('Modules/Customer/detail/products', compact('customer','products'));
-    }
-    public function activity($id)
-    {
-        $customer = User::findOrFail($id);
-        return Inertia::render('Modules/Customer/detail/activity', compact('customer'));
-    }
-    public function service($id)
-    {
-        $customer = User::findOrFail($id);
-        return Inertia::render('Modules/Customer/detail/service', compact('customer'));
-    }
+
 
 }
