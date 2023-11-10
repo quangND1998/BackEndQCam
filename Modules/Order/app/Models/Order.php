@@ -49,10 +49,5 @@ class Order extends Model
             $query->whereBetween('created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
         }
 
-        if (isset($filters['status'])) {
-
-            $query->where('status', $filters['status']);
-        }
-
     }
 }

@@ -50,8 +50,15 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'change-state-order']);
 
 
-
-
-
+        /**
+         * Quyền cho Đơn hàng
+         *
+         */
+        Permission::create(['name' => 'order-pending']);
+        Permission::create(['name' => 'order-packing']);
+        Permission::create(['name' => 'order-shipping']);
+        Permission::create(['name' => 'order-completed']);
+        Permission::create(['name' => 'order-refund']);
+        Permission::create(['name' => 'order-decline']);
     }
 }

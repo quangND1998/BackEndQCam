@@ -136,6 +136,20 @@ export default [{
     }
     ]
 },
+
+{
+    label: 'Quản lý đơn hàng',
+    icon: mdiFileTreeOutline,
+    permissions: ['order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+    route_list: ['admin.orders.index'],
+    menu: [{
+        route: 'admin.orders.index',
+        label: 'Đơn hàng',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },]
+},
 {
     label: 'SETTINGS',
 },
