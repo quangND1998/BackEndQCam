@@ -314,6 +314,9 @@ const selectAll = computed({
                         
                         " label="Create User" />
             </div>
+            <div v-if="selected>1">
+                <p class="text-red-600 text-end">Xóa (5) Customer</p>
+            </div>
             <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
