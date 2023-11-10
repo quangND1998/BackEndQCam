@@ -63,16 +63,16 @@ const state = reactive({
 const selected = ref([])
 const selectAll = computed({
     get() {
-        return props.customers.data
-            ? selected.value.length == props.customers.data
+        return product_retails.value.data
+            ? selected.value.length == product_retails.value.data
             : false;
     },
     set(value) {
         var array_selected = [];
 
         if (value) {
-            props.customers.data.forEach(function (image) {
-                array_selected.push(image.id);
+            product_retails.value.data.forEach(function (product) {
+                array_selected.push(product.id);
             });
         }
         selected.value = array_selected;
@@ -128,6 +128,7 @@ const changepPage = (url) => {
                 classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-3/5 xl:w-8/12 z-50 overflow-auto"
                 :title="editMode ? 'Sửa Sản Phẩm' : 'Thêm sản phẩm'">
                 <div class="w-3/12">
+                    {{ selected }}
                     <form>
                         <label for="default-search"
                             class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -154,7 +155,7 @@ const changepPage = (url) => {
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3 flex items-center">
-                                    <input type="checkbox"
+                                    <input type="checkbox" v-model="selectAll"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                                     #
                                 </th>
@@ -177,7 +178,7 @@ const changepPage = (url) => {
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 ">
                                 <th scope="col" class="px-6 py-3 ">
                                     <div class="flex items-center ">
-                                        <input id="default-checkbox" type="checkbox"
+                                        <input id="default-checkbox" type="checkbox" v-model="selected" :value="product.id"
                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                                         {{ index++ }}
                                     </div>
@@ -240,7 +241,8 @@ const changepPage = (url) => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 ">
+                            <tr v-for="(product, index) in voucher.products" :key="index"
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 ">
                                 <th scope="col" class="px-6 py-3 ">
                                     <div class="flex items-center ">
                                         <input id="default-checkbox" type="checkbox"
