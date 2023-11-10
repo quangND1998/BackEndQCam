@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Customer\app\Http\Controllers\CustomerController;
 use Modules\Customer\app\Http\Controllers\CustomerDetailController;
+use Modules\Customer\app\Http\Controllers\CustomerActivityController;
+use Modules\Customer\app\Http\Controllers\CustomerServiceController;
+use Modules\Customer\app\Http\Controllers\CustomerProductController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,8 +21,9 @@ Route::group([], function () {
     Route::resource('customers', CustomerController::class)->names('customer');
     Route::prefix('customer/{id}')->as('customer.detail.')->group(function () {
         Route::get('info', [CustomerDetailController::class, 'info'])->name('info');
-        Route::post('products', [CustomerDetailController::class, 'products'])->name('products');
-        Route::put('/activity', [CustomerDetailController::class, 'activity'])->name('activity');
-        Route::delete('/service', [CustomerDetailController::class, 'service'])->name('service');
+
+        Route::resource('products', CustomerProductController::class)->names('products');
+        Route::resource('activity', CustomerActivityController::class)->names('activity');
+        Route::resource('service', CustomerServiceController::class)->names('service');
     });
 });

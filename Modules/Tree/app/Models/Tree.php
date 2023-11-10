@@ -8,7 +8,6 @@ use Modules\Tree\Database\factories\TreeFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-
 class Tree extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -36,5 +35,8 @@ class Tree extends Model implements HasMedia
     public function images()
     {
         return $this->media()->where('collection_name', 'tree_images');
+    }
+    public function product_service_owner(){
+        return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
     }
 }

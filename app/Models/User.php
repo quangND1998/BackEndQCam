@@ -102,7 +102,7 @@ class User extends Authenticatable
 
     public function product_service_owners(){
 
-        return $this->belongsToMany(ProductServiceOwner::class, 'product_service_owners', 'user_id', 'product_service_id');
+        return $this->hasMany(ProductServiceOwner::class, 'user_id');
 
     }
 }

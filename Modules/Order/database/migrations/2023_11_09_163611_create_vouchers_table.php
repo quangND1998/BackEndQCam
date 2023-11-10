@@ -38,8 +38,6 @@ return new class extends Migration
             // The amount to discount by (in pennies) in this example.
             $table->integer('discount_amount');
 
-            $table->integer('discount_amount');
-
             // Whether or not the voucher is a percentage or a fixed price. 
             $table->boolean('is_fixed')->default(true);
 

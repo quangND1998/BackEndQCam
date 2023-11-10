@@ -31,10 +31,10 @@ class ProductService extends Model implements HasMedia
         return $this->morphMany(OrderItem::class, 'orderitemable');
     }
 
-    public function owners()
-    {
-        return $this->belongsToMany(User::class, 'product_service_owners', 'product_service_id', 'user_id');
-    }
+    // public function owners()
+    // {
+    //     return $this->belongsToMany(User::class, 'product_service_owners', 'product_service_id', 'user_id');
+    // }
 
     public function images()
     {
