@@ -1,5 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
+
 const props = defineProps({
     statusGroup: Array
 })
@@ -12,6 +13,13 @@ const totalOrder = (status) => {
     }
 }
 
+const handleNativeClick =()=>{
+    console.log("Native click event");
+    router.post(route("admin.orders.pending"), query, {
+        // preserveState: false
+       
+    });
+}
 </script>
 <template>
     <div class="my-3">

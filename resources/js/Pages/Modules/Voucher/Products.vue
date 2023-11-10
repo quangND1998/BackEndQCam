@@ -213,7 +213,11 @@ const changepPage = (url) => {
             </CardBoxModal>
             <!-- End Modal -->
             <div class="mt-5">
-
+                <div class="flex justify-end items-center">
+                    <BaseButton :icon="mdiTrashCanOutline" small
+                                                            class="text-[#D12953]" style="color:red" />
+                    <p class="text-red-600">Đã chọn (5) sản phẩm</p>
+                </div>
                 <div class="relative mt-5 ">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -260,8 +264,12 @@ const changepPage = (url) => {
                                 <td class="px-6 py-4">
                                     hhhh
                                 </td>
-
-                                <td class="px-6 py-4 ">
+                                <td class="px-6 py-4">
+                                    <BaseButton :icon="mdiTrashCanOutline" small class="text-[#D12953] " />
+                                </td>
+                                <!-- <BaseButton :icon="mdiTrashCanOutline" small
+                                                            class="text-[#D12953]" /> -->
+                                <!-- <td class="px-6 py-4 ">
                                     <div class="flex ">
                                         <label class="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" class="sr-only peer">
@@ -297,7 +305,7 @@ const changepPage = (url) => {
                                         </Dropdown>
                                     </div>
 
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>

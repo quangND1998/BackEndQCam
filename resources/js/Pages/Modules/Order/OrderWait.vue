@@ -94,6 +94,41 @@ const search = () => {
         }
     );
 }
+
+const contents = ref([
+  { id: 1, text: 'Content 1' },
+  { id: 2, text: 'Content 2' },
+  { id: 3, text: 'Content 3' },
+]);
+const showContent = {};
+// contents.value.forEach(content => {
+//   showContent[content.id] = ref(false);
+// });
+contents.value.forEach(content => showContent[content.id] = false )
+// Hàm để đóng tất cả nội dung trước khi mở nội dung mới
+const closeAllContent = () => {
+  contents.value.forEach(content => {
+    showContent[content.id] = false;
+  });
+};
+
+// Hàm để toggle trạng thái của mỗi nội dung
+const toggleContent = (id) => {
+//   closeAllContent(); // Đóng tất cả các nội dung
+console.log(id)
+
+  showContent[id] = !showContent[id];
+  console.log("showContent", !showContent[id])
+};
+
+
+// // Sử dụng ref để theo dõi trạng thái của nội dung
+// const showContent = ref(true);
+
+// // Hàm để toggle trạng thái của nội dung
+// const toggleContent = () => {
+//   showContent.value = !showContent.value;
+// };
 const changeDate = () => {
     let query = {
         from: filter.fromDate,
@@ -236,10 +271,9 @@ const changeDate = () => {
                                     </div>
                                 </div>
 
-                                <div class=" cursor-pointer" id="accordion-open" data-accordion="open">
-                                    <div id="accordion-open-heading-1" data-accordion-target="#accordion-open-body-1"
-                                        aria-expanded="true" aria-controls="accordion-open-body-1"
-                                        class="accordion-toggle grid grid-cols-5 gap-4 text-sm px-3 py-3 text-gray-400">
+                                <div v-for="(content, index) in contents" :key="index">
+                                    <div   @click="toggleContent(content.id)"
+                                        class=" grid grid-cols-5 gap-4 text-sm px-3 py-3 text-gray-400">
                                         <div>
                                             <a class="flex items-center">
                                                 <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2"
@@ -262,8 +296,8 @@ const changeDate = () => {
                                             <p>Chờ</p>
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-1 gap-4 bg-gray-300 p-3 border rounded-lg hidden "
-                                        id="accordion-open-body-1" aria-labelledby="accordion-open-heading-1">
+                                    <div class="grid grid-cols-1 gap-4 bg-gray-300 p-3 border rounded-lg  " v-if="showContent[content.id]"
+                                      >
                                         <div class="my-3 rounded-lg border">
                                             <div class="title_information p-2">
                                                 <h3>Thông tin khách hàng</h3>
@@ -441,7 +475,7 @@ const changeDate = () => {
                                     </div>
 
                                     <!--  -->
-                                    <div id="accordion-open-heading-2" data-accordion-target="#accordion-open-body-2"
+                                    <!-- <div id="accordion-open-heading-2" data-accordion-target="#accordion-open-body-2"
                                         aria-expanded="false" aria-controls="accordion-open-body-2"
                                         class="accordion-toggle grid grid-cols-5 gap-4 text-sm px-3 py-3 text-gray-400">
                                         <div>
@@ -642,7 +676,7 @@ const changeDate = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
