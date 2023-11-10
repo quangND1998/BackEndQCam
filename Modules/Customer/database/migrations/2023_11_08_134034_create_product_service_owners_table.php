@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('product_service_id')->unique()->nullable();
+            $table->unsignedBigInteger('product_service_id')->nullable();
             $table->foreign('product_service_id')->references('id')->on('product_services')->onDelete('cascade');
             $table->timestampTz("time_approve")->nullable();
             $table->longText("description")->nullable();

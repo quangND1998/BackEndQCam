@@ -12,7 +12,7 @@ class ProductVoucher extends Model
     use HasFactory;
     protected $table = 'product_voucher';
     protected $fillable = [
-        'id', 'product_retail_id', 'voucher_id'
+        'id', 'product_retail_id', 'voucher_id', 'quantity','price', 'discount', 'price_sale', 'stock',
 
     ];
 

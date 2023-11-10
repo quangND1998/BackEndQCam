@@ -109,7 +109,7 @@ class VoucherController extends Controller
         $voucher->load('products');
         $products = ProductRetail::where(function ($query) use ($request) {
             $query->where('name', 'LIKE', '%' . $request->search . '%');
-        })->paginate(1);
+        })->paginate(15);
         if ($request->wantsJson()) {
             return $products;
         }
