@@ -13,41 +13,43 @@ return new class extends Migration
     {
         Schema::create('vouchers', function (Blueprint $table) {
             $table->id();
-   
-    
+
+
             // The voucher code
-            $table->string('code')->nullable( );
-        
+            $table->string('code')->nullable();
+
             // The human readable voucher code name
             $table->string('name')->nullable();
             // The description of the voucher - Not necessary 
-            $table->text('description')->nullable( );
-        
+            $table->text('description')->nullable();
+
             // The number of uses currently
-            $table->integer('uses')->unsigned( )->nullable( );
-        
+            $table->integer('uses')->unsigned()->nullable();
+
             // The max uses this voucher has
-            $table->integer('max_uses')->unsigned()->nullable( );
-        
+            $table->integer('max_uses')->unsigned()->nullable();
+
             // How many times a user can use this voucher.
-            $table->integer('max_uses_user')->unsigned( )->nullable( );
-        
+            $table->integer('max_uses_user')->unsigned()->nullable();
+
             // The type can be: voucher, discount, sale. What ever you want.
-            $table->tinyInteger('type')->unsigned( )->nullable( );
-        
+            $table->tinyInteger('type')->unsigned()->nullable();
+
             // The amount to discount by (in pennies) in this example.
             $table->integer('discount_amount');
-        
+
+            $table->integer('discount_amount');
+
             // Whether or not the voucher is a percentage or a fixed price. 
             $table->boolean('is_fixed')->default(true);
-            
+
             // When the voucher begins
             $table->timestamp('starts_at')->nullable();
-        
+
             // When the voucher ends
             $table->timestamp('expires_at')->nullable();
-        
 
+            $table->string('unit')->nullable();
             $table->timestamps();
         });
     }
