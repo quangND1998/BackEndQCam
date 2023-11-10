@@ -30,7 +30,7 @@
         "@ckeditor/ckeditor5-vue": "^5.1.0",
         "@fancyapps/ui": "^5.0.24",
         "@vueform/multiselect": "^2.6.3",
-        "@vuepic/vue-datepicker": "^7.2.0",
+        "@vuepic/vue-datepicker": "^7.2.2",
         "@vueup/vue-quill": "^1.2.0",
         "ckeditor-tailwind-reset": "^1.0.5",
         "dayjs": "^1.11.10",

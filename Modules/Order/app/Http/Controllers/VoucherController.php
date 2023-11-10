@@ -107,7 +107,12 @@ class VoucherController extends Controller
     public function voucher_project(Request $request, Voucher $voucher)
     {
         $voucher->load('products');
-        $products = ProductRetail::get();
+        $products = ProductRetail::where(function ($query) use ($request) {
+            $query->where('name', 'LIKE', '%' . $request->search . '%');
+        })->paginate(15);
+        if ($request->wantsJson()) {
+            return $products;
+        }
         return Inertia::render('Modules/Voucher/Products', compact('voucher', 'products'));
     }
 }
