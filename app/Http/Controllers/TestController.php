@@ -9,6 +9,6 @@ class TestController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Test/ProfileDetail');
+        return Inertia::render('Test/OrderManagement');
     }
 }
