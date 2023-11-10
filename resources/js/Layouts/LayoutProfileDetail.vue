@@ -83,35 +83,31 @@ const state = reactive({
                 <li :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('info') }"
                     class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] dark:text-white inline-block my-2">
 
-                    <a href="" class="flex">
+                    <Link :href="route('customer.detail.info', customer.id)" class="flex">
                         <Icon icon="info" class=" mr-2" />Information
-                    </a>
+                    </Link>
                 </li>
                 <li
                 :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('product') }"
                 class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"
-                    v-tooltip.top="'Block'"
+                    
                   >
 
-                    <Link  class="flex">
-                    <Icon icon="buildings" class=" mr-2" />Products</Link>
+                    <Link  :href="route('customer.detail.products', customer.id)" class="flex">
+                    <Icon icon="buildings" class=" mr-2" />Sản phẩm</Link>
                 </li>
                 <li
                     :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('service') }"
                     class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"
-                    v-tooltip.top="'Amenities'"
                    >
-
-                    <Link class="flex">
+                    <Link :href="route('customer.detail.activity', customer.id)" class="flex">
                     <Icon icon="amentities" class=" mr-2" />Service</Link>
                 </li>
                 <li
                 :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('activity') }"
-                class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"
-                    v-tooltip.top="'Image'"
-          >
+                class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2">
 
-                    <Link href="" class="flex">
+                    <Link :href="route('customer.detail.service', customer.id)" class="flex">
                     <Icon icon="gallery" class=" mr-2" />Activity</Link>
                 </li>
 

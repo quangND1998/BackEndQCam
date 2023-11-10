@@ -24,9 +24,11 @@ Route::middleware(['auth'])->group(
         Route::prefix('admin')->as('admin.')->group(function () {
             Route::prefix('vouchers')->as('voucher.')->group(function () {
                 Route::get('all', [VoucherController::class, 'index'])->name('index');
-                // Route::post('', [LandController::class, 'store'])->name('store');
-                // Route::put('/update/{land}', [LandController::class, 'update'])->name('update');
-                // Route::delete('/delete/{land}', [LandController::class, 'delete'])->name('delete');
+                Route::post('', [VoucherController::class, 'store'])->name('store');
+                Route::put('/update/{voucher}', [VoucherController::class, 'update'])->name('update');
+                Route::delete('/delete/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
+
+                Route::get('{voucher}/products', [VoucherController::class, 'voucher_project'])->name('products');
             });
         });
     }

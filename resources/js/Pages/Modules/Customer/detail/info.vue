@@ -52,7 +52,24 @@ const crumbs = ref([
         name: "Amenities"
     }
 ])
+const save = () => {
 
+    form.put(route("customer.update", form.id), {
+            onError: () => {
+                isModalActive.value = true;
+                editMode.value = true;
+            },
+            onSuccess: () => {
+                form_reset();
+                isModalActive.value = false;
+                editMode.value = false;
+            },
+    });
+
+
+    // form.id = permission.id;
+    // form.name = permission.name
+};
 </script>
 
 <template>
@@ -103,10 +120,7 @@ const crumbs = ref([
                 </div>
                 <div class="right">
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-color_green" :icon="mdiPlus" small
-                        @click="
-                            isModalActive = true;
-                        form.reset();
-                        " label="Save" />
+                        @click="save()" label="Save" />
                 </div>
             </div>
 

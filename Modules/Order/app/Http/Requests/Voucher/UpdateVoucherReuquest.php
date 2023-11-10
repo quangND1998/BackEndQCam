@@ -3,8 +3,9 @@
 namespace Modules\Order\app\Http\Requests\Voucher;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreVoucherReuquest extends FormRequest
+class UpdateVoucherReuquest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,7 +13,11 @@ class StoreVoucherReuquest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required|unique:vouchers,code',
+            'code' => [
+                'required',
+                Rule::unique('vouchers', 'code')->ignore($this->voucher),
+
+            ],
             'name' => 'required',
             'description' => 'nullable',
             'uses' => 'nullable',

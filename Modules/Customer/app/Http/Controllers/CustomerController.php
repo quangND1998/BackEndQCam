@@ -101,16 +101,16 @@ class CustomerController extends Controller
             $request,
             [
                 'name' => 'required',
+                'username' => 'required|unique:users,username,' . $user->id,
                 'email' => 'required|email|unique:users,email,' . $user->id,
                 'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone,' . $user->id,
-                'roles' => 'required',
-                'created_byId' =>  'nullable',
                 'password' => 'nullable'
             ]
         );
 
         $user->update([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'phone_number' =>$request->phone_number
         ]);

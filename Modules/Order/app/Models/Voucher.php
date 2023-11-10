@@ -23,6 +23,7 @@ class Voucher extends Model
         'type',
         'discount_amount',
         "is_fixed",
+        'unit',
         "starts_at",
         "expires_at"
     ];
@@ -34,7 +35,7 @@ class Voucher extends Model
 
     public function products()
     {
-        return $this->belongsToMany(ProductRetail::class, 'product_voucher', 'voucher_id', 'product_id');
+        return $this->belongsToMany(ProductRetail::class, 'product_voucher', 'voucher_id', 'product_retail_id');
     }
 
     public function product_vouchers()
