@@ -33,6 +33,7 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import OrderHome from "@/Pages/Test/OrderHome.vue"
+import test from "@/Pages/Modules/Order/OrderRow.vue"
 const props = defineProps({
     orders: Object,
     status: String,
@@ -100,35 +101,22 @@ const contents = ref([
   { id: 2, text: 'Content 2' },
   { id: 3, text: 'Content 3' },
 ]);
-const showContent = {};
-// contents.value.forEach(content => {
-//   showContent[content.id] = ref(false);
-// });
-contents.value.forEach(content => showContent[content.id] = false )
-// Hàm để đóng tất cả nội dung trước khi mở nội dung mới
-const closeAllContent = () => {
-  contents.value.forEach(content => {
-    showContent[content.id] = false;
-  });
-};
+// const showContent =  ref({});
 
-// Hàm để toggle trạng thái của mỗi nội dung
-const toggleContent = (id) => {
-//   closeAllContent(); // Đóng tất cả các nội dung
-console.log(id)
+// contents.value.forEach(content => showContent[content.id] = false )
 
-  showContent[id] = !showContent[id];
-  console.log("showContent", !showContent[id])
-};
-
-
-// // Sử dụng ref để theo dõi trạng thái của nội dung
-// const showContent = ref(true);
-
-// // Hàm để toggle trạng thái của nội dung
-// const toggleContent = () => {
-//   showContent.value = !showContent.value;
+// const closeAllContent = () => {
+//   contents.value.forEach(content => {
+//     showContent[content.id].vaue = false;
+//   });
 // };
+
+// // Hàm để toggle trạng thái của mỗi nội dung
+// const toggleContent = (id) => {
+//   console.log("showContent", !showContent[id])
+// };
+
+
 const changeDate = () => {
     let query = {
         from: filter.fromDate,
@@ -138,6 +126,7 @@ const changeDate = () => {
         preserveScroll: true
     });
 }
+
 </script>
 <template>
     <LayoutAuthenticated>
@@ -272,7 +261,8 @@ const changeDate = () => {
                                 </div>
 
                                 <div v-for="(content, index) in contents" :key="index">
-                                    <div   @click="toggleContent(content.id)"
+                                    <test />
+                                    <!-- <div   @click="toggleContent(content.id)"
                                         class=" grid grid-cols-5 gap-4 text-sm px-3 py-3 text-gray-400">
                                         <div>
                                             <a class="flex items-center">
@@ -293,11 +283,13 @@ const changeDate = () => {
                                             <p>15:05 25/03/2023</p>
                                         </div>
                                         <div>
-                                            <p>Chờ</p>
+                                            <p>Chờ      {{ showContent }}</p>
                                         </div>
                                     </div>
+                                
                                     <div class="grid grid-cols-1 gap-4 bg-gray-300 p-3 border rounded-lg  " v-if="showContent[content.id]"
                                       >
+                                
                                         <div class="my-3 rounded-lg border">
                                             <div class="title_information p-2">
                                                 <h3>Thông tin khách hàng</h3>
@@ -346,7 +338,7 @@ const changeDate = () => {
                                                 <tr
                                                     class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                                                     <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                                        <!-- <img src="/img/xop.png" alt="" /> -->
+                                                   
                                                         <div class="ml-3">
                                                             <h4>
                                                                 Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -362,7 +354,7 @@ const changeDate = () => {
                                                 <tr d
                                                     class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                                                     <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                                        <!-- <img src="/img/xop.png" alt="" /> -->
+                                                     
                                                         <div class="ml-3">
                                                             <h4>
                                                                 Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -472,7 +464,7 @@ const changeDate = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <!--  -->
                                     <!-- <div id="accordion-open-heading-2" data-accordion-target="#accordion-open-body-2"
@@ -678,6 +670,8 @@ const changeDate = () => {
                                         </div>
                                     </div> -->
                                 </div>
+                               
+
                             </div>
                         </div>
                     </div>
