@@ -52,7 +52,7 @@ const form = useForm({
     created_byId: null,
     password: null,
     product_service: null,
-    time_approve:null,
+    time_approve: null,
 });
 const isModalActive = ref(false);
 const isActive = ref(false);
@@ -107,13 +107,18 @@ const save = () => {
             },
         });
     } else {
-        form.post(route("customer.store"), {
+        form
+        .transform((data) => ({
+            ...data,
+            remember: data.remember ? 'on' : '',
+        }))
+        .post(route("customer.store"), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = false;
             },
             onSuccess: () => {
-                form_reset();
+                // form_reset();
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -183,10 +188,10 @@ const Delete = (id) => {
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus" small
-                        @click="
+                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
+                        small @click="
                             isModalActive = true;
-                        form.reset();
+                        
                         " label="Create User" />
                 </div>
             </div>
@@ -230,29 +235,46 @@ const Delete = (id) => {
                             <InputError class="mt-2" :message="form.errors.password" />
                         </div>
                     </div>
+
+                    <div class="flex flex-wrap -mx-3 mb-6">
+                        <div class="w-full md:w-1/2 px-3">
+                            <InputLabel for="owner" value="Gói dịch vụ" />
+                            <select id="category_project_id" v-model="form.product_service" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option v-for="product in product_services" :key="product.id" :value="product.id">{{
+                                    product.name }}</option>
+                            </select>
+                        </div>
+                        <div class="w-full md:w-1/2 px-3">
+                            <InputLabel for="owner" value="Thời gian bắt đầu áp dụng" />
+                            <div date-rangepicker class="flex items-center">
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 text-gray-400"
+                                            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input v-model="form.time_approve" type="date"
+                                        class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5  placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Ngày bắt đầu" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                     <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="phone" value="Phone" />
-                                {{ form.phone_number }}
+                            {{ form.phone_number }}
                             <MazPhoneNumberInput v-model="form.phone_number" show-code-on-list
                                 :preferred-countries="['FR', 'BE', 'DE', 'US', 'GB']" :ignored-countries="['AC']"
                                 @update="results = $event" />
 
                             <InputError class="mt-2" :message="form.errors.phone_number" />
                         </div>
-                    </div>
-                    <div class="flex flex-wrap -mx-3 mb-6">
-                       <div class="w-full md:w-1/2 px-3">
-                            <InputLabel for="owner" value="Gói dịch vụ" />
-                            <select id="category_project_id" v-model="form.product_service" required
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option v-for="product in product_services" :key="product.id" :value="product">{{ product.name }}</option>
-                            </select>
-                        </div>
-                        <div class="w-full md:w-1/2 px-3">
-                            <!-- <vue-tailwind-datepicker v-model="form.time_approve" required/> -->
-                        </div>
-
                     </div>
                 </div>
             </CardBoxModal>
@@ -307,7 +329,7 @@ const Delete = (id) => {
                             <td class="py-4 px-6 text-right">
                                 <Link :href="route('customer.detail.info', user.id)" type="button"
                                     class="inline-block px-6 py-2.5 bg-blue-600 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
-                                    Detail
+                                Detail
                                 </Link>
                                 <button @click="edit(user)" type="button" data-toggle="modal" data-target="#exampleModal"
                                     class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">

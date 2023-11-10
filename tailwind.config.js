@@ -10,7 +10,8 @@ module.exports = {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
-        './resources/js/**/*.js'
+        './resources/js/**/*.js',
+        // './node_modules/flowbite/**/*.js'
     ],
     darkMode: "class", // or 'media' or 'class'
     theme: {
@@ -74,6 +75,7 @@ module.exports = {
     },
     plugins: [
         require("@tailwindcss/forms"),
+        // require('flowbite/plugin'),
         plugin(function ({ matchUtilities, theme }) {
             matchUtilities({
                 "aside-scrollbars": (value) => {
