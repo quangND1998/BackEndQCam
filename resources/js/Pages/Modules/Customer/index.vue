@@ -169,6 +169,25 @@ const Delete = (id) => {
             }
         });
 };
+
+const selected = ref([])
+const selectAll = computed({
+    get() {
+        return props.customers.data
+            ? selected.value.length == props.customers.data
+            : false;
+    },
+    set(value) {
+        var array_selected = [];
+
+        if (value) {
+            props.customers.data.forEach(function (image) {
+                array_selected.push(image.id);
+            });
+        }
+        selected.value = array_selected;
+    }
+});
 </script>
 
 <template>
@@ -278,10 +297,32 @@ const Delete = (id) => {
                     </div>
                 </div>
             </CardBoxModal>
+            <div class="flex justify-end my-3">
+                <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
+                        small @click="
+                            isModalActive = true;
+                        
+                        " label="Create User" />
+                         <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
+                        small @click="
+                            isModalActive = true;
+                        
+                        " label="Create User" />
+                         <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
+                        small @click="
+                            isModalActive = true;
+                        
+                        " label="Create User" />
+            </div>
             <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
+                            <th scope="col" class="px-6 py-3 flex items-center">
+                        <input type="checkbox" v-model="selectAll"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
+                        #
+                    </th>
                             <th scope="col" class="py-3 px-6 text-xs">STT</th>
                             <th scope="col" class="py-3 px-6 text-xs">name</th>
                             <th scope="col" class="py-3 px-6 text-xs">email</th>
@@ -297,7 +338,10 @@ const Delete = (id) => {
                     <tbody v-if="customers">
                         <tr v-for="(user, index) in customers.data" :key="index"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                           
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <input id="default-checkbox" type="checkbox"  v-model="selected" :value="user.id"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                                 {{ index + 1 }}
                             </th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
