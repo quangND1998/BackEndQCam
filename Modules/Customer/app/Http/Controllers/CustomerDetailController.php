@@ -8,6 +8,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
+use Modules\Tree\app\Models\ProductService;
+use Modules\Tree\app\Models\ProductRetail;
 
 class CustomerDetailController extends Controller
 {
@@ -33,8 +35,12 @@ class CustomerDetailController extends Controller
      */
     public function products($id)
     {
-        $customer = User::with('product_service_owners')->findOrFail($id);
-        return Inertia::render('Modules/Customer/detail/products', compact('customer'));
+        $customer = User::with('product_service_owners.product')->whereHas('roles', function ($query) {
+                $query->where('name', 'Customer');
+            })->findOrFail($id);
+        // return $customer;
+        $products = ProductService::where("status", 1)->get();
+        return Inertia::render('Modules/Customer/detail/products', compact('customer','products'));
     }
     public function activity($id)
     {
@@ -46,5 +52,5 @@ class CustomerDetailController extends Controller
         $customer = User::findOrFail($id);
         return Inertia::render('Modules/Customer/detail/service', compact('customer'));
     }
-    
+
 }

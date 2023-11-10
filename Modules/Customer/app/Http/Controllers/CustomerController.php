@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Tree\app\Models\ProductService;
 use Spatie\Permission\Models\Role;
+use Modules\Tree\app\Models\Tree;
 
 class CustomerController extends Controller
 {
@@ -41,8 +42,9 @@ class CustomerController extends Controller
         })->paginate(20)->appends($request->search);
 
         $product_services = ProductService::where("status", 1)->get();
+        $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();
 
-        return Inertia::render('Modules/Customer/index', compact('filters', 'customers', 'product_services'));
+        return Inertia::render('Modules/Customer/index', compact('filters', 'customers', 'product_services','trees'));
     }
 
     /**

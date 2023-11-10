@@ -18,8 +18,8 @@ Route::group([], function () {
     Route::resource('customers', CustomerController::class)->names('customer');
     Route::prefix('customer/{id}')->as('customer.detail.')->group(function () {
         Route::get('info', [CustomerDetailController::class, 'info'])->name('info');
-        Route::post('products', [CustomerDetailController::class, 'products'])->name('products');
-        Route::put('/activity', [CustomerDetailController::class, 'activity'])->name('activity');
-        Route::delete('/service', [CustomerDetailController::class, 'service'])->name('service');
+        Route::get('products', [CustomerDetailController::class, 'products'])->name('products');
+        Route::get('/activity', [CustomerDetailController::class, 'activity'])->name('activity');
+        Route::get('/service', [CustomerDetailController::class, 'service'])->name('service');
     });
 });

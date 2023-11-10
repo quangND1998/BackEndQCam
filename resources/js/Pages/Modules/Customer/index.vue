@@ -40,6 +40,7 @@ const props = defineProps({
     filters: Object,
     customers: Object,
     product_services: Object,
+    trees : Object
 });
 const swal = inject("$swal");
 const form = useForm({
@@ -53,6 +54,7 @@ const form = useForm({
     password: null,
     product_service: null,
     time_approve: null,
+    tree: null,
 });
 const isModalActive = ref(false);
 const isActive = ref(false);
@@ -174,7 +176,7 @@ const Delete = (id) => {
 <template>
     <LayoutAuthenticated>
 
-        <Head title="User" />
+        <Head title="Customer" />
         <SectionMain>
             <SectionTitleLineWithButton :icon="mdiAccountLockOpen" title="User" main></SectionTitleLineWithButton>
 
@@ -191,7 +193,7 @@ const Delete = (id) => {
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                         small @click="
                             isModalActive = true;
-                        
+
                         " label="Create User" />
                 </div>
             </div>
@@ -269,11 +271,24 @@ const Delete = (id) => {
                         <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="phone" value="Phone" />
                             {{ form.phone_number }}
-                            <MazPhoneNumberInput v-model="form.phone_number" show-code-on-list
+                            <!-- <MazPhoneNumberInput v-model="form.phone_number" show-code-on-list
                                 :preferred-countries="['FR', 'BE', 'DE', 'US', 'GB']" :ignored-countries="['AC']"
-                                @update="results = $event" />
+                                @update="results = $event" /> -->
+                            <TextInput id="password" v-model="form.phone_number" type="password" class="mt-1 block w-full"
+                                :class="form.errors.phone_number ? 'border-red-500' : ''" autocomplete="phone_number" />
 
                             <InputError class="mt-2" :message="form.errors.phone_number" />
+                        </div>
+                        <div class="w-full md:w-1/2 px-3">
+                            <InputLabel for="owner" value="Cây" />
+                            <Multiselect v-model="form.tree" mode="tags" :appendNewTag="false" :createTag="false"
+                                :searchable="true" label="name" valueProp="id" trackBy="name" :options="trees"
+                                class="form-control" :classes="{
+                                    tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-2xl leading-snug outline-none',
+                                    tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2 rtl:pl-0 rtl:pr-2',
+                                    tag: 'bg-red-600 text-white text-xs font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1',
+                                }" />
                         </div>
                     </div>
                 </div>
