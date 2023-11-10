@@ -30,6 +30,16 @@ Route::middleware(['auth'])->group(
 
                 Route::get('{voucher}/products', [VoucherController::class, 'voucher_project'])->name('products');
             });
+
+            Route::prefix('orders')->as('orders.')->group(function () {
+                Route::get('all', [OrderController::class, 'index'])->name('index');
+                Route::get('/pending', [OrderController::class, 'pending'])->name('pending');
+                Route::get('/packing', [OrderController::class, 'packing'])->name('packing');
+                Route::get('/shipping', [OrderController::class, 'shipping'])->name('shipping');
+                Route::get('/completed', [OrderController::class, 'completed'])->name('completed');
+                Route::get('/refund', [OrderController::class, 'refund'])->name('refund');
+                Route::get('/decline', [OrderController::class, 'decline'])->name('decline');
+            });
         });
     }
 );

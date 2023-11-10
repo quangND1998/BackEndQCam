@@ -24,12 +24,12 @@ class ProductRetailController extends Controller
     public function index(Request $request)
     {
 
-        $product_retails = ProductRetail::with('images', 'voucher_owner')->where(function ($query) use ($request) {
+        $product_retails = ProductRetail::with('images')->where(function ($query) use ($request) {
             $query->where('name', 'LIKE', '%' . $request->search . '%');
             $query->orwhere('code', 'LIKE', '%' . $request->search . '%');
             // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
         })->paginate(15);
-        return $product_retails;
+
         return Inertia::render('Modules/Tree/ProductRetail/Index', compact('product_retails'));
     }
 

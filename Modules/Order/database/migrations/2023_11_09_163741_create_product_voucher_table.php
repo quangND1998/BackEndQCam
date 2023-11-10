@@ -15,7 +15,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('product_retail_id')->nullable()->index();
             $table->unsignedBigInteger('voucher_id')->nullable()->index();
-            $table->unique(['product_retail_id', 'voucher_id' ] );
+            $table->foreign('product_retail_id')->references('id')->on('product_retails')->onDelete('cascade');
+            $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('cascade');
+            $table->unique(['product_retail_id', 'voucher_id']);
+
+            $table->decimal('price', 20, 6)->nullable();
+            $table->integer('discount')->default(0)->nullable();
+            $table->decimal('price_sale', 20, 6)->nullable();
+            $table->integer('stock')->default(0)->nullable();
             $table->timestamps();
         });
     }

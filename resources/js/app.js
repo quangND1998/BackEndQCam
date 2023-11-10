@@ -28,7 +28,8 @@ import "primevue/resources/themes/lara-light-indigo/theme.css";
 import 'maz-ui/css/main.css'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
-
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 
 
@@ -44,8 +45,7 @@ createInertiaApp({
             .use(ZiggyVue)
             .use(PrimeVue)
             .component('QuillEditor', QuillEditor)
-            // .use(CKEditor)
-            // .use(VueLazyload)
+            .component('VueDatePicker', VueDatePicker)
             .use(VueSweetalert2)
             .directive('tooltip', Tooltip)
             .mixin(helper, base)

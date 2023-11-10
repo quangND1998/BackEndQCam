@@ -250,8 +250,8 @@ initFlowbite();
               </div>
             </div>
 
-            <div class=" cursor-pointer" id="accordion-open" data-accordion="open">
-              <div id="accordion-open-heading-1" data-accordion-target="#accordion-open-body-1" aria-expanded="true" aria-controls="accordion-open-body-1"
+            <div class=" cursor-pointer" >
+              <div data-toggle="collapse" data-target="#demo1"
                 class="accordion-toggle grid grid-cols-5 gap-4 text-sm px-3 py-3 text-gray-400">
                 <div>
                   <a class="flex items-center">
@@ -272,7 +272,7 @@ initFlowbite();
                   <p>Chờ</p>
                 </div>
               </div>
-              <div class="grid grid-cols-1 gap-4 bg-gray-300 p-3 border rounded-lg hidden " id="accordion-open-body-1"  aria-labelledby="accordion-open-heading-1">
+              <div class="grid grid-cols-1 gap-4 bg-gray-300 p-3 border rounded-lg accordian-body collapse " id="demo1" >
                 <div class="my-3 rounded-lg border">
                   <div class="title_information p-2">
                     <h3>Thông tin khách hàng</h3>
@@ -319,7 +319,7 @@ initFlowbite();
                   <tbody>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        <img src="/img/xop.png" alt="" />
+                        
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -335,7 +335,7 @@ initFlowbite();
                     <tr d
                       class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        <img src="/img/xop.png" alt="" />
+                        
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -350,7 +350,7 @@ initFlowbite();
                     </tr>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        <img src="/img/xop.png" alt="" />
+                        
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -365,7 +365,7 @@ initFlowbite();
                     </tr>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        <img src="/img/xop.png" alt="" />
+                        
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -440,7 +440,7 @@ initFlowbite();
               </div>
 
               <!--  -->
-              <div  id="accordion-open-heading-2" data-accordion-target="#accordion-open-body-2" aria-expanded="false" aria-controls="accordion-open-body-2"
+              <!-- <div  id="accordion-open-heading-2" data-accordion-target="#accordion-open-body-2" aria-expanded="false" aria-controls="accordion-open-body-2"
                 class="accordion-toggle grid grid-cols-5 gap-4 text-sm px-3 py-3 text-gray-400">
                 <div>
                     <a class="flex items-center">
@@ -508,7 +508,7 @@ initFlowbite();
                   <tbody>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        <img src="/img/xop.png" alt="" />
+                        
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -524,7 +524,7 @@ initFlowbite();
                     <tr d
                       class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        <img src="/img/xop.png" alt="" />
+                        
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -539,7 +539,7 @@ initFlowbite();
                     </tr>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        <img src="/img/xop.png" alt="" />
+                        
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -554,7 +554,7 @@ initFlowbite();
                     </tr>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        <img src="/img/xop.png" alt="" />
+                        
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -626,7 +626,8 @@ initFlowbite();
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> -->
+              
             </div>
           </div>
         </div>
@@ -641,4 +642,11 @@ initFlowbite();
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<!-- <style src="@vueform/multiselect/themes/default.css">
+</style> -->
+<style scoped>
+
+.collapse {
+  visibility: inherit;
+}
+</style>

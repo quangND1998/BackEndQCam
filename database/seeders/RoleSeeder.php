@@ -28,7 +28,9 @@ class RoleSeeder extends Seeder
             'view-product',
             'create-product',
             'update-product',
-            'delete-product'
+            'delete-product',
+            // order permission
+            'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'
         ]);
         $role->givePermissionTo(['super-admin', 'update-user', 'delete-user', 'create-user', 'view-user', 'view-land',  'create-land',  'update-land', 'delete-land']);
 

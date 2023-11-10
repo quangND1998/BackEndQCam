@@ -14,7 +14,7 @@ use Modules\Tree\app\Models\ProductRetail;
 
 class OrderRepository implements OrderContract
 {
-  
+
 
     public function storeOrderDetails($params, $user)
     {
@@ -29,7 +29,7 @@ class OrderRepository implements OrderContract
             'first_name'        =>  $params['first_name'],
             'last_name'         =>  $params['last_name'],
             'address'           =>  $params['address'],
-           
+
             'notes'             =>  $params['notes']
         ]);
 
@@ -66,24 +66,51 @@ class OrderRepository implements OrderContract
     }
 
 
-    public function getOrder($filter)
+    public function getOrder($request, $status)
     {
         return Order::whereHas(
             'customer',
-            function ($q) use ($filter) {
-                $q->where('name', 'LIKE', '%' . $filter['customer'] . '%');
-
+            function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->customer . '%');
             }
         )->whereHas(
             'orderItems.product',
-            function ($q) use ($filter) {
-                $q->where('name', 'LIKE', '%' . $filter['name'] . '%');
+            function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->name . '%');
             }
-        )->with(['customer', 'orderItems.product'])->filter($filter)->where(function ($query) use ($filter) {
-            $query->where('order_number', 'LIKE', '%' . $filter['term'] . '%');
-        })->paginate(10);
+        )->with(['customer', 'orderItems.product'])->where('status', $status)->fillter($request->only('search', 'from', 'to'))->paginate(10);
     }
 
 
- 
+    public function groupByOrderStatus()
+    {
+
+        $array_status = ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline'];
+        $statusGroup = Order::whereHas('orderItems')
+            ->select('status', DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->get();
+        foreach ($array_status as $status) {
+
+            $filtered = $statusGroup->where('status', $status)->first();
+
+            if ($filtered == null) {
+
+                $newCollections[] = array(
+                    'status' => $status,
+                    'total' => 0,
+
+
+                );
+            } else {
+
+                $newCollections[] = array(
+                    'status' => $status,
+                    'total' => $filtered->total,
+
+                );
+            }
+        }
+        return $newCollections;
+    }
 }
