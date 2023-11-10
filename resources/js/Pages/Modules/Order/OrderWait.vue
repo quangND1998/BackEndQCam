@@ -2,7 +2,7 @@
 import { computed, ref, inject, reactive } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
@@ -41,6 +41,14 @@ const props = defineProps({
     to: String,
     statusGroup: Array
 });
+const filter = reactive({
+    customer: null,
+    name: null,
+    fromDate: null,
+    toDate: null,
+    search: null
+
+})
 const customer = ref()
 const searchVal = ref("");
 const swal = inject("$swal");
@@ -68,15 +76,33 @@ const state = reactive({
 initFlowbite();
 
 const searchCustomer = () => {
-    this.$inertia.get(
-        this.route(`orders.${props.status}`),
-        { customer: this.customer },
+    router.get(route(`admin.orders.${props.status}`),
+        { customer: filter.customer },
         {
             preserveState: true,
             preserveScroll: true
         }
     );
-},
+}
+
+const search = () => {
+    router.get(route(`admin.orders.${props.status}`),
+        { search: filter.search },
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
+const changeDate = () => {
+    let query = {
+        from: filter.fromDate,
+        to: filter.toDate
+    };
+    router.get(route(`admin.orders.${props.status}`), query, {
+        preserveScroll: true
+    });
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -106,7 +132,8 @@ const searchCustomer = () => {
                                             </svg>
                                         </div>
                                         <input type="search" id="default-search" name="search" data-toggle="hideseek"
-                                            laceholder="Search Menus" data-list=".menu-category"
+                                            laceholder="Search Menus" data-list=".menu-category" v-model="filter.search"
+                                            @keyup="search"
                                             class="block w-full p-2 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="Tìm đơn hàng bằng mã đơn hàng" required />
                                     </div>
@@ -114,64 +141,25 @@ const searchCustomer = () => {
                             </div>
                         </div>
                         <div class="min-[320px]:block sm:flex lg:flex my-3">
-                            <div class="min-[320px]:w-full w-1/5 mr-3 text-gray-500">
+                            <div class="min-[320px]:w-full lg:w-1/5 mr-3 text-gray-500">
                                 <label for>Ngày tạo đơn</label>
                             </div>
-                            <div class="min-[320px]:w-full w-4/5">
-                                <div date-rangepicker class="flex items-center">
+                            <div class="min-[320px]:w-full lg: w-4/5 flex flex-wrap">
+                                <div class="flex ">
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500 text-gray-400"
-                                                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                        <input name="start" type="date"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Ngày bắt đầu" />
+
+                                        <VueDatePicker v-model="filter.fromDate" time-picker-inline />
                                     </div>
                                     <span class="mx-4 text-gray-500">đến</span>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500 text-gray-400"
-                                                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                        <input name="end" type="date"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Ngày kết thúc" />
+                                        <VueDatePicker v-model="filter.toDate" time-picker-inline />
                                     </div>
                                 </div>
+                                <button @click.prevent="changeDate" name="search"
+                                    class="block p-2 ml-3 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">Search</button>
                             </div>
                         </div>
-                        <div class="min-[320px]:block sm:flex sm:my-2">
-                            <div class="min-[320px]:w-full sm:w-3/12 mr-3 text-gray-500">
-                                <label for>SKU</label>
-                            </div>
-                            <div class="min-[320px]:w-full form_search sm:w-9/12">
-                                <form v-on:submit.prevent>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg aria-hidden="true" class="w-5 h-5 text-sm text-gray-500 text-gray-400"
-                                                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                            </svg>
-                                        </div>
-                                        <input type="search" id="default-search" name="search" data-toggle="hideseek"
-                                            laceholder="Search Menus" data-list=".menu-category"
-                                            class="block w-full p-2 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Tìm sản phẩm bằng SKU" required />
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+
                     </div>
                     <div>
                         <div class="min-[320px]:block sm:flex sm:my-2">
@@ -190,7 +178,7 @@ const searchCustomer = () => {
                                             </svg>
                                         </div>
                                         <input type="search" id="default-search" name="search" data-toggle="hideseek"
-                                            v-model="customer" @keyup="searchCustomer" laceholder="Search Menus"
+                                            v-model="filter.customer" @keyup="searchCustomer" laceholder="Search Menus"
                                             data-list=".menu-category"
                                             class="block w-full p-2 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="Tìmkhách hàng bằng tên hoặc sđt" required />

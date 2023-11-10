@@ -19,13 +19,13 @@ const totalOrder = (status) => {
             class="min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
 
 
-            <Link v-if="hasAnyPermission(['order-pending'])" :href="route('admin.orders.pending')"
+            <Link v-if="hasAnyPermission(['order-pending'])" :href="route('admin.orders.pending')" @click.prevent
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
                 :class="{ 'bg-white  text-blue-500': $page.url === '/admin/orders/pending' }">
             Đơn chờ
             <span class="text-gray-400 ml-1">({{ totalOrder('pending') }})</span>
             </Link>
-            <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.orders.packing')"
+            <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.orders.packing')" @click.prevent
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
                 :class="{ 'bg-white  text-blue-500': $page.url === '/admin/orders/packing' }">
             Đóng gói
