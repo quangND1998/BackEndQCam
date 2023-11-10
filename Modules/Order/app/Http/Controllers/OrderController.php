@@ -4,10 +4,14 @@ namespace Modules\Order\app\Http\Controllers;
 
 use App\Contracts\OrderContract;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Modules\Order\app\Models\Order;
+use Modules\Tree\app\Models\ProductRetail;
 
 class OrderController extends Controller
 {
@@ -32,11 +36,104 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request )
+    public function index(Request $request)
     {
-        $data = $request->only('search', 'from', 'to', 'status', 'name', 'customer');
-        $orders =  $this->orderRepository->getOrder($data);
-        return $orders;
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'pending';
+        $orders =  $this->orderRepository->getOrder($request, $status);
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
+
+
+    public function pending(Request $request)
+    {
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'pending';
+        $orders =  $this->orderRepository->getOrder($request, $status);
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
+
+
+
+    public function packing(Request $request)
+    {
+
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'packing';
+        $orders = $this->orderRepository->getOrder($request, $status);
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+
+
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
+
+
+    public function shipping(Request $request)
+    {
+
+
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'shipping';
+        $orders = $this->orderRepository->getOrder($request, $status);
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+
+
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
+
+    public function completed(Request $request)
+    {
+
+
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'completed';
+        $orders = $this->orderRepository->getOrder($request, $status);
+
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+
+
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
+
+    public function refund(Request $request)
+    {
+
+
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'refund';
+
+
+        $orders = $this->orderRepository->getOrder($request, $status);
+
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+
+
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
+
+
+
+
+    public function decline(Request $request)
+    {
+
+
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'decline';
+        $orders = $this->orderRepository->getOrder($request, $status);
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+
+
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
 
     /**
@@ -52,25 +149,81 @@ class OrderController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $user= Auth::user();
-        $order=  $this->orderRepository->storeOrderDetails($request->all(), $user);
+        $user = Auth::user();
+        $order =  $this->orderRepository->storeOrderDetails($request->all(), $user);
         return $order->load('orderItems.product');
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
+    public function updateOrder(UpdateOrderRequest $request)
     {
-        //
+        $order = Order::find($request->order_id);
+        if ($order->payment_status == 1) {
+            return Response::json('Đơn hàng đã thanh toán không được sửa', 404);
+        }
+        if ($order) {
+            $fee = $order->grand_total - ($order->grand_total * $request->discount) / 100 + $request->shipping_fee;
+            $order->shipping_fee = $request->shipping_fee;
+            $order->discount = $request->discount;
+            $order->last_price =  $fee;
+            $order->save();
+            return response()->json($order->load('customer', 'orderItems.product'), 200);
+        } else {
+            return response()->json('Not found', 404);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+    public function orderCancel(Request $request, Order $order)
     {
-        //
+        $request->validate([
+            'reason' => 'required',
+
+        ], [
+            'reason.required' => 'Điền lý do hủy đơn'
+        ]);
+        $order->update([
+            'status' => 'decline',
+            'reason' => $request->reason
+        ]);
+
+        return back()->with('success', 'Hủy đơn thành công');
+    }
+
+    public function orderRefund(Request $request, Order $order)
+    {
+        $request->validate([
+            'reason' => 'required',
+            'grand_total' => 'required',
+            'shipping_fee' => 'required|numeric|gte:0|lt:grand_total'
+        ], [
+            'reason.required' => 'Điền lý do hủy đơn'
+        ]);
+
+        $order->update([
+            'status' => 'refund',
+            'shipping_fee' => $request->shipping_fee ? $request->shipping_fee : 0,
+            'reason' => $request->reason,
+            'last_price' => $order->grand_total - ($order->grand_total * $order->discount) / 100 + $request->shipping_fee
+        ]);
+
+        return back()->with('success', 'Hủy đơn thành công');
+    }
+
+    public function orderChangeStatus(Request $request, Order $order)
+    {
+
+        $order->update([
+            'status' => $request->status,
+        ]);
+        if ($order->status == 'completed') {
+            $orderItems = $order->orderItems()->get();
+            foreach ($orderItems as $item) {
+                $product = ProductRetail::find($item->product_id);
+                $product->update([
+                    'quantity_sold_auto' => $product->quantity_sold_auto + $item->quantity
+                ]);
+            }
+        }
+        return back()->with('success', `Đơn hàng đã được chuyển sang trạng thái:$request->status`);
     }
 }

@@ -17,7 +17,7 @@ class Tree extends Model implements HasMedia
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id",    "name",    "qr_code",    "land_id", "address", "price",    "state", "status",    "description", "user_manual",    "terms_policy",    "created_at",    "updated_at"];
+    protected $fillable = ["id",    "name",    "qr_code",    "land_id", "address", "price",    "state", "status",    "description", "user_manual",    "terms_policy", "product_service_owner_id",    "created_at",    "updated_at"];
 
 
 
