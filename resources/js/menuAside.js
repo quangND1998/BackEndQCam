@@ -23,7 +23,8 @@ import {
     mdiBellOutline,
     mdiCogOutline,
     mdiSale,
-    mdiFileDocumentEditOutline
+    mdiFileDocumentEditOutline,
+    mdiAccountKey
 } from '@mdi/js'
 
 export default [{
@@ -36,9 +37,17 @@ export default [{
     permissions: null,
     route_list: null
 },
+
+// {
+//     route: 'profile.show',
+//     label: 'Profile',
+//     icon: mdiAccountCogOutline,
+//     permissions: null,
+//     route_list: null
+// },
 {
-    label: 'Quản lý phân quyền & User',
-    icon: mdiFileTreeOutline,
+    label: 'Phân quyền',
+    icon: mdiAccountKey ,
     permissions: ['view-user'],
     route_list: ['permissions.index', 'roles.index', 'users.index'],
     menu: [{
@@ -63,92 +72,30 @@ export default [{
         route_list: null
     }
     ]
-}, {
-    label: 'Quản lý Cây & Gói sản phẩm',
-    icon: mdiFileTreeOutline,
-    permissions: ['view-user'],
-    route_list: ['admin.land.index', 'admin.product-retail.index'],
-    menu: [{
-        route: 'admin.land.index',
-        label: 'Lô',
-        icon: mdiMinus,
-        permissions: ['super-admin'],
-        route_list: null
-    },
-    {
-        route: 'admin.product-retail.index',
-        label: 'Sản phẩm bán lẻ',
-        icon: mdiMinus,
-        permissions: ['super-admin'],
-        route_list: null
-    },
-    {
-        route: 'admin.product-service.index',
-        label: 'Sản phẩm dịch vụ',
-        icon: mdiMinus,
-        permissions: ['super-admin'],
-        route_list: null
-    },
-
-
-    ]
-},
-
-{
-    route: 'news.index',
-    label: "Tin tức",
-    icon: mdiFileTreeOutline,
-    permissions: ['super-admin'],
 },
 {
-    route: 'admin.voucher.index',
-    label: "Mã giảm giá",
-    icon: mdiSale,
-    permissions: ['super-admin'],
-},
-{
-    label: 'Quản lý người dùng',
-    icon: mdiFileTreeOutline,
-    permissions: ['view-user'],
-    route_list: ['customer.index'],
-    menu: [{
-        route: 'customer.index',
-        label: 'Customer',
-        icon: mdiMinus,
-        permissions: ['super-admin'],
-        route_list: null
-    },
-    {
-        route: 'admin.land.index',
-        label: 'Shipper',
-        icon: mdiMinus,
-        permissions: ['super-admin'],
-        route_list: null
-    }
-    ]
-}, {
     label: 'Hoạt động',
     icon: mdiFileTreeOutline,
-    permissions: ['order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+    permissions: ['super-admin','order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
     route_list: ['admin.orders.index'],
     menu: [{
         route: 'admin.orders.index',
         label: 'Đơn hàng',
-        icon: mdiMinus,
+
         permissions: ['super-admin'],
         route_list: null
     },
     {
         route: 'admin.orders.index',
         label: 'Khiếu nại',
-        icon: mdiMinus,
+
         permissions: ['super-admin'],
         route_list: null
     },
     {
         route: 'admin.orders.index',
         label: 'Đánh giá',
-        icon: mdiMinus,
+
         permissions: ['super-admin'],
         route_list: null
     }
@@ -156,34 +103,32 @@ export default [{
 },
 {
     label: 'Sản phẩm',
-    icon: mdiFileTreeOutline,
+    icon: mdiSale,
     permissions: ['view-user'],
     route_list: ['admin.land.index', 'admin.product-retail.index', 'admin.product-service.index'],
     menu: [{
         route: 'admin.land.index',
         label: 'Cây',
-        icon: mdiMinus,
+
         permissions: ['super-admin'],
         route_list: null
     },
     {
         route: 'admin.product-retail.index',
         label: 'Sản phẩm bán lẻ',
-        icon: mdiMinus,
+
         permissions: ['super-admin'],
         route_list: null
     },
     {
         route: 'admin.product-service.index',
         label: 'Sản phẩm dịch vụ',
-        icon: mdiMinus,
         permissions: ['super-admin'],
         route_list: null
     },
     {
         route: 'admin.voucher.index',
         label: "Mã giảm giá",
-        icon: mdiSale,
         permissions: ['super-admin'],
     },
 
@@ -198,14 +143,12 @@ export default [{
     menu: [{
         route: 'customer.index',
         label: 'Customer',
-        icon: mdiMinus,
         permissions: ['super-admin'],
         route_list: null
     },
     {
         route: 'admin.land.index',
         label: 'Shipper',
-        icon: mdiMinus,
         permissions: ['super-admin'],
         route_list: null
     }
@@ -221,29 +164,25 @@ export default [{
     label: 'Cài đặt',
     icon: mdiCogOutline,
     permissions: ['view-user'],
-    route_list: ['customer.index'],
+    route_list: ['news.index'],
     menu: [{
-        route: 'customer.index',
+        route: '',
         label: 'Thông báo',
-        icon: mdiMinus,
         permissions: ['super-admin'],
         route_list: null
     },
     {
-        route: 'admin.land.index',
+        route: 'news.index',
         label: 'Tin tức',
-        icon: mdiMinus,
         permissions: ['super-admin'],
         route_list: null
     },
     {
-        route: 'admin.land.index',
+        route: '',
         label: 'Thông tin chung',
-        icon: mdiMinus,
         permissions: ['super-admin'],
         route_list: null
-    },
-
+    }
     ]
 },
 ]

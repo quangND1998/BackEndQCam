@@ -20,7 +20,7 @@ return new class extends Migration
 
             // The human readable voucher code name
             $table->string('name')->nullable();
-            // The description of the voucher - Not necessary 
+            // The description of the voucher - Not necessary
             $table->text('description')->nullable();
 
             // The number of uses currently
@@ -37,7 +37,6 @@ return new class extends Migration
 
             // The amount to discount by (in pennies) in this example.
             $table->integer('discount_amount');
-
 
             $table->bigInteger('min_spend')->nullable();
             // Whether or not the voucher is a percentage or a fixed price. 

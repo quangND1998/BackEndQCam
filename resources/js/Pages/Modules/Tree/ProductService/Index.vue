@@ -47,6 +47,7 @@ const form = useForm({
     life_time: null,
     description: null,
     unit: null,
+    images:null,
 });
 
 
@@ -189,10 +190,6 @@ const Delete = (id) => {
             <SectionTitleLineWithButton title="Product Service" main></SectionTitleLineWithButton>
 
             <!-- Modal -->
-            <CardBoxModal v-model="isModalDangerActive" title="Please confirm" button="danger" has-cancel>
-                <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-                <p>This is sample modal</p>
-            </CardBoxModal>
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
@@ -206,12 +203,12 @@ const Delete = (id) => {
                         @click="
                             isModalActive = true;
                         form.reset();
-                        " label="Tạo mới gọi dịch vụ" />
+                        " label="Tạo gói sản phẩm" />
                 </div>
             </div>
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
-                classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-5/12 z-50 overflow-auto"
-                :title="editMode ? 'Cập nhật gói dịch vụ' : 'Tạo mới gọi dịch vụ'">
+                classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-3/5 xl:w-1/2 z-50 overflow-auto"
+                :title="editMode ? 'Chỉnh sửa' : 'Tạo mới'">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <div>
@@ -220,7 +217,7 @@ const Delete = (id) => {
                             <InputError class="mt-2" :message="form.errors.name" />
                         </div>
                         <div class="my-2">
-                            <InputLabel for="name" value="Diện tích" />
+                            <InputLabel for="name" value="Diện tích vườn rau" />
                             <TextInput id="name" v-model="form.acreage" type="text" class="mt-1 block w-full" required />
                             <InputError class="mt-2" :message="form.errors.acreage" />
                         </div>
@@ -233,18 +230,40 @@ const Delete = (id) => {
                         </div>
 
                         <div class="my-2">
-                            <InputLabel for="name" value="Lượt tham quan" />
+                            <InputLabel for="name" value="Chuyến tham quan miễn phí" />
                             <input id="name" v-model="form.free_visit" type="number"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full"
                                 required />
                             <InputError class="mt-2" :message="form.errors.free_visit" />
                         </div>
                         <div class="my-2">
-                            <InputLabel for="name" value="Tổng sản lượng" />
+                            <InputLabel for="name" value="Cam thu hoạch" />
                             <input id="name" v-model="form.amount_products_received" type="number"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full"
                                 required autofocus autocomplete="name" />
                             <InputError class="mt-2" :message="form.errors.amount_products_received" />
+                        </div>
+                        <InputLabel for="image" value="Ảnh mô tả" />
+                        <div class=" flex items-center justify-center w-full">
+                            <label for="dropzone-file"
+                                class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                <div class="h-[160px] flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                    </svg>
+                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click
+                                            to upload</span> or drag and drop</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                    </p>
+                                </div>
+                                <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.file[0]" type="file"
+                                    class="hidden" accept="image/*" />
+                                <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
+                                    class="hidden" accept="image/*" />
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.images" />
                         </div>
 
 
@@ -262,7 +281,7 @@ const Delete = (id) => {
                             <InputError class="mt-2" :message="form.errors.price" />
                         </div>
                         <div class="my-2">
-                            <InputLabel for="number_deliveries" value="Số lượng giao hàng" />
+                            <InputLabel for="number_deliveries" value="Số lần nhận nông sản" />
                             <input id="number_deliveries" v-model="form.number_deliveries" type="number"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full"
                                 required autofocus />
@@ -289,16 +308,7 @@ const Delete = (id) => {
                             </label>
                             <InputError class="mt-2" :message="form.errors.state" />
                         </div>
-                        <!-- <div class="mt-2">
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                for="multiple_files">Upload Images</label>
-                            <input @input="form.images = $event.target.files" multiple accept="image/*"
-                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                id="multiple_files" type="file">
-                        </div> -->
-                    </div>
-                    <div>
-                        <div class="">
+                        <div class="h-[120px] rounded-lg">
                             <InputLabel for="name" value="Mô tả" />
                             <label class="input w-full" for="recipient-name">
 
@@ -307,6 +317,10 @@ const Delete = (id) => {
                             </label>
                             <InputError class="mt-2" :message="form.errors.description" />
                         </div>
+
+                    </div>
+                    <div>
+
                     </div>
                 </div>
 
@@ -391,7 +405,7 @@ const Delete = (id) => {
                                     {{ product_service.free_visit }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ product_service.amount_products_received }}
+                                    {{  product_service.amount_products_received  }}
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ formatPrice(product_service.price) }}
@@ -406,8 +420,8 @@ const Delete = (id) => {
                                 <td class="px-6 py-4">
                                     {{ product_service.life_time }}
                                 </td>
-                                <td class="px-6 py-4" v-html="product_service.description">
-
+                                <td class="px-6 py-4" >
+                                    <p class="string_long" v-html="product_service.description"></p>
                                 </td>
                                 <td class="px-6 py-4">
                                     <label class="relative inline-flex items-center cursor-pointer">
@@ -463,3 +477,19 @@ const Delete = (id) => {
     </LayoutAuthenticated>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
+<style scope>
+.ql-toolbar{
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+.ql-container{
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+.string_long {
+    width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+</style>

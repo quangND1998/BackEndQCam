@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transportations', function (Blueprint $table) {
+        Schema::create('question_answers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id')->index();
-            
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-            $table->string('state')->nullable();
-            $table->text('address')->nullable();
             $table->string('type')->nullable();
+            $table->text('question')->nullable();
+            $table->longText('answer')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transportations');
+        Schema::dropIfExists('question_answers');
     }
 };

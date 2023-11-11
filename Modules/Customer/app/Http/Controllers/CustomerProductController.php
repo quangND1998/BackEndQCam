@@ -115,11 +115,12 @@ class CustomerProductController extends Controller
                 $product_service_owner->time_approve = $request->time_approve;
                 $product_service_owner->time_end = Carbon::parse($request->time_approve)->addDays($time_life);
                 $product_service_owner->product_service_id = $product_service->id;
-                
-                $product_service_owner->trees()->delete();
-                $trees = Tree::find($request->tree);
-                $product_service_owner->trees()->saveMany($trees);
             }
+
+            $product_service_owner->trees()->delete();
+            $trees = Tree::find($request->tree);
+            $product_service_owner->trees()->saveMany($trees);
+
             $product_service_owner->save();
             return back()->with('success', 'Create customer successfully');
     }

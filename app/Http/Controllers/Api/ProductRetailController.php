@@ -13,9 +13,7 @@ class ProductRetailController extends BaseController
 {
     public function getProducts()
     {
-        $products = ProductRetail::with(['images', 'vouchers' => function ($q) {
-            $q->where('starts_at', '<', Carbon::now())->where('expires_at', '>=', Carbon::now())->where('is_fixed', true);
-        }])->paginate(15);
+        $products = ProductRetail::with('images')->where('status', 1)->paginate(15);
 
         return new ProductRetailCollection($products);
     }

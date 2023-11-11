@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Home\ScheduleVisitController;
 use App\Http\Controllers\TestController;
 
 /*
@@ -66,5 +67,13 @@ Route::middleware(['auth'])->group(
         });
 
         Route::get('test', [TestController::class, 'index']);
+
+        Route::prefix('visit')->as('visit.')->group(function () {
+            Route::get('pending', [ScheduleVisitController::class, 'getPending'])->name('pending');
+            Route::get('confirm', [ScheduleVisitController::class, 'getPending'])->name('confirm');
+            Route::get('cancel', [ScheduleVisitController::class, 'getPending'])->name('cancel');
+            Route::get('completed', [ScheduleVisitController::class, 'getPending'])->name('completed');
+        });
     }
+
 );
