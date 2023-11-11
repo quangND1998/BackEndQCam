@@ -105,7 +105,7 @@ export default [{
     label: 'Sản phẩm',
     icon: mdiSale,
     permissions: ['view-user'],
-    route_list: ['admin.land.index', 'admin.product-retail.index', 'admin.product-service.index'],
+    route_list: ['admin.land.index', 'admin.product-retail.index', 'admin.product-service.index','admin.land.tree.index','admin.voucher.index'],
     menu: [{
         route: 'admin.land.index',
         label: 'Cây',
