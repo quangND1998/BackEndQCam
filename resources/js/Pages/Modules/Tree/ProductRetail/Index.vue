@@ -77,7 +77,7 @@ const save = () => {
                 editMode.value = true;
             },
             onSuccess: () => {
-                form.reset();
+                form.reset('id', 'name', 'price', 'description', 'images');
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -89,7 +89,7 @@ const save = () => {
                 editMode.value = false;
             },
             onSuccess: () => {
-                form.reset();
+                form.reset('id', 'name', 'price', 'description', 'images');
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -162,7 +162,8 @@ const searchFilter = () => {
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
                         @click="
                             isModalActive = true;
-                        form.reset();
+                            editMode= false;
+                            form.reset('id', 'name', 'price', 'description', 'images');
                         " label="Create Product Retail" />
                 </div>
             </div>

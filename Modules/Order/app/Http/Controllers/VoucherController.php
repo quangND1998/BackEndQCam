@@ -3,6 +3,8 @@
 namespace Modules\Order\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\SaleService\MoneyDiscount;
+use App\SaleService\PercentDiscount;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,9 +16,12 @@ use Modules\Tree\app\Models\ProductRetail;
 
 class VoucherController extends Controller
 {
-
-    public function __construct()
+    protected $percent, $money;
+    public function __construct(PercentDiscount $percent, MoneyDiscount $money)
     {
+
+        $this->percent = $percent;
+        $this->money = $money;
         $this->middleware('permission:view-land', ['only' => ['index', 'voucher_project']]);
         $this->middleware('permission:create-land', ['only' => ['store']]);
         $this->middleware('permission:update-land', ['only' => ['update']]);
@@ -77,8 +82,9 @@ class VoucherController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateVoucherReuquest $request, Voucher $voucher): RedirectResponse
+    public function update(UpdateVoucherReuquest $request, Voucher $voucher)
     {
+
         $voucher->update([
             'code' => $request->code,
             'name' =>  $request->name,
@@ -90,6 +96,17 @@ class VoucherController extends Controller
             'starts_at' => $request->starts_at,
             'expires_at' =>  $request->expires_at
         ]);
+
+
+        foreach ($voucher->product_vouchers as $item) {
+            $product = ProductRetail::find($item->product_retail_id);
+            if ($voucher->unit == "percent") {
+                $this->percent::updateItem($voucher, $item, $product, $voucher->discount_amount);
+            } else {
+                $this->money::updateItem($voucher, $item, $product, $voucher->discount_amount);
+            }
+        }
+
         return back()->with('success', 'Update successfully');
     }
 
@@ -106,7 +123,8 @@ class VoucherController extends Controller
 
     public function voucher_project(Request $request, Voucher $voucher)
     {
-        $voucher->load('products');
+        $voucher->load('product_vouchers.product');
+
         $products = ProductRetail::where(function ($query) use ($request) {
             $query->where('name', 'LIKE', '%' . $request->search . '%');
         })->paginate(15);

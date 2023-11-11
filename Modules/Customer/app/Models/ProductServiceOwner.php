@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Customer\Database\factories\ProductServiceOwnerFactory;
 use Modules\Tree\app\Models\ProductService;
 use Modules\Tree\app\Models\Tree;
-
+use Modules\Customer\app\Models\Contract;
 class ProductServiceOwner extends Model
 {
     use HasFactory;
@@ -45,5 +45,9 @@ class ProductServiceOwner extends Model
     public function trees()
     {
         return $this->hasMany(Tree::class,'product_service_owner_id');
+    }
+    public function contract()
+    {
+        return $this->hasOne(Contract::class,'product_service_owner_id');
     }
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('cascade');
             $table->unique(['product_retail_id', 'voucher_id']);
 
+            $table->string('unit')->nullable();
             $table->decimal('price', 20, 6)->nullable();
             $table->integer('discount')->default(0)->nullable();
             $table->decimal('price_sale', 20, 6)->nullable();

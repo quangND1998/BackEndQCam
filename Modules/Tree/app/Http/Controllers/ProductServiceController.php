@@ -51,6 +51,9 @@ class ProductServiceController extends Controller
     {
         $data = $request->only($this->allowStoreField);
         $product_service = ProductService::create($data);
+        foreach ($request->images as $image) {
+            $product_service->addMedia($image)->toMediaCollection('product_service_images');
+        }
         return back()->with('success', 'Create succesfully');
     }
 
@@ -77,7 +80,14 @@ class ProductServiceController extends Controller
     {
 
         $data = $request->only($this->allowStoreField);
+
         $product_service->update($data);
+        if( $request->file('images') != null){
+            $product_service->clearMediaCollection('product_service_images');
+            foreach ($request->images as $image) {
+                $product_service->addMedia($image)->toMediaCollection('product_service_images');
+            }
+        }
         return back()->with('success', 'Update succesfully');
     }
 
@@ -86,6 +96,7 @@ class ProductServiceController extends Controller
      */
     public function destroy(ProductService $product_service)
     {
+        $product_service->clearMediaCollection('product_service_images');
         $product_service->delete();
         return back()->with('success', 'Delete succesfully');
     }

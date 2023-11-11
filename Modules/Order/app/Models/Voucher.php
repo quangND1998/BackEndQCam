@@ -35,7 +35,7 @@ class Voucher extends Model
 
     public function products()
     {
-        return $this->belongsToMany(ProductRetail::class, 'product_voucher', 'voucher_id', 'product_retail_id');
+        return $this->belongsToMany(ProductRetail::class, 'product_voucher', 'voucher_id', 'product_retail_id')->withPivot(['price', 'discount',"unit", 'price_sale']);
     }
 
     public function product_vouchers()

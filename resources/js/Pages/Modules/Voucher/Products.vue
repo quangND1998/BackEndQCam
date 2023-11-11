@@ -2,7 +2,7 @@
 import { computed, ref, inject, reactive, toRef } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
@@ -83,16 +83,16 @@ const selectAll = computed({
 const selected_productOwnder = ref([])
 const selectAllOwner = computed({
     get() {
-        return props.voucher.products.data
-            ? selected.value.length == props.voucher.products.data
+        return props.voucher.product_vouchers.data
+            ? selected.value.length == props.voucher.product_vouchers.data
             : false;
     },
     set(value) {
         var array_selected = [];
 
         if (value) {
-            props.voucher.products.forEach(function (product) {
-                array_selected.push(product.id);
+            props.voucher.product_vouchers.forEach(function (product_voucher) {
+                array_selected.push(product_voucher.id);
             });
         }
         selected_productOwnder.value = array_selected;
@@ -116,6 +116,94 @@ const changepPage = (url) => {
 
     })
 }
+
+const AddProductVouchers = () => {
+    let query = {
+        ids: selected.value
+    };
+
+    swal
+        .fire({
+            title: "Bạn có muốn?",
+            text: "Thêm các sản phẩm trên vào trường trình mã giảm giá!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Save",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+               
+                router.post(route("admin.voucher.saveItems", props.voucher.id), query,
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã thêm các sản phẩm vào mã giảm giá.", "success");
+                    },
+                });
+            }
+        });
+}
+
+const RemoveMutipleProduct =()=>{
+    let query = {
+        ids: selected_productOwnder.value
+    };
+    swal
+        .fire({
+            title: "Bạn có muốn?",
+            text: "Xóa sản phẩm trên vào trường trình mã giảm giá!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+               
+                router.delete(route("admin.voucher.deleteItems",  query),
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã thêm các sản phẩm vào mã giảm giá.", "success");
+                    },
+                });
+            }
+        });
+ }
+ const RemoveProductVoucher =(id)=>{
+    swal
+        .fire({
+            title: "Bạn có muốn?",
+            text: "Xóa sản phẩm trên vào trường trình mã giảm giá!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Save",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+               
+                form.delete(route("admin.voucher.deleteProductVoucher", id),
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã xóa sản phẩm.", "success");
+                        
+                    },
+                });
+            }
+        });
+ }
 </script>
 <template>
     <LayoutAuthenticated>
@@ -144,11 +232,11 @@ const changepPage = (url) => {
                         " label="Thêm sản phẩm" />
                 </div>
             </div>
-            <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
+            <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="AddProductVouchers"
                 classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-3/5 xl:w-8/12 z-50 overflow-auto"
                 :title="editMode ? 'Sửa Sản Phẩm' : 'Thêm sản phẩm'">
                 <div class="w-3/12">
-                    {{ selected }}
+                 
                     <form>
                         <label for="default-search"
                             class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -167,8 +255,8 @@ const changepPage = (url) => {
                         </div>
                     </form>
                 </div>
-                <div v-if="selected > 1">
-                    <p class="text-end text-blue-700">Thêm (15) sản phẩm đã chọn vào chương trình </p>
+                <div v-if="selected.length > 1">
+                    <p class="text-end text-blue-700">Thêm ({{ selected.length }}) sản phẩm đã chọn vào chương trình </p>
                 </div>
                 <div class="relative mt-5 ">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -233,7 +321,7 @@ const changepPage = (url) => {
             </CardBoxModal>
             <!-- End Modal -->
             <div class="mt-5">
-                <div class="flex justify-end items-center">
+                <div class="flex justify-end items-center" v-if="selected_productOwnder.length >0"  @click="RemoveMutipleProduct()">
                     <BaseButton :icon="mdiTrashCanOutline" small class="text-[#D12953]" style="color:red" />
                     <p class="text-red-600">Đã chọn ({{ selected_productOwnder.length }}) sản phẩm</p>
                 </div>
@@ -256,6 +344,9 @@ const changepPage = (url) => {
                                 <th scope="col" class="px-6 py-3">
                                     Chiết Khấu
                                 </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Giá sale
+                                </th>
 
                                 <th scope="col" class="px-6 py-3">
 
@@ -264,68 +355,35 @@ const changepPage = (url) => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(product, index) in voucher.products" :key="index"
+                            <tr v-for="(product_voucher, index) in voucher.product_vouchers" :key="index"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 ">
                                 <th scope="col" class="px-6 py-3 ">
                                     <div class="flex items-center ">
                                         <input id="default-checkbox" type="checkbox" v-model="selected_productOwnder"
-                                            :value="product.id"
+                                            :value="product_voucher.id"
                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
-                                        1
+                                        {{ index+1 }}
                                     </div>
                                 </th>
                                 <td class="px-6 py-4">
-                                    Product 1
+                                  {{ product_voucher.product.name }}
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    {{ formatPrice(product_voucher.product.price) }} vnđ
                                 </td>
                                 <td class="px-6 py-4">
-                                    hhhh
+                                    {{ product_voucher.unit=='percent'? product_voucher.discount: formatPrice(product_voucher.discount) }}
+                                    <span v-if=" product_voucher.unit =='percent'">%</span>
+                                    <span v-else>VNĐ</span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <BaseButton :icon="mdiTrashCanOutline" small class="text-[#D12953] " />
+                                    {{  formatPrice(product_voucher.price_sale) }} vnđ
                                 </td>
-                                <!-- <BaseButton :icon="mdiTrashCanOutline" small
-                                                            class="text-[#D12953]" /> -->
-                                <!-- <td class="px-6 py-4 ">
-                                    <div class="flex ">
-                                        <label class="relative inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" class="sr-only peer">
-                                            <div
-                                                class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-                                            </div>
-                                        </label>
-                                        <Dropdown align="right" width="40" class="ml-5">
-                                            <template #trigger>
-                                                <span class="inline-flex rounded-md">
-                                                    <BaseButton class="bg-[#D9D9D9] border-[#D9D9D9]"
-                                                        :icon="mdiDotsVertical" small />
-                                                </span>
-                                            </template>
-
-                                            <template #content>
-                                                <div class="w-40">
-                                                    <div @click="edit(image)"
-                                                        class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
-                                                        <p class="hover:text-blue-700"> Edit</p>
-                                                        <BaseButton :icon="mdiPencil" small class="text-[#2264E5]"
-                                                            type="button" data-toggle="modal" data-target="#exampleModal" />
-                                                    </div>
-                                                    <div @click="Delete(image.id)"
-                                                        class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
-                                                        <p class="hover:text-red-700"> Delete</p>
-                                                        <BaseButton :icon="mdiTrashCanOutline" small
-                                                            class="text-[#D12953]" />
-                                                    </div>
-
-                                                </div>
-                                            </template>
-                                        </Dropdown>
-                                    </div>
-
-                                </td> -->
+                                <td class="px-6 py-4">
+                                    <BaseButton :icon="mdiTrashCanOutline" @click="RemoveProductVoucher(product_voucher.id)" small class="text-[#D12953] " />
+                                </td>
+                             
                             </tr>
                         </tbody>
                     </table>

@@ -58,6 +58,7 @@ const crumbs = ref([
     }
 ])
 const form_reset = () => {
+    console.log("reset");
     totalTree.value = props.trees;
 };
 const save = () => {
@@ -71,6 +72,7 @@ const save = () => {
             },
             onSuccess: () => {
                 form_reset();
+                form.reset();
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -88,6 +90,7 @@ const save = () => {
             },
             onSuccess: () => {
                 form_reset();
+                form.reset();
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -134,7 +137,7 @@ const limit_tree = computed(() =>{
                                     tag: 'bg-red-600 text-white text-xs font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1',
                                 }" />
                         </div>
-                        
+
 
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-6">
@@ -167,6 +170,7 @@ const limit_tree = computed(() =>{
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                             small @click="
                                 isModalActive = true;
+                                editMode = false;
                                 form.reset();
                                 form_reset();
                             " label="Thêm gói sản phẩm" />
@@ -231,8 +235,8 @@ const limit_tree = computed(() =>{
                                     1/{{ product_owner?.product?.number_deliveries }}
                                 </th>
                                 <td class="py-4 px-6 text-right flex justify-end my-3">
-                                    <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active" 
-                                        small 
+                                    <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active"
+                                        small
                                         label="Thông tin cây" />
                                     <button @click="edit(product_owner)" type="button" data-toggle="modal"
                                         data-target="#exampleModal"
