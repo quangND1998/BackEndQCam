@@ -206,12 +206,12 @@ const Delete = (id) => {
                         @click="
                             isModalActive = true;
                         form.reset();
-                        " label="Create Product Service" />
+                        " label="Tạo mới gọi dịch vụ" />
                 </div>
             </div>
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                 classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-5/12 z-50 overflow-auto"
-                :title="editMode ? 'Update Product Service' : 'Create Product Service'">
+                :title="editMode ? 'Cập nhật gói dịch vụ' : 'Tạo mới gọi dịch vụ'">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <div>

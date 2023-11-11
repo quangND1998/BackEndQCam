@@ -4,6 +4,9 @@ namespace Modules\Tree\app\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Customer\app\Models\ProductServiceOwner;
+use Modules\Order\app\Models\ProductServiceVoucher;
+use Modules\Order\app\Models\Voucher;
 use Modules\Tree\Database\factories\ProductServiceFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -39,5 +42,18 @@ class ProductService extends Model implements HasMedia
     public function images()
     {
         return $this->media()->where('collection_name', 'product_service_images');
+    }
+
+
+    public function vouchers()
+    {
+
+        return $this->belongsToMany(Voucher::class, 'product_service_vouchers', 'product_service_id', 'voucher_id');
+    }
+
+    // product service co nhieu vouchers
+    public function voucher_items()
+    {
+        return $this->hasMany(ProductServiceVoucher::class, 'product_service_id');
     }
 }

@@ -8,12 +8,14 @@ use App\SaleService\PercentDiscount;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Modules\Order\app\Models\ProductVoucher;
+use Modules\Order\app\Models\ProductServiceVoucher;
 use Modules\Order\app\Models\Voucher;
-use Modules\Tree\app\Models\ProductRetail;
+use Modules\Tree\app\Models\ProductService;
 
-class ProductVoucherController extends Controller
+class ProductServiceVoucherController extends Controller
 {
+
+
     protected $percent, $money;
 
     public function __construct(PercentDiscount $percent, MoneyDiscount $money)
@@ -30,9 +32,9 @@ class ProductVoucherController extends Controller
             return back()->with('warning', "You must choose in checkbox !!!.");
         }
 
-        $product_vouchers = ProductVoucher::whereIn('id',  $ids)->get();
-        if ($product_vouchers->count() > 0) {
-            foreach ($product_vouchers as $item) {
+        $product_service_vouchers = ProductServiceVoucher::whereIn('id',  $ids)->get();
+        if ($product_service_vouchers->count() > 0) {
+            foreach ($product_service_vouchers as $item) {
                 $item->delete();
             }
 
@@ -41,23 +43,14 @@ class ProductVoucherController extends Controller
         return back()->with('warning', "Not found product");
     }
 
-    public function deleteProductVoucher(ProductVoucher $product_voucher)
+    public function deleteProductServiceVoucher(ProductServiceVoucher $product_service_voucher)
     {
-        $product_voucher->delete();
+        $product_service_voucher->delete();
         return back()->with('success', "Delete changed successfully.");
     }
 
 
-    // public function addProducts(Request $request, Voucher $sale)
-    // {
-    //     $sortBy = $request->sortBy ? $request->sortBy : 'id';
-    //     $sort_Direction = $request->sortDirection ?  $request->sortDirection : 'asc';
-    //     $status = $request->status;
-    //     $products = ProductRetail::select('id', 'name', 'status', 'price')->with(['first_image'])->where(function ($query) use ($request) {
-    //         $query->where('SKU', 'LIKE', '%' . $request->term . '%');
-    //     })->orderBy($sortBy, $sort_Direction)->paginate(15)->appends(['name' => $request->term, 'sortBy' => $request->sortBy, 'sortDirection' => $request->sort_Direction, 'status' => $request->status]);;
-    //     return Inertia::render("Sales/AddProducts", compact('products', 'sortBy', 'sort_Direction', 'status', 'sale'));
-    // }
+
 
 
     public function saveItems(Request $request, Voucher $voucher)
@@ -67,12 +60,12 @@ class ProductVoucherController extends Controller
         if ($ids == null) {
             return back()->with('warning', "You must choose in checkbox !!!.");
         }
-        $products = ProductRetail::whereIn('id',  $ids)->get();
+        $products = ProductService::whereIn('id',  $ids)->get();
 
         if ($products->count() > 0) {
             foreach ($products as $product) {
 
-                $item = $voucher->product_vouchers()->where('product_retail_id', $product->id)->first();
+                $item = $voucher->product_service_vouchers()->where('product_service_id', $product->id)->first();
 
                 if ($item) {
                     if ($voucher->unit == "percent") {
@@ -82,9 +75,9 @@ class ProductVoucherController extends Controller
                     }
                 } else {
                     if ($voucher->unit == "percent") {
-                        $this->percent::createItem($voucher, $product, $voucher->discount_amount);
+                        $this->percent::createProductServiceVoucher($voucher, $product, $voucher->discount_amount);
                     } else {
-                        $this->money::createItem($voucher, $product, $voucher->discount_amount);
+                        $this->money::createProductServiceVoucher($voucher, $product, $voucher->discount_amount);
                     }
                 }
             }
@@ -104,10 +97,10 @@ class ProductVoucherController extends Controller
             'item_sale_id' => 'required'
         ]);
 
-        $item = ProductVoucher::find($request->item_sale_id);
+        $item = ProductServiceVoucher::find($request->item_sale_id);
 
         if ($item) {
-            $product = ProductRetail::find($item->product_id);
+            $product = ProductService::find($item->product_id);
             $voucher = Voucher::find($item->sale_id);
             if ($product && $voucher) {
                 if ($voucher->unit == "percent") {

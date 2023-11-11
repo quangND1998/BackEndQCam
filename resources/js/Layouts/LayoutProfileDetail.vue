@@ -84,9 +84,10 @@ const state = reactive({
                     class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] dark:text-white inline-block my-2">
 
                     <Link :href="route('customer.detail.info', customer.id)" class="flex">
-                        <Icon icon="info" class=" mr-2" />Information
+                        <Icon icon="info" class=" mr-2" />Thông tin
                     </Link>
                 </li>
+                
                 <li
                 :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('product') }"
                 class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"

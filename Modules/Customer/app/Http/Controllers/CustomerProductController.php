@@ -57,7 +57,8 @@ class CustomerProductController extends Controller
      */
     public function store(Request $request,$id): RedirectResponse
     {
-        $customer = User::findOrfail($id);
+        $customer = User::findOrFail($id);
+        //dd($request);
         if ($request->product_service) {
             $product_service = ProductService::findOrFail($request->product_service);
 
@@ -94,7 +95,7 @@ class CustomerProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(Request $request,$id)
     {
         return view('customer::edit');
     }
@@ -102,9 +103,25 @@ class CustomerProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id): RedirectResponse
+    public function update(Request $request, $id, ProductService $product_service): RedirectResponse
     {
-        //
+
+            $product_service_owner = ProductServiceOwner::with('product')->findOrFail($request->id);
+            $product_service = ProductService::findOrFail($request->product_service);
+            $product_service_owner->state = "active"; //active, expired, stop
+
+            if ($product_service_owner->product ==null || $product_service_owner->product->id != $product_service->id ) {
+                $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
+                $product_service_owner->time_approve = $request->time_approve;
+                $product_service_owner->time_end = Carbon::parse($request->time_approve)->addDays($time_life);
+                $product_service_owner->product_service_id = $product_service->id;
+                
+                $product_service_owner->trees()->delete();
+                $trees = Tree::find($request->tree);
+                $product_service_owner->trees()->saveMany($trees);
+            }
+            $product_service_owner->save();
+            return back()->with('success', 'Create customer successfully');
     }
 
     /**

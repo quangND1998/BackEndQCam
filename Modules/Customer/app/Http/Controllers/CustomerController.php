@@ -173,6 +173,7 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+        $user->product_service_owners()->trees()->delete();
         $user->delete();
         return redirect()->back()->with('success', "Xóa tài khoản  thành công");
     }

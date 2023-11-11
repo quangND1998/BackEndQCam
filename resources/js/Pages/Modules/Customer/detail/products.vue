@@ -25,8 +25,10 @@ const { multipleSelect } = useHelper();
 const swal = inject('$swal')
 const form = useForm({
     id: null,
-    product_service: props.products.length >0 ? props.products[0].id:null,
+    product_service: props.products.length >0 ? props.products[0].id : null,
     tree: null,
+    time_approve: null,
+    state: null,
 });
 const totalTree = toRef(props.trees);
 const isModalActive = ref(false)
@@ -36,9 +38,11 @@ const edit = (product_owner) => {
     editMode.value = true
     form.id = product_owner.id;
     form.product_service = product_owner.product.id;
-    form.tree = multipleSelect( product_owner.trees)
-    console.log('edit',totalTree.value)
-    Array.prototype.push.apply(totalTree.value,product_owner.trees); 
+    form.state = product_owner.state
+    form.tree =   multipleSelect(product_owner.trees)
+    form.time_approve = product_owner.time_approve
+    totalTree.value = totalTree.value.concat(product_owner.trees)
+    console.log("product_service",product_owner.product.id)
 }
 const crumbs = ref([
 
@@ -53,11 +57,14 @@ const crumbs = ref([
         name: "Amenities"
     }
 ])
+const form_reset = () => {
+    totalTree.value = props.trees;
+};
 const save = () => {
 
     console.log(form);
     if (editMode.value == true) {
-        form.put(route("customer.detail.products.update", props.customer.id), {
+        form.put(route("customer.detail.products.update",[ props.customer.id, form.product_service]), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = true;
@@ -74,7 +81,7 @@ const save = () => {
             ...data,
             remember: data.remember ? 'on' : '',
         }))
-        .post(route("customer.detail.products.store", props.customer.id), {
+        .post(route("customer.detail.products.store", [ props.customer.id, form.product_service]), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = false;
@@ -127,7 +134,31 @@ const limit_tree = computed(() =>{
                                     tag: 'bg-red-600 text-white text-xs font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1',
                                 }" />
                         </div>
+                        
 
+                    </div>
+                    <div class="flex flex-wrap -mx-3 mb-6">
+                         <div class="w-full md:w-1/2 px-3">
+                            <InputLabel for="owner" value="Thời gian bắt đầu áp dụng" />
+                            <div date-rangepicker class="flex items-center">
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    </div>
+                                    <input v-model="form.time_approve" type="date"
+                                        class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5  placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Ngày bắt đầu" />
+                                </div>
+                            </div>
+                        </div>
+                            <div class="w-full md:w-1/2 px-3">
+                            <InputLabel for="owner" value="Gói dịch vụ" />
+                            <select id="category_project_id" v-model="form.state" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                 <option value="active">Đang hoạt động</option>
+                                 <option value="expired">Dừng hoạt động</option>
+                                 <option value="stop">Đã hủy</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </CardBoxModal>
@@ -137,7 +168,7 @@ const limit_tree = computed(() =>{
                             small @click="
                                 isModalActive = true;
                                 form.reset();
-                                reset();
+                                form_reset();
                             " label="Thêm gói sản phẩm" />
                 </div>
                 <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
@@ -185,7 +216,7 @@ const limit_tree = computed(() =>{
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ product_owner?.product?.number_tree }}
+                                  {{ product_owner?.product?.number_tree }}
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -199,7 +230,10 @@ const limit_tree = computed(() =>{
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     1/{{ product_owner?.product?.number_deliveries }}
                                 </th>
-                                <td class="py-4 px-6 text-right">
+                                <td class="py-4 px-6 text-right flex justify-end my-3">
+                                    <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active" 
+                                        small 
+                                        label="Thông tin cây" />
                                     <button @click="edit(product_owner)" type="button" data-toggle="modal"
                                         data-target="#exampleModal"
                                         class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">

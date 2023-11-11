@@ -50,6 +50,8 @@ return new class extends Migration
             $table->timestamp('expires_at')->nullable();
 
             $table->string('unit')->nullable();
+
+            $table->string('type_product')->nullable();
             $table->timestamps();
         });
     }

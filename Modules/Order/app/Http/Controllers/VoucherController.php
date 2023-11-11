@@ -13,6 +13,7 @@ use Modules\Order\app\Http\Requests\Voucher\StoreVoucherReuquest;
 use Modules\Order\app\Http\Requests\Voucher\UpdateVoucherReuquest;
 use Modules\Order\app\Models\Voucher;
 use Modules\Tree\app\Models\ProductRetail;
+use Modules\Tree\app\Models\ProductService;
 
 class VoucherController extends Controller
 {
@@ -58,7 +59,8 @@ class VoucherController extends Controller
             'is_fixed' =>  $request->is_fixed,
             'discount_amount' =>  $request->discount_amount,
             'starts_at' => $request->starts_at,
-            'expires_at' =>  $request->expires_at
+            'expires_at' =>  $request->expires_at,
+            'type_product' =>  $request->type_product,
         ]);
         return back()->with('success', 'Create successfully');
     }
@@ -85,6 +87,10 @@ class VoucherController extends Controller
     public function update(UpdateVoucherReuquest $request, Voucher $voucher)
     {
 
+        if ($voucher->type_product != $request->type_product) {
+            $voucher->product_vouchers()->delete();
+            $voucher->product_service_vouchers()->delete();
+        }
         $voucher->update([
             'code' => $request->code,
             'name' =>  $request->name,
@@ -94,18 +100,32 @@ class VoucherController extends Controller
             'is_fixed' =>  $request->is_fixed,
             'discount_amount' =>  $request->discount_amount,
             'starts_at' => $request->starts_at,
-            'expires_at' =>  $request->expires_at
+            'expires_at' =>  $request->expires_at,
+            'type_product' =>  $request->type_product,
         ]);
 
-
-        foreach ($voucher->product_vouchers as $item) {
-            $product = ProductRetail::find($item->product_retail_id);
-            if ($voucher->unit == "percent") {
-                $this->percent::updateItem($voucher, $item, $product, $voucher->discount_amount);
-            } else {
-                $this->money::updateItem($voucher, $item, $product, $voucher->discount_amount);
+        if ($voucher->type_product == 'retail') {
+            foreach ($voucher->product_vouchers as $item) {
+                $product = ProductRetail::find($item->product_retail_id);
+                if ($voucher->unit == "percent") {
+                    $this->percent::updateItem($voucher, $item, $product, $voucher->discount_amount);
+                } else {
+                    $this->money::updateItem($voucher, $item, $product, $voucher->discount_amount);
+                }
             }
         }
+
+        if ($voucher->type_product == 'service') {
+            foreach ($voucher->product_service_vouchers as $item) {
+                $product = ProductService::find($item->product_service_id);
+                if ($voucher->unit == "percent") {
+                    $this->percent::updateItem($voucher, $item, $product, $voucher->discount_amount);
+                } else {
+                    $this->money::updateItem($voucher, $item, $product, $voucher->discount_amount);
+                }
+            }
+        }
+
 
         return back()->with('success', 'Update successfully');
     }
@@ -115,7 +135,8 @@ class VoucherController extends Controller
      */
     public function destroy(Voucher $voucher)
     {
-        $voucher->products()->detach();
+        $voucher->product_vouchers()->detach();
+        $voucher->product_service_vouchers()->detach();
         $voucher->delete();
         return back()->with('success', 'Delete successfully');
     }
@@ -132,5 +153,18 @@ class VoucherController extends Controller
             return $products;
         }
         return Inertia::render('Modules/Voucher/Products', compact('voucher', 'products'));
+    }
+
+    public function getVoucherProjectServices(Request $request, Voucher $voucher)
+    {
+        $voucher->load('product_service_vouchers.product_service');
+
+        $products = ProductService::where(function ($query) use ($request) {
+            $query->where('name', 'LIKE', '%' . $request->search . '%');
+        })->paginate(15);
+        if ($request->wantsJson()) {
+            return $products;
+        }
+        return Inertia::render('Modules/Voucher/ProductServices', compact('voucher', 'products'));
     }
 }

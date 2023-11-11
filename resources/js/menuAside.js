@@ -36,14 +36,6 @@ export default [{
     permissions: null,
     route_list: null
 },
-
-{
-    route: 'profile.show',
-    label: 'Profile',
-    icon: mdiAccountCogOutline,
-    permissions: null,
-    route_list: null
-},
 {
     label: 'Quản lý phân quyền & User',
     icon: mdiFileTreeOutline,
@@ -71,8 +63,7 @@ export default [{
         route_list: null
     }
     ]
-},
-{
+}, {
     label: 'Quản lý Cây & Gói sản phẩm',
     icon: mdiFileTreeOutline,
     permissions: ['view-user'],
@@ -121,24 +112,22 @@ export default [{
     permissions: ['view-user'],
     route_list: ['customer.index'],
     menu: [{
-            route: 'customer.index',
-            label: 'Customer',
-            icon: mdiMinus,
-            permissions: ['super-admin'],
-            route_list: null
-        },
-        {
-            route: 'admin.land.index',
-            label: 'Shipper',
-            icon: mdiMinus,
-            permissions: ['super-admin'],
-            route_list: null
-        }
+        route: 'customer.index',
+        label: 'Customer',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.land.index',
+        label: 'Shipper',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    }
     ]
-},
-
-{
-    label: 'Quản lý đơn hàng',
+}, {
+    label: 'Hoạt động',
     icon: mdiFileTreeOutline,
     permissions: ['order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
     route_list: ['admin.orders.index'],
@@ -148,24 +137,113 @@ export default [{
         icon: mdiMinus,
         permissions: ['super-admin'],
         route_list: null
-    },]
+    },
+    {
+        route: 'admin.orders.index',
+        label: 'Khiếu nại',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.orders.index',
+        label: 'Đánh giá',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    }
+    ]
 },
+{
+    label: 'Sản phẩm',
+    icon: mdiFileTreeOutline,
+    permissions: ['view-user'],
+    route_list: ['admin.land.index', 'admin.product-retail.index', 'admin.product-service.index'],
+    menu: [{
+        route: 'admin.land.index',
+        label: 'Cây',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.product-retail.index',
+        label: 'Sản phẩm bán lẻ',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.product-service.index',
+        label: 'Sản phẩm dịch vụ',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.voucher.index',
+        label: "Mã giảm giá",
+        icon: mdiSale,
+        permissions: ['super-admin'],
+    },
+
+    ]
+},
+
+{
+    label: 'Quản lý người dùng',
+    icon: mdiFileTreeOutline,
+    permissions: ['view-user'],
+    route_list: ['customer.index'],
+    menu: [{
+        route: 'customer.index',
+        label: 'Customer',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.land.index',
+        label: 'Shipper',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    }
+    ]
+},
+
+
 {
     label: 'SETTINGS',
 },
-{
-    route: 'login',
-    label: 'Notification',
-    icon: mdiBellOutline,
-    permissions: null,
-    route_list: null,
-},
-{
-    route: 'login',
-    label: 'Settings',
-    icon: mdiCogOutline,
-    permissions: null,
-    route_list: null,
-},
 
+{
+    label: 'Cài đặt',
+    icon: mdiCogOutline,
+    permissions: ['view-user'],
+    route_list: ['customer.index'],
+    menu: [{
+        route: 'customer.index',
+        label: 'Thông báo',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.land.index',
+        label: 'Tin tức',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.land.index',
+        label: 'Thông tin chung',
+        icon: mdiMinus,
+        permissions: ['super-admin'],
+        route_list: null
+    },
+
+    ]
+},
 ]
