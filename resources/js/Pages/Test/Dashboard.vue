@@ -85,12 +85,12 @@ const state = reactive({
                         </div>
                         <div class="p-4 rounded-xl  text-[#64748B]"
                             style="box-shadow: 0px 1px 2px -1px #0000001A;box-shadow: 0px 1px 3px 0px #0000001A;">
-                            <p>Đơn bán</p>
+                            <p>Đặt lịch</p>
                             <h1 class="my-2"><strong class="text-3xl text-black">05</strong> đơn hàng</h1>
                         </div>
                         <div class="p-4 rounded-xl  text-[#64748B]"
                             style="box-shadow: 0px 1px 2px -1px #0000001A;box-shadow: 0px 1px 3px 0px #0000001A;">
-                            <p>Đơn hàng hủy</p>
+                            <p>Hoạt động</p>
                             <h1 class="my-2"><strong class="text-3xl text-black">35</strong> đơn hàng</h1>
                         </div>
                     </div>
