@@ -76,7 +76,7 @@ export default [{
 {
     label: 'Hoạt động',
     icon: mdiFileTreeOutline,
-    permissions: ['order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+    permissions: ['super-admin','order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
     route_list: ['admin.orders.index'],
     menu: [{
         route: 'admin.orders.index',
