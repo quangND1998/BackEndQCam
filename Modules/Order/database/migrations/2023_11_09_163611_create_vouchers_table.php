@@ -38,7 +38,8 @@ return new class extends Migration
             // The amount to discount by (in pennies) in this example.
             $table->integer('discount_amount');
 
-            // Whether or not the voucher is a percentage or a fixed price.
+            $table->bigInteger('min_spend')->nullable();
+            // Whether or not the voucher is a percentage or a fixed price. 
             $table->boolean('is_fixed')->default(true);
 
             // When the voucher begins
@@ -48,6 +49,8 @@ return new class extends Migration
             $table->timestamp('expires_at')->nullable();
 
             $table->string('unit')->nullable();
+
+            $table->string('type_product')->nullable();
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@ class ScheduleVisit extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['id','date_time','number_adult','number_children','state','product_service_owner_id'];
+    protected $fillable = ['id','date_time','number_adult','number_children','description','state','product_service_owner_id'];
 
     protected static function newFactory(): ScheduleVisitFactory
     {

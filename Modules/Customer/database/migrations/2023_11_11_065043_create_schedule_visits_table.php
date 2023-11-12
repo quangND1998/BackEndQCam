@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('number_adult');
             $table->integer('number_children');
             $table->string('state'); // đã đặt, xác nhận lịch trình, đã keesrt thúc
+            $table->longText('description')->nullable();
             $table->unsignedBigInteger('product_service_owner_id');
             $table->foreign('product_service_owner_id')->references('id')->on('product_service_owners');
             $table->timestamps();

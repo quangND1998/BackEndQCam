@@ -99,7 +99,7 @@ export default [{
         permissions: ['super-admin'],
         route_list: null
     }
-]
+    ]
 },
 {
     label: 'Sản phẩm',

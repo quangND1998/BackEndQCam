@@ -50,4 +50,7 @@ class ProductServiceOwner extends Model
     {
         return $this->hasOne(Contract::class,'product_service_owner_id');
     }
+    public function visit(){
+        return $this->hasMany(ScheduleVisit::class,'product_service_owner_id');
+    }
 }

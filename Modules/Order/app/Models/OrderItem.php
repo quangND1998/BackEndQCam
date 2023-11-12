@@ -21,6 +21,7 @@ class OrderItem extends Model
         'total_price',
         'discount',
         'price_sale',
+        'min_spend',
         'created_at',
         "updated_at"
     ];
@@ -34,11 +35,9 @@ class OrderItem extends Model
     {
         return $this->belongsTo(ProductRetail::class, 'product_id');
     }
-    
+
     protected static function newFactory(): OrderItemFactory
     {
         //return OrderItemFactory::new();
     }
-
-
 }

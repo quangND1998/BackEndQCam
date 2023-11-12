@@ -4,6 +4,7 @@ namespace App\SaleService;
 
 use Modules\Order\app\Models\ProductVoucher;
 use App\SaleService\SaleInterface;
+use Modules\Order\app\Models\ProductServiceVoucher;
 use Modules\Order\Entities\OrderItem;
 
 class MoneyDiscount implements SaleInterface
@@ -31,6 +32,18 @@ class MoneyDiscount implements SaleInterface
             'product_retail_id' => $product->id,
             'price' => $product->price,
             'unit' => $sale->unit,
+            'discount' => $discount,
+            'price_sale' => ($discount >= $product->price) ? $product->price : $product->price - $discount
+        ]);
+    }
+
+    public static function createProductServiceVoucher($voucher, $product, $discount)
+    {
+        ProductServiceVoucher::create([
+            'voucher_id' => $voucher->id,
+            'product_service_id' => $product->id,
+            'price' => $product->price,
+            'unit' => $voucher->unit,
             'discount' => $discount,
             'price_sale' => ($discount >= $product->price) ? $product->price : $product->price - $discount
         ]);
