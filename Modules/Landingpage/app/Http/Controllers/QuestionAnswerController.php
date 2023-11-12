@@ -19,12 +19,12 @@ class QuestionAnswerController extends Controller
      */
     public function index(Request $request)
     {
-        $question_answers= QuestionAnswer::where(function ($query) use ($request) {
+        $question_answers= QuestionAnswer::filter($request->only('status', 'type'))->where(function ($query) use ($request) {
             $query->where('question', 'LIKE', '%' . $request->search . '%');
             $query->orwhere('answer', 'LIKE', '%' . $request->search . '%');
             // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
         })->paginate(20)->appends($request->search);
-        return Inertia::render("",compact('question_answers'));
+        return Inertia::render("Modules/Landingpage/Question/Index",compact('question_answers'));
     }
 
     /**
@@ -40,7 +40,12 @@ class QuestionAnswerController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $question= QuestionAnswer::create($request->all());
+        $question= QuestionAnswer::create([
+            'question' => $request->question,
+            'answer' =>  $request->answer,
+            'type' => $request->type,
+            'status' =>  $request->status,
+        ]);
         return back()->with('success', "Create succesffuly");
     }
 
@@ -65,7 +70,13 @@ class QuestionAnswerController extends Controller
      */
     public function update(UpdateRequest $request, QuestionAnswer $question): RedirectResponse
     {
-        $question->update($request->all());
+   
+        $question->update([
+            'question' => $request->question,
+            'answer' =>  $request->answer,
+            'type' => $request->type,
+            'status' =>  $request->status,
+        ]);
         return back()->with('success', "Update succesffuly");
     }
 

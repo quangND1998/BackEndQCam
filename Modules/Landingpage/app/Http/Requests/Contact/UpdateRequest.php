@@ -12,7 +12,15 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string',
+            'email' => 'required|string',
+            'address' => 'required|string',
+            'tax_code' => 'nullable|string',
+            'hotline' => 'required|string',
+            'zalo_phone' => 'nullable|string',
+            'facebook' => 'nullable|string',
+            'website' => 'nullable|string',
+            'map' => 'nullable|string'
         ];
     }
 

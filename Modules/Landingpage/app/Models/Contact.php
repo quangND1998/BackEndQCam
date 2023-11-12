@@ -15,7 +15,7 @@ class Contact extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id","email","address","tax_code","hotline","zalo_phone","facebook","website","map","created_at",	"updated_at"];
+    protected $fillable = ["id","email","name","address","tax_code","hotline","zalo_phone","facebook","website","map","created_at",	"updated_at"];
     
     protected static function newFactory(): ContactFactory
     {

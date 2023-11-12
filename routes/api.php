@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\FAQsController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\ProductRetailController;
 use Illuminate\Http\Request;
@@ -29,5 +30,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('v1')->as('v1.')->group(function () {
         Route::get('product-retail', [ProductRetailController::class, 'getProducts']);
+
+
+
+        // FAQs
+        Route::get('faqs', [FAQsController::class, 'FAQs']);
+
+
     });
 });

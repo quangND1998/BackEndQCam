@@ -18,8 +18,9 @@ class TermsConditionController extends Controller
      */
     public function index()
     {
-        $terms_condition= TermsConditions::frist();
-        return Inertia::render("", compact('terms_condition'));
+        $terms_condition= TermsConditions::first();
+       
+        return Inertia::render("Modules/Landingpage/Terms/Index", compact('terms_condition'));
     }
 
     /**
