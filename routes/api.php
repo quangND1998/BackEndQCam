@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\FAQsController;
+use App\Http\Controllers\API\FAQsController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\ProductRetailController;
 use Illuminate\Http\Request;
