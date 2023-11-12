@@ -48,6 +48,7 @@ class TreeController extends Controller
      */
     public function store(StoreRequest $request, Land $land): RedirectResponse
     {
+
         $tree = Tree::create($request->all());
         if ($tree) {
             $tree->qr_code = $tree->id . Str::random(10);

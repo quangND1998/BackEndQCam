@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Customer\app\Http\Controllers\CustomerController;
-
+use Modules\Customer\app\Http\Controllers\CustomerDetailController;
+use Modules\Customer\app\Http\Controllers\CustomerActivityController;
+use Modules\Customer\app\Http\Controllers\CustomerServiceController;
+use Modules\Customer\app\Http\Controllers\CustomerProductController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,5 +18,12 @@ use Modules\Customer\app\Http\Controllers\CustomerController;
 */
 
 Route::group([], function () {
-    Route::resource('customer', CustomerController::class)->names('customer');
+    Route::resource('customers', CustomerController::class)->names('customer');
+    Route::prefix('customer/{id}')->as('customer.detail.')->group(function () {
+        Route::get('info', [CustomerDetailController::class, 'info'])->name('info');
+
+        Route::resource('products', CustomerProductController::class)->names('products');
+        Route::resource('activity', CustomerActivityController::class)->names('activity');
+        Route::resource('service', CustomerServiceController::class)->names('service');
+    });
 });

@@ -32,7 +32,7 @@ const activeInactiveStyle = computed(() => {
 })
 const activeMenuInactiveStyle = computed(() => {
   // console.log('activeInactiveStyle', props.item.route && route().current(props.item.route))
-  return props.item.route && route().current(props.item.route)
+  return ( props.item.route && route().current(props.item.route) )
     ? 'bg-aside_menu_item_active'
     : ''
 })
@@ -76,9 +76,9 @@ const checkOpenMenu = () => {
       <BaseIcon v-if="item.icon" :path="item.icon" class="flex-none " :class="activeInactiveStyle" w="w-16" :size="20" />
       <div v-else class="flex-none p-2" />
       <span v-if="item.icon" class="grow text-ellipsis line-clamp-1 text-[14px]" ::class="[{ 'pr-12': !hasDropdown }, activeInactiveStyle]">{{
-        item.label }} {{ item.route_list }} </span>
+        item.label }} </span>
       <span v-else class="grow text-ellipsis line-clamp-1 text-[12px]" ::class="[{ 'pr-12': !hasDropdown }, activeInactiveStyle]">{{
-        item.label }} {{ item.route_list }} </span>
+        item.label }}  </span>
       <BaseIcon v-if="hasDropdown" :path="isDropdownActive ? mdiChevronDown : mdiChevronUp" class="flex-none"
         :class="activeInactiveStyle" w="w-12" />
 

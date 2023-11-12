@@ -5,15 +5,18 @@ namespace Modules\Tree\app\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Tree\Database\factories\ProductServiceFactory;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class ProductService extends Model
+class ProductService extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     use HasFactory;
     protected $table = "product_services";
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id", "id_priority", "name", 'description', "number_tree", "acreage", "free_visit", "amount_products_received", 'price', 'number_deliveries', "life_time", "unit"];
+    protected $fillable = ["id", "id_priority", "name", 'status', 'description', "number_tree", "acreage", "free_visit", "amount_products_received", 'price', 'number_deliveries', "life_time", "unit"];
 
     protected static function newFactory(): ProductServiceFactory
     {
@@ -28,8 +31,13 @@ class ProductService extends Model
         return $this->morphMany(OrderItem::class, 'orderitemable');
     }
 
-    public function owners()
+    // public function owners()
+    // {
+    //     return $this->belongsToMany(User::class, 'product_service_owners', 'product_service_id', 'user_id');
+    // }
+
+    public function images()
     {
-        return $this->belongsToMany(User::class, 'product_service_owners', 'product_service_id', 'user_id');
+        return $this->media()->where('collection_name', 'product_service_images');
     }
 }

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('discount')->default(0)->nullable();
             $table->decimal('price_sale', 20, 6)->nullable();
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-            $table->unsignedBigInteger('orderitemable_id')->nullable();
-            $table->string("orderitemable_type")->nullable(); 
+            $table->unsignedBigInteger('product_id')->nullable()->index();
+            $table->foreign('product_id')->references('id')->on('product_retails')->onDelete('cascade');
             $table->timestamps();
         });
     }

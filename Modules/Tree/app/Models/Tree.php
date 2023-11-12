@@ -8,7 +8,6 @@ use Modules\Tree\Database\factories\TreeFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-
 class Tree extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -17,7 +16,7 @@ class Tree extends Model implements HasMedia
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id",    "name",    "qr_code",    "land_id", "address", "price",    "state", "status",    "description", "user_manual",    "terms_policy",    "created_at",    "updated_at"];
+    protected $fillable = ["id",    "name",    "qr_code",    "land_id", "address", "price",    "state", "status",    "description", "user_manual",    "terms_policy", "product_service_owner_id",    "created_at",    "updated_at"];
 
 
 
@@ -36,5 +35,8 @@ class Tree extends Model implements HasMedia
     public function images()
     {
         return $this->media()->where('collection_name', 'tree_images');
+    }
+    public function product_service_owner(){
+        return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
     }
 }

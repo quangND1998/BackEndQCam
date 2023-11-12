@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Order\app\Http\Controllers\CartController;
 
 /*
     |--------------------------------------------------------------------------
@@ -16,4 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
     Route::get('tree', fn (Request $request) => $request->user())->name('tree');
+});
+Route::prefix('v1')->group(function () {
+    Route::get('cart', [CartController::class,'getCart']);
+    Route::post('addToCart', [CartController::class,'addToCart']);
+    Route::post('updateCart', [CartController::class,'updateCart']);
+    Route::post('removeItem', [CartController::class,'removeItem']);
+    Route::post('clearCart', [CartController::class,'clearCart']);
+    
 });

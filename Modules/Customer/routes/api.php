@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use Modules\Customer\app\Http\Controllers\API\CustomerProductOwerController;
 /*
     |--------------------------------------------------------------------------
     | API Routes
@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
     |
 */
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
-    Route::get('customer', fn (Request $request) => $request->user())->name('customer');
+// Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
+//     Route::prefix('customer')->as('customer.')->group(function () {
+//         Route::get('product_service', [CustomerProductOwerController::class, 'getProductService']);
+//     });
+// });
+
+Route::prefix('v1')->name('api.')->group(function () {
+    Route::prefix('customer')->as('customer.')->group(function () {
+        Route::get('product_service', [CustomerProductOwerController::class, 'getProductService']);
+    });
 });

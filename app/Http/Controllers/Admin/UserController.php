@@ -46,12 +46,13 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-     
+
         $auth_user = Auth::user();
         $this->validate(
             $request,
             [
                 'name' => 'required',
+                'username' => 'required|unique:users,username',
                 'email' => 'required|email|unique:users,email',
                 'phone_number' => 'required|unique:users,phone_number|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
                 'roles' => 'required',
@@ -80,12 +81,13 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-       
+
         $user = User::findOrFail($id);
         $this->validate(
             $request,
             [
                 'name' => 'required',
+                'username' => 'required|unique:users,username,' . $user->id,
                 'email' => 'required|email|unique:users,email,' . $user->id,
                 'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone,' . $user->id,
                 'roles' => 'required',
@@ -98,17 +100,13 @@ class UserController extends Controller
 
         $user->update([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'phone_number' =>$request->phone_number
         ]);
-        // if ($request->created_byId) {
-        //     $user->created_byId = $request->created_byId;
-        // } else {
-        //     $user->created_byId = Auth::user()->id;
-        // }
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->syncRoles($roles);
-        // $user->created_byId = Auth::user()->id;
+
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }

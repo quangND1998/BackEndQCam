@@ -6,7 +6,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Customer\Database\factories\ProductServiceOwnerFactory;
-
+use Modules\Tree\app\Models\ProductService;
+use Modules\Tree\app\Models\Tree;
+use Modules\Customer\app\Models\Contract;
 class ProductServiceOwner extends Model
 {
     use HasFactory;
@@ -16,7 +18,7 @@ class ProductServiceOwner extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['id', 'user_id', 'product_service_owner_id', 'time_approve', 'description', 'number_deliveries_current', 'state', 'visited_time'];
+    protected $fillable = ['id', 'user_id', 'product_service_owner_id', 'time_approve','time_end', 'description', 'number_deliveries_current', 'state', 'visited_time'];
 
     protected static function newFactory(): ProductServiceOwnerFactory
     {
@@ -24,8 +26,28 @@ class ProductServiceOwner extends Model
     }
 
 
-    public function product_service_owner()
+    public function product()
     {
-        return $this->belongsTo(ProductServiceOwner::class, 'product_service_owner_id');
+        return $this->belongsTo(ProductService::class, 'product_service_id');
+    }
+    public function customer()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function history_product()
+    {
+        return $this->hasMany(HistoryProduct::class,'product_service_owner_id');
+    }
+    public function history_use_service()
+    {
+        return $this->hasMany(HistoryUseService::class,'product_service_owner_id');
+    }
+    public function trees()
+    {
+        return $this->hasMany(Tree::class,'product_service_owner_id');
+    }
+    public function contract()
+    {
+        return $this->hasOne(Contract::class,'product_service_owner_id');
     }
 }

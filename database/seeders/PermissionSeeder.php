@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         Permission::create(['name' => 'super-admin']);
 
-        /** 
+        /**
          *  user
          */
         Permission::create(['name' => 'view-user']);
@@ -33,5 +33,32 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'delete-land']);
         Permission::create(['name' => 'update-land']);
 
+
+
+
+        Permission::create(['name' => 'view-product']);
+        Permission::create(['name' => 'create-product']);
+        Permission::create(['name' => 'delete-product']);
+        Permission::create(['name' => 'update-product']);
+        // customer
+        Permission::create(['name' => 'login-app']);
+        Permission::create(['name' => 'order']);
+        Permission::create(['name' => 'review']);
+        Permission::create(['name' => 'complaint']);
+
+        // shipper & ke toan
+        Permission::create(['name' => 'change-state-order']);
+
+
+        /**
+         * Quyền cho Đơn hàng
+         *
+         */
+        Permission::create(['name' => 'order-pending']);
+        Permission::create(['name' => 'order-packing']);
+        Permission::create(['name' => 'order-shipping']);
+        Permission::create(['name' => 'order-completed']);
+        Permission::create(['name' => 'order-refund']);
+        Permission::create(['name' => 'order-decline']);
     }
 }

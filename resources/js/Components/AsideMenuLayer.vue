@@ -31,7 +31,7 @@ const asideLgCloseClick = (event) => {
 </script>
 
 <template>
-  <aside id="aside" class=" w-60 fixed flex z-40 top-0 h-screen transition-position overflow-hidden">
+  <aside id="aside" class=" w-[260px] fixed flex z-40 top-0 h-screen transition-position overflow-hidden">
     <div class="aside flex-1 flex flex-col overflow-hidden  bg-bg_green_default text-white">
       <div class="aside-brand flex flex-row h-[80px] items-center justify-between bg-bg_green text-white">
         <div class="flex items-center text-center flex-1 p-3">
@@ -53,3 +53,23 @@ const asideLgCloseClick = (event) => {
     </div>
   </aside>
 </template>
+
+<style scope>
+.aside-menu-dropdown li{
+    width: 75%;
+    margin-left: 20%;
+}
+.aside-menu-dropdown li .aside-menu-item{
+
+    border-radius: 8px;
+    margin-left: 10px;
+    padding: 10px 2px;
+}
+.aside-menu-dropdown li .aside-menu-item-active{
+    background-color: #C5E4CA;
+    color: black !important;
+    border-radius: 8px;
+    margin-left: 10px;
+    padding: 10px 2px;
+}
+</style>
