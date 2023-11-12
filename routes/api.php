@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\FAQsController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\ProductRetailController;
+use App\Http\Controllers\API\VoucherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,5 +38,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('faqs', [FAQsController::class, 'FAQs']);
 
 
+
+        // Voucher
+        Route::get('findVoucher/{code}', [VoucherController::class, 'findVoucher']);
     });
 });
