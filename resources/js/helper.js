@@ -1,38 +1,38 @@
 import moment from 'moment';
 export const helper = {
     methods: {
-        hasAnyPermission: function(permissions) {
+        hasAnyPermission: function (permissions) {
             if (permissions == null) {
                 return true
             }
             var allPermissions = this.$page.props.auth.can;
             var hasPermission = false;
-            permissions.forEach(function(item) {
+            permissions.forEach(function (item) {
                 if (allPermissions[item]) hasPermission = true;
             });
             return hasPermission;
         },
-        hasAnyRoles: function(roles) {
+        hasAnyRoles: function (roles) {
 
             var allroles = this.$page.props.auth.roles;
 
             var hasRole = false;
-            roles.forEach(function(item) {
+            roles.forEach(function (item) {
 
                 if (allroles[item]) hasRole = true;
 
             });
             return hasRole;
         },
-        hasRoles: function(user, roles) {
+        hasRoles: function (user, roles) {
             var hasRole = false;
-            user.roles.forEach(function(item) {
+            user.roles.forEach(function (item) {
                 if (item.name == roles) hasRole = true;
             });
             return hasRole;
         },
 
-        formatDate: function(value) {
+        formatDate: function (value) {
             if (value) {
                 return moment(String(value)).format('DD/MM/YYYY HH:mm:ss')
             }
@@ -73,6 +73,11 @@ export const helper = {
             if (i === 0) return `${bytes} ${sizes[i]}`;
 
             return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
+        },
+        formatTimeDayMonthyear: function (value) {
+            if (value) {
+                return moment(String(value)).format('HH:mm DD/MM/YYYY ')
+            }
         },
     },
 };

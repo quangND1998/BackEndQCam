@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Http\Response;
 
 class LoginController extends Base2Controller
 {
@@ -90,5 +92,18 @@ class LoginController extends Base2Controller
             return $this->sendResponse($success, 'User login successfully.');
         }
         return $this->sendError('Unauthorised.', ['error' => 'Invalid verification code entered!']);
+    }
+
+    public function logout(Request $request)
+    {
+
+        $token = PersonalAccessToken::findToken(request()->bearerToken());
+        if ($token) {
+            $token->delete();
+            // $user = $token->tokenable;
+            // $user->tokens()->delete();
+            return response()->json('You have successfully logged out.', Response::HTTP_OK);
+        }
+        return response()->json('Failed to logout, please try again.', Response::HTTP_BAD_REQUEST);
     }
 }

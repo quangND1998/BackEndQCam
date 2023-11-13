@@ -12,13 +12,15 @@ class Order extends Model
 {
     use HasFactory;
     protected $table = 'orders';
-    protected $fillable = ["id",   "order_number","user_id"	,"status" ,"item_count","payment_status","payment_method","grand_total", "discount","shipping_fee","last_price","notes","reason" , 'specific_address',
-    'address',
-    'city',
-    'district',
-    'wards',  "created_at", "updated_at"];
- 
-    
+    protected $fillable = [
+        "id",   "order_number", "user_id", "status", "item_count", "payment_status", "payment_method", "grand_total", "discount", "shipping_fee", "last_price", "notes", "reason", 'specific_address',
+        'address',
+        'city',
+        'district',
+        'wards',  "created_at", "updated_at"
+    ];
+
+
     protected static function newFactory(): OrderFactory
     {
         //return OrderFactory::new();
@@ -48,6 +50,10 @@ class Order extends Model
 
             $query->whereBetween('created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
         }
+    }
 
+    public function discount()
+    {
+        return $this->belongsTo(Voucher::class, 'discount');
     }
 }
