@@ -30,6 +30,13 @@ Route::prefix('v1')->as('v1.')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('v1')->as('v1.')->group(function () {
+
+
+        // logout
+        Route::get('logout', [LoginController::class, 'FAQs']);
+
+
+        // Product-retail
         Route::get('product-retail', [ProductRetailController::class, 'getProducts']);
 
 

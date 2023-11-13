@@ -22,10 +22,12 @@ class Voucher extends Model
         'max_uses',
         'max_uses_user',
         'type',
-        'discount_amount',
-        "is_fixed",
-        'unit',
-        'type_product',
+        'min_spend',
+        "discount_caption",
+        'discount_percentage',
+        'discount_value',
+        'discount_max_value',
+        'is_fixed',
         "starts_at",
         "expires_at"
     ];

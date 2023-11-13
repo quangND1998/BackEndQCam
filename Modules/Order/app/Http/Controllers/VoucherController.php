@@ -8,6 +8,7 @@ use App\SaleService\PercentDiscount;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Modules\Order\app\Http\Requests\Voucher\StoreVoucherReuquest;
 use Modules\Order\app\Http\Requests\Voucher\UpdateVoucherReuquest;
@@ -50,18 +51,42 @@ class VoucherController extends Controller
      */
     public function store(StoreVoucherReuquest $request): RedirectResponse
     {
+
+
+        if ($request->discount_percentage > 0) {
+            $this->validate($request, [
+                'discount_max_value' => 'required|numeric|gt:0|letter_than_field:min_spend',
+
+            ], [
+                'discount_max_value.letter_than_field' => 'Giá trị giảm giá tối đa phải nhỏ hơn giá trị đơn hàng tối thiểu',
+
+            ]);
+        }
+
         $voucher = Voucher::create([
             'code' => $request->code,
             'name' =>  $request->name,
             'description' =>  $request->description,
             'type' =>  $request->type,
-            'unit' =>  $request->unit,
             'is_fixed' =>  $request->is_fixed,
-            'discount_amount' =>  $request->discount_amount,
+            'min_spend' =>  $request->min_spend,
+            'discount_caption' =>  $request->discount_caption,
+            'discount_percentage' =>  $request->discount_percentage,
+            'discount_value' =>  $request->discount_value,
+            'discount_max_value' =>  $request->discount_max_value,
             'starts_at' => $request->starts_at,
             'expires_at' =>  $request->expires_at,
-            'type_product' =>  $request->type_product,
+
         ]);
+
+        if ($request->discount_percentage > 0 &&  $request->discount_max_value > 0) {
+            $voucher->discount_value = 0;
+            $voucher->save();
+        }
+        if ($request->discount_value > 0 &&  $request->discount_percentage == 0) {
+            $voucher->discount_max_value = 0;
+            $voucher->save();
+        }
         return back()->with('success', 'Create successfully');
     }
 
@@ -86,44 +111,39 @@ class VoucherController extends Controller
      */
     public function update(UpdateVoucherReuquest $request, Voucher $voucher)
     {
+        if ($request->discount_percentage > 0) {
+            $this->validate($request, [
+                'discount_max_value' => 'required|numeric|gt:0|letter_than_field:min_spend',
 
-        if ($voucher->type_product != $request->type_product) {
-            $voucher->product_vouchers()->delete();
-            $voucher->product_service_vouchers()->delete();
+            ], [
+                'discount_max_value.letter_than_field' => 'Giá trị giảm giá tối đa phải nhỏ hơn giá trị đơn hàng tối thiểu',
+
+            ]);
         }
+
         $voucher->update([
             'code' => $request->code,
             'name' =>  $request->name,
             'description' =>  $request->description,
             'type' =>  $request->type,
-            'unit' =>  $request->unit,
             'is_fixed' =>  $request->is_fixed,
-            'discount_amount' =>  $request->discount_amount,
+            'min_spend' =>  $request->min_spend,
+            'discount_caption' =>  $request->discount_caption,
+            'discount_percentage' =>  $request->discount_percentage,
+            'discount_value' =>  $request->discount_value,
+            'discount_max_value' =>  $request->discount_max_value,
             'starts_at' => $request->starts_at,
             'expires_at' =>  $request->expires_at,
-            'type_product' =>  $request->type_product,
+
         ]);
 
-        if ($voucher->type_product == 'retail') {
-            foreach ($voucher->product_vouchers as $item) {
-                $product = ProductRetail::find($item->product_retail_id);
-                if ($voucher->unit == "percent") {
-                    $this->percent::updateItem($voucher, $item, $product, $voucher->discount_amount);
-                } else {
-                    $this->money::updateItem($voucher, $item, $product, $voucher->discount_amount);
-                }
-            }
+        if ($request->discount_percentage > 0 &&  $request->discount_max_value > 0) {
+            $voucher->discount_value = 0;
+            $voucher->save();
         }
-
-        if ($voucher->type_product == 'service') {
-            foreach ($voucher->product_service_vouchers as $item) {
-                $product = ProductService::find($item->product_service_id);
-                if ($voucher->unit == "percent") {
-                    $this->percent::updateItem($voucher, $item, $product, $voucher->discount_amount);
-                } else {
-                    $this->money::updateItem($voucher, $item, $product, $voucher->discount_amount);
-                }
-            }
+        if ($request->discount_value > 0 &&  $request->discount_percentage == 0) {
+            $voucher->discount_max_value = 0;
+            $voucher->save();
         }
 
 
