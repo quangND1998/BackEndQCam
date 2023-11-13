@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Customer\app\Http\Controllers\API\CustomerProductOwerController;
+use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
 /*
     |--------------------------------------------------------------------------
     | API Routes
@@ -23,5 +24,9 @@ use Modules\Customer\app\Http\Controllers\API\CustomerProductOwerController;
 Route::prefix('v1')->name('api.')->group(function () {
     Route::prefix('customer')->as('customer.')->group(function () {
         Route::get('product_service', [CustomerProductOwerController::class, 'getProductService']);
+        Route::get('productWithID/{id}', [CustomerProductOwerController::class, 'getOneProductActivity']);
+
+        Route::post('visit/save', [ScheduleVisitController::class, 'saveScheduleVisit']);
+        Route::get('visit', [ScheduleVisitController::class, 'getsheduleCustomer']);
     });
 });

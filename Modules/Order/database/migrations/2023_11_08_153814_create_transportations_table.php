@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('transportations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id')->index();
+            
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->string('state')->nullable();
             $table->text('address')->nullable();
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }

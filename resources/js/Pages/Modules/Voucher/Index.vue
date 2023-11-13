@@ -42,11 +42,13 @@ const form = useForm({
     id: null,
     name: null,
     code: null,
-    discount_amount: null,
-    type: null,
-    unit: "percent",
-    is_fixed: null,
     description: null,
+    min_spend: null,
+    discount_caption: 0,
+    discount_percentage: 0,
+    discount_value: 0,
+    discount_max_value: null,
+    is_fixed: false,
     starts_at: null,
     expires_at: null
 });
@@ -118,10 +120,13 @@ const edit = (product) => {
     form.id = product.id;
     form.name = product.name;
     form.code = product.code;
-    form.discount_amount = product.discount_amount;
-    form.type = product.type;
-    form.is_fixed = product.is_fixed;
     form.description = product.description;
+    form.min_spend = product.min_spend;
+    form.discount_caption = product.discount_caption;
+    form.discount_value = product.discount_value;
+    form.discount_percentage = product.discount_percentage;
+    form.discount_max_value = product.discount_max_value;
+    form.is_fixed = product.is_fixed;
     form.starts_at = product.starts_at;
     form.expires_at = product.expires_at;
     form.unit = product.unit;
@@ -206,7 +211,7 @@ const Delete = (id) => {
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
                         @click="
                             isModalActive = true;
-                        form.reset();
+
                         " label="Tạo  Mã giảm giá" />
                 </div>
             </div>
@@ -247,10 +252,12 @@ const Delete = (id) => {
                             <InputLabel for="name" value="Trang thái" />
                             <div class="ml-2">
                                 <input id="link-checkbox" type="checkbox" v-model="form.is_fixed"
+                                    :checked="form.is_fixed == 1 ? true : false"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="link-checkbox"
                                     class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                    <a v-if="form.is_fixed" class="text-blue-600 dark:text-blue-500 hover:underline"> Kích
+                                    <a v-if="form.is_fixed == 1" class="text-blue-600 dark:text-blue-500 hover:underline">
+                                        Kích
                                         hoạt</a> <a v-else class="text-blue-600 dark:text-blue-500 hover:underline">Không
                                         Kích
                                         hoạt</a>.</label>
@@ -263,30 +270,9 @@ const Delete = (id) => {
 
                     </div>
                     <div>
-                        <div class="my-2">
-                            <InputLabel for="name" value="Đơn vị" />
-                            <label class="input w-full" for="recipient-name">
-                                <select id="project" v-model="form.unit"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full">
-                                    <option value="percent"> %</option>
-                                    <option value="price">Tiền</option>
-                                </select>
-                            </label>
-                            <InputError class="mt-2" :message="form.errors.unit" />
-                        </div>
 
-                        <div class="my-2">
-                            <InputLabel for="name" value="Loại" />
-                            <label class="input w-full" for="recipient-name">
-                                <select id="project" v-model="form.type"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full">
-                                    <option value="0">Sale</option>
-                                    <option value="1">Voucher</option>
-                                    <option value="2">Giảm giá</option>
-                                </select>
-                            </label>
-                            <InputError class="mt-2" :message="form.errors.type" />
-                        </div>
+
+
 
 
                         <div class="my-2">
@@ -300,12 +286,68 @@ const Delete = (id) => {
                         </div>
 
 
+
                         <div class="my-2">
+                            <label class="input w-full" for="recipient-name">
+
+                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Tổng giá trị
+                                    đơn
+                                    hàng tối thiểu
+
+                                </span>
+                                <MazInputPrice v-model="form.min_spend" label="Enter your price" currency="VND"
+                                    locale="vi-VN" :min="0" @formatted="formattedPrice = $event" />
+
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.min_spend" />
+                        </div>
+                        <div class="my-2">
+                            <label class="input w-full" for="recipient-name" v-if="form.discount_percentage == 0">
+
+                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giá trị giảm
+                                    giá
+                                </span>
+                                <MazInputPrice v-model="form.discount_value" label="Enter your price" currency="VND"
+                                    locale="vi-VN" :min="0" @formatted="formattedPrice = $event" />
+
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.discount_value" />
+                        </div>
+
+                        <div class="my-2">
+                            <label class="input w-full" for="recipient-name">
+
+                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giảm giá theo
+                                    %
+                                </span>
+                                <MazInputNumber v-model="form.discount_percentage" label="Enter number" :min="0" :max="100"
+                                    :step="1" size="md" color="secondary" />
+
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.discount_percentage" />
+                        </div>
+
+
+
+                        <div class="my-2" v-if="form.discount_percentage > 0">
+                            <label class="input w-full" for="recipient-name">
+
+                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giảm giá tối
+                                    đa
+
+                                </span>
+                                <MazInputPrice v-model="form.discount_max_value" label="Enter your price" currency="VND"
+                                    locale="vi-VN" :min="0" @formatted="formattedPrice = $event" />
+
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.discount_max_value" />
+                        </div>
+                        <!-- <div class="my-2">
                             <label class="input w-full" for="recipient-name">
 
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giảm giá
                                 </span>
-                                <MazInputPrice v-if="form.unit == 'price'" v-model="form.discount_amount"
+                                <MazInputPrice v-if="form.disc == 'price'" v-model="form.discount_amount"
                                     label="Enter your price" currency="VND" locale="vi-VN" :min="0"
                                     @formatted="formattedPrice = $event" />
                                 <MazInputNumber v-else v-model="form.discount_amount" label="Enter number" :min="0"
@@ -314,7 +356,7 @@ const Delete = (id) => {
                                 <span v-else>%</span>
                             </label>
                             <InputError class="mt-2" :message="form.errors.discount_amount" />
-                        </div>
+                        </div> -->
 
                     </div>
 
@@ -347,13 +389,16 @@ const Delete = (id) => {
                                 </th>
 
                                 <th scope="col" class="px-6 py-3">
-                                    Loại
+                                    Giá trị giảm giá tối thiểu
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Giá trị giảm giá
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Đơn vị giảm giá
+                                    giảm giá %
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Giảm giá tối đa
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Trang thái
@@ -387,15 +432,17 @@ const Delete = (id) => {
                                     {{ voucher.name }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ voucher.type }}
+                                    {{ formatPrice(voucher.min_spend) }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ voucher.discount_amount }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <p v-if="voucher.unit == 'percent'">%</p>
+                                    {{ formatPrice(voucher.discount_value) }}
 
-                                    <p v-else> VND</p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ voucher.discount_percentage }}%
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ formatPrice(voucher.discount_max_value) }}
                                 </td>
                                 <td class="px-6 py-4">
 
@@ -443,12 +490,7 @@ const Delete = (id) => {
                                                             type="button" data-toggle="modal" data-target="#exampleModal" />
                                                     </div>
 
-                                                    <Link :href="route('admin.voucher.products', voucher.id)"
-                                                        class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
-                                                    <p class="hover:text-blue-700"> Products</p>
-                                                    <BaseButton :icon="mdiPackage" small class="text-[#2264E5]"
-                                                        type="button" data-toggle="modal" />
-                                                    </Link>
+                                                   
                                                     <div @click="Delete(voucher.id)"
                                                         class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
                                                         <p class="hover:text-red-700"> Delete</p>

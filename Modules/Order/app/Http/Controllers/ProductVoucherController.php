@@ -25,7 +25,7 @@ class ProductVoucherController extends Controller
     public function deleteItems(Request $request)
     {
         $ids = $request->ids;
-       
+
         if ($ids == null) {
             return back()->with('warning', "You must choose in checkbox !!!.");
         }
@@ -41,10 +41,10 @@ class ProductVoucherController extends Controller
         return back()->with('warning', "Not found product");
     }
 
-    public function deleteProductVoucher(ProductVoucher $product_voucher){
+    public function deleteProductVoucher(ProductVoucher $product_voucher)
+    {
         $product_voucher->delete();
         return back()->with('success', "Delete changed successfully.");
-
     }
 
 
@@ -68,7 +68,7 @@ class ProductVoucherController extends Controller
             return back()->with('warning', "You must choose in checkbox !!!.");
         }
         $products = ProductRetail::whereIn('id',  $ids)->get();
-     
+
         if ($products->count() > 0) {
             foreach ($products as $product) {
 
