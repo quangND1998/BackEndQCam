@@ -9,7 +9,7 @@ use Modules\Customer\app\Models\ScheduleVisit;
 class ScheduleVisitController extends Controller
 {
     public function getAll(){
-        
+
     }
     //state : pending, confirm, compelete, cancel
     public function getPending(Request $request){
@@ -24,6 +24,12 @@ class ScheduleVisitController extends Controller
         }else if($visit->state == "confirm"){
             $visit->state = "complete";
         };
+        $visit->save();
+        return back()->with('success', 'xác nhận đặt lịch');
+    }
+    public function cancelState(Request $request,$id){
+        $visit = ScheduleVisit::findOrFail($id);
+        $visit->state = "cancel";
         $visit->save();
         return back()->with('success', 'xác nhận đặt lịch');
     }

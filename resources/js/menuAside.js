@@ -77,13 +77,20 @@ export default [{
     label: 'Hoạt động',
     icon: mdiFileTreeOutline,
     permissions: ['super-admin','order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
-    route_list: ['admin.orders.index'],
+    route_list: ['admin.orders.index','visit.pending','visit.confirm','visit.completed'],
     menu: [{
         route: 'admin.orders.index',
         label: 'Đơn hàng',
 
         permissions: ['super-admin'],
         route_list: null
+    },
+    {
+        route: 'visit.pending',
+        label: 'Đặt lịch tham quan',
+
+        permissions: ['super-admin'],
+        route_list: ['visit.pending','visit.confirm','visit.completed']
     },
     {
         route: 'admin.orders.index',

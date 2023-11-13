@@ -72,9 +72,11 @@ Route::middleware(['auth'])->group(
             Route::get('all', [ScheduleVisitController::class, 'getAll'])->name('all');
             Route::get('pending', [ScheduleVisitController::class, 'getPending'])->name('pending');
             Route::post('changeStateToConfirm/{id}', [ScheduleVisitController::class, 'changeState'])->name('changeStateToConfirm');
-            Route::get('confirm', [ScheduleVisitController::class, 'getPending'])->name('confirm');
-            Route::get('cancel', [ScheduleVisitController::class, 'getPending'])->name('cancel');
-            Route::get('completed', [ScheduleVisitController::class, 'getPending'])->name('completed');
+            Route::post('changeState/{id}', [ScheduleVisitController::class, 'changeState'])->name('changeState');
+
+            Route::get('confirm', [ScheduleVisitController::class, 'getConfirm'])->name('confirm');
+            Route::get('cancel', [ScheduleVisitController::class, 'getCancel'])->name('cancel');
+            Route::get('completed', [ScheduleVisitController::class, 'getComplete'])->name('completed');
         });
     }
 
