@@ -71,7 +71,8 @@ const props = defineProps({
                     <tr class="info">
                         <th>Sản phẩm</th>
                         <th>SL</th>
-                        <th>Giá trước chiết khấu</th>
+                        <th>Giá </th>
+                        <th>Thành tiền </th>
                         <!-- <th>Chiết khấu</th>
                         <th>Giá sau chiết khấu</th> -->
                     </tr>
@@ -89,6 +90,7 @@ const props = defineProps({
                             </div>
                         </td>
                         <td class="px-6 py-4"> {{ item.quantity }}</td>
+                        <td class="px-6 py-4">{{ formatPrice(item.price) }}đ</td>
                         <td class="px-6 py-4">{{ formatPrice(item.total_price) }}đ</td>
                         <!-- <td class="px-6 py-4">-10%</td>
                         <td class="px-6 py-4">225.000 đ7</td> -->
