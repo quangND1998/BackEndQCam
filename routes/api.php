@@ -32,12 +32,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('v1')->as('v1.')->group(function () {
         Route::get('product-retail', [ProductRetailController::class, 'getProducts']);
-
-        Route::prefix('visit')->as('visit.')->group(function () {
-            Route::post('save', [ScheduleVisitController::class, 'saveScheduleVisit']);
-        });
-
-
         // FAQs
         Route::get('faqs', [FAQsController::class, 'FAQs']);
 
