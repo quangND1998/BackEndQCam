@@ -34,7 +34,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
         // logout
-        Route::post('logout', [LoginController::class, 'FAQs']);
+        Route::post('logout', [LoginController::class, 'logout']);
 
 
         // Product-retail
