@@ -28,4 +28,12 @@ class VoucherController extends BaseController
         }
         return new VoucherResource($voucher);
     }
+
+
+    public function getVouchers(Request $request)
+    {
+        $voucher = Voucher::where('starts_at', "<", Carbon::now())->where('expires_at', ">", Carbon::now())->where('is_fixed', 1)->orderBy('discount_value', 'desc')->orderBy('discount_max_value', 'desc')->fillter($request->only('total'))->get();
+
+        return VoucherResource::collection($voucher);
+    }
 }

@@ -56,4 +56,12 @@ class Voucher extends Model
     {
         return $this->expires_at && $this->expires_at->isBefore(now());
     }
+
+    public function scopeFillter($query, array $filters)
+    {
+        if (isset($filters['total'])) {
+
+            $query->where('min_spend', "<=", $filters['total']);
+        }
+    }
 }
