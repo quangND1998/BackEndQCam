@@ -26,7 +26,8 @@ class VoucherResource extends JsonResource
             'discount_mount' => $this->discount_mount,
             "active" => $this->is_fixed == 1 ? true : false,
             'isExpried' => $this->expires_at >= Carbon::now() ? false : true,
-
+            'expires_at' => $this->expires_at,
+            'remaining_days' => Carbon::now()->diffInDays($this->expires_at, false)
 
         ];
     }
