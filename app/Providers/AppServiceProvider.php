@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Contracts\OrderContract;
 use Illuminate\Support\ServiceProvider;
 use Modules\Order\Repositories\OrderRepository;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        JsonResource::withoutWrapping();
     }
 }

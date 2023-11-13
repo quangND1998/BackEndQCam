@@ -33,7 +33,7 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import OrderHome from "@/Pages/Test/OrderHome.vue"
-import test from "@/Pages/Modules/Order/OrderRow.vue"
+import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
 const props = defineProps({
     orders: Object,
     status: String,
@@ -97,24 +97,11 @@ const search = () => {
 }
 
 const contents = ref([
-  { id: 1, text: 'Content 1' },
-  { id: 2, text: 'Content 2' },
-  { id: 3, text: 'Content 3' },
+    { id: 1, text: 'Content 1' },
+    { id: 2, text: 'Content 2' },
+    { id: 3, text: 'Content 3' },
 ]);
-// const showContent =  ref({});
 
-// contents.value.forEach(content => showContent[content.id] = false )
-
-// const closeAllContent = () => {
-//   contents.value.forEach(content => {
-//     showContent[content.id].vaue = false;
-//   });
-// };
-
-// // Hàm để toggle trạng thái của mỗi nội dung
-// const toggleContent = (id) => {
-//   console.log("showContent", !showContent[id])
-// };
 
 
 const changeDate = () => {
@@ -260,11 +247,12 @@ const changeDate = () => {
                                     </div>
                                 </div>
 
-                                <div v-for="(content, index) in contents" :key="index">
-                                    <test />
+                                <div v-for="(order, index) in orders.data" :key="index">
+                                    <OrderRow :order="order" />
 
                                 </div>
                                
+
 
                             </div>
                         </div>

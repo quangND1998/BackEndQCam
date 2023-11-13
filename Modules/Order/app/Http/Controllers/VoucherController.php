@@ -81,10 +81,12 @@ class VoucherController extends Controller
 
         if ($request->discount_percentage > 0 &&  $request->discount_max_value > 0) {
             $voucher->discount_value = 0;
+            $voucher->discount_mount = $request->discount_max_value;
             $voucher->save();
         }
         if ($request->discount_value > 0 &&  $request->discount_percentage == 0) {
             $voucher->discount_max_value = 0;
+            $voucher->discount_mount = $request->discount_value;
             $voucher->save();
         }
         return back()->with('success', 'Create successfully');
@@ -132,6 +134,7 @@ class VoucherController extends Controller
             'discount_percentage' =>  $request->discount_percentage,
             'discount_value' =>  $request->discount_value,
             'discount_max_value' =>  $request->discount_max_value,
+
             'starts_at' => $request->starts_at,
             'expires_at' =>  $request->expires_at,
 
@@ -139,10 +142,12 @@ class VoucherController extends Controller
 
         if ($request->discount_percentage > 0 &&  $request->discount_max_value > 0) {
             $voucher->discount_value = 0;
+            $voucher->discount_mount = $request->discount_max_value;
             $voucher->save();
         }
         if ($request->discount_value > 0 &&  $request->discount_percentage == 0) {
             $voucher->discount_max_value = 0;
+            $voucher->discount_mount = $request->discount_value;
             $voucher->save();
         }
 

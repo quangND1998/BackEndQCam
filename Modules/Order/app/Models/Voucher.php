@@ -27,6 +27,7 @@ class Voucher extends Model
         'discount_percentage',
         'discount_value',
         'discount_max_value',
+        'discount_mount',
         'is_fixed',
         "starts_at",
         "expires_at"
