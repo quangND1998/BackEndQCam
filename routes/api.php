@@ -50,8 +50,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Voucher
 
         Route::prefix('voucher')->as('voucher.')->group(function () {
-            Route::get('{code}', [VoucherController::class, 'findVoucher']);
-            Route::get('list', [VoucherController::class, 'getVouchers'])->name('list');
+            Route::get('{code}/find', [VoucherController::class, 'findVoucher'])->name('find');
+            Route::get('listVoucher', [VoucherController::class, 'getVouchers'])->name('list');
         });
         Route::prefix('visit')->as('visit.')->group(function () {
             Route::post('save', [ScheduleVisitController::class, 'saveScheduleVisit']);
