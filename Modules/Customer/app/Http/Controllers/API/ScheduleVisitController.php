@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Validator;
 use Modules\Customer\app\Models\ScheduleVisit;
 use App\Models\User;
 use Carbon\Carbon;
-use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\API\Base2Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 use Modules\Customer\app\Models\ProductServiceOwner;
 
-class ScheduleVisitController extends BaseController
+class ScheduleVisitController extends Base2Controller
 {
     //
     public function saveScheduleVisit(Request $request)

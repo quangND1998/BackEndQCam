@@ -171,7 +171,7 @@ export default [{
     label: 'Cài đặt',
     icon: mdiCogOutline,
     permissions: ['view-user'],
-    route_list: ['news.index'],
+    route_list: ['news.index','admin.terms.index','admin.contact.index','admin.FAQs.index'],
     menu: [{
         route: '',
         label: 'Thông báo',
