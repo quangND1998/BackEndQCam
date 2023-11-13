@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->text('question')->nullable();
             $table->longText('answer')->nullable();
+            $table->boolean('status')->default(true)->nullable();
             $table->timestamps();
         });
     }

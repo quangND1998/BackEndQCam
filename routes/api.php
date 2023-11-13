@@ -1,9 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\LoginController;
-use App\Http\Controllers\Api\ProductRetailController;
+use App\Http\Controllers\API\FAQsController;
+use App\Http\Controllers\API\LoginController;
+use App\Http\Controllers\API\ProductRetailController;
+use App\Http\Controllers\API\VoucherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,5 +36,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('visit')->as('visit.')->group(function () {
             Route::post('save', [ScheduleVisitController::class, 'saveScheduleVisit']);
         });
+
+
+        // FAQs
+        Route::get('faqs', [FAQsController::class, 'FAQs']);
+
+
+
+        // Voucher
+        Route::get('findVoucher/{code}', [VoucherController::class, 'findVoucher']);
     });
 });

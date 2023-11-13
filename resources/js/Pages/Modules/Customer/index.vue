@@ -272,13 +272,13 @@ const limit_tree = computed(() =>{
                         <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="phone" value="Phone" />
 
-                            <MazPhoneNumberInput v-model="form.phone_number" show-code-on-list
+                            <!-- <MazPhoneNumberInput v-model="form.phone_number" show-code-on-list
                                 :preferred-countries="['FR', 'BE', 'DE', 'US', 'GB']" :ignored-countries="['AC']"
-                                @update="results = $event" />
-                            <!-- <TextInput id="password" v-model="form.phone_number" type="text" class="mt-1 block w-full"
+                                @update="results = $event" /> -->
+                            <TextInput id="password" v-model="form.phone_number" type="text" class="mt-1 block w-full"
                                 :class="form.errors.phone_number ? 'border-red-500' : ''" autocomplete="phone_number" />
 
-                            <InputError class="mt-2" :message="form.errors.phone_number" /> -->
+                            <InputError class="mt-2" :message="form.errors.phone_number" />
                         </div>
 
                         <div class="w-full md:w-1/2 px-3">

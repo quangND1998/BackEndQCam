@@ -182,6 +182,24 @@ export default [{
         label: 'Thông tin chung',
         permissions: ['super-admin'],
         route_list: null
+    },
+    {
+        route: 'admin.terms.index',
+        label: 'Điều khoản',
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.contact.index',
+        label: 'Liên hệ',
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.FAQs.index',
+        label: 'FAQs',
+        permissions: ['super-admin'],
+        route_list: null
     }
     ]
 },
