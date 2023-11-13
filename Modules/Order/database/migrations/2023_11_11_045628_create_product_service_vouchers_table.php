@@ -24,7 +24,7 @@ return new class extends Migration
 
             $table->string('unit')->nullable();
             $table->decimal('price', 20, 6)->nullable();
-            $table->integer('discount')->default(0)->nullable();
+            $table->unsignedSmallInteger('discount')->nullable();
             $table->decimal('price_sale', 20, 6)->nullable();
             $table->timestamps();
         });
