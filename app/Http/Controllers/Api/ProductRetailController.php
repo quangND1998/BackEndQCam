@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\API\Base2Controller;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductRetailCollection;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Tree\app\Models\ProductRetail;
 
-class ProductRetailController extends BaseController
+class ProductRetailController extends Base2Controller
 {
     public function getProducts()
     {

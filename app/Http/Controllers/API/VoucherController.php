@@ -7,21 +7,23 @@ use App\Http\Resources\VoucherResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Order\app\Models\Voucher;
+use App\Http\Controllers\API\BaseController;
 
 class VoucherController extends BaseController
 {
-    public function findVoucher($code){
+    public function findVoucher($code)
+    {
         $voucher = Voucher::where('code', $code)->first();
-        if(!$voucher){
+        if (!$voucher) {
             return $this->sendError('Không tìm thấy mã giảm giá.');
         }
-        if($voucher->is_fixed == 0){
+        if ($voucher->is_fixed == 0) {
             return $this->sendError('Mã giảm giá này đã không còn đc sử dụng.');
         }
-        if($voucher->starts_at > Carbon::now() ){
+        if ($voucher->starts_at > Carbon::now()) {
             return $this->sendError('Mã giảm giá này chưa công khai');
         }
-        if($voucher->expires_at <= Carbon::now() ){
+        if ($voucher->expires_at <= Carbon::now()) {
             return $this->sendError('Mã giảm giá này đã hết hạn');
         }
         return new VoucherResource($voucher);

@@ -5,6 +5,7 @@ use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\ProductRetailController;
 use App\Http\Controllers\API\VoucherController;
 use Illuminate\Http\Request;
+use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,7 +34,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
         // logout
-        Route::get('logout', [LoginController::class, 'FAQs']);
+        Route::post('logout', [LoginController::class, 'FAQs']);
 
 
         // Product-retail
@@ -48,5 +49,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         // Voucher
         Route::get('findVoucher/{code}', [VoucherController::class, 'findVoucher']);
+        Route::prefix('visit')->as('visit.')->group(function () {
+            Route::post('save', [ScheduleVisitController::class, 'saveScheduleVisit']);
+        });
     });
 });

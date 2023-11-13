@@ -9,11 +9,12 @@ use Illuminate\Http\Response;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\API\Base2Controller;
 use Modules\Customer\app\Models\ProductServiceOwner;
 
-class CustomerProductOwerController extends BaseController
+class CustomerProductOwerController extends Base2Controller
 {
+   //all product of user
    public function getProductService()
    {
         // $token = PersonalAccessToken::findToken(request()->bearerToken());
@@ -27,5 +28,15 @@ class CustomerProductOwerController extends BaseController
         ];
         return $this->sendResponse($response, 'Get apartmentDetail successfully');
 
+   }
+
+   public function getOneProductActivity($id)
+   {
+        $customer = User::find(22);
+        $product_owner = ProductServiceOwner::with('product.images','trees','contract','history_use_service')->where('user_id',$customer->id)->find($id);
+        $response = [
+            'product_owner' =>$product_owner
+        ];
+        return $this->sendResponse($response, 'Get apartmentDetail successfully');
    }
 }

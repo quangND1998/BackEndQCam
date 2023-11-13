@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\API\Base2Controller;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Http\Response;
 
-class LoginController extends BaseController
+class LoginController extends Base2Controller
 {
     public function login(Request $request)
     {
