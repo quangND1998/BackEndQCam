@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\FAQsController;
 use App\Http\Controllers\API\LoginController;
+use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductRetailController;
 use App\Http\Controllers\API\VoucherController;
 use Illuminate\Http\Request;
@@ -40,6 +41,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Product-retail
         Route::get('product-retail', [ProductRetailController::class, 'getProducts']);
 
+        Route::prefix('visit')->as('visit.')->group(function () {
+            Route::post('save', [ScheduleVisitController::class, 'saveScheduleVisit']);
+        });
 
 
         // FAQs
@@ -53,8 +57,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('{code}/find', [VoucherController::class, 'findVoucher'])->name('find');
             Route::get('listVoucher', [VoucherController::class, 'getVouchers'])->name('list');
         });
-        Route::prefix('visit')->as('visit.')->group(function () {
-            Route::post('save', [ScheduleVisitController::class, 'saveScheduleVisit']);
+
+
+        // Voucher
+
+        Route::prefix('order')->as('order.')->group(function () {
+
+            Route::post('saveOrder', [OrderController::class, 'saveOrder'])->name('saveOrder');
         });
     });
 });

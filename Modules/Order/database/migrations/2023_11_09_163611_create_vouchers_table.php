@@ -43,6 +43,7 @@ return new class extends Migration
             $table->bigInteger('discount_percentage')->default(0)->nullable();
             $table->bigInteger('discount_value')->default(0)->nullable();
             $table->bigInteger('discount_max_value')->default(0)->nullable();
+            $table->bigInteger('discount_mount')->nullable();
             // Whether or not the voucher is a percentage or a fixed price. 
             $table->boolean('is_fixed')->default(true);
             // When the voucher begins

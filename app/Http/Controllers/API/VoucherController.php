@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Modules\Order\app\Models\Voucher;
 use App\Http\Controllers\API\BaseController;
 
-class VoucherController extends BaseController
+class VoucherController extends Base2Controller
 {
     public function findVoucher($code)
     {
