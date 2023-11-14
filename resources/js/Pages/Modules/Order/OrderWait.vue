@@ -34,6 +34,7 @@ import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import OrderHome from "@/Pages/Test/OrderHome.vue"
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
+
 const props = defineProps({
     orders: Object,
     status: String,
@@ -248,10 +249,10 @@ const changeDate = () => {
                                 </div>
 
                                 <div v-for="(order, index) in orders.data" :key="index">
-                                    <OrderRow :order="order" />
+                                    <OrderRow :order="order" :status="status" />
 
                                 </div>
-                               
+
 
 
                             </div>
