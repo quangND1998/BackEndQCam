@@ -11,7 +11,7 @@
             hàng</button>
         <div class="flex">
             <select v-if="status == 'pending' || status == 'packing' || status == 'shipping' || status == 'completed'"
-                id="countries" @change="orderChangePayment(order, $event)"
+                id="countries" @change="orderChangePayment( $event)"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-4.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option :value="0" :selected="order.payment_status == 0 ? true : false">Chưa thanh toán</option>
 
@@ -29,19 +29,24 @@
 
 <script setup>
 import { computed, ref, inject } from "vue";
+import { useForm, router } from "@inertiajs/vue3";
+import { emitter } from '@/composable/useEmitter';
 const swal = inject("$swal");
 const props = defineProps({
     status: String,
     order: Object
 })
 const openDecline = () => {
-
+    emitter.emit('OpenModalDecline', props.order)
 }
 
 const openRefund = () => {
-
+    emitter.emit('OpenModalRefund', props.order)
 }
 const orderChangePending = () => {
+    let query = {
+        status: "pending"
+      };
     swal
         .fire({
             title: "Bạn có muốn?",
@@ -55,10 +60,24 @@ const orderChangePending = () => {
         .then((result) => {
             if (result.isConfirmed) {
 
+                router.post(route("admin.orders.orderChangeStatus", props.voucher.id), query,
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã thêm các sản phẩm vào mã giảm giá.", "success");
+                    },
+                });
             }
         });
 }
-const orderChangePayment = () => {
+const orderChangePayment = (event) => {
+  
+    let query = {
+        payment_status: event.target.value,
+        id: props.order.id
+      };
     swal
         .fire({
             title: "Bạn có muốn?",
@@ -73,10 +92,22 @@ const orderChangePayment = () => {
             if (result.isConfirmed) {
 
 
+                router.post(route("admin.orders.orderChangePayment"), query,
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Deleted!", "Your role has been deleted.", "success");
+                    },
+                });
             }
         });
 }
 const orderChangeShipping = () => {
+    let query = {
+        status: "shipping"
+      };
     swal
         .fire({
             title: "Bạn có muốn?",
@@ -91,10 +122,22 @@ const orderChangeShipping = () => {
             if (result.isConfirmed) {
 
 
+                router.post(route("admin.orders.orderChangeStatus", props.order.id), query,
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã thêm các sản phẩm vào mã giảm giá.", "success");
+                    },
+                });
             }
         });
 }
 const orderChangeCompleted = () => {
+    let query = {
+        status: "completed"
+      };
     swal
         .fire({
             title: "Bạn có muốn?",
@@ -108,12 +151,23 @@ const orderChangeCompleted = () => {
         .then((result) => {
             if (result.isConfirmed) {
 
-
+                router.post(route("admin.orders.orderChangeStatus", props.order.id), query,
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã thêm các sản phẩm vào mã giảm giá.", "success");
+                    },
+                });
             }
         });
 }
 
 const orderChangePacking = () => {
+    let query = {
+        status: "packing"
+      };
     swal
         .fire({
             title: "Bạn có muốn?",
@@ -126,7 +180,15 @@ const orderChangePacking = () => {
         })
         .then((result) => {
             if (result.isConfirmed) {
-
+                router.post(route("admin.orders.orderChangeStatus", props.order.id), query,
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã thêm các sản phẩm vào mã giảm giá.", "success");
+                    },
+                });
 
             }
         });

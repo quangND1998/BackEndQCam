@@ -63,6 +63,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('order')->as('order.')->group(function () {
 
             Route::post('saveOrder', [OrderController::class, 'saveOrder'])->name('saveOrder');
+
+            Route::get('lisOrder', [OrderController::class, 'getUserOrders'])->name('lisOrder');
         });
     });
 });

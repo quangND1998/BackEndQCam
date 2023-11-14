@@ -8,6 +8,8 @@ import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
+import ModalDecline from "./ModalDecline.vue";
+import ModelRefund from "./ModelRefund.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -125,7 +127,8 @@ const changeDate = () => {
 
             <div>
                 <OrderBar :statusGroup="statusGroup"></OrderBar>
-
+                <ModalDecline ></ModalDecline>
+                <ModelRefund ></ModelRefund>
                 <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4">
                     <div>
                         <div class="min-[320px]:block sm:flex">

@@ -196,7 +196,7 @@ class OrderController extends Controller
         $request->validate([
             'reason' => 'required',
             'grand_total' => 'required',
-            'shipping_fee' => 'required|numeric|gte:0|lt:grand_total'
+            'shipping_fee' => 'required|numeric|gte:0|lte:grand_total'
         ], [
             'reason.required' => 'Điền lý do hủy đơn'
         ]);
@@ -221,7 +221,7 @@ class OrderController extends Controller
 
     public function orderChangePayment(Request $request)
     {
-
+       
         $order = Order::findOrFail($request->id);
         $order->update(['payment_status' => $request->payment_status]);
         return back()->with('success', 'Chuyển trạng thái thanh toán thành công');
