@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Customer\Database\factories\ContractFactory;
 
-
 class Contract extends Model
 {
-
     /**
      * The attributes that are mass assignable.
      */
@@ -27,6 +25,7 @@ class Contract extends Model
         return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
     }
     public function history_contact(){
-        return $this->hasMany(HistoryContract::class,'contract_id');
+        return $this->hasMany(HistoryContract::class,'contracts_id');
     }
+
 }

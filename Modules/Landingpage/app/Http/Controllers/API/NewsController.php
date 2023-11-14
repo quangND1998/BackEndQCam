@@ -47,5 +47,15 @@ class NewsController extends Controller
         ];
         return response()->json($response, 200);
     }
+    public function NewsDetail($id)
+    {
+        $news = News::with("images")->findOrFail($id);
+        $response = [
+            'success' => true,
+            'message' => "news detail",
+            'data'    => $news
+        ];
+        return response()->json($response, 200);
+    }
 
 }

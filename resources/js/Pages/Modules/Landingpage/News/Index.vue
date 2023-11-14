@@ -49,6 +49,16 @@ const isModalDangerActive = ref(false);
 //     'Robin',
 //     'Joker',
 // ])
+const reset = () => {
+    editMode.value = false;
+    search.value = null;
+    form.id = null;
+    form.title = null;
+    form.state = null;
+    form.type = null;
+    form.short_description = null;
+    form.description = null;
+};
 
 const edit = (new_data) => {
     isModalActive.value = true;
