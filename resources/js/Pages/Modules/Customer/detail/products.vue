@@ -48,7 +48,7 @@ const edit = (product_owner) => {
 }
 const extend = (product_owner) => {
     isModalExtendActive.value = true;
-    form.product_service = product_owner;
+    form.product_service = product_owner.id;
 }
 const crumbs = ref([
 
@@ -105,8 +105,8 @@ const save = () => {
 
 };
 const upgrade_extend = () => {
-    
-    form.post(route("customer.detail.extend", [props.customer.id, form.product_service.id]), {
+    console.log(form.product_service.id);
+    form.post(route("product_owner.extend", [props.customer.id, form.product_service.id]), {
                 onError: () => {
                     console.log("form error");
                 },
@@ -119,7 +119,7 @@ const upgrade_extend = () => {
                 },
             });
 
-    console.log(form.product_service.id);
+    
 }
 const limit_tree = computed(() => {
     console.log('limit_tree', form.product_service)
@@ -191,7 +191,8 @@ const limit_tree = computed(() => {
                 title=" Gia hạn ">
                 <div class="p-6 flex-auto">
                         <div class="w-full  px-3">
-                            <InputLabel class="py-5" for="owner" :value="form.product_service.name " />
+
+                            <InputLabel class="py-5" for="owner" :value="form.product_service.id " />
 
                             <InputLabel for="owner" value="Thời gian bắt đầu áp dụng" />
 
@@ -284,7 +285,7 @@ const limit_tree = computed(() => {
                                 </td>
                                 <td class="px-6 py-4 ">
                                     <div class="flex ">
-                                        <Link :href="route('product_owner.contract.index', product_owner.id)" class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">Thông tin hợp đồng </Link>
+                                      
 
                                         <Dropdown align="right" width="40" class="ml-5">
                                             <template #trigger>
@@ -298,7 +299,7 @@ const limit_tree = computed(() => {
                                                 <div class="w-40">
                                                     <div
                                                         class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
-                                                        <a href="" class="hover:text-blue-700">Lịch sử gia hạn</a>
+                                                        <Link :href="route('product_owner.getExtendHistory', product_owner.id)" class="hover:text-blue-700">Lịch sử gia hạn</Link>
                                                     </div>
                                                     <div
                                                         class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">

@@ -28,11 +28,12 @@ Route::middleware(['auth'])->group(
         Route::resource('activity', CustomerActivityController::class)->names('activity');
         Route::resource('service', CustomerServiceController::class)->names('service');
 
-        Route::post('extend/{idProduct}', [ContractController::class,'extend'])->name('extend');
+       
 
     });
     Route::prefix('product_owner/{id}')->as('product_owner.')->group(function () {
         Route::resource('contract', ContractController::class)->names('contract');
-        
+        Route::post('extend', [CustomerProductController::class,'extend'])->name('extend');
+        Route::get('extend', [CustomerProductController::class,'getExtendHistory'])->name('getExtendHistory');
     });
 });
