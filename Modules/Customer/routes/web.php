@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Customer\app\Http\Controllers\ContractController;
 use Modules\Customer\app\Http\Controllers\CustomerController;
 use Modules\Customer\app\Http\Controllers\CustomerDetailController;
 use Modules\Customer\app\Http\Controllers\CustomerActivityController;
@@ -26,5 +27,10 @@ Route::middleware(['auth'])->group(
         Route::resource('products', CustomerProductController::class)->names('products');
         Route::resource('activity', CustomerActivityController::class)->names('activity');
         Route::resource('service', CustomerServiceController::class)->names('service');
+
+
+    });
+    Route::prefix('product_owner/{id}')->as('product_owner.')->group(function () {
+        Route::resource('contract', ContractController::class)->names('contract');
     });
 });

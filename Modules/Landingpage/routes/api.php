@@ -19,6 +19,7 @@ Route::prefix('landingpage')->as('landingpage.')->group(function () {
         Route::get('index', [NewsController::class, 'index'])->name('index');
         Route::get('news', [NewsController::class, 'listNews'])->name('listNews');
         Route::get('activity', [NewsController::class, 'listActivity'])->name('listActivity');
+        Route::get('{id}/detail', [NewsController::class, 'NewsDetail'])->name('detail');
     });
 });
 Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {

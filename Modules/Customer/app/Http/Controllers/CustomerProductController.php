@@ -74,10 +74,10 @@ class CustomerProductController extends Controller
                 $new_product_owner->product_service_id = $product_service->id;
                 $new_product_owner->save();
                 $trees = Tree::find($request->tree);
-
-                $new_product_owner->trees()->saveMany($trees);
-
-                $customer->save();
+                if($trees){
+                    $new_product_owner->trees()->saveMany($trees);
+                    $customer->save();
+                }
             }
 
         }

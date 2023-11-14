@@ -1,11 +1,10 @@
 <script setup>
 import { computed, ref, inject, watch, toRef } from 'vue'
 import LayoutProfileDetail from '@/Layouts/LayoutProfileDetail.vue';
-import { useForm } from '@inertiajs/vue3';
 import SectionMain from '@/Components/SectionMain.vue'
 import { Head } from '@inertiajs/vue3'
 import CardBoxModal from '@/Components/CardBoxModal.vue'
-import { mdiReceiptText, mdiPencilOutline, mdiPlus, mdiTrashCan } from '@mdi/js'
+import { mdiReceiptText, mdiPencilOutline, mdiPlus, mdiTrashCan, mdiTrashCanOutline, mdiPencil, mdiDotsVertical } from '@mdi/js'
 import BaseButton from '@/Components/BaseButton.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -14,6 +13,8 @@ import SectionTitleLineWithButton from '@/Components/SectionTitleLineWithButton.
 import BaseButtons from '@/Components/BaseButtons.vue';
 import PillTag from '@/Components/PillTag.vue'
 import Multiselect from "@vueform/multiselect";
+import Dropdown from '@/Components/Dropdown.vue';
+import { Link, useForm } from "@inertiajs/vue3";
 import moment from 'moment';
 import { useHelper } from '@/composable/useHelper';
 const props = defineProps({
@@ -25,7 +26,7 @@ const { multipleSelect } = useHelper();
 const swal = inject('$swal')
 const form = useForm({
     id: null,
-    product_service: props.products.length >0 ? props.products[0].id : null,
+    product_service: props.products.length > 0 ? props.products[0].id : null,
     tree: null,
     time_approve: null,
     state: null,
@@ -39,10 +40,10 @@ const edit = (product_owner) => {
     form.id = product_owner.id;
     form.product_service = product_owner.product.id;
     form.state = product_owner.state
-    form.tree =   multipleSelect(product_owner.trees)
+    form.tree = multipleSelect(product_owner.trees)
     form.time_approve = product_owner.time_approve
     totalTree.value = totalTree.value.concat(product_owner.trees)
-    console.log("product_service",product_owner.product.id)
+    console.log("product_service", product_owner.product.id)
 }
 const crumbs = ref([
 
@@ -65,7 +66,7 @@ const save = () => {
 
     console.log(form);
     if (editMode.value == true) {
-        form.put(route("customer.detail.products.update",[ props.customer.id, form.product_service]), {
+        form.put(route("customer.detail.products.update", [props.customer.id, form.product_service]), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = true;
@@ -79,28 +80,28 @@ const save = () => {
         });
     } else {
         form
-        .transform((data) => ({
-            ...data,
-            remember: data.remember ? 'on' : '',
-        }))
-        .post(route("customer.detail.products.store", [ props.customer.id, form.product_service]), {
-            onError: () => {
-                isModalActive.value = true;
-                editMode.value = false;
-            },
-            onSuccess: () => {
-                form_reset();
-                form.reset();
-                isModalActive.value = false;
-                editMode.value = false;
-            },
-        });
+            .transform((data) => ({
+                ...data,
+                remember: data.remember ? 'on' : '',
+            }))
+            .post(route("customer.detail.products.store", [props.customer.id, form.product_service]), {
+                onError: () => {
+                    isModalActive.value = true;
+                    editMode.value = false;
+                },
+                onSuccess: () => {
+                    form_reset();
+                    form.reset();
+                    isModalActive.value = false;
+                    editMode.value = false;
+                },
+            });
     }
 
 };
-const limit_tree = computed(() =>{
-    console.log('limit_tree',form.product_service)
-    let product_service= props.products.find(e=>e.id == form.product_service);
+const limit_tree = computed(() => {
+    console.log('limit_tree', form.product_service)
+    let product_service = props.products.find(e => e.id == form.product_service);
 
     return product_service
 }
@@ -127,10 +128,9 @@ const limit_tree = computed(() =>{
                         </div>
                         <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="owner" value="Cây" />
-                            <Multiselect v-model="form.tree" mode="tags" :appendNewTag="false" :createTag="false" :limit="limit_tree?.number_tree"
-                                :searchable="true" label="name" valueProp="id" trackBy="name" :options="totalTree"
-
-                                class="form-control" :classes="{
+                            <Multiselect v-model="form.tree" mode="tags" :appendNewTag="false" :createTag="false"
+                                :limit="limit_tree?.number_tree" :searchable="true" label="name" valueProp="id"
+                                trackBy="name" :options="totalTree" class="form-control" :classes="{
                                     tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
                                     container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-2xl leading-snug outline-none',
                                     tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2 rtl:pl-0 rtl:pr-2',
@@ -141,7 +141,7 @@ const limit_tree = computed(() =>{
 
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-6">
-                         <div class="w-full md:w-1/2 px-3">
+                        <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="owner" value="Thời gian bắt đầu áp dụng" />
                             <div date-rangepicker class="flex items-center">
                                 <div class="relative w-full">
@@ -153,13 +153,13 @@ const limit_tree = computed(() =>{
                                 </div>
                             </div>
                         </div>
-                            <div class="w-full md:w-1/2 px-3">
+                        <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="owner" value="Gói dịch vụ" />
                             <select id="category_project_id" v-model="form.state" required
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                 <option value="active">Đang hoạt động</option>
-                                 <option value="expired">Dừng hoạt động</option>
-                                 <option value="stop">Đã hủy</option>
+                                <option value="active">Đang hoạt động</option>
+                                <option value="expired">Dừng hoạt động</option>
+                                <option value="stop">Đã hủy</option>
                             </select>
                         </div>
                     </div>
@@ -168,12 +168,12 @@ const limit_tree = computed(() =>{
             <div class="p-6 flex-auto sm:w-full">
                 <div class="flex justify-between">
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
-                            small @click="
-                                isModalActive = true;
-                                editMode = false;
-                                form.reset();
-                                form_reset();
-                            " label="Thêm gói sản phẩm" />
+                        small @click="
+                            isModalActive = true;
+                        editMode = false;
+                        form.reset();
+                        form_reset();
+                        " label="Thêm gói sản phẩm" />
                 </div>
                 <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
                     <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
@@ -189,7 +189,7 @@ const limit_tree = computed(() =>{
                                 <th scope="col" class="py-3 px-6 text-xs">Nông sản nhận</th>
                                 <th scope="col" class="py-3 px-6 text-xs">Số lần giao hàng</th>
                                 <th scope="col" class="py-3 px-6 text-xs">
-                                    <span class="sr-only">Edit</span>
+                                    <span class="sr-only">Action</span>
                                 </th>
                             </tr>
                         </thead>
@@ -220,21 +220,22 @@ const limit_tree = computed(() =>{
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                  {{ product_owner?.product?.number_tree }}
+                                    {{ product_owner?.product?.number_tree }}
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                   {{ product_owner?.product?.free_visit }}
+                                    {{ product_owner?.product?.free_visit }}
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                   <Link href="/"></Link>
+                                    <Link href="/">
+                                    </Link>
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     1/{{ product_owner?.product?.number_deliveries }}
                                 </th>
-                                <td class="py-4 px-6 text-right flex justify-end my-3">
+                                <!-- <td class="py-4 px-6 text-right flex justify-end my-3">
                                     <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active"
                                         small
                                         label="Thông tin cây" />
@@ -243,6 +244,47 @@ const limit_tree = computed(() =>{
                                         class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                         Edit
                                     </button>
+                                </td> -->
+                                <td class="px-6 py-4 ">
+                                    <div class="flex ">
+                                        <Link :href="route('product_owner.contract.index', product_owner.id)" class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">Thông tin hợp đồng </Link>
+
+                                        <Dropdown align="right" width="40" class="ml-5">
+                                            <template #trigger>
+                                                <span class="inline-flex rounded-md">
+                                                    <BaseButton class="bg-[#D9D9D9] border-[#D9D9D9]"
+                                                        :icon="mdiDotsVertical" small />
+                                                </span>
+                                            </template>
+
+                                            <template #content>
+                                                <div class="w-40">
+                                                    <div
+                                                        class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+                                                        <a href="" class="hover:text-blue-700">Lịch sử gia hạn</a>
+                                                    </div>
+                                                    <div
+                                                        class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+
+                                                    </div>
+                                                    <div @click="edit(product_owner)"
+                                                        class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+                                                        <p class="hover:text-blue-700"> Edit</p>
+                                                        <BaseButton :icon="mdiPencil" small class="text-[#2264E5]"
+                                                            type="button" data-toggle="modal" data-target="#exampleModal" />
+                                                    </div>
+                                                    <div @click="Delete(product_owner.id)"
+                                                        class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
+                                                        <p class="hover:text-red-700"> Delete</p>
+                                                        <BaseButton :icon="mdiTrashCanOutline" small
+                                                            class="text-[#D12953]" />
+                                                    </div>
+
+                                                </div>
+                                            </template>
+                                        </Dropdown>
+                                    </div>
+
                                 </td>
                             </tr>
                             <pagination :links="customer.product_service_owners.links" />
