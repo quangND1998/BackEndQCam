@@ -15,7 +15,7 @@ class SettingAndInforController extends Controller
 {
     public function get(){
         $term =TermsConditions::first();
-        return  new TermsConditionResource($term);
+        return $term? new TermsConditionResource($term): response()->json(null, 200);
     }
 
     public function FAQs()
@@ -25,8 +25,8 @@ class SettingAndInforController extends Controller
 
     public function contact()
     {
-        $contact =Contact::first();
+        $contact =Contact::first(1);
 
-        return  new ContactResource($contact) ;
+        return $contact ? new ContactResource($contact) :   response()->json(null, 200);
     }
 }
