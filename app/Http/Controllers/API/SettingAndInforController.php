@@ -25,7 +25,7 @@ class SettingAndInforController extends Controller
 
     public function contact()
     {
-        $contact =Contact::first(1);
+        $contact =Contact::first();
 
         return $contact ? new ContactResource($contact) :   response()->json(null, 200);
     }
