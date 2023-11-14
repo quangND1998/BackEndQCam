@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Home\ScheduleVisitController;
 use App\Http\Controllers\TestController;
+use Modules\Landingpage\app\Http\Controllers\TermsConditionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,8 @@ Route::middleware([
         return Inertia::render('HomeView');
     })->name('dashboard');
 });
+
+Route::get('terms&condition', [TermsConditionController::class,'previewTerm'])->name('terms&condition');
 Route::middleware(['auth'])->group(
     function () {
         Route::prefix('permissions')->as('permissions.')->group(function () {

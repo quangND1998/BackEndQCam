@@ -14,7 +14,7 @@
         
     </head>
     <body class="font-sans antialiased">
-        {!!  !!}
+        {!! $terms_condition?->description !!}
       
     </body>
     

@@ -14,6 +14,10 @@ class TermsConditionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'link_web' => $request->getSchemeAndHttpHost() . '/terms&condition',
+            'description' => $this->description
+
+        ];
     }
 }
