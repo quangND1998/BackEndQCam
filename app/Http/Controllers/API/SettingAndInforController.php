@@ -20,7 +20,7 @@ class SettingAndInforController extends Controller
 
     public function FAQs()
     {
-        return FAQsResource::collection(QuestionAnswer::get());
+        return FAQsResource::collection(QuestionAnswer::where("status", 1)->get());
     }
 
     public function contact()
@@ -29,4 +29,6 @@ class SettingAndInforController extends Controller
 
         return $contact ? new ContactResource($contact) :   response()->json(null, 200);
     }
+
+    
 }

@@ -73,4 +73,10 @@ class TermsConditionController extends Controller
         $term->delete();
         return back()->with('success', "Xóa thành công");
     }
+
+
+    public function previewTerm(){
+        $terms_condition= TermsConditions::first();
+       return view('term-condition', compact('terms_condition'));
+    }
 }
