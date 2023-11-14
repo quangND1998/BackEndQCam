@@ -32,5 +32,6 @@ Route::middleware(['auth'])->group(
     });
     Route::prefix('product_owner/{id}')->as('product_owner.')->group(function () {
         Route::resource('contract', ContractController::class)->names('contract');
+        Route::post('extend', [ContractController::class,'extend'])->name('extend');
     });
 });

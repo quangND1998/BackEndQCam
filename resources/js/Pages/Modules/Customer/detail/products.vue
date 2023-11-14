@@ -34,6 +34,7 @@ const form = useForm({
 const totalTree = toRef(props.trees);
 const isModalActive = ref(false)
 const editMode = ref(false)
+const isModalExtendActive = ref(false);
 const edit = (product_owner) => {
     isModalActive.value = true
     editMode.value = true
@@ -44,6 +45,10 @@ const edit = (product_owner) => {
     form.time_approve = product_owner.time_approve
     totalTree.value = totalTree.value.concat(product_owner.trees)
     console.log("product_service", product_owner.product.id)
+}
+const extend = (product_owner) => {
+    isModalExtendActive.value = true;
+    form.product_service = product_owner.product;
 }
 const crumbs = ref([
 
@@ -99,10 +104,23 @@ const save = () => {
     }
 
 };
+const upgrade = () => {
+    form.post(route("product_owner.extend", [props.customer.id, form.product_service]), {
+            onError: () => {
+                isModalExtendActive.value = true;
+                editMode.value = true;
+            },
+            onSuccess: () => {
+                form_reset();
+                form.reset();
+                isModalExtendActive.value = false;
+                editMode.value = false;
+            },
+        });
+}
 const limit_tree = computed(() => {
     console.log('limit_tree', form.product_service)
     let product_service = props.products.find(e => e.id == form.product_service);
-
     return product_service
 }
 );
@@ -162,6 +180,27 @@ const limit_tree = computed(() => {
                                 <option value="stop">Đã hủy</option>
                             </select>
                         </div>
+                    </div>
+                </div>
+            </CardBoxModal>
+
+            <CardBoxModal v-model="isModalExtendActive" buttonLabel="Save" has-cancel @confirm="upgrade"
+                title=" Gia hạn ">
+                <div class="p-6 flex-auto">
+                        <div class="w-full  px-3">
+                            <InputLabel class="py-5" for="owner" :value="form.product_service.name " />
+
+                            <InputLabel for="owner" value="Thời gian bắt đầu áp dụng" />
+
+                            <div date-rangepicker class="flex items-center">
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    </div>
+                                    <input v-model="form.time_approve" type="date"
+                                        class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5  placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Ngày bắt đầu" />
+                                </div>
+                            </div>
                     </div>
                 </div>
             </CardBoxModal>
@@ -235,16 +274,11 @@ const limit_tree = computed(() => {
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     1/{{ product_owner?.product?.number_deliveries }}
                                 </th>
-                                <!-- <td class="py-4 px-6 text-right flex justify-end my-3">
-                                    <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active"
-                                        small
-                                        label="Thông tin cây" />
-                                    <button @click="edit(product_owner)" type="button" data-toggle="modal"
-                                        data-target="#exampleModal"
-                                        class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
-                                        Edit
-                                    </button>
-                                </td> -->
+                                <td class="py-4 px-6 text-right flex justify-end my-3" @click="extend(product_owner)" >
+                                    <BaseButton color="info" class="bg-[#F78F43] border-[0px] mx-2 text-white p-2 hover:bg-bg_green_active"
+                                    type="button" data-toggle="modal" data-target="#exampleModal"
+                                        label="gia hạn ngay" />
+                                </td>
                                 <td class="px-6 py-4 ">
                                     <div class="flex ">
                                         <Link :href="route('product_owner.contract.index', product_owner.id)" class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">Thông tin hợp đồng </Link>

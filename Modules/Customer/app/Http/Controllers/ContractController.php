@@ -19,7 +19,8 @@ class ContractController extends Controller
      */
     public function index(Request $request, $id)
     {
-        $product_ownwer = ProductServiceOwner::with('customer','contract.history_contact')->findOrfail($id);
+        $product_ownwer = ProductServiceOwner::with('customer','contract.history_contact.images')->findOrfail($id);
+        // return $product_ownwer;
         return Inertia::render('Modules/Customer/detail/contract', compact('product_ownwer'));
     }
 
@@ -49,6 +50,9 @@ class ContractController extends Controller
             $contract->addMedia($image)->toMediaCollection('contract_images');
         }
         return back()->with('success', 'Update successffully');
+    }
+    public function extend(Request $request, $id){
+        
     }
         /**
      * Remove the specified resource from storage.

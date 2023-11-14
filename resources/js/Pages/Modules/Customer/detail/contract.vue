@@ -17,6 +17,7 @@ import Multiselect from "@vueform/multiselect";
 import Dropdown from '@/Components/Dropdown.vue';
 import moment from 'moment';
 import { useHelper } from '@/composable/useHelper';
+
 const props = defineProps({
     product_ownwer: Object,
 });
@@ -160,7 +161,7 @@ const save = () => {
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-
+                                    <iframe :src=" (history_contract?.images.length) > 0 ? history_contract?.images[0]?.original_url : null"></iframe>
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -178,14 +179,6 @@ const save = () => {
 
                                             <template #content>
                                                 <div class="w-40">
-                                                    <div
-                                                        class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
-                                                        <a href="" class="hover:text-blue-700">Lịch sử gia hạn</a>
-                                                    </div>
-                                                    <div
-                                                        class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
-                                                        <a href="" class="hover:text-blue-700">Thông tin hợp đồng</a>
-                                                    </div>
                                                     <div @click="edit(history_contract)"
                                                         class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
                                                         <p class="hover:text-blue-700"> Edit</p>
