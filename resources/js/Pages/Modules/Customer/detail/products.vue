@@ -48,7 +48,7 @@ const edit = (product_owner) => {
 }
 const extend = (product_owner) => {
     isModalExtendActive.value = true;
-    form.product_service = product_owner.product;
+    form.product_service = product_owner;
 }
 const crumbs = ref([
 
@@ -104,19 +104,22 @@ const save = () => {
     }
 
 };
-const upgrade = () => {
-    form.post(route("product_owner.extend", [props.customer.id, form.product_service]), {
-            onError: () => {
-                isModalExtendActive.value = true;
-                editMode.value = true;
-            },
-            onSuccess: () => {
-                form_reset();
-                form.reset();
-                isModalExtendActive.value = false;
-                editMode.value = false;
-            },
-        });
+const upgrade_extend = () => {
+    
+    form.post(route("customer.detail.extend", [props.customer.id, form.product_service.id]), {
+                onError: () => {
+                    console.log("form error");
+                },
+                onSuccess: (response) => {
+                    form_reset();
+                    form.reset();
+                    isModalActive.value = false;
+                    editMode.value = false;
+                    console.log("form succes",response);
+                },
+            });
+
+    console.log(form.product_service.id);
 }
 const limit_tree = computed(() => {
     console.log('limit_tree', form.product_service)
@@ -184,7 +187,7 @@ const limit_tree = computed(() => {
                 </div>
             </CardBoxModal>
 
-            <CardBoxModal v-model="isModalExtendActive" buttonLabel="Save" has-cancel @confirm="upgrade"
+            <CardBoxModal v-model="isModalExtendActive" buttonLabel="Save" has-cancel @confirm="upgrade_extend"
                 title=" Gia hạn ">
                 <div class="p-6 flex-auto">
                         <div class="w-full  px-3">
@@ -321,7 +324,7 @@ const limit_tree = computed(() => {
 
                                 </td>
                             </tr>
-                            <pagination :links="customer.product_service_owners.links" />
+                            <!-- <pagination :links="customer.product_service_owners.links" /> -->
                         </tbody>
                     </table>
                 </div>

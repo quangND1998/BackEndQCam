@@ -83,9 +83,7 @@ class CustomerProductController extends Controller
                 }
 
                 //history
-                $history_extend = new HistoryExtend;
-                $history_extend->description = "tạo mới";
-                $new_product_owner->history_extend()->save($history_extend);
+                $this->extendProduct($new_product_owner,$request->time_approve,"tạo mới");
             }
 
         }
@@ -133,10 +131,9 @@ class CustomerProductController extends Controller
             $product_service_owner->save();
             return back()->with('success', 'Create customer successfully');
     }
-    public function extend(Request $request,$id){
-        $product_owner = ProductServiceOwner::with('product')->findOrFail($id);
-        //history
-        return $product_owner;
+    public function extend(Request $request,$id,$idProduct){
+
+        $product_owner = ProductServiceOwner::findOrFail(1);
         if($product_owner){
             $time_limit =  $this->extendProduct($product_owner,$request->time_approve,"gia hạn");
             $product_owner->time_approve = $request->time_approve;
@@ -153,7 +150,8 @@ class CustomerProductController extends Controller
     }
 
     public function extendProduct($product_service,$time,$state){
-        $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
+        if($product_service->product){
+        $time_life = (int)$this->checkDay($product_service->product->life_time,$product_service->product->unit);
         $time_limit = Carbon::parse($time)->addDays($time_life);
 
         $history_extend = new HistoryExtend;
@@ -161,6 +159,7 @@ class CustomerProductController extends Controller
         $history_extend->description = $state;
         $product_service->history_extend()->save($history_extend);
         return $time_limit;
+        }
     }
     /**
      * Remove the specified resource from storage.
