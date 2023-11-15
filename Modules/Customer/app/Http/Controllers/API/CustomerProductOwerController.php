@@ -39,12 +39,12 @@ class CustomerProductOwerController extends Base2Controller
    {
         $customer = Auth::user();
         if($customer){
-        $product_owner = ProductServiceOwner::with('product.images','trees','history_extend.contractList.images')->where('user_id',$customer->id)->find($id);
+        $product_owner = ProductServiceOwner::with('product.images','trees','extend_last.contractList.images')->where('user_id',$customer->id)->find($id);
         $response = [
             'product_detail' =>$product_owner
         ];
         return $this->sendResponse($response, 'Get apartmentDetail successfully');
-    }
+        }
 
         return response()->json('Chua logim', 200);
    }
