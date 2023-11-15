@@ -32,4 +32,8 @@ class HistoryExtend extends Model
     {
         return $this->hasManyThrough( HistoryContract::class,Contract::class,'extend_id','contracts_id',);
     }
+    public function contract_last()
+    {
+        
+    }
 }

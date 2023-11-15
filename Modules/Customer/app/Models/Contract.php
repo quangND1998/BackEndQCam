@@ -28,7 +28,7 @@ class Contract extends Model
         return $this->hasMany(HistoryContract::class,'contracts_id');
     }
     public function lastcontract(){
-        
+        return $this->hasOne(HistoryContract::class,'contracts_id')->latest();
     }
 
 }
