@@ -165,6 +165,7 @@ class CustomerProductController extends Controller
     public function getExtendHistory($id){
         $product_owner = ProductServiceOwner::with('customer','history_extend.contract')->findOrFail($id);
         $customer =  $product_owner->customer;
+
         return Inertia::render('Modules/Customer/detail/extendHistory', compact('customer','product_owner'));
     }
     /**
