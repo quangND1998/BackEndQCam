@@ -4,6 +4,7 @@ use App\Http\Controllers\API\FAQsController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductRetailController;
+use App\Http\Controllers\API\SettingAndInforController;
 use App\Http\Controllers\API\VoucherController;
 use Illuminate\Http\Request;
 use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
@@ -40,15 +41,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         // Product-retail
         Route::get('product-retail', [ProductRetailController::class, 'getProducts']);
-
-        Route::prefix('visit')->as('visit.')->group(function () {
-            Route::post('save', [ScheduleVisitController::class, 'saveScheduleVisit']);
-        });
-
-
         // FAQs
-        Route::get('faqs', [FAQsController::class, 'FAQs']);
+        Route::get('faqs', [SettingAndInforController::class, 'FAQs']);
 
+        // term & condition
+        Route::get('term_condition', [SettingAndInforController::class, 'get']);
+        // term & condition
+        Route::get('contact', [SettingAndInforController::class, 'contact']);
 
 
         // Voucher
@@ -64,6 +63,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('order')->as('order.')->group(function () {
 
             Route::post('saveOrder', [OrderController::class, 'saveOrder'])->name('saveOrder');
+
+            Route::get('lisOrder', [OrderController::class, 'getUserOrders'])->name('lisOrder');
         });
     });
 });

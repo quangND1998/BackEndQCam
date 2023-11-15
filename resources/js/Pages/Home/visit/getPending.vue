@@ -71,6 +71,14 @@ const changeState = (visit) => {
         },
     });
 }
+const cancelState = (visit) => {
+    console.log(visit.id);
+    form.post(route('visit.cancelState',visit.id), {
+        onFinish: () => {
+            form.reset();
+        },
+    });
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -195,11 +203,11 @@ const changeState = (visit) => {
 
                                         </th>
                                         <th class="py-4 px-6 text-right flex justify-end my-3">
-                                            <button @click="changeState(visit)" 
+                                            <button @click="changeState(visit)"
                                                 class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                                 Xác nhận
                                             </button>
-                                            <button 
+                                            <button @click="cancelState(visit)"
                                                 class="inline-block flex justify-center item-center text-center px-6 py-2.5 text-white bg-red-600 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                                 <BaseIcon :path="mdiCancel" class="text-white"></BaseIcon>
                                                 Hủy
@@ -211,7 +219,7 @@ const changeState = (visit) => {
                                 </tbody>
                             </table>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
         </SectionMain>

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-
+import OrderAction from "@/Pages/Modules/Order/OrderAction.vue"
 const showContent = ref(false);
 
 // Hàm để toggle trạng thái của nội dung
@@ -9,7 +9,8 @@ const toggleContent = () => {
     console.log(showContent.value)
 };
 const props = defineProps({
-    order: Object
+    order: Object,
+    status: String
 })
 </script>
 
@@ -100,35 +101,20 @@ const props = defineProps({
             </table>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
                 <p>Cộng tiền hàng</p>
-                <p>450,000 ₫</p>
+                <p>{{ formatPrice(order.grand_total) }}₫</p>
 
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
                 <p>Chiết khấu</p>
-                <input class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
+                <input v-if="order.discount" :value="formatPrice(order.discount.discount_mount)"
+                    class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
                 <p>Khách phải trả</p>
-                <p class="text-red-600 text-xl">450,000 ₫</p>
+                <p class="text-red-600 text-xl">{{ formatPrice(order.last_price) }} ₫</p>
 
             </div>
-            <div class="flex justify-between ">
-                <button class="border rounded-lg bg-gray-100 px-3 py-2">
-                    Hủy đơn
-                </button>
-                <div class="flex">
-
-                    <select id="countries"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-4.5 py-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
-                        <option selected>Chưa thanh toán</option>
-
-                        <option value="CA">Đã thanh toán</option>
-                    </select>
-                    <button class="px-3 py-2 ml-3  border rounded-lg bg-primary">
-                        Đóng gói hàng
-                    </button>
-                </div>
-            </div>
+            <OrderAction :order="order" :status="status"></OrderAction>
         </div>
     </div>
 </template>

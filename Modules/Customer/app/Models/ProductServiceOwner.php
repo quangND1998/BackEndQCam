@@ -42,6 +42,10 @@ class ProductServiceOwner extends Model
     {
         return $this->hasMany(HistoryUseService::class,'product_service_owner_id');
     }
+    public function history_extend()
+    {
+        return $this->hasMany(HistoryExtend::class,'product_service_owner_id');
+    }
     public function trees()
     {
         return $this->hasMany(Tree::class,'product_service_owner_id');
