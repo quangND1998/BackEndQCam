@@ -53,7 +53,7 @@ const props = defineProps({
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain>
-            <div class="mx-5">
+            <div class="mx-5 mt-10">
                 <div class="grid grid-cols-3 gap-4">
                     <div class="col-span-2">
                        <InvoiceInformation />
@@ -145,15 +145,17 @@ const props = defineProps({
                         <h1 class="text-[30px] font-semibold text-[#686868] my-2">3:30</h1>
                         <p class="font-semibold text-base text-[#FF0000]">Chưa thanh toán</p>
                         <div class="mt-5">
-                            <img src="/assets/images/qr.png" class="w-44 h-44 m-auto" alt="">
-                            <p class="text-base my-1 ">Nội dung:  12535</p>
-                            <p class="text-base my-1 ">STK: 9999999</p>
-                            <p class="text-base my-1 ">CTK: CÔNG TY ABC</p>
-                            <p class="text-base my-1 ">NGÂN HÀNG: ABC</p>
-                        </div>
-                        <BaseButton color="info"
-                                class="bg-black text-white p-2 mt-3 w-3/5 text-center justify-center rounded-lg"
+                            <BaseButton color="info"
+                                class="bg-blue-500 text-white mb-2 p-2 w-3/5 text-center justify-center rounded-lg"
+                                :icon="mdiContentSaveMove" small label="Thanh toán ngay" />
+                                <BaseButton color="info"
+                                class=" bg-gray-700 text-white my-2 p-2 w-3/5 text-center justify-center rounded-lg"
+                                :icon="mdiContentSaveMove" small label="Sao chép đường dẫn" />
+                                <BaseButton color="info"
+                                class="bg-black text-white p-2 my-2 w-3/5 text-center justify-center rounded-lg"
                                 :icon="mdiContentSaveMove" small label="In đơn hàng" />
+                        </div>
+                        
                     </div>
                    
                 </div>
