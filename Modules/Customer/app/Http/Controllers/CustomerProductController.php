@@ -26,7 +26,7 @@ class CustomerProductController extends Controller
     }
     public function index($id)
     {
-        $customer = User::with('product_service_owners.product','product_service_owners.trees')->whereHas('roles', function ($query) {
+        $customer = User::with('product_service_owners.product','product_service_owners.trees','product_service_owners.history_extend')->whereHas('roles', function ($query) {
             $query->where('name', 'Customer');
         })->findOrFail($id);
         $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();
@@ -83,9 +83,7 @@ class CustomerProductController extends Controller
                 }
 
                 //history
-                $history_extend = new HistoryExtend;
-                $history_extend->description = "tạo mới";
-                $new_product_owner->history_extend()->save($history_extend);
+                $this->extendProduct($new_product_owner,$request->time_approve,"tạo mới");
             }
 
         }
@@ -134,15 +132,14 @@ class CustomerProductController extends Controller
             return back()->with('success', 'Create customer successfully');
     }
     public function extend(Request $request,$id){
-        $product_owner = ProductServiceOwner::with('product')->findOrFail($id);
-        //history
-        return $product_owner;
+
+        $product_owner = ProductServiceOwner::findOrFail($request->product_service);
         if($product_owner){
             $time_limit =  $this->extendProduct($product_owner,$request->time_approve,"gia hạn");
             $product_owner->time_approve = $request->time_approve;
             $product_owner->time_end = $time_limit;
 
-            $product_owner->description = " gia hạn gói " . $product_owner->name;
+            $product_owner->description = " gia hạn gói " . $product_owner->product->name;
             $product_owner->state = "active";
             $product_owner->save();
             return back()->with('success', 'Create customer successfully');
@@ -153,7 +150,8 @@ class CustomerProductController extends Controller
     }
 
     public function extendProduct($product_service,$time,$state){
-        $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
+        if($product_service->product){
+        $time_life = (int)$this->checkDay($product_service->product->life_time,$product_service->product->unit);
         $time_limit = Carbon::parse($time)->addDays($time_life);
 
         $history_extend = new HistoryExtend;
@@ -161,6 +159,12 @@ class CustomerProductController extends Controller
         $history_extend->description = $state;
         $product_service->history_extend()->save($history_extend);
         return $time_limit;
+        }
+    }
+    public function getExtendHistory($id){
+        $product_owner = ProductServiceOwner::with('customer','history_extend.contract')->findOrFail($id);
+        $customer =  $product_owner->customer;
+        return Inertia::render('Modules/Customer/detail/extendHistory', compact('customer','product_owner'));
     }
     /**
      * Remove the specified resource from storage.

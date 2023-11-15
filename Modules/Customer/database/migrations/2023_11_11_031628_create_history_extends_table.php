@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestampTz("date")->nullable();
             $table->longText("description")->nullable();
             $table->string("state")->nullable();
-            $table->unsignedBigInteger('product_service_owner_id')->unique()->nullable();
+            $table->unsignedBigInteger('product_service_owner_id')->nullable();
             $table->foreign('product_service_owner_id')->references('id')->on('product_service_owners')->onDelete('cascade');
             $table->timestamps();
         });

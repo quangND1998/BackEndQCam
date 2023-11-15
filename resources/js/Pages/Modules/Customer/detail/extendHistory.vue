@@ -19,7 +19,8 @@ import moment from 'moment';
 import { useHelper } from '@/composable/useHelper';
 
 const props = defineProps({
-    history_extend: Object,
+    product_owner: Object,
+    customer: Object
 });
 const { multipleSelect } = useHelper();
 const swal = inject('$swal')
@@ -38,7 +39,19 @@ const edit = (contract) => {
     form.images = contract.images,
     form.state = contract.state
 }
+const crumbs = ref([
 
+    {
+        route: "customer.detail.info",
+        parma: props.product_ownwer?.customer?.id,
+        name: props.product_ownwer?.customer?.name
+    },
+    {
+        route: "customer.detail.info",
+        parma: props.product_ownwer?.customer?.id,
+        name: "Amenities"
+    }
+])
 const form_reset = () => {
     console.log("reset");
 };
@@ -60,11 +73,7 @@ const save = () => {
         });
     } else {
         form
-            .transform((data) => ({
-                ...data,
-                remember: data.remember ? 'on' : '',
-            }))
-            .post(route("product_owner.contract.store", props.product_ownwer.id), {
+            .post(route("product_owner.contract.store", props.product_owner.id), {
                 onError: () => {
                     isModalActive.value = true;
                     editMode.value = false;
@@ -82,7 +91,7 @@ const save = () => {
 </script>
 
 <template>
-    <LayoutProfileDetail :customer="product_ownwer?.customer" :crumbs="crumbs">
+    <LayoutProfileDetail :customer="customer" :crumbs="crumbs">
 
         <Head title="Hợp đồng" />
         <SectionMain>
@@ -108,7 +117,7 @@ const save = () => {
                                 </div>
                                 <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.file[0]" type="file"
                                     class="hidden" accept="image/*" />
-                                <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" 
+                                <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
                                     class="hidden" accept="image/*" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.images" />
@@ -133,30 +142,33 @@ const save = () => {
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="py-3 px-6 text-xs">STT</th>
-                                <th scope="col" class="py-3 px-6 text-xs">Link</th>
-                                <th scope="col" class="py-3 px-6 text-xs">Thời gian</th>
+                                <th scope="col" class="py-3 px-6 text-xs">Từ</th>
+                                <th scope="col" class="py-3 px-6 text-xs">Đến</th>
                                 <th scope="col" class="py-3 px-6 text-xs">
                                     <span class="sr-only">Action</span>
                                 </th>
                             </tr>
                         </thead>
-                        <tbody v-if="history_extend?.contract?.history_contact">
-                            <tr v-for="(history_contract, index) in history_extend?.contract?.history_contact" :key="index"
+                        <tbody v-if="product_ownwer?.history_extend">
+                            <tr v-for="(history_extend, index) in product_ownwer?.history_extend" :key="index"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ index + 1 }}
                                 </th>
+
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <iframe :src=" (history_contract?.images.length) > 0 ? history_contract?.images[0]?.original_url : null"></iframe>
+                                   
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ history_contract?.created_at }}
+                                     {{ history_extend?.date }}
+                                   
                                 </th>
                                 <td class="px-6 py-4 ">
                                     <div class="flex ">
+                                          <Link :href="route('product_owner.contract.index', history_extend.id)" class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">Thông tin hợp đồng </Link>
                                         <Dropdown align="right" width="40" class="ml-5">
                                             <template #trigger>
                                                 <span class="inline-flex rounded-md">

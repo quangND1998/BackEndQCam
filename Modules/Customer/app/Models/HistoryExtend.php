@@ -21,6 +21,9 @@ class HistoryExtend extends Model
     }
     public function contract()
     {
-        return $this->hasOne(Contract::class,'product_service_owner_id');
+        return $this->hasOne(Contract::class,'extend_id');
+    }
+    public function product_service_owner(){
+        return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
     }
 }
