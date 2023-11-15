@@ -61,6 +61,8 @@ Route::middleware(['auth'])->group(
 
                 Route::post('orderChangeStatus/{order}', [OrderController::class, 'orderChangeStatus'])->name('orderChangeStatus');
                 Route::post('orderChangePayment', [OrderController::class, 'orderChangePayment'])->name('orderChangePayment');
+
+                Route::get('/create', [OrderController::class, 'createOrder'])->name('create');
             });
         });
     }

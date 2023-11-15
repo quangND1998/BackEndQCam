@@ -80,4 +80,7 @@ class OrderController extends Base2Controller
         $orders= Order::with('orderItems.product', 'discount')->where('status','!=','refund')->orWhere('status','!=','decline')->where('user_id', $user->id)->get();
         return $orders;
     }
+
+
+   
 }

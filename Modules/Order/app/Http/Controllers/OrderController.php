@@ -227,7 +227,9 @@ class OrderController extends Controller
         return back()->with('success', 'Chuyển trạng thái thanh toán thành công');
     }
 
-
+    public function createOrder(Request $request){
+        return Inertia::render('Modules/Order/Create/CreateOrder');
+    }
 
  
 }
