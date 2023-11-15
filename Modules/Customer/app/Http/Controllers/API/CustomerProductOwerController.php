@@ -13,6 +13,7 @@ use App\Http\Controllers\API\Base2Controller;
 use Carbon\Carbon;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Illuminate\Support\Facades\Auth;
+use Modules\Customer\app\Models\HistoryExtend;
 use Modules\Tree\app\Models\ProductService;
 class CustomerProductOwerController extends Base2Controller
 {
@@ -51,5 +52,16 @@ class CustomerProductOwerController extends Base2Controller
     }
 
         return response()->json('Chua login', 200);
+   }
+   public function getDetailExtendHistory($id)
+   {
+    $customer = Auth::user();
+    if($customer){
+        $extend = HistoryExtend::with('contract.lastcontract.images')->findOrFail($id);
+        $response = [
+            'extend' =>$extend
+        ];
+        return $this->sendResponse($response, 'Get HistoryExtend successfully');
+    }
    }
 }
