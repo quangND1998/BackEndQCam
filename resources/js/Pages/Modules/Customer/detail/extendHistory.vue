@@ -32,23 +32,24 @@ const form = useForm({
 const totalTree = toRef(props.trees);
 const isModalActive = ref(false)
 const editMode = ref(false)
-const edit = (contract) => {
+const edit = (history_extend) => {
+    console.log(history_extend);
     isModalActive.value = true
     editMode.value = true
-    form.id = contract.id;
-    form.images = contract.images,
-        form.state = contract.state
+    form.id = history_extend.id;
+    form.state = history_extend.state
+    console.log(form.id);
 }
 const crumbs = ref([
 
     {
         route: "customer.detail.info",
-        parma: props.product_ownwer?.customer?.id,
-        name: props.product_ownwer?.customer?.name
+        parma: props.product_owner?.customer?.id,
+        name: props.product_owner?.customer?.name
     },
     {
         route: "customer.detail.info",
-        parma: props.product_ownwer?.customer?.id,
+        parma: props.product_owner?.customer?.id,
         name: "Amenities"
     }
 ])
@@ -56,10 +57,8 @@ const form_reset = () => {
     console.log("reset");
 };
 const save = () => {
-
-    console.log(form);
-    if (editMode.value == true) {
-        form.put(route("product_owner.contract.update", form.id), {
+    console.log(form.id);
+        form.post(route("product_owner.history_extend", form.id), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = true;
@@ -71,21 +70,7 @@ const save = () => {
                 editMode.value = false;
             },
         });
-    } else {
-        form
-            .post(route("product_owner.contract.store", props.product_owner.id), {
-                onError: () => {
-                    isModalActive.value = true;
-                    editMode.value = false;
-                },
-                onSuccess: () => {
-                    form_reset();
-                    form.reset();
-                    isModalActive.value = false;
-                    editMode.value = false;
-                },
-            });
-    }
+
 
 };
 </script>
@@ -100,33 +85,15 @@ const save = () => {
                 :title="editMode ? 'Chỉnh sửa' : 'Tạo mới'">
                 <div class="p-6 flex-auto">
                     <div class="flex flex-wrap -mx-3 mb-6">
-                        <InputLabel for="image" value="Bản scan hợp đồng" />
-                        <div class=" flex items-center justify-center w-full">
-                            <label for="dropzone-file"
-                                class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                <div class="h-[160px] flex flex-col items-center justify-center pt-5 pb-6">
-                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                    </svg>
-                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                            class="font-semibold">Click
-                                            to upload</span> or drag and drop</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.
-                                        800x400px)
-                                    </p>
-                                </div>
-                                <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.file[0]"
-                                    type="file" class="hidden" accept="image/*" />
-                                <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file"
-                                    multiple class="hidden" accept="image/*" />
-                            </label>
-                            <InputError class="mt-2" :message="form.errors.images" />
+                        <div class="w-full md:w-1/2 px-3">
+                            <InputLabel for="owner" value="Trạng thái" />
+                            <select id="category_project_id" v-model="form.state" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option  value="active">Đang hoạt động</option>
+                                <option value="expired">Dừng hoạt động</option>
+                                <option value="stop">Đã hủy</option>
+                            </select>
                         </div>
-
-
                     </div>
                 </div>
             </CardBoxModal>
@@ -140,13 +107,16 @@ const save = () => {
                         form_reset();
                         " label="Tải scan hợp đồng" />
                 </div> -->
-                <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+                <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5 min-h-[400px]">
                     <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="py-3 px-6 text-xs">STT</th>
+                                <th scope="col" class="py-3 px-6 text-xs">Gói sp</th>
+                                <th scope="col" class="py-3 px-6 text-xs">Giá</th>
                                 <th scope="col" class="py-3 px-6 text-xs">Từ</th>
                                 <th scope="col" class="py-3 px-6 text-xs">Đến</th>
+                                <th scope="col" class="py-3 px-6 text-xs">State</th>
                                 <th scope="col" class="py-3 px-6 text-xs">
                                     <span class="sr-only">Action</span>
                                 </th>
@@ -162,11 +132,24 @@ const save = () => {
 
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ history_extend?.product_name }}
+                                </th>
+                                <th scope="row"
+                                    class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ history_extend?.price }}
+                                </th>
+                                <th scope="row"
+                                    class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ history_extend?.date_from }}
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ history_extend?.date_to }}
+
+                                </th>
+                                <th scope="row"
+                                    class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ history_extend?.state }}
 
                                 </th>
                                 <th scope="row"
@@ -191,13 +174,13 @@ const save = () => {
 
                                             <template #content>
                                                 <div class="w-40">
-                                                    <div @click="edit(history_contract)"
+                                                    <div @click="edit(history_extend)"
                                                         class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
                                                         <p class="hover:text-blue-700"> Edit</p>
                                                         <BaseButton :icon="mdiPencil" small class="text-[#2264E5]"
                                                             type="button" data-toggle="modal" data-target="#exampleModal" />
                                                     </div>
-                                                    <div @click="Delete(history_contract.id)"
+                                                    <div @click="Delete(history_extend.id)"
                                                         class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
                                                         <p class="hover:text-red-700"> Delete</p>
                                                         <BaseButton :icon="mdiTrashCanOutline" small

@@ -170,6 +170,12 @@ class CustomerProductController extends Controller
 
         return Inertia::render('Modules/Customer/detail/extendHistory', compact('customer','product_owner'));
     }
+    public function editHistoryExtend(Request $request,$id){
+        $history_extend = HistoryExtend::findOrFail($id);
+        $history_extend->state = $request->state;
+        $history_extend->save();
+        return back()->with('success', 'update successfully');
+    }
     /**
      * Remove the specified resource from storage.
      */
