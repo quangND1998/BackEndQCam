@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->timestampTz("date_from")->nullable();
             $table->timestampTz("date_to")->nullable();
+            $table->bigInteger("price")->nullable();
+            $table->string("product_name")->nullable();
             $table->longText("description")->nullable();
             $table->string("state")->nullable();
             $table->unsignedBigInteger('product_service_owner_id')->nullable();

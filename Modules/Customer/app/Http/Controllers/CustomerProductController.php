@@ -155,6 +155,8 @@ class CustomerProductController extends Controller
         $time_limit = Carbon::parse($time)->addDays($time_life);
 
         $history_extend = new HistoryExtend;
+        $history_extend->price = $product_service->product->price;
+        $history_extend->product_name = $product_service->product->name;
         $history_extend->date_from = $time;
         $history_extend->date_to = $time_limit;
         $history_extend->description = $state;
