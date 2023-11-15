@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->text('specific_address')->nullable();
-
+            $table->string("fcm_token")->nullable();
             $table->string('city')->nullable();
             $table->string('district')->nullable();
             $table->string('wards')->nullable();
