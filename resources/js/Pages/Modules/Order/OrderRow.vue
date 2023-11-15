@@ -99,19 +99,19 @@ const props = defineProps({
                 </tbody>
             </table>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
-                                    <p>Cộng tiền hàng</p>
-                                    <p>450,000 ₫</p>
+                <p>Cộng tiền hàng</p>
+                <p>450,000 ₫</p>
 
-                                </div>
-                                <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
-                                    <p>Chiết khấu</p>
-                                    <input  class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />                          
-                                </div>
-                                <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
-                                    <p>Khách phải trả</p>
-                                    <p class="text-red-600 text-xl">450,000 ₫</p>
+            </div>
+            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Chiết khấu</p>
+                <input class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
+            </div>
+            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Khách phải trả</p>
+                <p class="text-red-600 text-xl">450,000 ₫</p>
 
-                                </div>
+            </div>
             <div class="flex justify-between ">
                 <button class="border rounded-lg bg-gray-100 px-3 py-2">
                     Hủy đơn
