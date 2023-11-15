@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Home\ScheduleVisitController;
 use App\Http\Controllers\TestController;
+use Modules\Landingpage\app\Http\Controllers\TermsConditionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,12 +22,7 @@ use App\Http\Controllers\TestController;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect('/login');
 });
 
 Route::middleware([
@@ -38,6 +34,8 @@ Route::middleware([
         return Inertia::render('HomeView');
     })->name('dashboard');
 });
+
+Route::get('terms&condition', [TermsConditionController::class,'previewTerm'])->name('terms&condition');
 Route::middleware(['auth'])->group(
     function () {
         Route::prefix('permissions')->as('permissions.')->group(function () {
@@ -72,9 +70,11 @@ Route::middleware(['auth'])->group(
             Route::get('all', [ScheduleVisitController::class, 'getAll'])->name('all');
             Route::get('pending', [ScheduleVisitController::class, 'getPending'])->name('pending');
             Route::post('changeStateToConfirm/{id}', [ScheduleVisitController::class, 'changeState'])->name('changeStateToConfirm');
-            Route::get('confirm', [ScheduleVisitController::class, 'getPending'])->name('confirm');
-            Route::get('cancel', [ScheduleVisitController::class, 'getPending'])->name('cancel');
-            Route::get('completed', [ScheduleVisitController::class, 'getPending'])->name('completed');
+            Route::post('changeState/{id}', [ScheduleVisitController::class, 'changeState'])->name('changeState');
+
+            Route::get('confirm', [ScheduleVisitController::class, 'getConfirm'])->name('confirm');
+            Route::get('cancel', [ScheduleVisitController::class, 'getCancel'])->name('cancel');
+            Route::get('completed', [ScheduleVisitController::class, 'getComplete'])->name('completed');
         });
     }
 

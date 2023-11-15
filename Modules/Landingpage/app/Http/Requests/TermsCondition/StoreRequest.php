@@ -12,15 +12,8 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'email' => 'required|string',
-            'address' => 'required|string',
-            'tax_code' => 'required|string',
-            'hotline' => 'required|string',
-            'zalo_phone' => 'required|string',
-            'facebook' => 'required|string',
-            'website' => 'required|string',
-            'map' => 'required|string'
+            'description' => 'required|string',
+    
         ];
     }
 

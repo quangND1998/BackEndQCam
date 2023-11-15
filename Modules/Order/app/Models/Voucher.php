@@ -22,10 +22,13 @@ class Voucher extends Model
         'max_uses',
         'max_uses_user',
         'type',
-        'discount_amount',
-        "is_fixed",
-        'unit',
-        'type_product',
+        'min_spend',
+        "discount_caption",
+        'discount_percentage',
+        'discount_value',
+        'discount_max_value',
+        'discount_mount',
+        'is_fixed',
         "starts_at",
         "expires_at"
     ];
@@ -53,5 +56,13 @@ class Voucher extends Model
     public function isExpired(): bool
     {
         return $this->expires_at && $this->expires_at->isBefore(now());
+    }
+
+    public function scopeFillter($query, array $filters)
+    {
+        if (isset($filters['total'])) {
+
+            $query->where('min_spend', "<=", $filters['total']);
+        }
     }
 }

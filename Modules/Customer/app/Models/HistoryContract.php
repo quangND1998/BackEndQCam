@@ -25,7 +25,7 @@ class HistoryContract extends Model implements HasMedia
     }
     public function images()
     {
-        return $this->media()->where('collection_name', 'product_service_images');
+        return $this->media()->where('collection_name', 'contract_images');
     }
     public function contracts(){
         return $this->belongsTo(contracts::class,'contract_id');

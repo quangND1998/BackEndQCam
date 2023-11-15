@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedBigInteger('product_service_owner_id')->nullable();
             $table->foreign('product_service_owner_id')->references('id')->on('product_service_owners');
+
+            $table->unsignedBigInteger('extend_id')->nullable();
+            $table->foreign('extend_id')->references('id')->on('history_extends');
             $table->timestamps();
         });
     }

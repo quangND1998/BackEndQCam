@@ -56,4 +56,8 @@ class ProductService extends Model implements HasMedia
     {
         return $this->hasMany(ProductServiceVoucher::class, 'product_service_id');
     }
+    public function productServiceOwner()
+    {
+        return $this->hasMany(ProductServiceOwner::class,'product_service_id');
+    }
 }

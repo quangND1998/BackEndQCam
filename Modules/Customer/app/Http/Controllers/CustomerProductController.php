@@ -12,6 +12,9 @@ use Modules\Tree\app\Models\Tree;
 use Inertia\Inertia;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Carbon\Carbon;
+use Modules\Customer\app\Models\HistoryExtend;
+use Modules\Customer\app\Models\HistoryUseService;
+
 class CustomerProductController extends Controller
 {
     public function __construct()
@@ -74,10 +77,15 @@ class CustomerProductController extends Controller
                 $new_product_owner->product_service_id = $product_service->id;
                 $new_product_owner->save();
                 $trees = Tree::find($request->tree);
+                if($trees){
+                    $new_product_owner->trees()->saveMany($trees);
+                    $customer->save();
+                }
 
-                $new_product_owner->trees()->saveMany($trees);
-
-                $customer->save();
+                //history
+                $history_extend = new HistoryExtend;
+                $history_extend->description = "tạo mới";
+                $new_product_owner->history_extend()->save($history_extend);
             }
 
         }
@@ -105,10 +113,9 @@ class CustomerProductController extends Controller
      */
     public function update(Request $request, $id, ProductService $product_service): RedirectResponse
     {
-
             $product_service_owner = ProductServiceOwner::with('product')->findOrFail($request->id);
             $product_service = ProductService::findOrFail($request->product_service);
-            $product_service_owner->state = "active"; //active, expired, stop
+            $product_service_owner->state = $request->state; //active, expired, stop
 
             if ($product_service_owner->product ==null || $product_service_owner->product->id != $product_service->id ) {
                 $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
@@ -116,15 +123,45 @@ class CustomerProductController extends Controller
                 $product_service_owner->time_end = Carbon::parse($request->time_approve)->addDays($time_life);
                 $product_service_owner->product_service_id = $product_service->id;
             }
-
-            $product_service_owner->trees()->delete();
+            foreach($product_service_owner->trees() as $tree){
+                $tree->product_service_owner_id = null;
+                $tree->save();
+            }
             $trees = Tree::find($request->tree);
             $product_service_owner->trees()->saveMany($trees);
 
             $product_service_owner->save();
             return back()->with('success', 'Create customer successfully');
     }
+    public function extend(Request $request,$id){
+        $product_owner = ProductServiceOwner::with('product')->findOrFail($id);
+        //history
+        return $product_owner;
+        if($product_owner){
+            $time_limit =  $this->extendProduct($product_owner,$request->time_approve,"gia hạn");
+            $product_owner->time_approve = $request->time_approve;
+            $product_owner->time_end = $time_limit;
 
+            $product_owner->description = " gia hạn gói " . $product_owner->name;
+            $product_owner->state = "active";
+            $product_owner->save();
+            return back()->with('success', 'Create customer successfully');
+        }else{
+            return back()->with('error', 'không tồn tại gói dịch vụ');
+        }
+
+    }
+
+    public function extendProduct($product_service,$time,$state){
+        $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
+        $time_limit = Carbon::parse($time)->addDays($time_life);
+
+        $history_extend = new HistoryExtend;
+        $history_extend->date = $time_limit;
+        $history_extend->description = $state;
+        $product_service->history_extend()->save($history_extend);
+        return $time_limit;
+    }
     /**
      * Remove the specified resource from storage.
      */

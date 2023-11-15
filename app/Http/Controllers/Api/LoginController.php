@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\API\Base2Controller;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Http;
 
-class LoginController extends BaseController
+class LoginController extends Base2Controller
 {
     public function login(Request $request)
     {
@@ -40,18 +43,31 @@ class LoginController extends BaseController
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-        if (!User::where('phone_number', $request->phone_number)->exists()) {
-            return $this->sendError('Không tìm thấy số điện thoại.', $validator->errors(), 404);
-        } /* Get credentials from .env */
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $twilio_sid = getenv("TWILIO_SID");
-        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        $user = User::where('phone_number', preg_replace('/\s+/', '', $request->phone_number))->first();
 
-        $twilio = new Client($twilio_sid, $token);
-        $twilio->verify->v2->services($twilio_verify_sid)
-            ->verifications
-            ->create($request->phone_number, "sms");
-        return response()->json('We send otp to your phone ' . $request->phone_number, 200);
+        if(!$user){
+              return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 404);
+        }
+        $response = Http::withHeaders([
+            'Cookie' => 'ASP.NET_SessionId=nhizlj210llu1cbvucp133aa',
+            'Content-Type' => 'application/json'
+        ])->get('https://rest.esms.vn/MainService.svc/json/SendMessageAutoGenCode_V4_get', [
+            "Phone" =>$request->phone_number,
+            "ApiKey" => config('esms.esms_api_key'),
+            "SecretKey" => config('esms.esms_secret_key'),
+            "SmsType" => 2,
+            "TimeAlive" => 45,
+            "NumCharOfCode" => 6,
+            "Brandname" => "Baotrixemay",
+            "Type" => 2,
+            "message" => "{OTP} la ma xac minh dang ky Baotrixemay cua ban",
+            "IsNumber" => 1
+        ]);
+         $data = $response->json();
+        if($data["CodeResult"] == 100){
+            return response()->json('We send otp to your phone ' . $request->phone_number, 200);
+        }
+           return response()->json("Lỗi xảy ra", 404);
     }
 
 
@@ -62,33 +78,44 @@ class LoginController extends BaseController
             'phone_number' => ['required', 'string'],
         ]);
 
+    
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors(), 422);
+        }
 
+        $response = Http::withHeaders([
+            'Cookie' => 'ASP.NET_SessionId=nhizlj210llu1cbvucp133aa',
+            'Content-Type' => 'application/json'
+        ])->get('https://rest.esms.vn/MainService.svc/json/CheckCodeGen_V4_get', [
+            "Phone" => $request->phone_number,
+            "ApiKey" => config('esms.esms_api_key'),
+            "SecretKey" => config('esms.esms_secret_key'),
+            "Code" => $request->verification_code,
+          
+        ]);
+        $data = $response->json();
 
-        /* Get credentials from .env */
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $twilio_sid = getenv("TWILIO_SID");
-        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
-
-        $twilio = new Client($twilio_sid, $token);
-
-        $verification = $twilio->verify->v2->services($twilio_verify_sid)
-            ->verificationChecks
-            ->create(
-                [
-                    "to" => $request->phone_number,
-                    "code" => $request->verification_code
-                ]
-            );
-
-        if ($verification->valid) {
-
-            $user = User::where('phone_number', $request->phone_number)->first();
+        if($data['CodeResult'] ==100){
+            $user = User::where('phone_number', preg_replace('/\s+/', '', $request->phone_number))->first();
             Auth::login($user);
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
             $success['user'] =  $user;
-
             return $this->sendResponse($success, 'User login successfully.');
         }
-        return $this->sendError('Unauthorised.', ['error' => 'Invalid verification code entered!']);
+    
+          return response()->json('Mã code không chính xác hoặc đã sử dụng!. Vui lòng thử lại',404);
+    }
+
+    public function logout(Request $request)
+    {
+
+        $token = PersonalAccessToken::findToken(request()->bearerToken());
+        if ($token) {
+            $token->delete();
+            // $user = $token->tokenable;
+            // $user->tokens()->delete();
+            return response()->json('You have successfully logged out.', Response::HTTP_OK);
+        }
+        return response()->json('Failed to logout, please try again.', Response::HTTP_BAD_REQUEST);
     }
 }

@@ -38,6 +38,8 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        // $order = Order::with('discount')->find(1);
+        // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
@@ -194,16 +196,14 @@ class OrderController extends Controller
         $request->validate([
             'reason' => 'required',
             'grand_total' => 'required',
-            'shipping_fee' => 'required|numeric|gte:0|lt:grand_total'
+            'shipping_fee' => 'required|numeric|gte:0|lte:grand_total'
         ], [
             'reason.required' => 'Điền lý do hủy đơn'
         ]);
 
         $order->update([
             'status' => 'refund',
-            'shipping_fee' => $request->shipping_fee ? $request->shipping_fee : 0,
             'reason' => $request->reason,
-            'last_price' => $order->grand_total - ($order->grand_total * $order->discount) / 100 + $request->shipping_fee
         ]);
 
         return back()->with('success', 'Hủy đơn thành công');
@@ -215,15 +215,19 @@ class OrderController extends Controller
         $order->update([
             'status' => $request->status,
         ]);
-        if ($order->status == 'completed') {
-            $orderItems = $order->orderItems()->get();
-            foreach ($orderItems as $item) {
-                $product = ProductRetail::find($item->product_id);
-                $product->update([
-                    'quantity_sold_auto' => $product->quantity_sold_auto + $item->quantity
-                ]);
-            }
-        }
         return back()->with('success', `Đơn hàng đã được chuyển sang trạng thái:$request->status`);
     }
+
+
+    public function orderChangePayment(Request $request)
+    {
+       
+        $order = Order::findOrFail($request->id);
+        $order->update(['payment_status' => $request->payment_status]);
+        return back()->with('success', 'Chuyển trạng thái thanh toán thành công');
+    }
+
+
+
+ 
 }

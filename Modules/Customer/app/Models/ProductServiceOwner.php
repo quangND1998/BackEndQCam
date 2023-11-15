@@ -42,6 +42,10 @@ class ProductServiceOwner extends Model
     {
         return $this->hasMany(HistoryUseService::class,'product_service_owner_id');
     }
+    public function history_extend()
+    {
+        return $this->hasMany(HistoryExtend::class,'product_service_owner_id');
+    }
     public function trees()
     {
         return $this->hasMany(Tree::class,'product_service_owner_id');
@@ -49,5 +53,8 @@ class ProductServiceOwner extends Model
     public function contract()
     {
         return $this->hasOne(Contract::class,'product_service_owner_id');
+    }
+    public function visit(){
+        return $this->hasMany(ScheduleVisit::class,'product_service_owner_id');
     }
 }

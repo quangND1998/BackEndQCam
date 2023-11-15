@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer("number_deliveries_current")->nullable();
             $table->string("state")->nullable();
             $table->integer("visited_time")->default(0)->nullable();
+
             $table->timestamps();
         });
     }

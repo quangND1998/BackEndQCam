@@ -1,0 +1,156 @@
+<script setup>
+import { computed, ref, inject, reactive } from "vue";
+import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
+import Pagination from "@/Components/Pagination.vue";
+import { useForm, router } from "@inertiajs/vue3";
+import SectionMain from "@/Components/SectionMain.vue";
+import { Head, Link } from "@inertiajs/vue3";
+import CardBox from "@/Components/CardBox.vue";
+import CardBoxModal from "@/Components/CardBoxModal.vue";
+import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
+
+import {
+    mdiEye,
+    mdiAccountLockOpen,
+    mdiPlus,
+    mdiFilter,
+    mdiMagnify,
+    mdiDotsVertical,
+    mdiTrashCanOutline,
+    mdiCodeBlockBrackets,
+    mdiPencil,
+    mdiLandFields
+} from "@mdi/js";
+import BaseButton from "@/Components/BaseButton.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
+// import Multiselect from '@vueform/multiselect'
+import Dropdown from '@/Components/Dropdown.vue';
+import BaseIcon from '@/Components/BaseIcon.vue'
+import SearchInput from "vue-search-input";
+import "vue-search-input/dist/styles.css";
+import MazInputPrice from 'maz-ui/components/MazInputPrice'
+import { initFlowbite } from 'flowbite'
+import Contract from '@/Pages/Test/Contract.vue'
+
+
+const props = defineProps({
+    orders: Object,
+    status: String,
+    status: String,
+    from: String,
+    to: String,
+    statusGroup: Array
+});
+
+
+</script>
+<template>
+    <LayoutAuthenticated>
+
+        <Head title="Quản lý đơn hàng" />
+        <SectionMain>
+            <div class="mx-5">
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="col-span-2">
+                        <div class="pb-3 border-b border-gray-300">
+                            <img src="/assets/images/cammattroi.png" alt="">
+                            <h1 class="text-base font-semibold">CÔNG TY CỔ PHẦN CAM MẶT TRỜI</h1>
+                            <p class="text-sm text-[#5F5F5F]">Địa chỉ:</p>
+                            <p class="text-sm text-[#5F5F5F]">Farm:</p>
+                            <p class="text-sm text-[#5F5F5F]">Điện thoại:</p>
+                            <p class="text-sm text-[#5F5F5F]">Email:</p>
+                        </div>
+                        <div class="mt-5">
+                            <h3 class="text-[17px] font-bold">Thông tin liên hệ</h3>
+                            <p class="text-[#686868] text-base my-2">Khách hàng: <strong class="ml-3">(Ông) Nguyễn Mạnh
+                                    Hùng</strong></p>
+                            <p class="text-[#686868] text-base my-2">Số điện thoại: <strong class="ml-3">0988 198
+                                    554</strong></p>
+                            <p class="text-[#686868] text-base my-2">Địa chỉ: <strong class="ml-3">Thôn A, xã B, huyện D,
+                                    tỉnh E</strong></p>
+                        </div>
+                        <div class="mt-5">
+                            <div class="relative overflow-x-auto">
+                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                    <thead
+                                        class="text-xs text-gray-700 uppercase bg-[#F0F0F0] dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">
+                                                Sản phẩm
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Thời gian áp dụng
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Tổng
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                            <th scope="row"
+                                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                Gói nhận nuôi cây 1 năm
+                                            </th>
+
+                                            <td class="px-6 py-4">
+                                                20/11/2023 - 20/11/2024
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                1.000.000đ
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="flex w-full justify-end mt-5">
+                                <!-- <div class="w-1/2"></div> -->
+                                <div class="w-1/2">
+                                    <div class="flex justify-between my-2">
+                                        <p class="text-sm text-[#686868] font-bold">Tổng</p>
+                                        <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                                    </div>
+                                    <div class="flex justify-between my-2">
+                                        <p class="text-sm text-[#686868] font-bold">VAT(x%)</p>
+                                        <p class="text-sm text-[#686868] font-bold">100.000đ</p>
+                                    </div>
+                                    <div class="flex justify-between my-2">
+                                        <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
+                                        <p class="text-sm text-[#686868] font-bold">Miễn phí</p>
+                                    </div>
+                                    <div class="flex justify-between my-2">
+                                        <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
+                                        <p class="text-sm text-[#686868] font-bold">100.000đ</p>
+                                    </div>
+                                    <div class="flex justify-between my-2">
+                                        <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
+                                        <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                                    </div>
+                                    <div class="flex justify-between my-2">
+                                        <p class="text-sm text-[#686868] font-bold">Đã thanh toán</p>
+                                        <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                                    </div>
+                                    <div class="flex justify-between my-2">
+                                        <p class="text-sm text-[#686868] font-bold">Còn lại</p>
+                                        <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </SectionMain>
+    </LayoutAuthenticated>
+</template>
+<style src="@vueform/multiselect/themes/default.css"></style>

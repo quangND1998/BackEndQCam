@@ -23,13 +23,14 @@ class UpdateVoucherReuquest extends FormRequest
             'uses' => 'nullable',
             'max_uses_user' => 'nullable',
             'max_uses' => 'nullable',
-            'type' => 'required',
-            'unit' => 'required',
+            'min_spend' => 'required',
             'is_fixed' => 'required',
-            'discount_amount' => 'required|numeric|gt:0',
+            // 'discount_caption' => 'required|numeric|gt:-1',
+            'discount_percentage' => 'nullable|numeric|gt:-1',
+            'discount_value' => 'required|numeric|gt:-1',
+            'discount_max_value' => 'required_if:discount_percentage,>,0',
             'starts_at' => 'required|date',
             'expires_at' =>  'required|date|after:starts_at',
-            'type_product' => 'required'
         ];
     }
 

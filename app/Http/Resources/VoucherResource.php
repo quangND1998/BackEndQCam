@@ -19,10 +19,15 @@ class VoucherResource extends JsonResource
             'id' => $this->id,
             'code' => $this->code,
             'description' => $this->description,
-            'type' => $this->type,
-            'discount_amount' => $this->discount_amount,
-            'unit' => $this->unit,
-            'expires_at' => $this->expires_at
+            'min_spend' => $this->min_spend,
+            'discount_percentage' => $this->discount_percentage,
+            'discount_value' => $this->discount_value,
+            'discount_max_value' => $this->discount_max_value,
+            'discount_mount' => $this->discount_mount,
+            "active" => $this->is_fixed == 1 ? true : false,
+            'isExpried' => $this->expires_at >= Carbon::now() ? false : true,
+            'expires_at' => $this->expires_at,
+            'remaining_days' => Carbon::now()->diffInDays($this->expires_at, false)
 
         ];
     }

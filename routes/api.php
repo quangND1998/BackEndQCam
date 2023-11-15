@@ -1,9 +1,13 @@
 <?php
 
-use App\Http\Controllers\Api\FAQsController;
+use App\Http\Controllers\API\FAQsController;
 use App\Http\Controllers\API\LoginController;
+use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductRetailController;
+use App\Http\Controllers\API\SettingAndInforController;
+use App\Http\Controllers\API\VoucherController;
 use Illuminate\Http\Request;
+use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,13 +33,38 @@ Route::prefix('v1')->as('v1.')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('v1')->as('v1.')->group(function () {
+
+
+        // logout
+        Route::post('logout', [LoginController::class, 'logout']);
+
+
+        // Product-retail
         Route::get('product-retail', [ProductRetailController::class, 'getProducts']);
-
-
-
         // FAQs
-        Route::get('faqs', [FAQsController::class, 'FAQs']);
+        Route::get('faqs', [SettingAndInforController::class, 'FAQs']);
+
+        // term & condition
+        Route::get('term_condition', [SettingAndInforController::class, 'get']);
+        // term & condition
+        Route::get('contact', [SettingAndInforController::class, 'contact']);
 
 
+        // Voucher
+
+        Route::prefix('voucher')->as('voucher.')->group(function () {
+            Route::get('{code}/find', [VoucherController::class, 'findVoucher'])->name('find');
+            Route::get('listVoucher', [VoucherController::class, 'getVouchers'])->name('list');
+        });
+
+
+        // Voucher
+
+        Route::prefix('order')->as('order.')->group(function () {
+
+            Route::post('saveOrder', [OrderController::class, 'saveOrder'])->name('saveOrder');
+
+            Route::get('lisOrder', [OrderController::class, 'getUserOrders'])->name('lisOrder');
+        });
     });
 });
