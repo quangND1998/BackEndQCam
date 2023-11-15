@@ -44,22 +44,16 @@ class ProductRetail extends Model implements HasMedia
     }
 
 
-    public function voucher_owner()
+    public function vouchers()
     {
-        // return $this->belongsToMany(Voucher::class,'product_voucher', 'product_retail_id','voucher_id');
+
         return $this->belongsToMany(Voucher::class, 'product_voucher', 'product_retail_id', 'voucher_id');
     }
-    public function vouchers()
+    public function voucher_items()
     {
         return $this->hasMany(ProductVoucher::class, 'product_retail_id');
     }
 
-
-    // public function voucher()
-    // {
-    //     // return $this->belongsToMany(Voucher::class,'product_voucher', 'product_retail_id','voucher_id');
-    //     return $this->hasMany(Voucher::class, 'product_voucher', 'product_retail_id', 'voucher_id');
-    // }
     public function HasDiscount()
     {
     }

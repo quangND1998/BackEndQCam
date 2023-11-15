@@ -76,7 +76,7 @@ export default [{
 {
     label: 'Hoạt động',
     icon: mdiFileTreeOutline,
-    permissions: ['order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+    permissions: ['super-admin','order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
     route_list: ['admin.orders.index'],
     menu: [{
         route: 'admin.orders.index',
@@ -99,13 +99,13 @@ export default [{
         permissions: ['super-admin'],
         route_list: null
     }
-]
+    ]
 },
 {
     label: 'Sản phẩm',
     icon: mdiSale,
     permissions: ['view-user'],
-    route_list: ['admin.land.index', 'admin.product-retail.index', 'admin.product-service.index'],
+    route_list: ['admin.land.index', 'admin.product-retail.index', 'admin.product-service.index','admin.land.tree.index','admin.voucher.index'],
     menu: [{
         route: 'admin.land.index',
         label: 'Cây',
@@ -180,6 +180,24 @@ export default [{
     {
         route: '',
         label: 'Thông tin chung',
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.terms.index',
+        label: 'Điều khoản',
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.contact.index',
+        label: 'Liên hệ',
+        permissions: ['super-admin'],
+        route_list: null
+    },
+    {
+        route: 'admin.FAQs.index',
+        label: 'FAQs',
         permissions: ['super-admin'],
         route_list: null
     }

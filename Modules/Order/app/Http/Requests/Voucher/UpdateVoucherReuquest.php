@@ -28,7 +28,8 @@ class UpdateVoucherReuquest extends FormRequest
             'is_fixed' => 'required',
             'discount_amount' => 'required|numeric|gt:0',
             'starts_at' => 'required|date',
-            'expires_at' =>  'required|date|after:starts_at'
+            'expires_at' =>  'required|date|after:starts_at',
+            'type_product' => 'required'
         ];
     }
 

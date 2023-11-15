@@ -4,6 +4,7 @@ namespace App\SaleService;
 
 use Modules\Order\app\Models\ProductVoucher;
 use App\SaleService\SaleInterface;
+use Modules\Order\app\Models\ProductServiceVoucher;
 
 class PercentDiscount implements SaleInterface
 {
@@ -29,6 +30,19 @@ class PercentDiscount implements SaleInterface
         ProductVoucher::create([
             'voucher_id' => $voucher->id,
             'product_retail_id' => $product->id,
+            'price' => $product->price,
+            'unit' => $voucher->unit,
+            'discount' => $discount,
+            'price_sale' => $product->price - ($product->price * $discount) / 100
+        ]);
+    }
+
+
+    public static function createProductServiceVoucher($voucher, $product, $discount)
+    {
+        ProductServiceVoucher::create([
+            'voucher_id' => $voucher->id,
+            'product_service_id' => $product->id,
             'price' => $product->price,
             'unit' => $voucher->unit,
             'discount' => $discount,

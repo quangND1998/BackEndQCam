@@ -44,6 +44,7 @@ const form = useForm({
     code: null,
     discount_amount: null,
     type: null,
+    type_product: null,
     unit: "percent",
     is_fixed: null,
     description: null,
@@ -120,6 +121,7 @@ const edit = (product) => {
     form.code = product.code;
     form.discount_amount = product.discount_amount;
     form.type = product.type;
+    form.type_product = product.type_product;
     form.is_fixed = product.is_fixed;
     form.description = product.description;
     form.starts_at = product.starts_at;
@@ -247,10 +249,12 @@ const Delete = (id) => {
                             <InputLabel for="name" value="Trang thái" />
                             <div class="ml-2">
                                 <input id="link-checkbox" type="checkbox" v-model="form.is_fixed"
+                                    :checked="form.is_fixed == 1 ? true : false"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="link-checkbox"
                                     class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                    <a v-if="form.is_fixed" class="text-blue-600 dark:text-blue-500 hover:underline"> Kích
+                                    <a v-if="form.is_fixed == 1" class="text-blue-600 dark:text-blue-500 hover:underline">
+                                        Kích
                                         hoạt</a> <a v-else class="text-blue-600 dark:text-blue-500 hover:underline">Không
                                         Kích
                                         hoạt</a>.</label>
@@ -258,7 +262,18 @@ const Delete = (id) => {
 
 
                         </div>
-
+                        <div class="my-2">
+                            <InputLabel for="name" value="Giảm giá cho Loại sản phẩm" />
+                            <label class="input w-full" for="recipient-name">
+                                <select id="project" v-model="form.type_product"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full">
+                                    <option :value="null">Chọn Loại sản phẩm</option>
+                                    <option value="service">Sản phẩm dịch vụ</option>
+                                    <option value="retail">Sản phẩm lẻ</option>
+                                </select>
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.type" />
+                        </div>
 
 
                     </div>
@@ -390,6 +405,17 @@ const Delete = (id) => {
                                     {{ voucher.type }}
                                 </td>
                                 <td class="px-6 py-4">
+                                    <p v-if="voucher.type_product == 'retail'">
+                                        Sản phẩm lẻ
+                                    </p>
+
+                                    <p v-if="voucher.type_product == 'service'">
+                                        'Sản phẩm dịch vụ'
+                                    </p>
+
+
+                                </td>
+                                <td class="px-6 py-4">
                                     {{ voucher.discount_amount }}
                                 </td>
                                 <td class="px-6 py-4">
@@ -444,8 +470,17 @@ const Delete = (id) => {
                                                     </div>
 
                                                     <Link :href="route('admin.voucher.products', voucher.id)"
+                                                        v-if="voucher.type_product == 'retail'"
                                                         class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
                                                     <p class="hover:text-blue-700"> Products</p>
+                                                    <BaseButton :icon="mdiPackage" small class="text-[#2264E5]"
+                                                        type="button" data-toggle="modal" />
+                                                    </Link>
+
+                                                    <Link :href="route('admin.voucher.product-service.index', voucher.id)"
+                                                        v-if="voucher.type_product == 'service'"
+                                                        class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+                                                    <p class="hover:text-blue-700"> Product Service</p>
                                                     <BaseButton :icon="mdiPackage" small class="text-[#2264E5]"
                                                         type="button" data-toggle="modal" />
                                                     </Link>
