@@ -64,7 +64,7 @@ const save = () => {
                 ...data,
                 remember: data.remember ? 'on' : '',
             }))
-            .post(route("product_owner.contract.store", props.product_ownwer.id), {
+            .post(route("product_owner.contract.store", props.history_extend.id), {
                 onError: () => {
                     isModalActive.value = true;
                     editMode.value = false;
@@ -82,7 +82,7 @@ const save = () => {
 </script>
 
 <template>
-    <LayoutProfileDetail :customer="product_ownwer?.customer" :crumbs="crumbs">
+    <LayoutProfileDetail :customer="history_extend?.product_service_owner?.customer" :crumbs="crumbs">
 
         <Head title="Hợp đồng" />
         <SectionMain>
@@ -103,13 +103,13 @@ const save = () => {
                                     </svg>
                                     <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click
                                             to upload</span> or drag and drop</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">FPD
                                     </p>
                                 </div>
                                 <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.file[0]" type="file"
-                                    class="hidden" accept="image/*" />
-                                <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" 
-                                    class="hidden" accept="image/*" />
+                                    class="hidden" accept="application/pdf,application/vnd.ms-excel" />
+                                <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
+                                    class="hidden" accept="application/pdf,application/vnd.ms-excel" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.images" />
                         </div>

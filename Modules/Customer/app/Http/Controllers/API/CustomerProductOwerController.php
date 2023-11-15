@@ -19,25 +19,33 @@ class CustomerProductOwerController extends Base2Controller
    public function getProductService()
    {
             $customer = Auth::user();
-            // $product_owner = $customer->product_service_owners;
-            $product_owner = ProductServiceOwner::with('product.images')->where('user_id',$customer->id)->get();
-            $product_not_owner = ProductService::with('images')->whereDoesntHave('productServiceOwner')->get();
+            if($customer){
+                // $product_owner = $customer->product_service_owners;
+                $product_owner = ProductServiceOwner::with('product.images')->where('user_id',$customer->id)->get();
+                $product_not_owner = ProductService::with('images')->whereDoesntHave('productServiceOwner')->get();
 
-            $response = [
-                'user' => $customer->name,
-                'product_owner' =>$product_owner,
-                'not_owner' => $product_not_owner
-            ];
-            return $this->sendResponse($response, 'Get apartmentDetail successfully');
+                $response = [
+                    'user' => $customer->name,
+                    'product_owner' =>$product_owner,
+                    'not_owner' => $product_not_owner
+                ];
+                return $this->sendResponse($response, 'Get apartmentDetail successfully');
+            }
+            return response()->json('Chua logim', 200);
+
    }
 
    public function getOneProductActivity($id)
    {
         $customer = Auth::user();
-        $product_owner = ProductServiceOwner::with('product.images','trees','contract','history_use_service')->where('user_id',$customer->id)->find($id);
+        if($customer){
+        $product_owner = ProductServiceOwner::with('product.images','trees','history_extend.contractList.images')->where('user_id',$customer->id)->find($id);
         $response = [
             'product_detail' =>$product_owner
         ];
         return $this->sendResponse($response, 'Get apartmentDetail successfully');
+    }
+
+        return response()->json('Chua logim', 200);
    }
 }

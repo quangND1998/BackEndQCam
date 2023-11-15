@@ -119,7 +119,7 @@ const upgrade_extend = () => {
                 },
             });
 
-    
+
 }
 const limit_tree = computed(() => {
     console.log('limit_tree', form.product_service)
@@ -285,8 +285,6 @@ const limit_tree = computed(() => {
                                 </td>
                                 <td class="px-6 py-4 ">
                                     <div class="flex ">
-                                      
-
                                         <Dropdown align="right" width="40" class="ml-5">
                                             <template #trigger>
                                                 <span class="inline-flex rounded-md">

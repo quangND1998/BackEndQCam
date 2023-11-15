@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('history_extends', function (Blueprint $table) {
             $table->id();
-            $table->timestampTz("date")->nullable();
+            $table->timestampTz("date_from")->nullable();
+            $table->timestampTz("date_to")->nullable();
             $table->longText("description")->nullable();
             $table->string("state")->nullable();
             $table->unsignedBigInteger('product_service_owner_id')->nullable();

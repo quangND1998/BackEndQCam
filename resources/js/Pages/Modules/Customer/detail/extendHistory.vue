@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, inject, watch, toRef } from 'vue'
 import LayoutProfileDetail from '@/Layouts/LayoutProfileDetail.vue';
-import { useForm } from '@inertiajs/vue3';
+import { Link, useForm } from "@inertiajs/vue3";
 import SectionMain from '@/Components/SectionMain.vue'
 import { Head } from '@inertiajs/vue3'
 import CardBoxModal from '@/Components/CardBoxModal.vue'
@@ -37,7 +37,7 @@ const edit = (contract) => {
     editMode.value = true
     form.id = contract.id;
     form.images = contract.images,
-    form.state = contract.state
+        form.state = contract.state
 }
 const crumbs = ref([
 
@@ -107,18 +107,21 @@ const save = () => {
                                 <div class="h-[160px] flex flex-col items-center justify-center pt-5 pb-6">
                                     <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
                                             d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                     </svg>
-                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click
+                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
+                                            class="font-semibold">Click
                                             to upload</span> or drag and drop</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.
+                                        800x400px)
                                     </p>
                                 </div>
-                                <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.file[0]" type="file"
-                                    class="hidden" accept="image/*" />
-                                <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
-                                    class="hidden" accept="image/*" />
+                                <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.file[0]"
+                                    type="file" class="hidden" accept="image/*" />
+                                <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file"
+                                    multiple class="hidden" accept="image/*" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.images" />
                         </div>
@@ -128,7 +131,7 @@ const save = () => {
                 </div>
             </CardBoxModal>
             <div class="p-6 flex-auto sm:w-full">
-                <div class="flex justify-between">
+                <!-- <div class="flex justify-between">
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                         small @click="
                             isModalActive = true;
@@ -136,7 +139,7 @@ const save = () => {
                         form.reset();
                         form_reset();
                         " label="Tải scan hợp đồng" />
-                </div>
+                </div> -->
                 <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
                     <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -149,8 +152,8 @@ const save = () => {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody v-if="product_ownwer?.history_extend">
-                            <tr v-for="(history_extend, index) in product_ownwer?.history_extend" :key="index"
+                        <tbody v-if="product_owner?.history_extend">
+                            <tr v-for="(history_extend, index) in product_owner?.history_extend" :key="index"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -159,16 +162,25 @@ const save = () => {
 
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                   
+                                    {{ history_extend?.date_from }}
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                     {{ history_extend?.date }}
-                                   
+                                    {{ history_extend?.date_to }}
+
+                                </th>
+                                <th scope="row"
+                                    class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <Link :href="route('product_owner.contract.index', history_extend.id)"
+                                                class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+                                            Thông tin hợp đồng</Link>
                                 </th>
                                 <td class="px-6 py-4 ">
                                     <div class="flex ">
-                                          <Link :href="route('product_owner.contract.index', history_extend.id)" class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">Thông tin hợp đồng </Link>
+                                        <div
+                                            class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+
+                                        </div>
                                         <Dropdown align="right" width="40" class="ml-5">
                                             <template #trigger>
                                                 <span class="inline-flex rounded-md">
@@ -205,7 +217,6 @@ const save = () => {
                 </div>
             </div>
 
-        </SectionMain>
-    </LayoutProfileDetail>
-</template>
+    </SectionMain>
+</LayoutProfileDetail></template>
 <style src="@vueform/multiselect/themes/default.css"></style>
