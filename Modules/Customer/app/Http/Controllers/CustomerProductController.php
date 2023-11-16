@@ -155,7 +155,10 @@ class CustomerProductController extends Controller
         $time_limit = Carbon::parse($time)->addDays($time_life);
 
         $history_extend = new HistoryExtend;
-        $history_extend->date = $time_limit;
+        $history_extend->price = $product_service->product->price;
+        $history_extend->product_name = $product_service->product->name;
+        $history_extend->date_from = $time;
+        $history_extend->date_to = $time_limit;
         $history_extend->description = $state;
         $product_service->history_extend()->save($history_extend);
         return $time_limit;
@@ -164,7 +167,14 @@ class CustomerProductController extends Controller
     public function getExtendHistory($id){
         $product_owner = ProductServiceOwner::with('customer','history_extend.contract')->findOrFail($id);
         $customer =  $product_owner->customer;
+
         return Inertia::render('Modules/Customer/detail/extendHistory', compact('customer','product_owner'));
+    }
+    public function editHistoryExtend(Request $request,$id){
+        $history_extend = HistoryExtend::findOrFail($id);
+        $history_extend->state = $request->state;
+        $history_extend->save();
+        return back()->with('success', 'update successfully');
     }
     /**
      * Remove the specified resource from storage.

@@ -46,6 +46,10 @@ class ProductServiceOwner extends Model
     {
         return $this->hasMany(HistoryExtend::class,'product_service_owner_id');
     }
+    public function extend_last()
+    {
+        return $this->hasOne(HistoryExtend::class,'product_service_owner_id')->latest();
+    }
     public function trees()
     {
         return $this->hasMany(Tree::class,'product_service_owner_id');
