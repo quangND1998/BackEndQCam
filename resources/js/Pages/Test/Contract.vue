@@ -243,6 +243,18 @@ const date = ref(new Date());
 
             </div>
             <div class="min-[320px]:mx-0 md:mx-5">
+                <div class="mb-3">
+                    <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                       Loại hình</label>
+                       <select id="countries"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>Tiền mặt</option>
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="FR">France</option>
+                        <option value="DE">Germany</option>
+                    </select>
+                </div>
                 <div class="my-3">
                     <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                         VAT(%)</label>
@@ -264,13 +276,7 @@ const date = ref(new Date());
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="" required>
                 </div>
-                <div class="my-2">
-                    <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                        Thời gian giữ chỗ (ngày)</label>
-                    <input type="number" id="first_name"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="" required>
-                </div>
+                
                 <div class="my-2">
                     <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                         Số tiền thanh toán</label>
