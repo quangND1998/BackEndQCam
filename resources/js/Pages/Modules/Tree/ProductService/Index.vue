@@ -42,6 +42,7 @@ const form = useForm({
     acreage: null,
     free_visit: null,
     amount_products_received: null,
+    number_receive_product: null,
     price: null,
     number_deliveries: null,
     life_time: null,
@@ -120,6 +121,7 @@ const edit = (product) => {
     form.acreage = product.acreage;
     form.free_visit = product.free_visit;
     form.amount_products_received = product.amount_products_received;
+    form.number_receive_product = product.number_receive_product;
     form.price = product.price;
     form.number_deliveries = product.number_deliveries;
     form.life_time = product.life_time;
@@ -271,10 +273,8 @@ const Delete = (id) => {
                     </div>
                     <div>
                         <div class="">
-                            <label class="input w-full" for="recipient-name">
-
-                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giá
-                                </span>
+                            <InputLabel for="number_deliveries" value="Giá" />
+                            <label class="input w-full" >
                                 <MazInputPrice v-model="form.price" label="Enter your price" currency="VND" locale="vi-VN"
                                     :min="0" @formatted="formattedPrice = $event" />
                             </label>
@@ -286,6 +286,13 @@ const Delete = (id) => {
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full"
                                 required autofocus />
                             <InputError class="mt-2" :message="form.errors.number_deliveries" />
+                        </div>
+                        <div class="my-2">
+                            <InputLabel for="number_receive_product" value="Số lần vận chuyển miễn phí" />
+                            <input id="number_receive_product" v-model="form.number_receive_product" type="number"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm input__field rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 w-full"
+                                required autofocus />
+                            <InputError class="mt-2" :message="form.errors.number_receive_product" />
                         </div>
                         <div class="my-2">
                             <InputLabel for="life_time" value="Thời gian hoạt động" />

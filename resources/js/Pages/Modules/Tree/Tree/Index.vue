@@ -128,11 +128,15 @@ const Delete = (id) => {
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="py-3 px-6 text-xs">STT</th>
-                            <th scope="col" class="py-3 px-6 text-xs">name</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Image</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Giá</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Tên</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Vị trí</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Ảnh đại diện</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Giá gốc</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Giá bán</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Giá chuyển nhượng</th>
                             <th scope="col" class="py-3 px-6 text-xs">Trang thái</th>
                             <th scope="col" class="py-3 px-6 text-xs">Tình Trạng cây</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Bộ sưu tập</th>
                             <th scope="col" class="py-3 px-6 text-xs">
                                 <span class="sr-only">Edit</span>
                             </th>
@@ -145,18 +149,21 @@ const Delete = (id) => {
                                 index + 1 }}</th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                 tree.name }}</th>
-
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                                tree.addess }}</th>
                             <th scope="row"
                                 class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-wrap">
-                                <img v-for="(image, index) in tree.images" :key="index" :src="image.original_url"
-                                    class="w-20 h-20 " />
-
-
+                                <img  :src="(count(tree.thumb_image) > 0) ? tree.thumb_image[0].file_name : null" class="w-20 h-20 " />
                             </th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <strong>{{
+                                    formatPrice(tree.price_origin) }}</strong></th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <strong>{{
                                     formatPrice(tree.price) }}</strong></th>
-
+                                    <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <strong>{{
+                                    formatPrice(tree.transfer_value) }}</strong></th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <div class=" flex justify-center">
                                     <span v-if="tree.state == 'public'"
@@ -173,6 +180,7 @@ const Delete = (id) => {
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <strong>{{ tree.status }}</strong>
                             </th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">link</th>
                             <td class="py-4 px-6 text-right">
                                 <BaseButtons type="justify-start lg:justify-end" no-wrap>
                                     <BaseButton color="contrast" :icon="mdiPencilOutline" small @click="edit(tree)"
