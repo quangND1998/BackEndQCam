@@ -9,6 +9,6 @@ class TestController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Test/QrOrder');
+        return Inertia::render('Test/CashPayoo');
     }
 }
