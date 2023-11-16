@@ -36,6 +36,7 @@ class Tree extends Model implements HasMedia
     {
         return $this->media()->where('collection_name', 'tree_images');
     }
+  
     public function product_service_owner(){
         return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
     }

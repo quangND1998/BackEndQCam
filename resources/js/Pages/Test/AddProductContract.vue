@@ -188,11 +188,11 @@ const props = defineProps({
                             </table>
                         </div>
                     </CardBoxModal>
-                    <div class="min-[320px]:block md:flex w-full">
+                    <!-- <div class="min-[320px]:block md:flex w-full">
                         <div class="min-[320px]:w-full md:w-1/2">
                             <BaseButton color="info" @click="
-                                isModalActive = true;" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
-                                label="Thêm sản phẩm" />
+                                isModalActive = true;" class="bg-btn_green text-white p-2 hover:bg-[#008000]"
+                                :icon="mdiPlus" small label="Thêm sản phẩm" />
                         </div>
 
                         <div class="min-[320px]:w-full md:w-1/2 min-[320px]:mt-3 md:mt-0">
@@ -225,30 +225,34 @@ const props = defineProps({
                                 <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div>
-                      <div class="my-3">
-                    <BaseButton color="info"
-                        class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center rounded-lg"
-                        :icon="mdiContentSaveMove" small label="Lưu đơn hàng" />
-                </div>
-                <div class="my-3">
-                    <BaseButton color="info" class="bg-lime-600 hover:bg-lime-700 text-white p-2 w-full text-center justify-center"
-                        :icon="mdiEye" small label="Xem đơn hàng" />
-                </div>
-                <div class="my-3">
-                    <BaseButton color="info" class="bg-blue-900 hover:bg-blue-900 text-white p-2 w-full text-center justify-center"
-                        :icon="mdiCreditCardSettingsOutline" small label="Thanh toán ngay" />
-                </div>
-                <div class="my-3">
-                    <BaseButton color="info" class="bg-gray-700 hover:bg-gray-800 text-white p-2 w-full text-center justify-center"
-                        :icon="mdiContentCopy" small label="Sao chép đường dẫn" />
-                </div>
-                <div class="my-3">
-                    <BaseButton color="info" class="bg-black text-white p-2 w-full text-center justify-center"
-                        :icon="mdiImport" small label="In đơn hàng" />
-                </div>
+
+                    <div class="my-3">
+                        <BaseButton color="info"
+                            class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center rounded-lg"
+                            :icon="mdiContentSaveMove" small label="Lưu đơn hàng" />
+                    </div>
+                    <div class="my-3">
+                        <BaseButton color="info"
+                            class="bg-lime-600 hover:bg-lime-700 text-white p-2 w-full text-center justify-center"
+                            :icon="mdiEye" small label="Xem đơn hàng" />
+                    </div>
+                    <div class="my-3">
+                        <BaseButton color="info"
+                            class="bg-blue-900 hover:bg-blue-900 text-white p-2 w-full text-center justify-center"
+                            :icon="mdiCreditCardSettingsOutline" small label="Thanh toán ngay" />
+                    </div>
+                    <div class="my-3">
+                        <BaseButton color="info"
+                            class="bg-gray-700 hover:bg-gray-800 text-white p-2 w-full text-center justify-center"
+                            :icon="mdiContentCopy" small label="Sao chép đường dẫn" />
+                    </div>
+                    <div class="my-3">
+                        <BaseButton color="info" class="bg-black text-white p-2 w-full text-center justify-center"
+                            :icon="mdiImport" small label="In đơn hàng" />
+                    </div>
                 </div>
             </div>
 

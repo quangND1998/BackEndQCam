@@ -1,14 +1,9 @@
 <script setup>
 import { computed, ref, inject, reactive } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import CardBox from "@/Components/CardBox.vue";
-import CardBoxModal from "@/Components/CardBoxModal.vue";
-import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
-
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -19,32 +14,68 @@ import {
     mdiTrashCanOutline,
     mdiCodeBlockBrackets,
     mdiPencil,
-    mdiLandFields
+    mdiLandFields,
+    mdiContentCopy,
+    mdiCreditCardSettingsOutline,
+    mdiContentSaveMove
 } from "@mdi/js";
-import BaseButton from "@/Components/BaseButton.vue";
+
 import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
-import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-// import Multiselect from '@vueform/multiselect'
-import Dropdown from '@/Components/Dropdown.vue';
-import BaseIcon from '@/Components/BaseIcon.vue'
-import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
-import Contract from '@/Pages/Test/Contract.vue'
+import OrderProduct from '@/Pages/Modules/Order/Create/OrderProduct.vue'
+import axios from "axios";
 
 
 const props = defineProps({
-    orders: Object,
-    status: String,
-    status: String,
-    from: String,
-    to: String,
-    statusGroup: Array
+    product_retails: Array,
+    cart: Array,
+    total_price: Number
 });
 
+const search = ref(null)
+const user = ref(null);
+const flash = ref(null);
+const form = useForm({
+    name: null,
+    phone_number: null,
+    sex: null,
+    address: null,
+    city: null,
+    district: null,
+    wards: null,
+    vat: 0,
+    discount_deal: 0,
+    type: 'retail',
+    payment_method: 'cash',
+    shipping_fee: 'cash'
+
+})
+
+const foundUser = (data) => {
+    form.name = data.name
+    form.phone_number = data.phone_number
+    form.sex = data.sex
+    form.address = data.address
+    form.city = data.city
+    form.district = data.district
+    form.wards = data.wards
+}
+const onSearchUser = async () => {
+    axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
+        if (res.data) {
+            user.value = res.data;
+            foundUser(res.data)
+        }
+    }).catch(err => {
+        user.value = null
+        flash.value = err.response.data
+        form.reset()
+    })
+
+}
+const date = ref(new Date());
 
 </script>
 <template>
@@ -52,208 +83,205 @@ const props = defineProps({
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain>
-            <Contract />
-            <div class="min-[320x]:w-full grid grid-cols-3 gap-4">
-                <div class=" col-span-2 mt-2 w-full">
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-5 mt-4">
-                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">
-                                        #
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Name
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Số lượng
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Giá
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Tổng
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
+            <div class="lg:container m-auto mt-10">
+                <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
+                    <div class="col-span-2">
+                        <div class="min-[320px]:block md:flex border-b border-gray-200 pb-4">
+                            <div class="min-[320px]:w-full md:w-1/2 px-2">
+                                <div class="block">
+                                    <img src="assets/images/cammattroi.png" alt="">
+                                    <h1>CÔNG TY CỔ PHẦN CAM MẶT TRỜI</h1>
 
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="bg-white border-b ">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                        <span></span>
-                                    </th>
-                                    <td class="px-6 py-4 ">
-                                        <select id="countries"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 ">
-                                            <option value="Tiền"></option>
-                                            <option value="%">%</option>
-                                        </select>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <input type="number"
-                                            class="border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 hover:border-gray-500 w-28">
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <input type="number"
-                                            class="border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 hover:border-gray-500 w-28">
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <input type="number"
-                                            class="border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 hover:border-gray-500 w-32">
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <svg @click="deletetable(value.id)" width="15" height="15" viewBox="0 0 15 15"
-                                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M1 14L7.50002 7.50003M7.50002 7.50003L14 1M7.50002 7.50003L1 1M7.50002 7.50003L14 14"
-                                                stroke="#4E4E4E" stroke-width="2" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                        </svg>
-
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
-                        classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-8/12 z-50 overflow-auto"
-                        :title="editMode ? '' : 'Thêm sản phẩm'">
-
-
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
-                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                <thead
-                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="p-4">
-                                            <div class="flex items-center">
-                                                <input id="checkbox-all-search" type="checkbox"
-                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                                    <p class="text-sm text-[#5F5F5F] my-1">Địa chỉ:</p>
+                                    <p class="text-sm text-[#5F5F5F] my-1">Farm:</p>
+                                    <p class="text-sm text-[#5F5F5F] my-1">Điện thoại:</p>
+                                    <p class="text-sm text-[#5F5F5F] my-1">Email:</p>
+                                </div>
+                            </div>
+                            <div class="min-[320px]:w-full min-[320px]:mt-3 min-[320px]:px-0 md:w-1/2 md:mt-0 md:px-2">
+                                <div class="w-full">
+                                    <div class="flex items-center w-full">
+                                        <p class="text-sm text-[#5F5F5F] w-28 ">Số phiếu #</p>
+                                        <input type="text" id="first_name"
+                                            class="  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="12345" required>
+                                    </div>
+                                    <div class="flex items-center w-full my-4">
+                                        <p class="text-sm text-[#5F5F5F] w-28 ">Ngày</p>
+                                        <div class="relative w-full">
+                                            <VueDatePicker v-model="date" time-picker-inline />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="my-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-[17px] font-bold">Thông tin liên hệ</h3>
+                                <input type="string" id="first_name" v-model="search" @keyup="onSearchUser()"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Search SĐT" required>
+                            </div>
+                            <div class="text-red-500" v-if="flash"> {{ flash }}</div>
+                            <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt-5">
+                                <div>
+                                    <div class="my-3">
+                                        <label for="name" class="block mb-2 text-sm  text-gray-900 dark:text-white">Tên
+                                            Khách
+                                            Hàng
+                                            *</label>
+                                        <input type="text" id="name" v-model="form.name"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="" required>
+                                    </div>
+                                    <div class="my-3">
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Giới tính</label>
+                                        <div class="flex">
+                                            <div class="flex items-center ">
+                                                <input id="default-radio-1" type="radio" value="male" name="default-radio"
+                                                    v-model="form.sex"
+                                                    class="w-4 h-4  text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <label for="default-radio-1"
+                                                    class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nam</label>
                                             </div>
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Name
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Hình ảnh
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Giá
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Mô tả
-                                        </th>
-
-                                        <th scope="col" class="px-6 py-3">
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <td class="w-4 p-4">
-                                            <div class="flex items-center">
-                                                <input id="checkbox-table-search-1" type="checkbox"
-                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                                            <div class="flex items-center mx-5">
+                                                <input checked id="default-radio-2" type="radio" value="female"
+                                                    v-model="form.sex" name="default-radio"
+                                                    class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <label for="default-radio-2"
+                                                    class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nữ</label>
                                             </div>
-                                        </td>
-                                        <th scope="row"
-                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            Apple MacBook Pro 17"
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Silver
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Laptop
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Yes
-                                        </td>
-
-                                        <td class="flex items-center px-6 py-4">
-                                            <a href="#"
-                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                            <a href="#"
-                                                class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </CardBoxModal>
-                    <div class="min-[320px]:block md:flex w-full">
-                        <div class="min-[320px]:w-full md:w-1/2">
-                            <BaseButton color="info" @click="
-                                isModalActive = true;" class="bg-btn_green text-white p-2 hover:bg-[#008000]"
-                                :icon="mdiPlus" small label="Thêm sản phẩm" />
-                        </div>
-
-                        <div class="min-[320px]:w-full md:w-1/2 min-[320px]:mt-3 md:mt-0">
-                            <div class="flex justify-between my-2">
-                                <p class="text-sm text-[#686868] font-bold">Tổng</p>
-                                <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
-                            </div>
-                            <div class="flex justify-between my-2">
-                                <p class="text-sm text-[#686868] font-bold">VAT(x%)</p>
-                                <p class="text-sm text-[#686868] font-bold">100.000đ</p>
-                            </div>
-                            <div class="flex justify-between my-2">
-                                <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
-                                <p class="text-sm text-[#686868] font-bold">Miễn phí</p>
-                            </div>
-                            <div class="flex justify-between my-2">
-                                <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
-                                <p class="text-sm text-[#686868] font-bold">100.000đ</p>
-                            </div>
-                            <div class="flex justify-between my-2">
-                                <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
-                                <p class="text-sm text-[#686868]">1.000.000đ</p>
-                            </div>
-                            <div class="flex justify-between my-2">
-                                <p class="text-sm text-[#686868]">Đã thanh toán</p>
-                                <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
-                            </div>
-                            <div class="flex justify-between my-2">
-                                <p class="text-sm text-[#686868] font-bold">Còn lại</p>
-                                <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                                        </div>
+                                    </div>
+                                    <div class="my-3">
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Số điện thoại *</label>
+                                        <input type="text" id="first_name" v-model="form.phone_number"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="" required>
+                                    </div>
+                                </div>
+                                <div class="min-[320px]:ml-0 md:ml-3">
+                                    <div class="my-3">
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Địa chỉ *</label>
+                                        <input type="text" id="first_name" v-model="form.address"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="" required>
+                                    </div>
+                                    <div class="my-3">
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Tỉnh/Thành Phố *</label>
+                                        <input type="text" id="first_name" v-model="form.city"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="" required>
+                                    </div>
+                                    <div class="my-3 min-[320px]:block md:flex">
+                                        <div class="min-[320px]:w-full md:w-1/2 mr-2">
+                                            <label for="first_name"
+                                                class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                                Quận/huyện *</label>
+                                            <input type="text" id="first_name" v-model="form.district"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                placeholder="" required>
+                                        </div>
+                                        <div class="min-[320px]:w-full md:w-1/2 ml-2">
+                                            <label for="first_name"
+                                                class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                                Phường xã*</label>
+                                            <input type="text" id="first_name" v-model="form.wards"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                placeholder="" required>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="my-3">
+                            <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
+                            <div class="flex mt-2">
+                                <div class="mr-2 inline-block">
+                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
+                                </div>
+                                <div class="mr-2 inline-block">
+                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
+                                </div>
+                                <div class="mr-2 inline-block">
+                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
+                                </div>
+                                <label for="uploadFile"
+                                    class="mr-2 cursor-pointer border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg w-20 h-20">
+                                    <svg width="10" height="11" viewBox="0 0 10 11" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M3.88228 10.1406V0.311079H6.11239V10.1406H3.88228ZM0.0825639 6.34091V4.1108H9.91211V6.34091H0.0825639Z"
+                                            fill="#D9D9D9" />
+                                    </svg>
+                                </label>
+                                <input id="uploadFile" type="file" class="hidden">
+                            </div>
+                        </div>
+
+
                     </div>
-                </div>
-                <div>
-                    <div class="my-3">
-                        <BaseButton color="info"
-                            class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center rounded-lg"
-                            :icon="mdiContentSaveMove" small label="Lưu đơn hàng" />
-                    </div>
-                    <div class="my-3">
-                        <BaseButton color="info"
-                            class="bg-lime-600 hover:bg-lime-700 text-white p-2 w-full text-center justify-center"
-                            :icon="mdiEye" small label="Xem đơn hàng" />
-                    </div>
-                    <div class="my-3">
-                        <BaseButton color="info"
-                            class="bg-blue-900 hover:bg-blue-900 text-white p-2 w-full text-center justify-center"
-                            :icon="mdiCreditCardSettingsOutline" small label="Thanh toán ngay" />
-                    </div>
-                    <div class="my-3">
-                        <BaseButton color="info"
-                            class="bg-gray-700 hover:bg-gray-800 text-white p-2 w-full text-center justify-center"
-                            :icon="mdiContentCopy" small label="Sao chép đường dẫn" />
-                    </div>
-                    <div class="my-3">
-                        <BaseButton color="info" class="bg-black text-white p-2 w-full text-center justify-center"
-                            :icon="mdiImport" small label="In đơn hàng" />
+                    <div class="min-[320px]:mx-0 md:mx-5">
+                        <div class="mb-3">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Loại hình</label>
+                            <select id="countries" v-model="form.type"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="retail" selected>Tiền mặt</option>
+
+
+                            </select>
+                        </div>
+                        <div class="my-3">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                VAT(%)</label>
+                            <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" required>
+                        </div>
+                        <div class="my-2">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Ưu đãi (%)</label>
+                            <input type="number" id="first_name" v-model="form.discount_deal"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" required>
+                        </div>
+                        <div class="my-2">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Vận chuyển</label>
+                            <MazInputPrice v-model="form.shipping_fee" label="Enter your price" currency="VND"
+                                locale="vi-VN" :min="0" @formatted="formattedPrice = $event" />
+                        </div>
+
+
+                        <div class="my-2">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Hình thức thanh toán</label>
+                            <select id="countries" v-model="form.payment_method"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="cash">Tiền mặt</option>
+                                <option value="banking">Chuyển khoản</option>
+                                <option value="payoo">Payoo</option>
+                            </select>
+                        </div>
+
                     </div>
                 </div>
             </div>
+            <OrderProduct 
+            :products="product_retails" 
+            :user="user" :cart="cart" 
+            :total_price="total_price"  
+            :vat="form.vat" 
+            :discount_deal="form.discount_deal" 
+            :shipping_fee="form.shipping_fee" 
+            :payment_method="form.payment_method" 
+            :type="form.type" />
 
         </SectionMain>
     </LayoutAuthenticated>

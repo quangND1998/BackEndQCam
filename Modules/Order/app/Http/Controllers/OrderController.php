@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Modules\Order\app\Models\Order;
 use Modules\Tree\app\Models\ProductRetail;
+use Cart;
 
 class OrderController extends Controller
 {
@@ -231,8 +232,52 @@ class OrderController extends Controller
     public function createOrder(Request $request)
     {
 
-        $customers = User::role('customer')->get();
-        $product_retails = ProductRetail::get();
-        return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails'));
+        $customers = User::role('customer')->where(function ($query) use ($request) {
+            $query->where('phone_number', 'LIKE', '%' . $request->search . '%');
+        })->get();
+        $cart = Cart::getContent();
+        $total_price = Cart::getTotal();
+        $sub_total = Cart::getSubTotal();
+        $product_retails = ProductRetail::with('images')->get();
+        return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails', 'cart', 'total_price'));
+    }
+
+    public function searchUser(Request $request)
+    {
+        $customer = User::role('customer')->where('phone_number',  $request->search)->first();
+
+        if ($customer) {
+            return response()->json($customer, 200);
+        } else {
+            return response()->json('Không tìm thấy Khách hàng!', 404);
+        }
+    }
+
+    public function addToCart(Request $request){
+        
+        $request->validate([
+            'product' => 'required',
+            'quantity' => 'required|gt:0',
+           
+        ]);
+        $product = ProductRetail::find($request->product['id']);
+
+        Cart::add(array(
+            'id' => $product->id, // inique row ID
+            'name' => $product->name,
+            'price' => $product->price,
+            'quantity' =>  $request->quantity,
+            'attributes' => array([
+                'image' => count($product->images) >0 ? $product->images[0]->original_url : null
+            ]),
+            // 'conditions' => $saleCondition
+        ));
+        $response= [
+            'cart' =>Cart::getContent(),
+            'total_price' => Cart::getTotal(),
+            'sub_total' =>  Cart::getSubTotal()
+        ];
+        return response()->json($response,200);
+            
     }
 }
