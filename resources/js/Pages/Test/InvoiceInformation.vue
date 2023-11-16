@@ -2,8 +2,8 @@
 <script setup>
 </script>
 <template>
-    <div class="min-[320px]:block flex  border-b border-gray-300">
-        <div class="min-[320px]:w-full w-1/2">
+    <div class="min-[320px]:block md:flex  border-b border-gray-300">
+        <div class="min-[320px]:w-full md:w-1/2">
             <div class="pb-3 ">
                 <img src="/assets/images/cammattroi.png" alt="">
                 <h1 class="text-base font-semibold">CÔNG TY CỔ PHẦN CAM MẶT TRỜI</h1>
@@ -14,7 +14,7 @@
             </div>
 
         </div>
-        <div class="w-1/2">
+        <div class="min-[320px]:w-full md:w-1/2">
             <div class="flex my-2 items-center">
                 <p class="text-sm text-[#5F5F5F] w-36">Số phiếu #</p>
                 <p class="text-sm text-[#5F5F5F] ">12345</p>

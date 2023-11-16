@@ -54,7 +54,7 @@ const props = defineProps({
         <Head title="Quản lý đơn hàng" />
         <SectionMain>
             <div class="mx-5">
-                <div class="grid grid-cols-3 gap-4">
+                <div class="min-[320px]:block sm:block md:grid grid-cols-3 gap-4">
                     <div class="col-span-2">
                        <InvoiceInformation />
                         <div class="mt-5">
@@ -105,7 +105,7 @@ const props = defineProps({
                             </div>
                             <div class="flex w-full justify-end mt-5">
                                 <!-- <div class="w-1/2"></div> -->
-                                <div class="w-1/2">
+                                <div class="min-[320px]:w-full md:w-1/2">
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Tổng</p>
                                         <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
