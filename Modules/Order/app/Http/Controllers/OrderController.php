@@ -233,7 +233,6 @@ class OrderController extends Controller
 
         $customers = User::role('customer')->get();
         $product_retails = ProductRetail::get();
-        return Inertia::render('Test/AddProductContract');
-        // return Inertia::render('Modules/Order/Create/CreateOrder', compact('customer', 'product_retails'));
+        return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails'));
     }
 }

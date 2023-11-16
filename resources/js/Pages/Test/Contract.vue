@@ -104,7 +104,7 @@ const date = ref(new Date());
                 </div>
                 <div class="my-3">
                     <h3 class="text-[17px] font-bold">Thông tin liên hệ</h3>
-                    <div class="min-[320px]:block grid grid-cols-2 gap-4">
+                    <div class="min-[320px]:block md:grid grid-cols-2 gap-4">
                         <div>
                             <div class="my-3">
                                 <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">Tên Khách
@@ -160,15 +160,15 @@ const date = ref(new Date());
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required>
                             </div>
-                            <div class="my-3 min-[320px]:block flex">
-                                <div class="min-[320px]:w-full w-1/2 mr-2">
+                            <div class="my-3 min-[320px]:block md:flex">
+                                <div class="min-[320px]:w-full md:w-1/2 mr-2">
                                     <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                         Quận/huyện *</label>
                                     <input type="text" id="first_name"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         placeholder="" required>
                                 </div>
-                                <div class="min-[320px]:w-full w-1/2 ml-2">
+                                <div class="min-[320px]:w-full md:w-1/2 ml-2">
                                     <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                         Phường xã*</label>
                                     <input type="text" id="first_name"
@@ -179,44 +179,44 @@ const date = ref(new Date());
                         </div>
                     </div>
                 </div>
-                <div class="my-3">
-                    <h3 class="text-[17px] font-bold">Thông tin giấy tờ</h3>
-                    <div class="min-[320px]:block grid grid-cols-2 gap-4">
-                        <div>
-                            <div class="my-3">
-                                <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                    Số CMND/CCCD/Hộ chiếu</label>
-                                <input type="text" id="first_name"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="" required>
-                            </div>
+                <!-- <div class="my-3">
+                            <h3 class="text-[17px] font-bold">Thông tin giấy tờ</h3>
+                            <div class="min-[320px]:block md:grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="my-3">
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Số CMND/CCCD/Hộ chiếu</label>
+                                        <input type="text" id="first_name"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="" required>
+                                    </div>
 
-                            <div class="my-3">
-                                <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                    Ngày sinh</label>
-                                <div class="relative w-full">
-                                    <VueDatePicker v-model="date" time-picker-inline />
+                                    <div class="my-3">
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Ngày sinh</label>
+                                        <div class="relative w-full">
+                                            <VueDatePicker v-model="date" time-picker-inline />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="min-[320px]:ml-0 md:ml-3">
+                                    <div class="my-3">
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Ngày cấp</label>
+                                        <div class="relative w-full">
+                                            <VueDatePicker v-model="date" time-picker-inline />
+                                        </div>
+                                    </div>
+                                    <div class="my-3">
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Có giá trị đến</label>
+                                        <div class="relative w-full">
+                                            <VueDatePicker v-model="date" time-picker-inline />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="min-[320px]:ml-0 md:ml-3">
-                            <div class="my-3">
-                                <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                    Ngày cấp</label>
-                                <div class="relative w-full">
-                                    <VueDatePicker v-model="date" time-picker-inline />
-                                </div>
-                            </div>
-                            <div class="my-3">
-                                <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                    Có giá trị đến</label>
-                                <div class="relative w-full">
-                                    <VueDatePicker v-model="date" time-picker-inline />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </div> -->
                 <div class="my-3">
                     <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                     <div class="flex mt-2">
@@ -291,7 +291,7 @@ const date = ref(new Date());
                         <option value="DE">Germany</option>
                     </select>
                 </div>
-                <div class="my-3">
+                <!-- <div class="my-3">
                     <BaseButton color="info"
                         class="bg-[#F78F43] text-white p-2 w-full text-center justify-center rounded-lg"
                         :icon="mdiContentSaveMove" small label="Lưu đơn hàng" />
@@ -311,7 +311,7 @@ const date = ref(new Date());
                 <div class="my-3">
                     <BaseButton color="info" class="bg-black text-white p-2 w-full text-center justify-center"
                         :icon="mdiImport" small label="In đơn hàng" />
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
