@@ -39,10 +39,38 @@ class UserController extends Controller
             })->paginate(20)->appends($request->search);
             $roles = Role::get();
         } else {
-           return  abort(403);
+            return  abort(403);
         }
         return Inertia::render('Admin/User', compact('filters', 'users', 'roles', 'subadmins'));
     }
+
+
+    public function create(Request $request)
+    {
+        $user = Auth::user();
+        if ($user->hasRole('super-admin')) {
+            $roles = Role::where('name', '!=', 'super-admin')->get();
+        } else {
+            return  abort(403);
+        }
+        return Inertia::render('Admin/CreateUser', compact('roles'));
+    }
+
+
+    public function edit(Request $request, User $user)
+    {
+       
+        $user->load('roles');
+        $user_auth = Auth::user();
+        if ($user_auth->hasRole('super-admin')) {
+
+            $roles = Role::where('name', '!=', 'super-admin')->get();
+        } else {
+            return  abort(403);
+        }
+        return Inertia::render('Admin/EditUser', compact('roles', 'user'));
+    }
+
 
     public function store(Request $request)
     {
@@ -52,13 +80,23 @@ class UserController extends Controller
             $request,
             [
                 'name' => 'required',
-                'username' => 'required|unique:users,username',
+                'cic_number' => 'required|unique:users,cic_number',
                 'email' => 'required|email|unique:users,email',
                 'phone_number' => 'required|unique:users,phone_number|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-                'roles' => 'required',
-                // 'time_limit' => 'nullable|date|after:tomorrow',
+                'sex' => 'required',
+                'address' => 'required',
+
+                'city' => 'required',
+                'wards' => 'required',
+                'district' => 'required',
+                'date_of_birth' => 'required|date',
+
+                'cic_date' => 'required|date',
+                'cic_date_expried' => 'required|date|after:cic_date',
+
                 'created_byId' => 'nullable',
                 'password' => 'nullable',
+                'roles' => 'required'
 
             ]
         );
@@ -66,14 +104,10 @@ class UserController extends Controller
         $user = User::create($request->all());
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->assignRole($roles);
-        // if ($request->created_byId) {
-        //     $user->created_byId = $request->created_byId;
-        // } else {
-        //     $user->created_byId = $auth_user->id;
-        // }
-        // $user->created_byId = Auth::user()->id;
         if ($request->password) {
             $user->password = Hash::make($request->password);
+        } else {
+            $user->password = Hash::make('cammattroi');
         }
         $user->save();
         return back()->with('success', 'Create user successfully');
@@ -86,24 +120,28 @@ class UserController extends Controller
         $this->validate(
             $request,
             [
+
                 'name' => 'required',
-                'username' => 'required|unique:users,username,' . $user->id,
+                'cic_number' => 'required|unique:users,cic_number,' . $user->id,
                 'email' => 'required|email|unique:users,email,' . $user->id,
-                'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone,' . $user->id,
-                'roles' => 'required',
-                // 'time_limit' => 'nullable|date|after:tomorrow',
-                // 'number_device' => 'nullable|numeric|gt:-1',
-                'created_byId' =>  'nullable',
-                'password' => 'nullable'
+                'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone_number,' . $user->id,
+                'sex' => 'required',
+                'address' => 'required',
+                'password' => 'nullable',
+                'city' => 'required',
+                'wards' => 'required',
+                'district' => 'required',
+                'date_of_birth' => 'required|date',
+
+                'cic_date' => 'required|date',
+                'cic_date_expried' => 'required|date|after:cic_date',
+
+                'created_byId' => 'nullable',
+                'password' => 'nullable',
             ]
         );
 
-        $user->update([
-            'name' => $request->name,
-            'username' => $request->username,
-            'email' => $request->email,
-            'phone_number' =>$request->phone_number
-        ]);
+        $user->update($request->all());
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->syncRoles($roles);
 

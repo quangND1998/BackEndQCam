@@ -4,6 +4,7 @@ namespace Modules\Order\app\Http\Controllers;
 
 use App\Contracts\OrderContract;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -221,15 +222,18 @@ class OrderController extends Controller
 
     public function orderChangePayment(Request $request)
     {
-       
+
         $order = Order::findOrFail($request->id);
         $order->update(['payment_status' => $request->payment_status]);
         return back()->with('success', 'Chuyển trạng thái thanh toán thành công');
     }
 
-    public function createOrder(Request $request){
+    public function createOrder(Request $request)
+    {
+
+        $customer = User::role('customer')->get();
+
+        return $customer;
         return Inertia::render('Modules/Order/Create/CreateOrder');
     }
-
- 
 }
