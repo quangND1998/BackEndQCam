@@ -27,11 +27,13 @@ class TreeController extends Controller
      */
     public function index(Request $request, Land $land)
     {
-        $trees = Tree::with('images')->where('land_id', $land->id)->where(function ($query) use ($request) {
+        $trees = Tree::with('images','thumb_image')->where('land_id', $land->id)->where(function ($query) use ($request) {
             $query->where('name', 'LIKE', '%' . $request->search . '%');
             $query->orwhere('qr_code', 'LIKE', '%' . $request->search . '%');
             // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
         })->paginate(12);
+
+        // return $trees;
         return Inertia::render('Modules/Tree/Tree/Index', compact('land', 'trees'));
     }
 
@@ -58,6 +60,9 @@ class TreeController extends Controller
 
         foreach ($request->images as $image) {
             $tree->addMedia($image)->toMediaCollection('tree_images');
+        }
+        if($request->images_thumb){
+            $tree->addMedia($request->images_thumb)->toMediaCollection('tree_thumb');
         }
         return back()->with('success', 'Create successfully');
     }
@@ -90,8 +95,12 @@ class TreeController extends Controller
             foreach ($request->images as $image) {
                 $tree->addMedia($image)->toMediaCollection('tree_images');
             }
-        }
 
+        }
+        if($request->hasFile('images_thumb')){
+            $tree->clearMediaCollection('tree_thumb');
+            $tree->addMedia($request->images_thumb)->toMediaCollection('tree_thumb');
+        }
         return back()->with('success', 'Update successfully');
     }
 
@@ -101,6 +110,7 @@ class TreeController extends Controller
     public function destroy(Tree $tree)
     {
         $tree->clearMediaCollection('tree_images');
+        $tree->clearMediaCollection('tree_thumb');
         $tree->delete();
         return back()->with('success', 'Delete successfully');
     }

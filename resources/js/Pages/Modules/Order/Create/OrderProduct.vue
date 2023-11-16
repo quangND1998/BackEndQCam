@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive,toRef } from "vue";
+import { computed, ref, inject, reactive,toRef, toRefs, onMounted } from "vue";
 
 import Pagination from "@/Components/Pagination.vue";
 import { useForm } from "@inertiajs/vue3";
@@ -42,7 +42,7 @@ const form = useForm({
 const product = computed(()=>{
     return props.products.find((e)=> e.id == product_selectd.value )
 });
-const carts = toRef(props.cart)
+
 const quantity= ref(1)
 const product_selectd= toRef(props.products.length>0? props.products[0].id :null)
 const cart_selected = ref([])
@@ -55,9 +55,12 @@ const props = defineProps({
     discount_deal:Number,
     shipping_fee:Number,
     payment_method:String,
-    type:String
+    type:String,
+    sub_total:Number
 });
-
+const  cart = toRef(props.cart);
+const  total_price = toRef(props.total_price);
+const  sub_total = toRef(props.sub_total);
 const selectAllCart = computed({
     get() {
         return props.cart
@@ -104,23 +107,81 @@ const addToCart=()=>{
     }
     else{
         axios.post('/admin/orders/addToCart', {product:product.value , quantity:quantity.value}).then(res=>{
-            console.log(res)
-            props.cart = res.data.cart
+            console.log( res.data.cart)
+            cart.value = res.data.cart
+            total_price.value = res.data.total_price
+            sub_total.value = res.data.sub_total
         }).catch(err=>{
 
         })
     }
  
 }
+const updateCart=(product, value)=>{
+      // quantity_cart:,
+      this.$refs[`quantity${product.id}`][0].value =
+        parseInt(this.$refs[`quantity${product.id}`][0].value) +
+        parseInt(value);
+    //   let query = {
+    //     quantity_cart: this.$refs[`quantity${product.id}`][0].value,
+    //     product_id: product.id
+    //   };
+    //   // this.$store.dispatch("stores/updateCart", query);
+    //   if (
+    //     this.$refs[`quantity${product.id}`][0].value == 0 ||
+    //     this.$refs[`quantity${product.id}`][0].value < 0 ||
+    //     query.quantity_cart == 0
+    //   ) {
+    //     this.$swal("Error, Some values are missing.", {
+    //       icon: "error"
+    //     });
+    //   } else {
+    //     axios
+    //       .post("/admin/cart/updateCart", query)
+    //       .then(response => {
+    //         // console.log(response)
+    //         this.total_price = response.data.total_price;
+    //         // console.log(response.data.item);
+
+    //         this.cart[product.id] = response.data.item;
+    //       })
+    //       .catch(error => {});
+    //   }
+    }
+const    updateCartInput =(product)=> {
+    
+      let query = {
+        quantity_cart: this.$refs[`quantity${product.id}`][0].value,
+        product_id: product.id
+      };
+      // this.$store.dispatch("stores/updateCart", query);
+    //   console.log(query);
+    //   if (
+    //     parseInt(this.$refs[`quantity${product.id}`][0].value) == 0 ||
+    //     this.$refs[`quantity${product.id}`][0].value < 0
+    //   ) {
+    //     this.$swal("Error, Số lượng không được nhỏ hơn hoặc bằng 0 .", {
+    //       icon: "error"
+    //     });
+    //   } else {
+    //     axios
+    //       .post("/admin/cart/updateCart", query)
+    //       .then(response => {
+    //         // console.log(response)
+    //         this.total_price = response.data.total_price;
+    //         // console.log(response.data.item);
+
+    //         this.cart[product.id] = response.data.item;
+    //       })
+    //       .catch(error => {});
+    //   }
+    }
 </script>
 <template>
-    <!-- <LayoutAuthenticated>
-
-        <Head title="Hợp Đồng" />
-        <SectionMain> -->
+ 
 
     <div class="min-[320x]:w-full grid grid-cols-3 gap-4">
-      
+       
         <div class=" col-span-2 mt-2 w-full">
           
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-5 mt-4">
@@ -213,7 +274,7 @@ const addToCart=()=>{
                 </div>
 
                 <hr />
-                <div v-for="(item, index) in carts" :key="index" class="flex my-3">
+                <div v-for="(item, index) in cart" :key="index" class="flex my-3">
                     <div class="flex">
                         <input id="default-checkbox" type="checkbox" v-model="cart_selected" :value="item.id"
                             class="icon_checkbox w-4 h-4 mt-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
@@ -233,7 +294,7 @@ const addToCart=()=>{
                           class="minus is-form"
                           type="button"
                           value="-"
-                      
+                          @click="updateCart(item, -1)"
                         />
                         <input
                           aria-label="quantity"
@@ -250,7 +311,7 @@ const addToCart=()=>{
                           class="plus is-form"
                           type="button"
                           value="+"
-                         
+                          @click="updateCart(item, 1)"
                         />
                         
                       </div>
@@ -373,12 +434,29 @@ const addToCart=()=>{
         </div>
     </div>
 
-    <!-- </SectionMain>
-</LayoutAuthenticated> -->
+
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped >
+.list_icon_crud {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
+  right: -40px;
+  top: 20px;
+  z-index: 111;
+  display: inline-grid;
+}
+
+.btn_crud {
+  font-size: 20px;
+}
+
+.icon_giam {
+  width: 32px;
+  height: 32px;
+}
+
+/*  */
 .buttons_added {
   opacity: 1;
   display: inline-block;
@@ -388,7 +466,31 @@ const addToCart=()=>{
   vertical-align: top;
 }
 
-.input-qty_create {
+.is-form {
+  overflow: hidden;
+  position: relative;
+  background-color: #f9f9f9;
+  height: 2.2rem;
+  width: 1.9rem;
+  padding: 0;
+  text-shadow: 1px 1px 1px #fff;
+  border: 1px solid #ddd;
+}
+
+.is-form:focus,
+.input-text:focus {
+  outline: none;
+}
+
+.is-form.minus {
+  border-radius: 4px 0 0 4px;
+}
+
+.is-form.plus {
+  border-radius: 0 4px 4px 0;
+}
+
+.input-qty {
   background-color: #fff;
   height: 2.2rem;
   text-align: center;
@@ -404,11 +506,9 @@ const addToCart=()=>{
   width: 35px;
 }
 
-
-.input-qty_create::-webkit-outer-spin-button,
-.input-qty_create::-webkit-inner-spin-button {
+.input-qty::-webkit-outer-spin-button,
+.input-qty::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 </style>

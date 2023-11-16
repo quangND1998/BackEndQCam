@@ -65,7 +65,20 @@ Route::middleware(['auth'])->group(
                 Route::get('/create', [OrderController::class, 'createOrder'])->name('create');
                 Route::get('/searchUser', [OrderController::class, 'searchUser'])->name('searchUser');
                 Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
+                Route::post('saveOrder/user',[OrderController::class, 'saveOrder'])->name('saveOrder');
 
+            });
+
+            Route::prefix('cart')->as('cart.')->group(function () {
+
+              
+                Route::post('/updateCart', [OrderController::class, 'updateCart'])->name('updateCart');
+                Route::post('/removeItem', [OrderController::class, 'removeItem'])->name('removeItem');
+                Route::post('/removeCart', [OrderController::class, 'removeCart'])->name('removeCart');
+                Route::post('/deleteCarts', [OrderController::class, 'deleteMultipleItem'])->name('deleteCarts');
+    
+                // Route::put('/update/{shipping}', [PaymentMethodsController::class, 'update'])->name('update');
+                // Route::delete('/delete/{shipping}', [PaymentMethodsController::class, 'destroy'])->name('destroy');
             });
         });
     }

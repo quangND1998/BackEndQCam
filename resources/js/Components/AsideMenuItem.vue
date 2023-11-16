@@ -17,8 +17,8 @@ const props = defineProps({
 })
 const itemHref = computed(() => (props.item.route ? route(props.item.route) : props.item.href))
 const activeInactiveStyle = computed(() => {
-   console.log('activeInactiveStyle', props.item.route && route().current(props.item.route))
-   console.log('current route', route().current(props.item.route) );
+  //  console.log('activeInactiveStyle', props.item.route && route().current(props.item.route))
+  //  console.log('current route', route().current(props.item.route) );
   if( props.item.route_list != null && props.item.route_list.includes(route().current(props.item.route)) == true){
     isDropdownActive.value = true;
   }

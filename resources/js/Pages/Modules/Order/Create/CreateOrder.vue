@@ -24,14 +24,15 @@ import InputError from "@/Components/InputError.vue";
 import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
-import OrderProduct from '@/Pages/Modules/Order/Create/OrderProduct.vue'
+import NewOrderProduct from '@/Pages/Modules/Order/Create/NewOrderProduct.vue'
 import axios from "axios";
-
+const swal = inject("$swal");
 
 const props = defineProps({
     product_retails: Array,
-    cart: Array,
-    total_price: Number
+    cart: Object,
+    total_price: Number,
+    sub_total: Number
 });
 
 const search = ref(null)
@@ -75,6 +76,35 @@ const onSearchUser = async () => {
     })
 
 }
+const save = () => {
+    if (user.value ==null) {
+        swal.fire({
+            title: "Lỗi?",
+            text: "Chưa có thông tin khách hàng!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                
+            }
+        });
+    }
+    else{
+        form.post(route('admin.orders.saveOrder', user.value.id), {
+                    onError: () => {
+
+
+                    },
+                    onSuccess: () => {
+                        form.reset()
+
+                    }
+                });
+    }
+}
+
 const date = ref(new Date());
 
 </script>
@@ -273,15 +303,9 @@ const date = ref(new Date());
                     </div>
                 </div>
             </div>
-            <OrderProduct 
-            :products="product_retails" 
-            :user="user" :cart="cart" 
-            :total_price="total_price"  
-            :vat="form.vat" 
-            :discount_deal="form.discount_deal" 
-            :shipping_fee="form.shipping_fee" 
-            :payment_method="form.payment_method" 
-            :type="form.type" />
+            <NewOrderProduct :products="product_retails" :user="user" :cart="cart" :total_price="total_price"
+                :vat="form.vat" :discount_deal="form.discount_deal" :shipping_fee="form.shipping_fee"
+                :payment_method="form.payment_method" :type="form.type" :sub_total="sub_total" @confirm="save" />
 
         </SectionMain>
     </LayoutAuthenticated>

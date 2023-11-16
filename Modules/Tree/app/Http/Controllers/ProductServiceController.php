@@ -14,7 +14,7 @@ use Modules\Tree\app\Models\ProductService;
 class ProductServiceController extends Controller
 {
     protected $allowStoreField = [
-        'name', 'number_tree', "acreage",  "free_visit", "amount_products_received", "price",    "number_deliveries", "life_time", "description",    "unit"
+        'name', 'number_tree', "acreage",  "free_visit", "amount_products_received", "price",    "number_deliveries", "life_time", "description", "number_receive_product",   "unit"
     ];
     public function __construct()
     {
@@ -78,7 +78,6 @@ class ProductServiceController extends Controller
      */
     public function update(UpdateRequest $request, ProductService $product_service): RedirectResponse
     {
-
         $data = $request->only($this->allowStoreField);
 
         $product_service->update($data);

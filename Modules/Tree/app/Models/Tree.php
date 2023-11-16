@@ -16,7 +16,7 @@ class Tree extends Model implements HasMedia
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id",    "name",    "qr_code",    "land_id", "address", "price",    "state", "status",    "description", "user_manual",    "terms_policy", "product_service_owner_id",    "created_at",    "updated_at"];
+    protected $fillable = ["id",    "name",    "qr_code",    "land_id", "address", "price",    "state", "status",    "description", "user_manual",    "terms_policy", "product_service_owner_id","transfer_value","price_origin" ,   "created_at",    "updated_at"];
 
 
 
@@ -36,7 +36,10 @@ class Tree extends Model implements HasMedia
     {
         return $this->media()->where('collection_name', 'tree_images');
     }
-  
+    public function thumb_image()
+    {
+        return $this->media()->where('collection_name', 'tree_thumb');
+    }
     public function product_service_owner(){
         return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
     }
