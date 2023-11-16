@@ -193,32 +193,32 @@ const props = defineProps({
 
             <div class="min-[320px]:w-full md:w-1/2 min-[320px]:mt-3 md:mt-0">
                 <div class="flex justify-between my-2">
-                    <p class="text-sm text-[#686868]">Tổng</p>
-                    <p class="text-sm text-[#686868]">1.000.000đ</p>
+                    <p class="text-sm text-[#686868] font-bold">Tổng</p>
+                    <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
                 </div>
                 <div class="flex justify-between my-2">
-                    <p class="text-sm text-[#686868]">VAT(x%)</p>
-                    <p class="text-sm text-[#686868]">100.000đ</p>
+                    <p class="text-sm text-[#686868] font-bold">VAT(x%)</p>
+                    <p class="text-sm text-[#686868] font-bold">100.000đ</p>
                 </div>
                 <div class="flex justify-between my-2">
-                    <p class="text-sm text-[#686868]">Vận chuyển</p>
-                    <p class="text-sm text-[#686868]">Miễn phí</p>
+                    <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
+                    <p class="text-sm text-[#686868] font-bold">Miễn phí</p>
                 </div>
                 <div class="flex justify-between my-2">
-                    <p class="text-sm text-[#686868]">Ưu đãi</p>
-                    <p class="text-sm text-[#686868]">100.000đ</p>
+                    <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
+                    <p class="text-sm text-[#686868] font-bold">100.000đ</p>
                 </div>
                 <div class="flex justify-between my-2">
-                    <p class="text-sm text-[#686868]">Tổng cộng</p>
+                    <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
                     <p class="text-sm text-[#686868]">1.000.000đ</p>
                 </div>
                 <div class="flex justify-between my-2">
                     <p class="text-sm text-[#686868]">Đã thanh toán</p>
-                    <p class="text-sm text-[#686868]">1.000.000đ</p>
+                    <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
                 </div>
                 <div class="flex justify-between my-2">
-                    <p class="text-sm text-[#686868]">Còn lại</p>
-                    <p class="text-sm text-[#686868]">1.000.000đ</p>
+                    <p class="text-sm text-[#686868] font-bold">Còn lại</p>
+                    <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
                 </div>
             </div>
         </div>
