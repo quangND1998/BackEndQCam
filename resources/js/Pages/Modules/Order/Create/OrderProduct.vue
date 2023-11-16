@@ -42,6 +42,7 @@ const form = useForm({
 const product = computed(()=>{
     return props.products.find((e)=> e.id == product_selectd.value )
 });
+const carts = toRef(props.cart)
 const quantity= ref(1)
 const product_selectd= toRef(props.products.length>0? props.products[0].id :null)
 const cart_selected = ref([])
@@ -80,7 +81,7 @@ const editMode = ref(false);
 const isModalDangerActive = ref(false);
 
 
-const numberValue = ref(2)
+const numberValue = ref([])
 const date = ref(new Date());
 const changeProduct =(event)=>{
 
@@ -212,7 +213,7 @@ const addToCart=()=>{
                 </div>
 
                 <hr />
-                <div v-for="(item, index) in cart" :key="index" class="flex my-3">
+                <div v-for="(item, index) in carts" :key="index" class="flex my-3">
                     <div class="flex">
                         <input id="default-checkbox" type="checkbox" v-model="cart_selected" :value="item.id"
                             class="icon_checkbox w-4 h-4 mt-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
@@ -225,8 +226,34 @@ const addToCart=()=>{
                             <h3>{{ item.name }}</h3>
                             <p class="text-red-700 text-base">{{ formatPrice(item.price) }} </p>
                             <div class="buttons_added">
-                                <MazInputNumber v-model="numberValue" label="Enter number" :min="5" :max="10000" :step="1"
-                                    size="xs" color="secondary" />
+                                <!-- <MazInputNumber v-model="numberValue[item.id]" label="Enter number" :min="5" :max="10000" :step="1"
+                                    size="xs" color="secondary" /> -->
+                                     <div class="buttons_added">
+                        <input
+                          class="minus is-form"
+                          type="button"
+                          value="-"
+                      
+                        />
+                        <input
+                          aria-label="quantity"
+                          class="input-qty_create"
+                          :ref="`quantity${item.id}`"
+                        
+                          :value="item.quantity"
+                          max="100"
+                          min="0"
+                          name
+                          type="number"
+                        />
+                        <input
+                          class="plus is-form"
+                          type="button"
+                          value="+"
+                         
+                        />
+                        
+                      </div>
 
                             </div>
                         </div>
@@ -350,3 +377,38 @@ const addToCart=()=>{
 </LayoutAuthenticated> -->
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped >
+
+.buttons_added {
+  opacity: 1;
+  display: inline-block;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.input-qty_create {
+  background-color: #fff;
+  height: 2.2rem;
+  text-align: center;
+  font-size: 1rem;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  border-left: 0;
+  border-right: 0;
+  padding: 0;
+  width: 35px;
+}
+
+
+.input-qty_create::-webkit-outer-spin-button,
+.input-qty_create::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+</style>

@@ -49,7 +49,7 @@ const form = useForm({
     discount_deal: 0,
     type: 'retail',
     payment_method: 'cash',
-    shipping_fee: 'cash'
+    shipping_fee: 0
 
 })
 
