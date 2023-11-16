@@ -316,7 +316,7 @@ const save = () => {
                         <div class="my-3">
                             <BaseButton color="info" @click="save()"
                                 class="bg-[#F78F43] text-white p-2 w-full text-center justify-center rounded-lg"
-                                :icon="mdiContentSaveMove" small label="Tạo" />
+                                :icon="mdiContentSaveMove" small label="Cập nhật" />
                         </div>
                         <div class="my-3">
                             <BaseButton :routeName="'users.index'" color="info"

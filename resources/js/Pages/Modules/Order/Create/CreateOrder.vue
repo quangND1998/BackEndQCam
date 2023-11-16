@@ -58,13 +58,17 @@ const getProvinces = async () => {
 };
 getProvinces();
 
+
 const districts = computed(() => {
     if (form.city == null) {
         return [];
     } else {
-        return provinces.value.find(pro => {
-            return pro.Name == form.city;
-        });
+        if (provinces.value) {
+            return provinces.value?.find(pro => {
+                return pro.Name == form.city;
+            });
+        }
+        return [];
     }
 })
 
@@ -74,13 +78,19 @@ const wards = computed(() => {
     } else if (form.city !== null && form.district == null) {
         return [];
     } else {
-        let array = provinces.value.find(pro => {
-            return pro.Name == form.city;
-        });
+        if (provinces.value) {
+            let array = provinces.value.find(pro => {
+                return pro.Name == form.city;
+            });
+            if (array.Districts) {
+                return array.Districts.find(district => {
+                    return district.Name == form.district;
+                });
+            }
+            return []
 
-        return array.Districts.find(district => {
-            return district.Name == form.district;
-        });
+        }
+        return []
     }
 })
 const onChangeCity = (event) => {
@@ -96,9 +106,9 @@ const format = (date) => {
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
-  
+
     return `${day}/${month}/${year}`;
-  }
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -205,7 +215,7 @@ const format = (date) => {
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
-                                              
+
 
                                             <select id="city" v-model="form.district" @change="onChangeDistrict($event)"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -221,7 +231,7 @@ const format = (date) => {
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Phường xã*</label>
-                                          
+
                                             <select v-model="form.wards" id="wards"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                                 <option :value="null">Chọn phường xã</option>
@@ -249,7 +259,7 @@ const format = (date) => {
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Ngày sinh</label>
                                         <div class="relative w-full">
-                                            <VueDatePicker v-model="date" :format="format"  />
+                                            <VueDatePicker v-model="date" :format="format" />
                                         </div>
                                     </div>
                                 </div>
@@ -258,14 +268,14 @@ const format = (date) => {
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Ngày cấp</label>
                                         <div class="relative w-full">
-                                            <VueDatePicker v-model="date" :format="format"/>
+                                            <VueDatePicker v-model="date" :format="format" />
                                         </div>
                                     </div>
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Có giá trị đến</label>
                                         <div class="relative w-full">
-                                            <VueDatePicker v-model="date" :format="format"/>
+                                            <VueDatePicker v-model="date" :format="format" />
                                         </div>
                                     </div>
                                 </div>

@@ -15,9 +15,12 @@ use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ReviewManagement;
 use Modules\Order\app\Models\Order;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
+    use InteractsWithMedia;
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
@@ -108,5 +111,11 @@ class User extends Authenticatable
     {
 
         return $this->hasMany(ProductServiceOwner::class, 'user_id');
+    }
+
+
+    public function related_images()
+    {
+        return $this->media()->where('collection_name', 'related_images');
     }
 }

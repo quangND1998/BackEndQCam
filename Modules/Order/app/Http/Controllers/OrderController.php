@@ -231,9 +231,9 @@ class OrderController extends Controller
     public function createOrder(Request $request)
     {
 
-        $customer = User::role('customer')->get();
-
-        return $customer;
-        return Inertia::render('Modules/Order/Create/CreateOrder');
+        $customers = User::role('customer')->get();
+        $product_retails = ProductRetail::get();
+        return Inertia::render('Test/AddProductContract');
+        // return Inertia::render('Modules/Order/Create/CreateOrder', compact('customer', 'product_retails'));
     }
 }
