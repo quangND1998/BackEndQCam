@@ -33,7 +33,7 @@ class TreeController extends Controller
             // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
         })->paginate(12);
 
-        //  return $trees;
+        // return $trees;
         return Inertia::render('Modules/Tree/Tree/Index', compact('land', 'trees'));
     }
 
