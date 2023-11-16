@@ -99,7 +99,7 @@ class TreeController extends Controller
         }
         if($request->hasFile('images_thumb')){
             $tree->clearMediaCollection('tree_thumb');
-            $tree->addMedia($image)->toMediaCollection('tree_thumb');
+            $tree->addMedia($request->images_thumb)->toMediaCollection('tree_thumb');
         }
         return back()->with('success', 'Update successfully');
     }
