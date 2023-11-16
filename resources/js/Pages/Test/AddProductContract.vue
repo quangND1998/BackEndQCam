@@ -53,7 +53,7 @@ const props = defineProps({
         <Head title="Quản lý đơn hàng" />
         <SectionMain>
             <Contract />
-            <div class="w-4/5">
+            <div class="min-[320x]:w-full md:w-4/5">
                 <div class=" mt-2 w-full">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-5 mt-4">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -184,14 +184,14 @@ const props = defineProps({
                 </table>
             </div>
         </CardBoxModal>
-        <div class="flex w-full">
-            <div class="w-1/2">
+        <div class="min-[320px]:block md:flex w-full">
+            <div class="min-[320px]:w-full md:w-1/2">
                 <BaseButton color="info" @click="
                     isModalActive = true;"
                     class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small label="Thêm sản phẩm" />
             </div>
 
-            <div class="w-1/2">
+            <div class="min-[320px]:w-full md:w-1/2 min-[320px]:mt-3 md:mt-0">
                 <div class="flex justify-between my-2">
                     <p class="text-sm text-[#686868]">Tổng</p>
                     <p class="text-sm text-[#686868]">1.000.000đ</p>

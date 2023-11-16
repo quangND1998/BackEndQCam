@@ -69,22 +69,22 @@ const date = ref(new Date());
         <Head title="Hợp Đồng" />
         <SectionMain> -->
 
-            <div class="container m-auto mt-10">
+            <div class="lg:container m-auto mt-10">
                 <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
                     <div class="col-span-2">
-                        <div class="flex border-b border-gray-200 pb-4">
-                            <div class="w-1/2 px-2">
+                        <div class="min-[320px]:block md:flex border-b border-gray-200 pb-4">
+                            <div class="min-[320px]:w-full md:w-1/2 px-2">
                                 <div class="block">
                                     <img src="assets/images/cammattroi.png" alt="">
                                     <h1>CÔNG TY CỔ PHẦN CAM MẶT TRỜI</h1>
 
-                                    <p class="text-sm text-[#5F5F5F]">Địa chỉ:</p>
-                                    <p class="text-sm text-[#5F5F5F]">Farm:</p>
-                                    <p class="text-sm text-[#5F5F5F]">Điện thoại:</p>
-                                    <p class="text-sm text-[#5F5F5F]">Email:</p>
+                                    <p class="text-sm text-[#5F5F5F] my-1">Địa chỉ:</p>
+                                    <p class="text-sm text-[#5F5F5F] my-1">Farm:</p>
+                                    <p class="text-sm text-[#5F5F5F] my-1">Điện thoại:</p>
+                                    <p class="text-sm text-[#5F5F5F] my-1">Email:</p>
                                 </div>
                             </div>
-                            <div class="w-1/2 px-2">
+                            <div class="min-[320px]:w-full min-[320px]:mt-3 min-[320px]:px-0 md:w-1/2 md:mt-0 md:px-2">
                                 <div class="w-full">
                                     <div class="flex items-center w-full">
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Số phiếu #</p>
@@ -103,7 +103,7 @@ const date = ref(new Date());
                         </div>
                         <div class="my-3">
                             <h3 class="text-[17px] font-bold">Thông tin liên hệ</h3>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="min-[320px]:block grid grid-cols-2 gap-4">
                                 <div>
                                     <div class="my-3">
                                         <label for="first_name"
@@ -145,7 +145,7 @@ const date = ref(new Date());
                                             placeholder="" required>
                                     </div>
                                 </div>
-                                <div class="ml-3">
+                                <div class="min-[320px]:ml-0 md:ml-3">
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Địa chỉ *</label>
@@ -160,8 +160,8 @@ const date = ref(new Date());
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                     </div>
-                                    <div class="my-3 flex">
-                                        <div class="w-1/2 mr-2">
+                                    <div class="my-3 min-[320px]:block flex">
+                                        <div class="min-[320px]:w-full w-1/2 mr-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
@@ -169,7 +169,7 @@ const date = ref(new Date());
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="" required>
                                         </div>
-                                        <div class="w-1/2 ml-2">
+                                        <div class="min-[320px]:w-full w-1/2 ml-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Phường xã*</label>
@@ -183,7 +183,7 @@ const date = ref(new Date());
                         </div>
                         <div class="my-3">
                             <h3 class="text-[17px] font-bold">Thông tin giấy tờ</h3>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="min-[320px]:block grid grid-cols-2 gap-4">
                                 <div>
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -201,7 +201,7 @@ const date = ref(new Date());
                                         </div>
                                     </div>
                                 </div>
-                                <div class="ml-3">
+                                <div class="min-[320px]:ml-0 md:ml-3">
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Ngày cấp</label>
@@ -222,13 +222,13 @@ const date = ref(new Date());
                         <div class="my-3">
                             <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
-                                <div class="mr-2">
+                                <div class="mr-2 inline-block">
                                     <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
                                 </div>
-                                <div class="mr-2">
+                                <div class="mr-2 inline-block">
                                     <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
                                 </div>
-                                <div class="mr-2">
+                                <div class="mr-2 inline-block">
                                     <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
                                 </div>
                                 <label for="uploadFile"
@@ -246,7 +246,7 @@ const date = ref(new Date());
                        
 
                     </div>
-                    <div class="mx-5">
+                    <div class="min-[320px]:mx-0 md:mx-5">
                         <div class="my-3">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 VAT(%)</label>
