@@ -15,7 +15,7 @@ use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Tree\app\Models\ProductService;
 use Spatie\Permission\Models\Role;
 use Modules\Tree\app\Models\Tree;
-
+use Modules\Customer\app\Models\HistoryExtend;
 class CustomerController extends Controller
 {
     public function __construct()
@@ -101,6 +101,18 @@ class CustomerController extends Controller
                 $new_product_owner->trees()->saveMany($trees);
 
                 $customer->save();
+
+                //history
+                $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
+                $time_limit = Carbon::parse($request->time_approve)->addDays($time_life);
+
+                $history_extend = new HistoryExtend;
+                $history_extend->price = $product_service->price;
+                $history_extend->product_name = $product_service->name;
+                $history_extend->date_from = $request->time_approve;
+                $history_extend->date_to = $time_limit;
+                $history_extend->description = "tạo mới";
+                $new_product_owner->history_extend()->save($history_extend);
             }
 
         }
@@ -173,7 +185,13 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        $user->product_service_owners()->trees()->delete();
+        foreach($user->product_service_owners as $product_service_owner){
+            foreach($product_service_owner->trees() as $tree){
+                $tree->product_service_owner_id = null;
+                $tree->save();
+            }
+        }
+        $user->product_service_owners()->delete();
         $user->delete();
         return redirect()->back()->with('success', "Xóa tài khoản  thành công");
     }
