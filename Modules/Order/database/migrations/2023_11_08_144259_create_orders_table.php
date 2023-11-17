@@ -31,6 +31,10 @@ return new class extends Migration
             //phí ship
             $table->integer('shipping_fee')->nullable();
             //giá phải trả 
+            $table->decimal('amount_paid', 25, 6)->default(0)->nullable();
+
+            $table->decimal('amount_unpaid', 25, 6)->default(0)->nullable();
+            $table->decimal('last_price', 25, 6)->default(0)->nullable();
             $table->integer('last_price')->nullable();
             $table->string('name')->nullable();
             $table->text('specific_address')->nullable();

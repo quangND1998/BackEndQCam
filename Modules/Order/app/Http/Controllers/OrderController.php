@@ -15,6 +15,7 @@ use Modules\Order\app\Models\Order;
 use Modules\Tree\app\Models\ProductRetail;
 use Cart;
 use Modules\Customer\app\Resources\UserResource;
+use Modules\Order\app\Http\Requests\SaveOrderRequest;
 use Modules\Order\app\Models\OrderItem;
 
 class OrderController extends Controller
@@ -233,12 +234,13 @@ class OrderController extends Controller
 
     public function createOrder(Request $request)
     {
+
         $customers = User::with(['product_service_owners' => function ($q) {
             $q->where('state', 1);
         }])->role('customer')->get();
 
         $cart = Cart::getContent();
-        $total_price = Cart::getTotal();
+        $total_price = Cart::getSubTotalWithoutConditions();
         $sub_total = Cart::getSubTotal();
         $product_retails = ProductRetail::with('images')->get();
         return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails', 'cart', 'total_price', 'sub_total'));
@@ -279,7 +281,7 @@ class OrderController extends Controller
         ));
         $response = [
             'cart' => Cart::getContent(),
-            'total_price' => Cart::getTotal(),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
             'sub_total' =>  Cart::getSubTotal()
         ];
         return response()->json($response, 200);
@@ -299,7 +301,7 @@ class OrderController extends Controller
 
         $response = [
             'cart' => Cart::getContent(),
-            'total_price' => Cart::getTotal(),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
             'sub_total' =>  Cart::getSubTotal()
         ];
         return response()->json($response, 200);
@@ -318,7 +320,9 @@ class OrderController extends Controller
 
         $respone = [
             'total_price' => Cart::getSubTotal(),
-            'item' => Cart::get($request->product_id)
+            'item' => Cart::get($request->product_id),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
+            'sub_total' =>  Cart::getSubTotal()
         ];
         return response()->json($respone, 200);
     }
@@ -327,7 +331,7 @@ class OrderController extends Controller
         Cart::remove($request->product_id);
         $response = [
             'cart' => Cart::getContent(),
-            'total_price' => Cart::getTotal(),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
             'sub_total' =>  Cart::getSubTotal()
         ];
         return response()->json($response, 200);
@@ -339,9 +343,10 @@ class OrderController extends Controller
     {
 
         Cart::clear();
+        Cart::clearCartConditions();
         $response = [
             'cart' => Cart::getContent(),
-            'total_price' => Cart::getTotal(),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
             'sub_total' =>  Cart::getSubTotal()
         ];
         return response()->json($response, 200);
@@ -350,14 +355,14 @@ class OrderController extends Controller
 
 
     // Save Order
-    public function saveOrder(Request $request, User $user)
+    public function saveOrder(SaveOrderRequest $request, User $user)
     {
         // OrderStoreRequest
-        dd($request);
+
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
-
+        $this->addConditionToCart($request);
 
         if ($user) {
             $order = Order::create([
@@ -366,19 +371,26 @@ class OrderController extends Controller
                 'status'            =>  'pending',
                 'payment_status'    =>  0,
                 'payment_method' => $request->payment_method,
-                // 'specific_address' => $request->specific_address,
                 'address' => $request->address,
                 'city' => $request->city,
                 'district' => $request->district,
                 'wards' => $request->wards,
                 'phone_number'        =>  $request->phone_number,
                 'notes'         =>  $request->notes,
-                'grand_total' => Cart::getSubTotal(),
+                'grand_total' => Cart::getSubTotalWithoutConditions(),
+                'last_price' => Cart::getSubTotal(),
+                'last_price' => Cart::getSubTotal(),
                 'item_count' => Cart::getTotalQuantity(),
                 'vat' => $request->vat,
                 'discount_deal' => $request->discount_deal,
                 'type' => $request->type,
+                'shipping_fee' => $request->shipping_fee,
+                'amount_paid' => $request->amount_paid
+
             ]);
+
+            $order->amount_unpaid = $order->last_price - $request->amount_paid;
+            $order->save();
 
             if ($order) {
 
@@ -401,6 +413,70 @@ class OrderController extends Controller
             }
         }
         Cart::clear();
-        return redirect()->route('orders.pending')->with('success', "Tạo đơn hàng thành công");
+        Cart::clearCartConditions();
+        if ($order->payment_method == 'cash' || $order->payment_method == 'banking') {
+
+            return  redirect()->route('admin.payment.orderCashBankingPayment', [$order]);
+        }
+    }
+
+
+    public function addConditionToCart($request)
+    {
+
+        if ($request->discount_deal) {
+            $conditionDiscount = new \Darryldecode\Cart\CartCondition(array(
+                'name' => 'DISCOUNT',
+                'type' => 'tax',
+                'target' => 'subtotal',
+                'value' => "-" . $request->discount_deal . '%',
+                // 'order' => 1
+            ));
+            Cart::condition($conditionDiscount);
+        }
+
+        if ($request->vat) {
+            $conditionVat = new \Darryldecode\Cart\CartCondition(array(
+                'name' => 'VAT',
+                'type' => 'tax',
+                'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'value' => $request->vat . '%',
+
+            ));
+            Cart::condition($conditionVat);
+        }
+
+        if ($request->shipping_fee) {
+            $conditionShipping = new \Darryldecode\Cart\CartCondition(array(
+                'name' => 'SHIPPING',
+                'type' => 'tax',
+                'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'value' => $request->shipping_fee,
+
+            ));
+            Cart::condition($conditionShipping);
+        }
+
+        if ($request->shipping_fee) {
+            $conditionShipping = new \Darryldecode\Cart\CartCondition(array(
+                'name' => 'SHIPPING',
+                'type' => 'tax',
+                'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'value' => $request->shipping_fee,
+
+            ));
+            Cart::condition($conditionShipping);
+        }
+
+        // if ($request->amount_paid) {
+        //     $conditionPaid = new \Darryldecode\Cart\CartCondition(array(
+        //         'name' => 'PAID',
+        //         'type' => 'tax',
+        //         'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+        //         'value' => '-' . $request->amount_paid,
+
+        //     ));
+        //     Cart::condition($conditionPaid);
+        // }
     }
 }

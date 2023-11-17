@@ -56,7 +56,9 @@ const form = useForm({
     type: 'retail',
     payment_method: 'cash',
     shipping_fee: 0,
-    product_service_owner: null
+    product_service_owner: null,
+    amount_paid: 0,
+
 
 })
 const getProvinces = async () => {
@@ -337,31 +339,7 @@ const date = ref(new Date());
                             </div>
                         </div>
 
-                        <div class="my-3">
-                            <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
-                            <div class="flex mt-2">
-                                <div class="mr-2 inline-block">
-                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div>
-                                <div class="mr-2 inline-block">
-                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div>
-                                <div class="mr-2 inline-block">
-                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div>
-                                <label for="uploadFile"
-                                    class="mr-2 cursor-pointer border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg w-20 h-20">
-                                    <svg width="10" height="11" viewBox="0 0 10 11" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M3.88228 10.1406V0.311079H6.11239V10.1406H3.88228ZM0.0825639 6.34091V4.1108H9.91211V6.34091H0.0825639Z"
-                                            fill="#D9D9D9" />
-                                    </svg>
-                                </label>
-                                <input id="uploadFile" type="file" class="hidden">
-                            </div>
-                        </div>
-
+                    
 
                     </div>
                     <div class="min-[320px]:mx-0 md:mx-5">
@@ -409,7 +387,12 @@ const date = ref(new Date());
                             <MazInputPrice v-model="form.shipping_fee" label="Enter your price" currency="VND"
                                 locale="vi-VN" :min="0" @formatted="formattedPrice = $event" />
                         </div>
-
+                        <!-- <div class="my-2" v-if="form.type == 'retail'">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Số tiền đã thanh toán</label>
+                            <MazInputPrice v-model="form.amount_paid" label="Enter your price" currency="VND" locale="vi-VN"
+                                :min="0" @formatted="formattedPrice = $event" />
+                        </div> -->
 
                         <div class="my-2" v-if="form.type == 'retail'">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -430,7 +413,7 @@ const date = ref(new Date());
             <NewOrderProduct v-if="form.type == 'retail'" :products="product_retails" :user="user" :cart="cart"
                 :total_price="total_price" :vat="form.vat" :discount_deal="form.discount_deal"
                 :shipping_fee="form.shipping_fee" :payment_method="form.payment_method" :type="form.type"
-                :sub_total="sub_total" @confirm="saveOrder" />
+                :amount_paid="form.amount_paid" :sub_total="sub_total" @confirm="saveOrder" />
 
         </SectionMain>
     </LayoutAuthenticated>

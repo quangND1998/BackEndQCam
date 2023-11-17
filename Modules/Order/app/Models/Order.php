@@ -20,6 +20,8 @@ class Order extends Model
         'district',
         'vat',
         'discount_deal',
+        'amount_paid',
+        'amount_unpaid',
         'type',
         'wards',  "created_at", "updated_at"
     ];
@@ -53,6 +55,17 @@ class Order extends Model
         if (isset($filters['from']) && isset($filters['to'])) {
 
             $query->whereBetween('created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+        }
+
+        if (isset($filters['payment_status'])) {
+
+            $query->where('payment_status', $filters['payment_status']);
+        }
+
+
+        if (isset($filters['payment_method'])) {
+
+            $query->where('payment_method', $filters['payment_method']);
         }
     }
 

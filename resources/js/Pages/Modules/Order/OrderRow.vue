@@ -104,14 +104,38 @@ const props = defineProps({
                 <p>{{ formatPrice(order.grand_total) }}₫</p>
 
             </div>
-            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
-                <p>Chiết khấu</p>
+            <div v-if="order.discount" class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Voucher</p>
                 <input v-if="order.discount" :value="formatPrice(order.discount.discount_mount)"
                     class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
-                <p>Khách phải trả</p>
+                <p>Ưu đãi</p>
+                <input :value="`${order.discount_deal} %`" class="px-3 py-2 border border-gray-400 rounded-lg w-24"
+                    readonly />
+            </div>
+            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>VAT</p>
+                <input :value="`${order.vat} %`" class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
+            </div>
+            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Phí ship</p>
+                <p class="text-red-600 text-xl">{{ formatPrice(order.shipping_fee) }} ₫</p>
+            </div>
+            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Tổng giá trị</p>
                 <p class="text-red-600 text-xl">{{ formatPrice(order.last_price) }} ₫</p>
+            </div>
+
+            <!-- <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Khách đã trả</p>
+                <p class="text-red-600 text-xl">{{ formatPrice(order.amount_paid) }} ₫</p>
+
+            </div> -->
+
+            <div v-if="order.amount_unpaid" class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Khách phải trả</p>
+                <p class="text-red-600 text-xl">{{ formatPrice(order.amount_unpaid) }} ₫</p>
 
             </div>
             <OrderAction :order="order" :status="status"></OrderAction>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->integer('vat')->nullable();
             $table->integer("discount_deal")->nullable();
-            $table->integer("type")->nullable();
+            $table->string("type")->nullable();
         });
     }
 

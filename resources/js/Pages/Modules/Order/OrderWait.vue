@@ -50,7 +50,9 @@ const filter = reactive({
     name: null,
     fromDate: null,
     toDate: null,
-    search: null
+    search: null,
+    payment_status: null,
+    payment_method: null,
 
 })
 const customer = ref()
@@ -81,7 +83,7 @@ initFlowbite();
 
 const searchCustomer = () => {
     router.get(route(`admin.orders.${props.status}`),
-        { customer: filter.customer },
+        filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -89,9 +91,28 @@ const searchCustomer = () => {
     );
 }
 
+const Fillter = (event) => {
+    router.get(route(`admin.orders.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
+
+const fillterPaymentMethod = (event) => {
+    router.get(route(`admin.orders.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 const search = () => {
     router.get(route(`admin.orders.${props.status}`),
-        { search: filter.search },
+        filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -108,13 +129,13 @@ const contents = ref([
 
 
 const changeDate = () => {
-    let query = {
-        from: filter.fromDate,
-        to: filter.toDate
-    };
-    router.get(route(`admin.orders.${props.status}`), query, {
-        preserveScroll: true
-    });
+    router.get(route(`admin.orders.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
 }
 
 </script>
@@ -123,12 +144,12 @@ const changeDate = () => {
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain>
-            <SectionTitleLineWithButton title="Quản lý đơn hàng" main></SectionTitleLineWithButton>
+           
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
                 <div>
                     <h2 class="min-[320px]:text-xl sm:text-2xl font-semibold lg:text-3xl flex mr-2">
                         Quản lý đơn hàng
-                        <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p>
+                        <!-- <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p> -->
                     </h2>
                 </div>
 
@@ -136,7 +157,7 @@ const changeDate = () => {
 
                     <Link :href="route('admin.orders.create')"
                         class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
-                    <font-awesome-icon :icon="['fas', 'plus']" />Tạo đơn hàng
+                    Tạo đơn hàng
                     </Link>
                 </div>
             </div>
@@ -222,11 +243,12 @@ const changeDate = () => {
                                 <label for>Phương thức TT</label>
                             </div>
                             <div class="min-[320px]:w-full sm:w-9/12">
-                                <select id="countries"
+                                <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
-                                    <option selected>Tất cả</option>
-                                    <option value="US">Còn hàng</option>
-                                    <option value="CA">Hết hàng</option>
+                                    <option :value="null">Tất cả</option>
+                                    <option value="cash">Tiền mặt</option>
+                                    <option value="banking">Chuyển khoản ngân hàng</option>
+                                    <option value="payoo">Payoo</option>
                                 </select>
                             </div>
                         </div>
@@ -235,7 +257,7 @@ const changeDate = () => {
                                 <label for>Trạng thái TT</label>
                             </div>
                             <div class="min-[320px]:w-full sm:w-9/12">
-                                <select id="countries"
+                                <select id="countries" v-model="filter.payment_status" @change="Fillter()"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tình trạng</option>
                                     <option :value="1">Đã thanh toán</option>
@@ -279,7 +301,7 @@ const changeDate = () => {
                     </div>
                 </div>
 
-
+                <Pagination :links="orders.links" />
 
             </div>
 

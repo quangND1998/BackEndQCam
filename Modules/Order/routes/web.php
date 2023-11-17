@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Order\app\Http\Controllers\OrderController;
+use Modules\Order\app\Http\Controllers\PaymentController;
 use Modules\Order\app\Http\Controllers\ProductServiceVoucherController;
 use Modules\Order\app\Http\Controllers\ProductVoucherController;
 use Modules\Order\app\Http\Controllers\VoucherController;
+use Twilio\Rest\Api\V2010\Account\Call\PaymentContext;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,20 +67,24 @@ Route::middleware(['auth'])->group(
                 Route::get('/create', [OrderController::class, 'createOrder'])->name('create');
                 Route::get('/searchUser', [OrderController::class, 'searchUser'])->name('searchUser');
                 Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
-                Route::post('saveOrder/user',[OrderController::class, 'saveOrder'])->name('saveOrder');
-
+                Route::post('saveOrder/{user}', [OrderController::class, 'saveOrder'])->name('saveOrder');
             });
 
             Route::prefix('cart')->as('cart.')->group(function () {
 
-              
+
                 Route::post('/updateCart', [OrderController::class, 'updateCart'])->name('updateCart');
                 Route::post('/removeItem', [OrderController::class, 'removeItem'])->name('removeItem');
                 Route::post('/removeCart', [OrderController::class, 'removeCart'])->name('removeCart');
                 Route::post('/deleteCarts', [OrderController::class, 'deleteMultipleItem'])->name('deleteCarts');
-    
+
                 // Route::put('/update/{shipping}', [PaymentMethodsController::class, 'update'])->name('update');
                 // Route::delete('/delete/{shipping}', [PaymentMethodsController::class, 'destroy'])->name('destroy');
+            });
+
+
+            Route::prefix('payment')->as('payment.')->group(function () {
+                Route::get('/{order}/Cash&Banking', [PaymentController::class, 'orderCashBankingPayment'])->name('orderCashBankingPayment');
             });
         });
     }
