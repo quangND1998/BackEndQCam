@@ -15,9 +15,12 @@ use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ReviewManagement;
 use Modules\Order\app\Models\Order;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
+    use InteractsWithMedia;
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
@@ -34,7 +37,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'phone_number', 'isVerified',  'address', 'date_of_brith', 'cic_number','sex', 'adrress', 'phone_number2', 'date_of_birth'
+        'phone_number', 'isVerified',  'address', 'date_of_brith', 'cic_number', 'sex', 'adrress', 'date_of_birth', 'city', 'district', 'wards', 'cic_date', 'cic_date_expried', 'phone_number2', 'date_of_birth'
     ];
 
     /**
@@ -81,28 +84,38 @@ class User extends Authenticatable
     }
 
 
-    public function orders(){
-        return $this->hasMany(Order::class,'user_id');
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_id');
     }
 
 
-    public function address(){
-        return $this->hasOne(Address::class,'user_id');
+    public function address()
+    {
+        return $this->hasOne(Address::class, 'user_id');
     }
 
 
-    public function reviews(){
-        return $this->hasMany(ReviewManagement::class,'user_id');
+    public function reviews()
+    {
+        return $this->hasMany(ReviewManagement::class, 'user_id');
     }
 
-    public function complaints(){
-        return $this->hasMany(ComplaintManagement::class,'user_id');
+    public function complaints()
+    {
+        return $this->hasMany(ComplaintManagement::class, 'user_id');
     }
 
 
-    public function product_service_owners(){
+    public function product_service_owners()
+    {
 
         return $this->hasMany(ProductServiceOwner::class, 'user_id');
+    }
 
+
+    public function related_images()
+    {
+        return $this->media()->where('collection_name', 'related_images');
     }
 }

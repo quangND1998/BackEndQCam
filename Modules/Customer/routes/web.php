@@ -20,6 +20,7 @@ use Modules\Customer\app\Http\Controllers\CustomerProductController;
 
 Route::middleware(['auth'])->group(
     function () {
+    Route::get('orderPackage/create', [CustomerController::class,'orderPackage'])->name('orderPackage.create');
     Route::resource('customers', CustomerController::class)->names('customer');
     Route::prefix('customer/{id}')->as('customer.detail.')->group(function () {
         Route::get('info', [CustomerDetailController::class, 'info'])->name('info');
@@ -27,9 +28,6 @@ Route::middleware(['auth'])->group(
         Route::resource('products', CustomerProductController::class)->names('products');
         Route::resource('activity', CustomerActivityController::class)->names('activity');
         Route::resource('service', CustomerServiceController::class)->names('service');
-
-
-
     });
     Route::prefix('product_owner/{id}')->as('product_owner.')->group(function () {
         Route::resource('contract', ContractController::class)->names('contract');

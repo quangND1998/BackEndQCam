@@ -25,6 +25,13 @@ class CustomerController extends Controller
         $this->middleware('permission:update-user', ['only' => ['update']]);
         $this->middleware('permission:delete-user', ['only' => ['destroy']]);
     }
+    public function orderPackage(Request $request){
+        $user = Auth::user();
+        $product_services = ProductService::where("status", 1)->get();
+        $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();
+
+        return Inertia::render('Modules/Order/Create/CreateOrderPackage', compact('product_services','trees'));
+    }
     public function index(Request $request)
     {
         $user = Auth::user();

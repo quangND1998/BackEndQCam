@@ -218,7 +218,7 @@ const limit_tree = computed(() => {
                         form_reset();
                         " label="Thêm gói sản phẩm" />
                 </div>
-                <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+                <div class=" relative shadow-md sm:rounded-lg mt-5">
                     <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>

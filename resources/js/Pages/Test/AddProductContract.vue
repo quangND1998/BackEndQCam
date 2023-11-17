@@ -188,7 +188,7 @@ const props = defineProps({
                             </table>
                         </div>
                     </CardBoxModal>
-                    <div class="min-[320px]:block md:flex w-full">
+                    <!-- <div class="min-[320px]:block md:flex w-full">
                         <div class="min-[320px]:w-full md:w-1/2">
                             <BaseButton color="info" @click="
                                 isModalActive = true;" class="bg-btn_green text-white p-2 hover:bg-[#008000]"
@@ -225,7 +225,7 @@ const props = defineProps({
                                 <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div>
                     <div class="my-3">

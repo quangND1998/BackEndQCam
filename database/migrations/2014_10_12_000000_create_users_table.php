@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone_number')->unique()->nullable();
             $table->boolean('isVerified')->default(false);
-            $table->string('sex')->unique()->nullable();
-            $table->string('address')->unique()->nullable();
+            $table->string('sex')()->nullable();
+            $table->string('address')->nullable();
             $table->string('phone_number2')->unique()->nullable();
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
