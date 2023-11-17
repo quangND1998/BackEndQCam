@@ -21,6 +21,7 @@ use Modules\Customer\app\Http\Controllers\CustomerProductController;
 Route::middleware(['auth'])->group(
     function () {
     Route::get('orderPackage/create', [CustomerController::class,'orderPackage'])->name('orderPackage.create');
+    Route::post('orderPackage/save', [CustomerController::class,'saveOrderPackage'])->name('orderPackage.save');
     Route::resource('customers', CustomerController::class)->names('customer');
     Route::prefix('customer/{id}')->as('customer.detail.')->group(function () {
         Route::get('info', [CustomerDetailController::class, 'info'])->name('info');

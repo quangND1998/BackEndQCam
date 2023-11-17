@@ -5,7 +5,7 @@ use Modules\Order\app\Http\Controllers\OrderController;
 use Modules\Order\app\Http\Controllers\ProductServiceVoucherController;
 use Modules\Order\app\Http\Controllers\ProductVoucherController;
 use Modules\Order\app\Http\Controllers\VoucherController;
-
+use Modules\Order\app\Http\Controllers\OrderPackageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -67,16 +67,23 @@ Route::middleware(['auth'])->group(
                 Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
                 Route::post('saveOrder/user',[OrderController::class, 'saveOrder'])->name('saveOrder');
 
+                Route::prefix('package')->as('package.')->group(function () {
+                    Route::get('all', [OrderPackageController::class, 'index'])->name('index');
+                    Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
+                    Route::get('pending/{id}', [OrderPackageController::class, 'OrderPending'])->name('pending');
+                    Route::post('/addToCartPackage', [OrderPackageController::class, 'addToCart'])->name('addToCartPackage');
+                });
+
             });
 
             Route::prefix('cart')->as('cart.')->group(function () {
 
-              
+
                 Route::post('/updateCart', [OrderController::class, 'updateCart'])->name('updateCart');
                 Route::post('/removeItem', [OrderController::class, 'removeItem'])->name('removeItem');
                 Route::post('/removeCart', [OrderController::class, 'removeCart'])->name('removeCart');
                 Route::post('/deleteCarts', [OrderController::class, 'deleteMultipleItem'])->name('deleteCarts');
-    
+
                 // Route::put('/update/{shipping}', [PaymentMethodsController::class, 'update'])->name('update');
                 // Route::delete('/delete/{shipping}', [PaymentMethodsController::class, 'destroy'])->name('destroy');
             });

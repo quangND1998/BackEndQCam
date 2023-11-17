@@ -25,12 +25,63 @@ class CustomerController extends Controller
         $this->middleware('permission:update-user', ['only' => ['update']]);
         $this->middleware('permission:delete-user', ['only' => ['destroy']]);
     }
-    public function orderPackage(Request $request){
-        $user = Auth::user();
-        $product_services = ProductService::where("status", 1)->get();
-        $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();
 
-        return Inertia::render('Modules/Order/Create/CreateOrderPackage', compact('product_services','trees'));
+    public function saveOrderPackage(Request $request){
+
+        $customer = User::where('phone_number',$request->phone_number)->first();
+        if(!$customer){
+            $customer = $this->createCustomerDefault($request);
+        }
+        $product_service = ProductService::findOrFail($request->product_selected);
+        if ($product_service) {
+            $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
+            $new_product_owner = new ProductServiceOwner;
+            $new_product_owner->time_approve = $request->time_approve;
+            $new_product_owner->time_end = Carbon::parse($request->time_approve)->addDays($time_life);
+
+            $new_product_owner->description = $customer->name . " sử dụng gói " . $product_service->name;
+            $new_product_owner->state = "active"; //active, expired, stop
+            $new_product_owner->user_id = $customer->id;
+            $new_product_owner->product_service_id = $product_service->id;
+            $new_product_owner->save();
+
+            $trees = Tree::where('state','public')->where('product_service_owner_id',null)->first();
+
+            $new_product_owner->trees()->save($trees);
+
+            $customer->save();
+
+            //history
+            $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
+            $time_limit = Carbon::parse($request->time_approve)->addDays($time_life);
+
+            $history_extend = new HistoryExtend;
+            $history_extend->price = $product_service->price;
+            $history_extend->product_name = $product_service->name;
+            $history_extend->date_from = $request->time_approve;
+            $history_extend->date_to = $time_limit;
+            $history_extend->description = "tạo mới";
+            $new_product_owner->history_extend()->save($history_extend);
+        }
+
+
+    }
+    public function paymentPending(Request $request)
+    {
+
+    }
+    public function paymentSuccess(Request $request){
+
+    }
+    public function createCustomerDefault($request){
+        $customer = new User;
+        $customer->name = $request->name;
+        $customer->phone_number = $request->phone_number;
+        $roles = 'customer';
+        $customer->assignRole($roles);
+        $customer->password = Hash::make('cammattroi');
+        $customer->save();
+        return $customer;
     }
     public function index(Request $request)
     {

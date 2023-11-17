@@ -7,9 +7,9 @@ import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
-import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
-import ModalDecline from "./ModalDecline.vue";
-import ModelRefund from "./ModelRefund.vue";
+import PackageBar from "@/Pages/Modules/Order/Package/PackageBar.vue";
+import ModalDecline from "./../ModalDecline.vue";
+import ModelRefund from "./../ModelRefund.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -132,21 +132,15 @@ const changeDate = () => {
                 </div>
                 <div class="flex">
                     <div>
-                        <Link :href="route('admin.orders.create')"
-                            class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
-                        <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn lẻ
-                        </Link>
-                    </div>
-                    <!-- <div>
-                        <Link :href="route('orderPackage.create')"
+                        <Link :href="route('admin.orders.package.create')"
                             class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
                         <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn hàng hợp đồng
                         </Link>
-                    </div> -->
+                    </div>
                 </div>
             </div>
             <div>
-                <OrderBar :statusGroup="statusGroup"></OrderBar>
+                <PackageBar :statusGroup="statusGroup"></PackageBar>
                 <ModalDecline></ModalDecline>
                 <ModelRefund></ModelRefund>
                 <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4">

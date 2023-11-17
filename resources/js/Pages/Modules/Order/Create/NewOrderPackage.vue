@@ -88,29 +88,29 @@
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
                 <p class="text-sm text-[#686868] font-bold" v-if="shipping_fee == 0">Miễn phí</p>
-                <p class="text-sm text-[#686868] font-bold" v-else>{{ formatPrice(shipping_fee) }}</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
-                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(discount_deal) }}đ</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice((discount_deal*product?.price)/100) }}đ</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
-                <p class="text-sm text-[#686868]">{{formatPrice( product?.price )}} vnd</p>
+                <p class="text-sm text-[#686868]">{{formatPrice( (product?.price + ((vat*product?.price)/100)  - ((discount_deal*product?.price)/100)) )}} vnd</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868]">Đã thanh toán</p>
-                <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(price_percent) }} vnđ</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Còn lại</p>
-                <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice((product?.price + ((vat*product?.price)/100)  - ((discount_deal*product?.price)/100)) -price_percent) }}</p>
             </div>
             <div class="my-3">
                 <BaseButton color="info"  @click="save()"
                     class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center rounded-lg"
                     :icon="mdiContentSaveMove" small label="Lưu hợp đồng" />
             </div>
+
         </div>
     </div>
 </template>
@@ -183,7 +183,7 @@ export default {
             mdiContentSaveMove: mdiContentSaveMove,
             carts: this.cart,
             subTotal: this.sub_total,
-            totalPrice: this.product_selected?.price,
+            totalPrice: 0,
             time_approve : new Date(),
         }
     },
@@ -232,10 +232,10 @@ export default {
 
         save(){
 
-            if (this.carts.length ==0) {
+            if (this.product_selected == null) {
                 Swal.fire({
                     title: "Lỗi?",
-                    text: "Chưa sản phẩm!",
+                    text: "Chưa chọn gói!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
