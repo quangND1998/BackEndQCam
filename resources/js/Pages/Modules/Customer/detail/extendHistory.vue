@@ -107,7 +107,7 @@ const save = () => {
                         form_reset();
                         " label="Tải scan hợp đồng" />
                 </div> -->
-                <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5 min-h-[400px]">
+                <div class=" relative shadow-md sm:rounded-lg mt-5 min-h-[400px]">
                     <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>

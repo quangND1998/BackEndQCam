@@ -13,7 +13,7 @@ import FooterBar from '@/Components/FooterBar.vue'
 import { router } from '@inertiajs/vue3'
 import NotificationBar from '@/Components/NotificationBar.vue'
 import SectionMain from '@/Components/SectionMain.vue'
-const layoutAsidePadding = 'xl:pl-60'
+const layoutAsidePadding = 'xl:pl-72'
 
 const darkModeStore = useDarkModeStore()
 
@@ -60,7 +60,7 @@ const menuClick = (event, item) => {
         </NotificationBar>
       </SectionMain>
 
-      <NavBar :menu="menuNavBar" :class="[layoutAsidePadding, { 'ml-60 lg:ml-0': isAsideMobileExpanded }]"
+      <NavBar :menu="menuNavBar" :class="['ml-0', { 'ml-60 lg:ml-0': isAsideMobileExpanded }]"
         @menu-click="menuClick">
         <NavBarItemPlain display="flex lg:hidden" @click.prevent="isAsideMobileExpanded = !isAsideMobileExpanded">
           <BaseIcon :path="isAsideMobileExpanded ? mdiBackburger : mdiForwardburger" size="24" />

@@ -18,6 +18,7 @@ class OrderRepository implements OrderContract
 
     public function storeOrderDetails($params, $user)
     {
+        dd($params);
         $order = Order::create([
             'order_number'      =>  'ORD-' . strtoupper(uniqid()),
             'user_id'           => $user->id,
@@ -25,7 +26,7 @@ class OrderRepository implements OrderContract
             'grand_total'       =>  Cart::getSubTotal(),
             'item_count'        =>  Cart::getTotalQuantity(),
             'payment_status'    =>  0,
-            'payment_method'    =>  null,
+            'payment_method'    =>  $params['payment_method'],
             'first_name'        =>  $params['first_name'],
             'last_name'         =>  $params['last_name'],
             'address'           =>  $params['address'],
@@ -48,7 +49,7 @@ class OrderRepository implements OrderContract
                     'price'         =>  $item->getPriceSum()
                 ]);
 
-                $order->items()->save($orderItem);
+                $order->orderItems()->save($orderItem);
             }
         }
 

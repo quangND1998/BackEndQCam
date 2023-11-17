@@ -17,6 +17,9 @@ class Order extends Model
         'address',
         'city',
         'district',
+        'vat',
+        'discount_deal',
+        'type',
         'wards',  "created_at", "updated_at"
     ];
 
