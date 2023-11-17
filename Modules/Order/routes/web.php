@@ -2,10 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Order\app\Http\Controllers\OrderController;
+use Modules\Order\app\Http\Controllers\PaymentController;
 use Modules\Order\app\Http\Controllers\ProductServiceVoucherController;
 use Modules\Order\app\Http\Controllers\ProductVoucherController;
 use Modules\Order\app\Http\Controllers\VoucherController;
 use Modules\Order\app\Http\Controllers\OrderPackageController;
+use Twilio\Rest\Api\V2010\Account\Call\PaymentContext;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -69,11 +72,15 @@ Route::middleware(['auth'])->group(
 
                 Route::prefix('package')->as('package.')->group(function () {
                     Route::get('all', [OrderPackageController::class, 'index'])->name('index');
+                    Route::get('listCancel', [OrderPackageController::class, 'listOrderCancel'])->name('listOrderCancel');
+                    Route::get('listComplete', [OrderPackageController::class, 'listOrderComplete'])->name('listOrderComplete');
+
                     Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
                     Route::get('pending/{id}', [OrderPackageController::class, 'OrderPending'])->name('pending');
                     Route::post('/addToCartPackage', [OrderPackageController::class, 'addToCart'])->name('addToCartPackage');
+                    Route::post('orderCancel/{order}', [OrderPackageController::class, 'orderCancel'])->name('orderCancel');
+                    Route::post('orderComplete/{order}', [OrderPackageController::class, 'orderComplete'])->name('orderComplete');
                 });
-
             });
 
             Route::prefix('cart')->as('cart.')->group(function () {
@@ -86,6 +93,11 @@ Route::middleware(['auth'])->group(
 
                 // Route::put('/update/{shipping}', [PaymentMethodsController::class, 'update'])->name('update');
                 // Route::delete('/delete/{shipping}', [PaymentMethodsController::class, 'destroy'])->name('destroy');
+            });
+
+
+            Route::prefix('payment')->as('payment.')->group(function () {
+                Route::get('/{order}/Cash&Banking', [PaymentController::class, 'orderCashBankingPayment'])->name('orderCashBankingPayment');
             });
         });
     }

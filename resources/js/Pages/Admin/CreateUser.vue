@@ -58,9 +58,12 @@ const districts = computed(() => {
     if (form.city == null) {
         return [];
     } else {
-        return provinces.value.find(pro => {
-            return pro.Name == form.city;
-        });
+        if (provinces.value) {
+            return provinces.value?.find(pro => {
+                return pro.Name == form.city;
+            });
+        }
+        return [];
     }
 })
 
@@ -70,13 +73,19 @@ const wards = computed(() => {
     } else if (form.city !== null && form.district == null) {
         return [];
     } else {
-        let array = provinces.value.find(pro => {
-            return pro.Name == form.city;
-        });
+        if (provinces.value) {
+            let array = provinces.value.find(pro => {
+                return pro.Name == form.city;
+            });
+            if (array.Districts) {
+                return array.Districts.find(district => {
+                    return district.Name == form.district;
+                });
+            }
+            return []
 
-        return array.Districts.find(district => {
-            return district.Name == form.district;
-        });
+        }
+        return []
     }
 })
 const onChangeCity = (event) => {
@@ -132,6 +141,7 @@ const save = () => {
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                         <InputError class="mt-2" :message="form.errors.name" />
+                                        
                                     </div>
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -286,7 +296,8 @@ const save = () => {
                                 </div>
                             </div>
                         </div>
-
+                        <label for="phone" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                            Quyền *</label>
                         <Multiselect v-model="form.roles" mode="tags" :appendNewTag="false" :createTag="false"
                             :searchable="true" label="name" valueProp="id" trackBy="name" :options="roles"
                             class="form-control" :classes="{

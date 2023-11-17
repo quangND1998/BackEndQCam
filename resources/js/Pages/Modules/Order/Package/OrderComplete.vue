@@ -7,9 +7,9 @@ import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
-import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
+import PackageBar from "@/Pages/Modules/Order/Package/PackageBar.vue";
 import ModalDecline from "./ModalDecline.vue";
-import ModelRefund from "./ModelRefund.vue";
+import ModelRefund from "../ModelRefund.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -35,7 +35,7 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import OrderHome from "@/Pages/Test/OrderHome.vue"
-import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
+import OrderRow from "@/Pages/Modules/Order/Package/OrderRow.vue"
 
 const props = defineProps({
     orders: Object,
@@ -50,9 +50,7 @@ const filter = reactive({
     name: null,
     fromDate: null,
     toDate: null,
-    search: null,
-    payment_status: null,
-    payment_method: null,
+    search: null
 
 })
 const customer = ref()
@@ -83,7 +81,7 @@ initFlowbite();
 
 const searchCustomer = () => {
     router.get(route(`admin.orders.${props.status}`),
-        filter,
+        { customer: filter.customer },
         {
             preserveState: true,
             preserveScroll: true
@@ -91,28 +89,9 @@ const searchCustomer = () => {
     );
 }
 
-const Fillter = (event) => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
-
-const fillterPaymentMethod = (event) => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
 const search = () => {
     router.get(route(`admin.orders.${props.status}`),
-        filter,
+        { search: filter.search },
         {
             preserveState: true,
             preserveScroll: true
@@ -129,13 +108,13 @@ const contents = ref([
 
 
 const changeDate = () => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
+    let query = {
+        from: filter.fromDate,
+        to: filter.toDate
+    };
+    router.get(route(`admin.orders.${props.status}`), query, {
+        preserveScroll: true
+    });
 }
 
 </script>
@@ -148,26 +127,20 @@ const changeDate = () => {
                 <div>
                     <h2 class="min-[320px]:text-xl sm:text-2xl font-semibold lg:text-3xl flex mr-2">
                         Quản lý đơn hàng
-                        <!-- <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p> -->
+                        <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p>
                     </h2>
                 </div>
                 <div class="flex">
                     <div>
-                        <Link :href="route('admin.orders.create')"
-                            class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
-                        <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn lẻ
-                        </Link>
-                    </div>
-                    <!-- <div>
-                        <Link :href="route('orderPackage.create')"
+                        <Link :href="route('admin.orders.package.create')"
                             class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
                         <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn hàng hợp đồng
                         </Link>
-                    </div> -->
+                    </div>
                 </div>
             </div>
             <div>
-                <OrderBar :statusGroup="statusGroup"></OrderBar>
+                <PackageBar :statusGroup="statusGroup"></PackageBar>
                 <ModalDecline></ModalDecline>
                 <ModelRefund></ModelRefund>
                 <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4">
@@ -247,12 +220,11 @@ const changeDate = () => {
                                 <label for>Phương thức TT</label>
                             </div>
                             <div class="min-[320px]:w-full sm:w-9/12">
-                                <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
+                                <select id="countries"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
-                                    <option :value="null">Tất cả</option>
-                                    <option value="cash">Tiền mặt</option>
-                                    <option value="banking">Chuyển khoản ngân hàng</option>
-                                    <option value="payoo">Payoo</option>
+                                    <option selected>Tất cả</option>
+                                    <option value="US">Còn hàng</option>
+                                    <option value="CA">Hết hàng</option>
                                 </select>
                             </div>
                         </div>
@@ -261,7 +233,7 @@ const changeDate = () => {
                                 <label for>Trạng thái TT</label>
                             </div>
                             <div class="min-[320px]:w-full sm:w-9/12">
-                                <select id="countries" v-model="filter.payment_status" @change="Fillter()"
+                                <select id="countries"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tình trạng</option>
                                     <option :value="1">Đã thanh toán</option>
@@ -275,7 +247,7 @@ const changeDate = () => {
                     <div class="panel panel-default">
                         <div class="panel-body relative overflow-x-auto shadow-md sm:rounded-lg">
                             <div>
-                                <div class="grid grid-cols-6 gap-4 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400">
+                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400 grid grid-cols-6 gap-4 text-sm px-3 py-3 text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
@@ -291,13 +263,12 @@ const changeDate = () => {
                                     <div>
                                         <p>Trạng thái</p>
                                     </div>
-                                    <div>
-                                        <p>Trạng thái</p>
+                                     <div>
+                                        <p></p>
                                     </div>
-
                                 </div>
 
-                                <div v-for="(order, index) in orders.data" :key="index">
+                                <div v-for="(order, index) in orders" :key="index">
                                     <OrderRow :order="order" :status="status" />
 
                                 </div>
@@ -309,7 +280,7 @@ const changeDate = () => {
                     </div>
                 </div>
 
-                <Pagination :links="orders.links" />
+
 
             </div>
 
@@ -318,29 +289,3 @@ const changeDate = () => {
     </LayoutAuthenticated>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
-<style scoped>
-.list_icon_crud {
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-
-    right: -40px;
-    top: 20px;
-    z-index: 111;
-    display: inline-grid;
-}
-
-.btn_crud {
-    font-size: 20px;
-}
-
-.title_information {
-    background-color: #f3f4f6;
-}
-
-.item_information {
-    height: 100px;
-}
-
-.collapse {
-    visibility: inherit;
-}
-</style>

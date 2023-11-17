@@ -8,7 +8,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import PackageBar from "@/Pages/Modules/Order/Package/PackageBar.vue";
-import ModalDecline from "./../ModalDecline.vue";
+import ModalDecline from "./ModalDecline.vue";
 import ModelRefund from "./../ModelRefund.vue";
 import {
     mdiEye,
@@ -35,7 +35,7 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import OrderHome from "@/Pages/Test/OrderHome.vue"
-import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
+import OrderRow from "@/Pages/Modules/Order/Package/OrderRow.vue"
 
 const props = defineProps({
     orders: Object,
@@ -247,7 +247,7 @@ const changeDate = () => {
                     <div class="panel panel-default">
                         <div class="panel-body relative overflow-x-auto shadow-md sm:rounded-lg">
                             <div>
-                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400">
+                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400 grid grid-cols-6 gap-4 text-sm px-3 py-3 text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
@@ -263,9 +263,12 @@ const changeDate = () => {
                                     <div>
                                         <p>Trạng thái</p>
                                     </div>
+                                     <div>
+                                        <p></p>
+                                    </div>
                                 </div>
 
-                                <div v-for="(order, index) in orders.data" :key="index">
+                                <div v-for="(order, index) in orders" :key="index">
                                     <OrderRow :order="order" :status="status" />
 
                                 </div>

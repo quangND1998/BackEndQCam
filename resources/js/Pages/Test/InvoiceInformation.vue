@@ -1,5 +1,8 @@
 
 <script setup>
+const props = defineProps({
+
+})
 </script>
 <template>
     <div class="min-[320px]:block md:flex  border-b border-gray-300">

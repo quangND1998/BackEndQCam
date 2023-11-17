@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Customer\app\Http\Controllers\API\ComplaintController;
 use Modules\Customer\app\Http\Controllers\API\CustomerProductOwerController;
+use Modules\Customer\app\Http\Controllers\API\ReviewManagerController;
 use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
 /*
     |--------------------------------------------------------------------------
@@ -29,6 +31,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
             Route::post('visit/save', [ScheduleVisitController::class, 'saveScheduleVisit']);
             Route::get('visit', [ScheduleVisitController::class, 'getsheduleCustomer']);
+
+
+            Route::prefix('complaint')->as('customer.')->group(function () {
+                Route::post('save', [ComplaintController::class, 'save']);
+            });
+            Route::prefix('review')->as('review.')->group(function () {
+                Route::post('saveApp', [ReviewManagerController::class, 'saveApp']);
+                Route::post('saveOrder/{id}', [ReviewManagerController::class, 'saveOrder']);
+            });
         });
     });
 });

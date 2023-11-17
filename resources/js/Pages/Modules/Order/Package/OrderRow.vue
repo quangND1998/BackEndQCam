@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import OrderAction from "@/Pages/Modules/Order/OrderAction.vue"
+import OrderAction from "@/Pages/Modules/Order/Package/OrderAction.vue"
 import { Head, Link } from "@inertiajs/vue3";
 import BaseButton from "@/Components/BaseButton.vue";
 const showContent = ref(false);
@@ -40,7 +40,7 @@ const props = defineProps({
             </div>
             <div>
                 <Link v-if="order.payment_method == 'cash' || order.payment_method == 'banking'"
-                    :href="route('admin.payment.orderCashBankingPayment', order.id)"
+                    :href="route('admin.orders.package.pending', order.id)"
                     class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
                 Chi tiết thanh toán
                 </Link>
@@ -77,63 +77,57 @@ const props = defineProps({
                 </div>
             </div>
             <table class="table table-striped w-full text-sm text-left text-gray-500 text-gray-400 rounded-lg">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50  text-gray-400">
+                <thead class="text-xs justify-between text-gray-700 uppercase bg-gray-50  text-gray-400">
                     <tr class="info">
                         <th>Sản phẩm</th>
-                        <th>SL</th>
-                        <th>Giá </th>
                         <th>Thành tiền </th>
-                        <!-- <th>Chiết khấu</th>
-                        <th>Giá sau chiết khấu</th> -->
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600"
-                        v-for="(item, index) in order.order_items" :key="index">
-                        <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                            <!-- <img src="/img/xop.png" alt="" /> -->
+                    <tr class=" bg-white justify-between bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
+                        <td class="px-6 flex  py-4 font-medium text-gray-900 whitespace-nowrap ">
                             <div class="ml-3">
                                 <h4>
-                                    {{ item.product.name }}
+                                  gói nhận nuôi  {{ order?.product_service?.name }}
                                 </h4>
 
                             </div>
                         </td>
-                        <td class="px-6 py-4"> {{ item.quantity }}</td>
-                        <td class="px-6 py-4">{{ formatPrice(item.price) }}đ</td>
-                        <td class="px-6 py-4">{{ formatPrice(item.total_price) }}đ</td>
-                        <!-- <td class="px-6 py-4">-10%</td>
-                        <td class="px-6 py-4">225.000 đ7</td> -->
+                        <td class="px-6 py-4">{{ formatPrice(order?.product_service?.price) }}₫</td>
                     </tr>
 
                 </tbody>
             </table>
-            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
-                <p>Cộng tiền hàng</p>
-                <p>{{ formatPrice(order.grand_total) }}₫</p>
+            <!-- <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Giá gói</p>
+                <p>{{ formatPrice(order?.product_service?.price) }}₫</p>
 
-            </div>
+            </div> -->
             <div v-if="order.discount" class="flex justify-between mx-2 border-b border-gray-400 pb-3">
                 <p>Voucher</p>
                 <input v-if="order.discount" :value="formatPrice(order.discount.discount_mount)"
-                    class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
+                    class="px-3 py-2 border border-gray-400 rounded-lg w-40" readonly />
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
                 <p>Ưu đãi</p>
-                <input :value="`${order.discount_deal} %`" class="px-3 py-2 border border-gray-400 rounded-lg w-24"
+                <input :value="`${order.discount_deal} %`" class="px-3 py-2 border border-gray-400 rounded-lg w-40"
                     readonly />
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
                 <p>VAT</p>
-                <input :value="`${order.vat} %`" class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
+                <input :value="`${order.vat} %`" class="px-3 py-2 border border-gray-400 rounded-lg w-40" readonly />
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
-                <p>Phí ship</p>
-                <p class="text-red-600 text-xl">{{ formatPrice(order.shipping_fee) }} ₫</p>
+                <p>Tổng giá</p>
+                <input :value="formatPrice(order.grand_total)" class="px-3 py-2 border border-gray-400 rounded-lg w-40" readonly />
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
-                <p>Tổng giá trị</p>
-                <p class="text-red-600 text-xl">{{ formatPrice(order.last_price) }} ₫</p>
+                <p>Khách đã trả</p>
+                <input :value="formatPrice(order.price_percent)" class="px-3 py-2 border border-gray-400 rounded-lg w-40" readonly />
+            </div>
+            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Còn phải trả</p>
+                <p class="text-red-600 text-xl">{{ formatPrice(order?.grand_total -  order?.price_percent ) }} ₫</p>
             </div>
 
             <!-- <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
