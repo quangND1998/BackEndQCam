@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('amount_products_received')->nullable();
             $table->bigInteger('price')->nullable();
             $table->integer('number_deliveries')->nullable();
+
             $table->integer('life_time')->nullable();
             $table->longText('description')->nullable();
             $table->string('unit')->nullable();

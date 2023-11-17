@@ -29,9 +29,13 @@ Route::middleware(['auth'])->group(
         Route::resource('service', CustomerServiceController::class)->names('service');
 
 
+
     });
     Route::prefix('product_owner/{id}')->as('product_owner.')->group(function () {
         Route::resource('contract', ContractController::class)->names('contract');
-        Route::post('extend', [ContractController::class,'extend'])->name('extend');
+        Route::post('extend', [CustomerProductController::class,'extend'])->name('extend');
+        Route::get('extend', [CustomerProductController::class,'getExtendHistory'])->name('getExtendHistory');
+
+        Route::post('history_extend', [CustomerProductController::class,'editHistoryExtend'])->name('history_extend');
     });
 });

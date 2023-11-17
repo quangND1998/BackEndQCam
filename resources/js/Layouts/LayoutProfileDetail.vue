@@ -70,8 +70,8 @@ const state = reactive({
          <div class="h-52 w-96 bg-white rounded-xl " style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
             <div class="p-3 ">
                 <img src="/assets/images/new4.png" class="h-24 w-24 my-2 rounded-full m-auto object-cover" alt="">
-                <h3 class="font-bold text-xl text-center">{{ customer.name }}</h3>
-                <p class="text-center">{{ customer.email }}</p>
+                <h3 class="font-bold text-xl text-center">{{ customer?.name }}</h3>
+                <p class="text-center">{{ customer?.email }}</p>
 
             </div>
 
@@ -101,14 +101,14 @@ const state = reactive({
                     :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('service') }"
                     class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"
                    >
-                    <Link :href="route('customer.detail.activity.index', customer.id)" class="flex">
+                    <Link :href="route('customer.detail.activity.index', customer?.id)" class="flex">
                     <Icon icon="amentities" class=" mr-2" />Service</Link>
                 </li>
                 <li
                 :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('activity') }"
                 class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2">
 
-                    <Link :href="route('customer.detail.service.index', customer.id)" class="flex">
+                    <Link :href="route('customer.detail.service.index', customer?.id)" class="flex">
                     <Icon icon="gallery" class=" mr-2" />Activity</Link>
                 </li>
 

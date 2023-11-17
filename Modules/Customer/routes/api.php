@@ -25,6 +25,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('customer')->as('customer.')->group(function () {
             Route::get('product_service', [CustomerProductOwerController::class, 'getProductService']);
             Route::get('productWithID/{id}', [CustomerProductOwerController::class, 'getOneProductActivity']);
+            Route::get('getDetailExtendHistory', [CustomerProductOwerController::class, 'getDetailExtendHistory']);
 
             Route::post('visit/save', [ScheduleVisitController::class, 'saveScheduleVisit']);
             Route::get('visit', [ScheduleVisitController::class, 'getsheduleCustomer']);

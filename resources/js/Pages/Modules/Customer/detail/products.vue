@@ -48,7 +48,7 @@ const edit = (product_owner) => {
 }
 const extend = (product_owner) => {
     isModalExtendActive.value = true;
-    form.product_service = product_owner.product;
+    form.product_service = product_owner.id;
 }
 const crumbs = ref([
 
@@ -104,19 +104,22 @@ const save = () => {
     }
 
 };
-const upgrade = () => {
-    form.post(route("product_owner.extend", [props.customer.id, form.product_service]), {
-            onError: () => {
-                isModalExtendActive.value = true;
-                editMode.value = true;
-            },
-            onSuccess: () => {
-                form_reset();
-                form.reset();
-                isModalExtendActive.value = false;
-                editMode.value = false;
-            },
-        });
+const upgrade_extend = () => {
+    console.log(form.product_service.id);
+    form.post(route("product_owner.extend", [props.customer.id, form.product_service.id]), {
+                onError: () => {
+                    console.log("form error");
+                },
+                onSuccess: (response) => {
+                    form_reset();
+                    form.reset();
+                    isModalActive.value = false;
+                    editMode.value = false;
+                    console.log("form succes",response);
+                },
+            });
+
+
 }
 const limit_tree = computed(() => {
     console.log('limit_tree', form.product_service)
@@ -184,11 +187,12 @@ const limit_tree = computed(() => {
                 </div>
             </CardBoxModal>
 
-            <CardBoxModal v-model="isModalExtendActive" buttonLabel="Save" has-cancel @confirm="upgrade"
+            <CardBoxModal v-model="isModalExtendActive" buttonLabel="Save" has-cancel @confirm="upgrade_extend"
                 title=" Gia hạn ">
                 <div class="p-6 flex-auto">
                         <div class="w-full  px-3">
-                            <InputLabel class="py-5" for="owner" :value="form.product_service.name " />
+
+                            <InputLabel class="py-5" for="owner" :value="form.product_service.id " />
 
                             <InputLabel for="owner" value="Thời gian bắt đầu áp dụng" />
 
@@ -281,8 +285,6 @@ const limit_tree = computed(() => {
                                 </td>
                                 <td class="px-6 py-4 ">
                                     <div class="flex ">
-                                        <Link :href="route('product_owner.contract.index', product_owner.id)" class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">Thông tin hợp đồng </Link>
-
                                         <Dropdown align="right" width="40" class="ml-5">
                                             <template #trigger>
                                                 <span class="inline-flex rounded-md">
@@ -295,7 +297,7 @@ const limit_tree = computed(() => {
                                                 <div class="w-40">
                                                     <div
                                                         class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
-                                                        <a href="" class="hover:text-blue-700">Lịch sử gia hạn</a>
+                                                        <Link :href="route('product_owner.getExtendHistory', product_owner.id)" class="hover:text-blue-700">Lịch sử gia hạn</Link>
                                                     </div>
                                                     <div
                                                         class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
@@ -321,7 +323,7 @@ const limit_tree = computed(() => {
 
                                 </td>
                             </tr>
-                            <pagination :links="customer.product_service_owners.links" />
+                            <!-- <pagination :links="customer.product_service_owners.links" /> -->
                         </tbody>
                     </table>
                 </div>

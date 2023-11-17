@@ -11,6 +11,7 @@ use Modules\Customer\app\Models\ProductServiceOwner;
 use Inertia\Inertia;
 use Modules\Customer\app\Models\Contract;
 use Modules\Customer\app\Models\HistoryContract;
+use Modules\Customer\app\Models\HistoryExtend;
 
 class ContractController extends Controller
 {
@@ -19,19 +20,19 @@ class ContractController extends Controller
      */
     public function index(Request $request, $id)
     {
-        $product_ownwer = ProductServiceOwner::with('customer','contract.history_contact.images')->findOrfail($id);
-        // return $product_ownwer;
-        return Inertia::render('Modules/Customer/detail/contract', compact('product_ownwer'));
+        $history_extend = HistoryExtend::with('product_service_owner.customer','contract.history_contact.images')->findOrfail($id);
+        // return $history_extend;
+        return Inertia::render('Modules/Customer/detail/contract', compact('history_extend'));
     }
 
     public function store(Request $request, $id)
     {
-        $product_ownwer = ProductServiceOwner::with('contract')->findOrfail($id);
-        if($product_ownwer != null && $product_ownwer->contract){
-            $contract = $product_ownwer->contract;
+        $history_extend = HistoryExtend::with('contract')->findOrfail($id);
+        if($history_extend != null && $history_extend->contract){
+            $contract = $history_extend->contract;
         }else{
             $contract = new Contract;
-            $contract->product_service_owner_id = $product_ownwer->id;
+            $contract->extend_id = $history_extend->id;
             $contract->save();
         }
         $history = new HistoryContract;
@@ -40,19 +41,22 @@ class ContractController extends Controller
         foreach ($request->images as $image) {
             $history->addMedia($image)->toMediaCollection('contract_images');
         }
+
         return back()->with('success', 'Create successffully');
     }
     public function update(Request $request, $id)
     {
         $contract = Contract::findOrfail($id);
-        $contract->clearMediaCollection('contract_images');
-        foreach ($request->images as $image) {
-            $contract->addMedia($image)->toMediaCollection('contract_images');
+        if($request->images){
+            $contract->clearMediaCollection('contract_images');
+            foreach ($request->images as $image) {
+                $contract->addMedia($image)->toMediaCollection('contract_images');
+            }
         }
         return back()->with('success', 'Update successffully');
     }
     public function extend(Request $request, $id){
-        
+
     }
         /**
      * Remove the specified resource from storage.

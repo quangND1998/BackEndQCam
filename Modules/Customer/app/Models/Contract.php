@@ -27,5 +27,8 @@ class Contract extends Model
     public function history_contact(){
         return $this->hasMany(HistoryContract::class,'contracts_id');
     }
+    public function lastcontract(){
+        return $this->hasOne(HistoryContract::class,'contracts_id')->latest();
+    }
 
 }
