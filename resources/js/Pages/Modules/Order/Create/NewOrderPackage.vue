@@ -3,60 +3,37 @@
 
         <div class=" col-span-2 mt-2 w-full">
 
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-5 mt-4">
+            <div class="relative shadow-md sm:rounded-lg mb-5 mt-4">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3">
-                                #
+                                Gói sản phẩm
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Số lượng
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Giá
-                            </th>
-
-                            <th scope="col" class="px-6 py-3">
-
+                                Tổng
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="bg-white border-b ">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                <span></span>
-                            </th>
                             <td class="px-6 py-4 ">
                                 <select id="countries" @change="changeProduct($event)" v-model="product_selected"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 ">
-                                    <option v-for="(product, index) in products" :key="index" :value="product.id">{{
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 ">
+                                    <option v-for="(product, index) in product_services" :key="index" :value="product.id">{{
                                         product.name }}</option>
 
                                 </select>
+                                <label for="first_name" class="block mb-1 mt-4 text-sm  text-gray-900 dark:text-white">
+                                Áp dụng từ ngày</label>
+                                <div class="flex items-center w-60 ">
+                                    <VueDatePicker v-model="time_approve" time-picker-inline />
+                                </div>
                             </td>
-                            <td class="px-6 py-4">
 
-                                <MazInputNumber v-model="quantity" label="Enter number" :min="1" :max="10000" :step="1"
-                                    size="md" color="secondary" />
-                            </td>
-                            <td class="px-6 py-4">
-                                <input type="number" readonly :value="product?.price"
-                                    class="border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 hover:border-gray-500 w-28">
-                            </td>
-                            <!-- <td class="px-6 py-4">
-                                <input type="number"
-                                    class="border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 hover:border-gray-500 w-32">
-                            </td> -->
-                            <td class="px-6 py-4">
-
-                                <BaseButton color="info" @click="addToCart()"
-                                    class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
-                                    label="Thêm sản phẩm" />
-
+                            <td class="px-6  py-4">
+                                <p type="number"
+                                    class="border-[0px] text-[#686868] font-bold w-28">{{ formatPrice(product?.price) }}</p>
                             </td>
                         </tr>
                     </tbody>
@@ -66,121 +43,47 @@
                 <div class="flex justify-between">
                     <div>
                         <!-- <font-awesome-icon :icon="['fas', 'cart-shopping']" class="mt-1" /> -->
-                        <span class="text-xl font-semibold ml-2">Giỏ hàng</span>
+                        <span class="text-xl font-semibold ml-2">Quyền lợi nhận nuôi {{ product?.name }}</span>
                     </div>
-                    <button v-if="cart" class="flex text-red-600 mx-3 text-sm">
-                        <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700 mx-1 "
-                            @click="DeleteCart()"></BaseIcon>
-                        Hủy đơn hàng
-                    </button>
+
                 </div>
                 <hr />
-                <div class="flex my-3">
-                    <input v-if="cart_selected" id="default-checkbox" type="checkbox" v-model="selectAllCart"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                    <div>
-                        <button v-if="cart_selected.length > 0" class="flex text-red-600 mx-3 text-sm" @click="DeleteCheckbox()">
-                            <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700"></BaseIcon>Xóa
-                            <span>({{ cart_selected.length }})</span> sản phẩm đã chọn
-                        </button>
+                <div class="my-3">
+                    <div class="block ml-3 w-4/5">
+                        <h3 class="text-base font-semibold">1. Thăm vườn không giới hạn</h3>
+                        <p class="text-xs font-normal">Nhận {{product?.free_visit}} lần tham quan miễn phí</p>
                     </div>
-                </div>
-
-                <hr />
-                <div v-for="(item, index) in carts" :key="index" class="flex my-3">
-                    <div class="flex">
-                        <input id="default-checkbox" type="checkbox" v-model="cart_selected" :value="item.id"
-                            class="icon_checkbox w-4 h-4 mt-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-
+                    <div class="block ml-3 w-4/5">
+                        <h3 class="text-base font-semibold">2. Thu hoạch {{ product?.amount_products_received }} kg cam</h3>
+                        <p class="text-xs font-normal">{{product?.number_deliveries}}lần ship hàng về tận nhà</p>
                     </div>
-                    <img v-if="item.images && item.images.length > 0 && item.images[0].image" :src="item.images[0].image"
-                        class="w-16 h-16 object-cover ml-3" alt="">
-                    <div class="flex  justify-between items-center w-full">
-                        <div class=" ml-4">
-                            <h3>{{ item.name }}</h3>
-                            <p class="text-red-700 text-base">{{ formatPrice(item.price) }} </p>
-                            <div class="buttons_added">
-                                <!-- <MazInputNumber v-model="numberValue[item.id]" label="Enter number" :min="5" :max="10000" :step="1"
-                                    size="xs" color="secondary" /> -->
-                                <div class="buttons_added">
-                                    <input class="minus is-form" type="button" value="-" @click="updateCart(item, -1)" />
-                                    <input aria-label="quantity" class="input-qty_create" :ref="`quantity${item.id}`"
-                                        @blur="updateCartInput(item)" v-on:keyup.enter="updateCartInput(item)"
-                                        :value="item.quantity" max="100" min="0" name type="number" />
-                                    <input class="plus is-form" type="button" value="+" @click="updateCart(item, 1)" />
-
-                                </div>
-
-                            </div>
+                    <div class="block ml-3 w-4/5">
+                            <h3 class="text-base font-semibold">3. Tặng thẻ Membership</h3>
+                            <p class="text-xs font-normal">Hưởng đặc quyền riêng từ trang trại</p>
+                    </div>
+                    <div class="block ml-3 w-4/5">
+                            <h3 class="text-base font-semibold">4. Nhận nông sản sạch {{product?.number_receive_product}} lần/năm</h3>
+                            <p class="text-xs font-normal">Các sản phẩm nông sản như thanh long
+                                sầu riêng là quà tặng đến cho bạn</p>
+                    </div>
+                    <div class="block ml-3 w-4/5">
+                            <h3 class="text-base font-semibold">5. Quà tặng thêm</h3>
+                            <p class="text-xs font-normal">Nhiều phần quà nông sản hấp dẫn trị tổng
+                                trị giá xx triệu</p>
                         </div>
-                        <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700"
-                            @click="deleteItem(item)"></BaseIcon>
-
-                    </div>
-
                 </div>
-
                 <hr />
-                <div class="mt-5 pt-5">
-                    <hr />
-                    <div class="flex justify-between my-2">
-                        <p>Tạm tính:</p>
-                        <h3 class="text-xl text-red-700 font-semibold"></h3>
-                    </div>
-
-                    <div class="text-center">
-                        <h3 class="text-gray-500 text-sm">Lưu ý: Số tiền trên chưa bao gồm phí ship</h3>
-                    </div>
-                </div>
             </div>
-
-            <!-- <div class="min-[320px]:block md:flex w-full">
-                <div class="min-[320px]:w-full md:w-1/2">
-                    <BaseButton color="info" @click="
-                        isModalActive = true;" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus"
-                        small label="Thêm sản phẩm" />
-                </div>
-
-                <div class="min-[320px]:w-full md:w-1/2 min-[320px]:mt-3 md:mt-0">
-                    <div class="flex justify-between my-2">
-                        <p class="text-sm text-[#686868] font-bold">Tổng</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(total_price) }}đ</p>
-                    </div>
-                    <div class="flex justify-between my-2">
-                        <p class="text-sm text-[#686868] font-bold">VAT(x%)</p>
-                        <p class="text-sm text-[#686868] font-bold">100.000đ</p>
-                    </div>
-                    <div class="flex justify-between my-2">
-                        <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
-                        <p class="text-sm text-[#686868] font-bold">Miễn phí</p>
-                    </div>
-                    <div class="flex justify-between my-2">
-                        <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
-                        <p class="text-sm text-[#686868] font-bold">100.000đ</p>
-                    </div>
-                    <div class="flex justify-between my-2">
-                        <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
-                        <p class="text-sm text-[#686868]">1.000.000đ</p>
-                    </div>
-                    <div class="flex justify-between my-2">
-                        <p class="text-sm text-[#686868]">Đã thanh toán</p>
-                        <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
-                    </div>
-                    <div class="flex justify-between my-2">
-                        <p class="text-sm text-[#686868] font-bold">Còn lại</p>
-                        <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
-                    </div>
-                </div>
-            </div> -->
         </div>
+
         <div class="mx-5">
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Tổng</p>
-                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(totalPrice) }}đ</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(product?.price) }} vnđ</p>
             </div>
             <div class="flex justify-between my-2">
-                <p class="text-sm text-[#686868] font-bold">VAT(x%)</p>
-                <p class="text-sm text-[#686868] font-bold">{{ vat }}đ</p>
+                <p class="text-sm text-[#686868] font-bold">VAT({{vat}}%)</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice((vat*product?.price)/100) }} vnd</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
@@ -189,11 +92,11 @@
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
-                <p class="text-sm text-[#686868] font-bold">{{ discount_deal }}đ</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(discount_deal) }}đ</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
-                <p class="text-sm text-[#686868]">1.000.000đ</p>
+                <p class="text-sm text-[#686868]">{{formatPrice( product?.price )}} vnd</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868]">Đã thanh toán</p>
@@ -206,27 +109,8 @@
             <div class="my-3">
                 <BaseButton color="info"  @click="save()"
                     class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center rounded-lg"
-                    :icon="mdiContentSaveMove" small label="Lưu đơn hàng" />
+                    :icon="mdiContentSaveMove" small label="Lưu hợp đồng" />
             </div>
-            <!-- <div class="my-3">
-                <BaseButton color="info"
-                    class="bg-lime-600 hover:bg-lime-700 text-white p-2 w-full text-center justify-center" :icon="mdiEye"
-                    small label="Xem đơn hàng" />
-            </div>
-            <div class="my-3">
-                <BaseButton color="info"
-                    class="bg-blue-900 hover:bg-blue-900 text-white p-2 w-full text-center justify-center"
-                    :icon="mdiCreditCardSettingsOutline" small label="Thanh toán ngay" />
-            </div>
-            <div class="my-3">
-                <BaseButton color="info"
-                    class="bg-gray-700 hover:bg-gray-800 text-white p-2 w-full text-center justify-center"
-                    :icon="mdiContentCopy" small label="Sao chép đường dẫn" />
-            </div>
-            <div class="my-3">
-                <BaseButton color="info" class="bg-black text-white p-2 w-full text-center justify-center" :icon="mdiImport"
-                    small label="In đơn hàng" />
-            </div> -->
         </div>
     </div>
 </template>
@@ -271,7 +155,8 @@ export default {
         BaseIcon
     },
     props: {
-        products: Array,
+        product_services: Array,
+        trees: Array,
         user: Object,
         cart: Object,
         total_price: Number,
@@ -280,7 +165,9 @@ export default {
         shipping_fee: Number,
         payment_method: String,
         type: String,
-        sub_total: Number
+        sub_total: Number,
+        time_reservations : Number,
+        price_percent : Number,
     },
     data() {
         return {
@@ -290,13 +177,14 @@ export default {
             quantity: 1,
             cart_selected: [],
             date: new Date(),
-            product_selected: this.products.length > 0 ? this.products[0].id : null,
+            product_selected: this.product_services.length > 0 ? this.product_services[0].id : null,
             mdiPlus: mdiPlus,
             mdiTrashCanOutline: mdiTrashCanOutline,
             mdiContentSaveMove: mdiContentSaveMove,
             carts: this.cart,
             subTotal: this.sub_total,
-            totalPrice: this.total_price
+            totalPrice: this.product_selected?.price,
+            time_approve : new Date(),
         }
     },
     mounted: function () {
@@ -337,7 +225,7 @@ export default {
             }
         },
         product() {
-            return this.products.find((e) => e.id == this.product_selected)
+            return this.product_services.find((e) => e.id == this.product_selected)
         }
     },
     methods: {

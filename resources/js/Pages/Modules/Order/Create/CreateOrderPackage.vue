@@ -24,13 +24,13 @@ import InputError from "@/Components/InputError.vue";
 import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
-import NewOrderProduct from '@/Pages/Modules/Order/Create/NewOrderProduct.vue'
+import NewOrderPackage from '@/Pages/Modules/Order/Create/NewOrderPackage.vue'
 import axios from "axios";
 const swal = inject("$swal");
 
 const props = defineProps({
-    product_retails: Array,
-    cart: Object,
+    product_services: Array,
+    trees : Array,
     total_price: Number,
     sub_total: Number
 });
@@ -50,7 +50,9 @@ const form = useForm({
     discount_deal: 0,
     type: 'retail',
     payment_method: 'cash',
-    shipping_fee: 0
+    shipping_fee: 0,
+    time_reservations : 1,
+    price_percent: null,
 
 })
 
@@ -94,8 +96,6 @@ const save = () => {
     else{
         form.post(route('admin.orders.saveOrder', user.value.id), {
                     onError: () => {
-
-
                     },
                     onSuccess: () => {
                         form.reset()
@@ -106,7 +106,6 @@ const save = () => {
 }
 
 const date = ref(new Date());
-
 </script>
 <template>
     <LayoutAuthenticated>
@@ -119,8 +118,8 @@ const date = ref(new Date());
                         <div class="min-[320px]:block md:flex border-b border-gray-200 pb-4">
                             <div class="min-[320px]:w-full md:w-1/2 px-2">
                                 <div class="block">
-                                    <img src="assets/images/cammattroi.png" alt="">
-                                    <h1>CÔNG TY CỔ PHẦN CAM MẶT TRỜI</h1>
+                                    <img src="/assets/images/cammattroi.png" alt="">
+                                    <h1 class="pt-2">CÔNG TY CỔ PHẦN CAM MẶT TRỜI</h1>
 
                                     <p class="text-sm text-[#5F5F5F] my-1">Địa chỉ:</p>
                                     <p class="text-sm text-[#5F5F5F] my-1">Farm:</p>
@@ -257,16 +256,7 @@ const date = ref(new Date());
 
                     </div>
                     <div class="min-[320px]:mx-0 md:mx-5">
-                        <div class="mb-3">
-                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                Loại hình</label>
-                            <select id="countries" v-model="form.type"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="retail" selected>Bán lẻ</option>
-                                <option value="gif" selected>Giao quà</option>
 
-                            </select>
-                        </div>
                         <div class="my-3">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 VAT(%)</label>
@@ -283,12 +273,18 @@ const date = ref(new Date());
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                Vận chuyển</label>
-                            <MazInputPrice v-model="form.shipping_fee" label="Enter your price" currency="VND"
-                                locale="vi-VN" :min="0" @formatted="formattedPrice = $event" />
+                               Thời gian giữ chỗ (ngày)</label>
+                            <input type="number" id="first_name" v-model="form.time_reservations"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" required>
                         </div>
-
-
+                        <div class="my-2">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                              Số tiền thanh toán (%)</label>
+                            <input type="number" id="first_name" v-model="form.price_percent"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" required>
+                        </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Hình thức thanh toán</label>
@@ -303,8 +299,9 @@ const date = ref(new Date());
                     </div>
                 </div>
             </div>
-            <NewOrderProduct :products="product_retails" :user="user" :cart="cart" :total_price="total_price"
-                :vat="form.vat" :discount_deal="form.discount_deal" :shipping_fee="form.shipping_fee"
+            <NewOrderPackage :product_services="product_services" :trees="trees" :user="user" :cart="cart" :total_price="total_price"
+                :vat="form.vat" :discount_deal="form.discount_deal" :shipping_fee="form.shipping_fee" :time_reservations="form.time_reservations"
+                :price="form.price_percent"
                 :payment_method="form.payment_method" :type="form.type" :sub_total="sub_total" @confirm="save" />
 
         </SectionMain>

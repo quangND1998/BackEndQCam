@@ -250,13 +250,11 @@ class OrderController extends Controller
             return response()->json('Không tìm thấy Khách hàng!', 404);
         }
     }
-
     public function addToCart(Request $request){
-        
         $request->validate([
             'product' => 'required',
             'quantity' => 'required|gt:0',
-           
+
         ]);
         $product = ProductRetail::find($request->product['id']);
 
@@ -276,7 +274,7 @@ class OrderController extends Controller
             'sub_total' =>  Cart::getSubTotal()
         ];
         return response()->json($response,200);
-            
+
     }
 
 
@@ -351,7 +349,7 @@ class OrderController extends Controller
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
-        
+
 
         if ($user) {
             $order = Order::create([
@@ -399,5 +397,5 @@ class OrderController extends Controller
     }
 
 
-    
+
 }
