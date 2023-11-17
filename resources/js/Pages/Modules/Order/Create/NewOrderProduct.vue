@@ -204,7 +204,7 @@
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Còn lại</p>
-                <p class="text-sm text-[#686868] font-bold">{{ lastPrice }}đ</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(lastPrice) }}đ</p>
             </div>
             <div class="my-3">
                 <BaseButton color="info" @click="save()"
@@ -397,7 +397,7 @@ export default {
                     this.carts = res.data.cart
                     this.totalPrice = res.data.total_price
                     this.subTotal = res.data.sub_total;
-
+                    this.quantity = 1;
                 }).catch(err => {
 
                 })

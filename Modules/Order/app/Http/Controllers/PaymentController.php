@@ -12,7 +12,7 @@ use Modules\Order\app\Models\Order;
 class PaymentController extends Controller
 {
 
-    public function orderPayment(Request $request, Order $order)
+    public function orderCashBankingPayment(Request $request, Order $order)
     {
         $order->load('orderItems.product', 'customer');
         return Inertia::render('Payment/CashBanking', compact('order'));

@@ -19,6 +19,7 @@ import {
     mdiTrashCanOutline,
     mdiCodeBlockBrackets,
     mdiPencil,
+    mdiContentSaveMove,
     mdiLandFields
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
@@ -34,15 +35,35 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import Contract from '@/Pages/Test/Contract.vue'
-import InvoiceInformation from '@/Pages/Test/InvoiceInformation.vue'
+import InvoiceInformation from '@/Pages/Payment/InvoiceInformation.vue'
 
 
 const props = defineProps({
-    orders: Object,
+    order: Object,
 
 });
 
+const priceVat = computed(() => {
 
+    if (props.order) {
+        let lastPrice = props.order.grand_total
+        if (props.order.discount_deal > 0) {
+            lastPrice = props.order.grand_total - ((props.order.grand_total * props.order.discount_deal) / 100)
+        }
+        if (props.order.vat > 0) {
+            return ((lastPrice * props.order.vat) / 100)
+        }
+        else {
+            return 0;
+        }
+
+    }
+    else {
+        return 0
+    }
+
+
+})
 </script>
 <template>
     <LayoutAuthenticated>
@@ -52,16 +73,19 @@ const props = defineProps({
             <div class="mx-5">
                 <div class="min-[320px]:block sm:block md:grid grid-cols-3 gap-4">
                     <div class="col-span-2">
-                        <InvoiceInformation />
+                        <InvoiceInformation :order="order" />
                         <div class="mt-5">
                             <h3 class="text-[17px] font-bold">Thông tin liên hệ</h3>
-                            <p class="text-[#686868] text-base my-2">Khách hàng: <strong class="ml-3">(Ông) {{
-                                orders.customer.name }}</strong></p>
-                            <p class="text-[#686868] text-base my-2">Số điện thoại: <strong class="ml-3">0988 198
-                                    554</strong></p>
-                            <p class="text-[#686868] text-base my-2">Địa chỉ: <strong class="ml-3">Thôn A, xã B,
-                                    huyện D,
-                                    tỉnh E</strong></p>
+                            <p class="text-[#686868] text-base my-2">Khách hàng: <strong class="ml-3">{{ order.customer.sex
+                                == 'male' ? '(Ông)' : '(Bà)' }} {{
+        order.customer.name }}</strong></p>
+                            <p class="text-[#686868] text-base my-2">Số điện thoại: <strong class="ml-3">{{
+                                order.customer.phone_number }}</strong></p>
+                            <p class="text-[#686868] text-base my-2">Địa chỉ: <strong class="ml-3">{{ order.customer.address
+                                + ',' +
+                                order.customer.wards ? order.customer.wards : '' + ',' + order.customer.district ?
+                                order.customer.district : '' + ',' +
+                                    order.customer.city ? order.customer.city : '' }}</strong></p>
                         </div>
                         <div class="mt-5">
                             <div class="relative overflow-x-auto">
@@ -73,26 +97,35 @@ const props = defineProps({
                                                 Sản phẩm
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Thời gian áp dụng
+                                                Giá
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                số lượng
                                             </th>
 
                                             <th scope="col" class="px-6 py-3">
-                                                Tổng
+                                                Thành tiền
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <tr v-for="(item, index) in order.order_items" :key="index"
+                                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                             <th scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Gói nhận nuôi cây 1 năm
+                                                {{ item.product.name }}
                                             </th>
-                                            <td class="px-6 py-4">
-                                                20/11/2023 - 20/11/2024
-                                            </td>
+                                            <th scope="row"
+                                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ item.product.price }}
+                                            </th>
+                                            <th scope="row"
+                                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ item.quantity }}
+                                            </th>
 
                                             <td class="px-6 py-4">
-                                                1.000.000đ
+                                                {{ formatPrice(item.total_price) }} VNĐ
                                             </td>
                                         </tr>
                                     </tbody>
@@ -103,32 +136,43 @@ const props = defineProps({
                                 <div class="min-[320px]:w-full md:w-1/2">
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Tổng</p>
-                                        <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                                        <p class="text-sm text-[#686868] font-bold"> {{ formatPrice(order.grand_total) }}đ
+                                        </p>
+                                    </div>
+
+
+                                    <div class="flex justify-between my-2">
+                                        <p class="text-sm text-[#686868] font-bold">Ưu đãi({{ order.discount_deal }}%)</p>
+                                        <p v-if="order.discount_deal == 0" class="text-sm text-[#686868] font-bold">0đ</p>
+                                        <p v-else class="text-sm text-[#686868] font-bold">{{
+                                            formatPrice(-order.grand_total * order.discount_deal / 100) }}</p>
                                     </div>
                                     <div class="flex justify-between my-2">
-                                        <p class="text-sm text-[#686868] font-bold">VAT(x%)</p>
-                                        <p class="text-sm text-[#686868] font-bold">100.000đ</p>
+                                        <p class="text-sm text-[#686868] font-bold">VAT({{ order.vat }}%)</p>
+                                        <p v-if="order.vat == 0" class="text-sm text-[#686868] font-bold">0đ</p>
+                                        <p v-else class="text-sm text-[#686868] font-bold">{{ formatPrice(priceVat) }}</p>
                                     </div>
+
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
-                                        <p class="text-sm text-[#686868] font-bold">Miễn phí</p>
-                                    </div>
-                                    <div class="flex justify-between my-2">
-                                        <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
-                                        <p class="text-sm text-[#686868] font-bold">100.000đ</p>
+                                        <p v-if="order.shipping_fee == 0" class="text-sm text-[#686868] font-bold">Miễn phí
+                                        </p>
+                                        <p v-else class="text-sm text-[#686868] font-bold">{{
+                                            formatPrice(order.shipping_fee) }}</p>
                                     </div>
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
-                                        <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(order.last_price) }}đ
+                                        </p>
                                     </div>
-                                    <div class="flex justify-between my-2">
+                                    <!-- <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Đã thanh toán</p>
                                         <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
-                                    </div>
-                                    <div class="flex justify-between my-2">
+                                    </div> -->
+                                    <!-- <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Còn lại</p>
                                         <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
 

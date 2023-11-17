@@ -144,7 +144,7 @@ const changeDate = () => {
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain>
-           
+
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
                 <div>
                     <h2 class="min-[320px]:text-xl sm:text-2xl font-semibold lg:text-3xl flex mr-2">
@@ -271,7 +271,7 @@ const changeDate = () => {
                     <div class="panel panel-default">
                         <div class="panel-body relative overflow-x-auto shadow-md sm:rounded-lg">
                             <div>
-                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400">
+                                <div class="grid grid-cols-6 gap-4 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
@@ -287,6 +287,10 @@ const changeDate = () => {
                                     <div>
                                         <p>Trạng thái</p>
                                     </div>
+                                    <div>
+                                        <p>Trạng thái</p>
+                                    </div>
+
                                 </div>
 
                                 <div v-for="(order, index) in orders.data" :key="index">
@@ -310,3 +314,29 @@ const changeDate = () => {
     </LayoutAuthenticated>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped>
+.list_icon_crud {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+    right: -40px;
+    top: 20px;
+    z-index: 111;
+    display: inline-grid;
+}
+
+.btn_crud {
+    font-size: 20px;
+}
+
+.title_information {
+    background-color: #f3f4f6;
+}
+
+.item_information {
+    height: 100px;
+}
+
+.collapse {
+    visibility: inherit;
+}
+</style>

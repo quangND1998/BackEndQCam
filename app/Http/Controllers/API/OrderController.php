@@ -74,13 +74,11 @@ class OrderController extends Base2Controller
         return $order->load('orderItems.product.images');
     }
 
-    public function getUserOrders(){
-        $user= Auth::user();
+    public function getUserOrders()
+    {
+        $user = Auth::user();
 
-        $orders= Order::with('orderItems.product', 'discount')->where('status','!=','refund')->orWhere('status','!=','decline')->where('user_id', $user->id)->get();
+        $orders = Order::with('orderItems.product', 'discount')->where('status', '!=', 'refund')->orWhere('status', '!=', 'decline')->where('user_id', $user->id)->get();
         return $orders;
     }
-
-
-   
 }
