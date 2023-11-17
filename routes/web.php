@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Home\ScheduleVisitController;
 use App\Http\Controllers\TestController;
+use Modules\Landingpage\app\Http\Controllers\TermsConditionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,10 +34,13 @@ Route::middleware([
         return Inertia::render('HomeView');
     })->name('dashboard');
 });
+
+Route::get('terms&condition', [TermsConditionController::class, 'previewTerm'])->name('terms&condition');
 Route::middleware(['auth'])->group(
     function () {
         Route::prefix('permissions')->as('permissions.')->group(function () {
             Route::get('', [PermissionController::class, 'index'])->name('index');
+
             Route::post('', [PermissionController::class, 'store'])->name('store');
             Route::put('/update/{id}', [PermissionController::class, 'update'])->name('update');
             Route::delete('/delete/{id}', [PermissionController::class, 'delete'])->name('delete');
@@ -51,6 +55,8 @@ Route::middleware(['auth'])->group(
         Route::prefix('users')->as('users.')->group(function () {
             Route::get('', [UserController::class, 'index'])->name('index');
             Route::post('', [UserController::class, 'store'])->name('store');
+            Route::get('create-user', [UserController::class, 'create'])->name('create');
+            Route::get('edit-user/{user}', [UserController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [UserController::class, 'update'])->name('update');
             Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('destroy');
             Route::post('setActive', [UserController::class, 'setActive'])->name('setActive');

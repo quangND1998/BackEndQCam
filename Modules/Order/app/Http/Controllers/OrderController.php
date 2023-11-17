@@ -4,6 +4,7 @@ namespace Modules\Order\app\Http\Controllers;
 
 use App\Contracts\OrderContract;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Modules\Order\app\Models\Order;
 use Modules\Tree\app\Models\ProductRetail;
+use Cart;
 
 class OrderController extends Controller
 {
@@ -196,16 +198,14 @@ class OrderController extends Controller
         $request->validate([
             'reason' => 'required',
             'grand_total' => 'required',
-            'shipping_fee' => 'required|numeric|gte:0|lt:grand_total'
+            'shipping_fee' => 'required|numeric|gte:0|lte:grand_total'
         ], [
             'reason.required' => 'Điền lý do hủy đơn'
         ]);
 
         $order->update([
             'status' => 'refund',
-            'shipping_fee' => $request->shipping_fee ? $request->shipping_fee : 0,
             'reason' => $request->reason,
-            'last_price' => $order->grand_total - ($order->grand_total * $order->discount) / 100 + $request->shipping_fee
         ]);
 
         return back()->with('success', 'Hủy đơn thành công');
@@ -217,15 +217,67 @@ class OrderController extends Controller
         $order->update([
             'status' => $request->status,
         ]);
-        if ($order->status == 'completed') {
-            $orderItems = $order->orderItems()->get();
-            foreach ($orderItems as $item) {
-                $product = ProductRetail::find($item->product_id);
-                $product->update([
-                    'quantity_sold_auto' => $product->quantity_sold_auto + $item->quantity
-                ]);
-            }
-        }
         return back()->with('success', `Đơn hàng đã được chuyển sang trạng thái:$request->status`);
+    }
+
+
+    public function orderChangePayment(Request $request)
+    {
+
+        $order = Order::findOrFail($request->id);
+        $order->update(['payment_status' => $request->payment_status]);
+        return back()->with('success', 'Chuyển trạng thái thanh toán thành công');
+    }
+
+    public function createOrder(Request $request)
+    {
+
+        $customers = User::role('customer')->where(function ($query) use ($request) {
+            $query->where('phone_number', 'LIKE', '%' . $request->search . '%');
+        })->get();
+        $cart = Cart::getContent();
+        $total_price = Cart::getTotal();
+        $sub_total = Cart::getSubTotal();
+        $product_retails = ProductRetail::with('images')->get();
+        return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails', 'cart', 'total_price'));
+    }
+
+    public function searchUser(Request $request)
+    {
+        $customer = User::role('customer')->where('phone_number',  $request->search)->first();
+
+        if ($customer) {
+            return response()->json($customer, 200);
+        } else {
+            return response()->json('Không tìm thấy Khách hàng!', 404);
+        }
+    }
+
+    public function addToCart(Request $request){
+        
+        $request->validate([
+            'product' => 'required',
+            'quantity' => 'required|gt:0',
+           
+        ]);
+        $product = ProductRetail::find($request->product['id']);
+
+        Cart::add(array(
+            'id' => $product->id, // inique row ID
+            'name' => $product->name,
+            'price' => $product->price,
+            'quantity' =>  $request->quantity,
+            'attributes' => array([
+                'image' => count($product->images) >0 ? $product->images[0]->original_url : null
+            ]),
+            // 'conditions' => $saleCondition
+        ));
+        $response= [
+            'cart' =>Cart::getContent(),
+            'total_price' => Cart::getTotal(),
+            'sub_total' =>  Cart::getSubTotal()
+        ];
+        return response()->json($response,200);
+            
     }
 }

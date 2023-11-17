@@ -24,7 +24,7 @@ import PillTag from "@/Components/PillTag.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
 import Multiselect from "@vueform/multiselect";
 import { useHelper } from "@/composable/useHelper";
-import { router } from "@inertiajs/vue3";
+import { router, Link } from "@inertiajs/vue3";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import throttle from "lodash/throttle";
 import mapValues from "lodash/mapValues";
@@ -184,15 +184,19 @@ const Delete = (id) => {
                         <!-- <SearchInput v-model="search" placeholder="Search" aria-label="Search" size="24" @reset="reset"/> -->
                         <search-filter v-model="search" class="mr-4 w-full max-w-md" @reset="reset">
                             <label class="block text-gray-700">Trashed:</label>
-                        </search-filter> 
+                        </search-filter>
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-color_green" :icon="mdiPlus" small
+                    <!-- <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-color_green" :icon="mdiPlus" small
                         @click="
                             isModalActive = true;
                         form.reset();
-                        " label="Create User" />
+                        " label="Create User" /> -->
+
+                    <BaseButton :routeName="'users.create'" color="info"
+                        class="bg-btn_green text-white p-2 hover:bg-color_green" :icon="mdiPlus" small
+                        label="Create User" />
                 </div>
             </div>
             <!-- Modal -->
@@ -237,7 +241,6 @@ const Delete = (id) => {
 
                             <!-- <TextInput id="value" v-model="form.phone_number" type="text" class="mt-1 block w-full"
                                 :class="form.errors.phone_number ? 'border-red-500' : ''" autocomplete="name" /> -->
-                                {{ form.phone_number }}
                             <MazPhoneNumberInput v-model="form.phone_number" show-code-on-list
                                 :preferred-countries="['FR', 'BE', 'DE', 'US', 'GB']" :ignored-countries="['AC']"
                                 @update="results = $event" />
@@ -350,10 +353,11 @@ const Delete = (id) => {
                                 {{ formatDate(user.created_at) }}
                             </th>
                             <td class="py-4 px-6 text-right">
-                                <button @click="edit(user)" type="button" data-toggle="modal" data-target="#exampleModal"
+                                <Link :href="route('users.edit', user.id)" type="button" data-toggle="modal"
+                                    data-target="#exampleModal"
                                     class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                    Edit
-                                </button>
+                                Edit
+                                </Link>
                                 <button type=" button" @click="Delete(user.id)"
                                     class="inline-block px-6 py-2.5 bg-red-500 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-red-600 hover:text-white hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">
                                     Delete

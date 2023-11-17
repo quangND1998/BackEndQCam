@@ -38,7 +38,7 @@ Route::middleware(['auth'])->group(
                 Route::post('updateDiscount', [ProductVoucherController::class, 'updateDiscount'])->name('updateDiscount');
                 Route::delete('deleteProductVoucher/{product_voucher}', [ProductVoucherController::class, 'deleteProductVoucher'])->name('deleteProductVoucher');
                 Route::prefix('product-service')->as('product-service.')->group(function () {
-              
+
                     Route::delete('/deleteItems', [ProductServiceVoucherController::class, 'deleteItems'])->name('deleteItems');
                     Route::post('saveItems/{voucher}', [ProductServiceVoucherController::class, 'saveItems'])->name('saveItems');
                     Route::post('updateDiscount', [ProductServiceVoucherController::class, 'updateDiscount'])->name('updateDiscount');
@@ -54,6 +54,18 @@ Route::middleware(['auth'])->group(
                 Route::get('/completed', [OrderController::class, 'completed'])->name('completed');
                 Route::get('/refund', [OrderController::class, 'refund'])->name('refund');
                 Route::get('/decline', [OrderController::class, 'decline'])->name('decline');
+
+
+                Route::post('orderCancel/{order}', [OrderController::class, 'orderCancel'])->name('orderCancel');
+                Route::post('orderRefund/{order}', [OrderController::class, 'orderRefund'])->name('orderRefund');
+
+                Route::post('orderChangeStatus/{order}', [OrderController::class, 'orderChangeStatus'])->name('orderChangeStatus');
+                Route::post('orderChangePayment', [OrderController::class, 'orderChangePayment'])->name('orderChangePayment');
+
+                Route::get('/create', [OrderController::class, 'createOrder'])->name('create');
+                Route::get('/searchUser', [OrderController::class, 'searchUser'])->name('searchUser');
+                Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
+
             });
         });
     }

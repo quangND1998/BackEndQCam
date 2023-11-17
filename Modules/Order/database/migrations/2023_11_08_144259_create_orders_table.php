@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedInteger('item_count')->nullable();
 
             $table->boolean('payment_status')->default(0);
-            $table->bigInteger('payment_method')->nullable();
+            $table->string('payment_method')->nullable();
             // gia tam thoi
             $table->decimal('grand_total', 20)->nullable();
             // triết khấu

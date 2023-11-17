@@ -17,7 +17,7 @@ class FAQsResource extends JsonResource
         return [
             'id' => $this->id,
             'question' => $this->question,
-            'question' => $this->question,
+            'answer' => $this->answer,
             'type' => $this->type,
             'status' => $this->status ==1 ? true: false
         ];

@@ -8,6 +8,8 @@ import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
+import ModalDecline from "./ModalDecline.vue";
+import ModelRefund from "./ModelRefund.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -34,6 +36,7 @@ import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import OrderHome from "@/Pages/Test/OrderHome.vue"
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
+
 const props = defineProps({
     orders: Object,
     status: String,
@@ -121,10 +124,27 @@ const changeDate = () => {
         <Head title="Quản lý đơn hàng" />
         <SectionMain>
             <SectionTitleLineWithButton title="Quản lý đơn hàng" main></SectionTitleLineWithButton>
+            <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
+                <div>
+                    <h2 class="min-[320px]:text-xl sm:text-2xl font-semibold lg:text-3xl flex mr-2">
+                        Quản lý đơn hàng
+                        <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p>
+                    </h2>
+                </div>
+
+                <div>
+
+                    <Link :href="route('admin.orders.create')"
+                        class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
+                    <font-awesome-icon :icon="['fas', 'plus']" />Tạo đơn hàng
+                    </Link>
+                </div>
+            </div>
 
             <div>
                 <OrderBar :statusGroup="statusGroup"></OrderBar>
-
+                <ModalDecline></ModalDecline>
+                <ModelRefund></ModelRefund>
                 <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4">
                     <div>
                         <div class="min-[320px]:block sm:flex">
@@ -248,9 +268,10 @@ const changeDate = () => {
                                 </div>
 
                                 <div v-for="(order, index) in orders.data" :key="index">
-                                    <OrderRow :order="order" />
+                                    <OrderRow :order="order" :status="status" />
 
                                 </div>
+
 
 
                             </div>
