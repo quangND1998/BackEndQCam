@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Customer\app\Models\ReviewManagement;
 use Modules\Order\Database\factories\OrderFactory;
 
 class Order extends Model
@@ -58,5 +59,11 @@ class Order extends Model
     public function discount()
     {
         return $this->belongsTo(Voucher::class, 'discount');
+    }
+
+
+    public function reviews()
+    {
+        return $this->hasMany(ReviewManagement::class, 'order_id');
     }
 }

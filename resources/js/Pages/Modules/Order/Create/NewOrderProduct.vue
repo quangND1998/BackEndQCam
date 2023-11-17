@@ -44,7 +44,7 @@
                                     size="md" color="secondary" />
                             </td>
                             <td class="px-6 py-4">
-                                <input type="number" readonly :value="product.price"
+                                <input type="number" readonly :value="product?.price"
                                     class="border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 hover:border-gray-500 w-28">
                             </td>
                             <!-- <td class="px-6 py-4">
@@ -79,7 +79,8 @@
                     <input v-if="cart_selected" id="default-checkbox" type="checkbox" v-model="selectAllCart"
                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                     <div>
-                        <button v-if="cart_selected.length > 0" class="flex text-red-600 mx-3 text-sm" @click="DeleteCheckbox()">
+                        <button v-if="cart_selected.length > 0" class="flex text-red-600 mx-3 text-sm"
+                            @click="DeleteCheckbox()">
                             <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700"></BaseIcon>Xóa
                             <span>({{ cart_selected.length }})</span> sản phẩm đã chọn
                         </button>
@@ -93,8 +94,9 @@
                             class="icon_checkbox w-4 h-4 mt-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
 
                     </div>
-                    <img v-if="item.images && item.images.length > 0 && item.images[0].image" :src="item.images[0].image"
-                        class="w-16 h-16 object-cover ml-3" alt="">
+     
+                    <img v-if="item.attributes && item.attributes.length >0"
+                        :src="item.attributes[0].image" class="w-16 h-16 object-cover ml-3" alt="">
                     <div class="flex  justify-between items-center w-full">
                         <div class=" ml-4">
                             <h3>{{ item.name }}</h3>
@@ -204,7 +206,7 @@
                 <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
             </div>
             <div class="my-3">
-                <BaseButton color="info"  @click="save()"
+                <BaseButton color="info" @click="save()"
                     class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center rounded-lg"
                     :icon="mdiContentSaveMove" small label="Lưu đơn hàng" />
             </div>
@@ -285,7 +287,7 @@ export default {
     data() {
         return {
             form: this.$inertia.form({
-              
+
             }),
             quantity: 1,
             cart_selected: [],
@@ -342,9 +344,9 @@ export default {
     },
     methods: {
 
-        save(){
-            
-            if (this.carts.length ==0) {
+        save() {
+
+            if (this.carts.length == 0) {
                 Swal.fire({
                     title: "Lỗi?",
                     text: "Chưa sản phẩm!",
@@ -359,10 +361,10 @@ export default {
                 });
                 return
             }
-            else{
+            else {
                 this.$emit('confirm')
             }
-            
+
         },
         changeProduct(event) {
 
@@ -388,7 +390,8 @@ export default {
                     console.log(res.data.cart)
                     this.carts = res.data.cart
                     this.totalPrice = res.data.total_price
-                    this.subTotal = res.data.sub_total
+                    this.subTotal = res.data.sub_total.
+                        this.quantity = 1
                 }).catch(err => {
 
                 })
@@ -472,17 +475,17 @@ export default {
                 cancelButtonColor: "#d33",
             }).then(result => {
                 if (result.isConfirmed) {
-                
+
                     axios
-                    .post("/admin/cart/removeItem", query)
-                    .then(response => {
-                        this.totalPrice = response.data.total_price;
-                        this.subTotal = response.data.subTotal;
-                        this.carts= response.data.cart;
-                    })
-                    .catch(error => { });
+                        .post("/admin/cart/removeItem", query)
+                        .then(response => {
+                            this.totalPrice = response.data.total_price;
+                            this.subTotal = response.data.subTotal;
+                            this.carts = response.data.cart;
+                        })
+                        .catch(error => { });
                 } else {
-                    return 
+                    return
                 }
             });
         },
@@ -496,17 +499,17 @@ export default {
                 cancelButtonColor: "#d33",
             }).then(result => {
                 if (result.isConfirmed) {
-                  
+
                     axios
-                    .post("/admin/cart/removeCart", query)
-                    .then(response => {
-                        this.totalPrice = response.data.total_price;
-                        this.subTotal = response.data.subTotal;
-                        this.carts= response.data.cart;
-                    })
-                    .catch(error => { });
+                        .post("/admin/cart/removeCart", query)
+                        .then(response => {
+                            this.totalPrice = response.data.total_price;
+                            this.subTotal = response.data.subTotal;
+                            this.carts = response.data.cart;
+                        })
+                        .catch(error => { });
                 } else {
-                    return 
+                    return
                 }
             });
         },
@@ -523,21 +526,21 @@ export default {
                 cancelButtonColor: "#d33",
             }).then(result => {
                 if (result.isConfirmed) {
-                axios
-                    .post("/admin/cart/deleteCarts", query)
-                    .then(response => {
-                        this.totalPrice = response.data.total_price;
-                        this.subTotal = response.data.subTotal;
-                        this.carts= response.data.cart;
-                        this.cart_selected = [];
-                    })
-                    .catch(error => { });
-                
+                    axios
+                        .post("/admin/cart/deleteCarts", query)
+                        .then(response => {
+                            this.totalPrice = response.data.total_price;
+                            this.subTotal = response.data.subTotal;
+                            this.carts = response.data.cart;
+                            this.cart_selected = [];
+                        })
+                        .catch(error => { });
+
                 } else {
-                    return 
+                    return
                 }
             });
-            },
+        },
     }
 }
 </script>
