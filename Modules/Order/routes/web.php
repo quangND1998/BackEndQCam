@@ -6,8 +6,7 @@ use Modules\Order\app\Http\Controllers\PaymentController;
 use Modules\Order\app\Http\Controllers\ProductServiceVoucherController;
 use Modules\Order\app\Http\Controllers\ProductVoucherController;
 use Modules\Order\app\Http\Controllers\VoucherController;
-use Twilio\Rest\Api\V2010\Account\Call\PaymentContext;
-
+use Modules\Order\app\Http\Controllers\OrderPackageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -68,6 +67,15 @@ Route::middleware(['auth'])->group(
                 Route::get('/searchUser', [OrderController::class, 'searchUser'])->name('searchUser');
                 Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
                 Route::post('saveOrder/{user}', [OrderController::class, 'saveOrder'])->name('saveOrder');
+            
+
+                Route::prefix('package')->as('package.')->group(function () {
+                    Route::get('all', [OrderPackageController::class, 'index'])->name('index');
+                    Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
+                    Route::get('pending/{id}', [OrderPackageController::class, 'OrderPending'])->name('pending');
+                    Route::post('/addToCartPackage', [OrderPackageController::class, 'addToCart'])->name('addToCartPackage');
+                });
+
             });
 
             Route::prefix('cart')->as('cart.')->group(function () {

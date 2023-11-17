@@ -227,7 +227,7 @@
                     :icon="mdiContentCopy" small label="Sao chép đường dẫn" />
             </div>
             <div class="my-3">
-                <BaseButton color="info" class="bg-black text-white p-2 w-full text-center justify-center" :icon="mdiImport" 
+                <BaseButton color="info" class="bg-black text-white p-2 w-full text-center justify-center" :icon="mdiImport"
                     small label="In đơn hàng" />
             </div> -->
         </div>
