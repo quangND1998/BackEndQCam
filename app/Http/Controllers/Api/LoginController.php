@@ -126,8 +126,8 @@ class LoginController extends Base2Controller
     public function updatePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'old_password' => ['required', 'numeric'],
-            'new_password' => ['required', 'string'],
+            'old_password' => 'required',
+            'new_password' => 'required|confirmed',
         ]);
 
 
