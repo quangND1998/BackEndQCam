@@ -48,12 +48,12 @@ class ScheduleVisitController extends Base2Controller
     {
             $customer = Auth::user();
             $customer = User::with('product_service_owners.visit','product_service_owners.product')->find($customer->id);
-            $visits = [];
-            foreach ($customer->product_service_owners as $product_owner) {
-                $visits[] = $product_owner->visit;
-            }
+            // $visits = [];
+            // foreach ($customer->product_service_owners as $product_owner) {
+            //     $visits[] = $product_owner->visit;
+            // }
 
-            return $this->sendResponse($visits, 'danh sách lịch tham quan');
+            return $this->sendResponse($customer, 'danh sách lịch tham quan');
         }
 
 }
