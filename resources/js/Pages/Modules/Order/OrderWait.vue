@@ -53,6 +53,7 @@ const filter = reactive({
     search: null,
     payment_status: null,
     payment_method: null,
+    type:null
 
 })
 const customer = ref()
@@ -210,6 +211,21 @@ const changeDate = () => {
                             </div>
                         </div>
 
+                        <div class="min-[320px]:block sm:flex my-3">
+                            <div class="min-[320px]:w-full sm:w-3/12 mr-3 text-gray-500">
+                                <label for>Phương thức TT</label>
+                            </div>
+                            <div class="min-[320px]:w-full sm:w-9/12">
+                                <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                    <option :value="null">Tất cả</option>
+                                    <option value="reail">Đơn hàng</option>
+                                    <option value="gift_delivery">Quà tặng</option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
                     <div>
                         <div class="min-[320px]:block sm:flex sm:my-2">
@@ -269,7 +285,7 @@ const changeDate = () => {
                     <div class="panel panel-default">
                         <div class="panel-body relative overflow-x-auto shadow-md sm:rounded-lg">
                             <div>
-                                <div class="grid grid-cols-6 gap-4 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400">
+                                <div class="grid grid-cols-7 gap-5 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
@@ -286,7 +302,10 @@ const changeDate = () => {
                                         <p>Trạng thái</p>
                                     </div>
                                     <div>
-                                        <p>Trạng thái</p>
+                                        <p>Loại đơn</p>
+                                    </div>
+                                    <div>
+                                        <p>Chi tiết</p>
                                     </div>
 
                                 </div>

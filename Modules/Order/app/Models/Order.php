@@ -23,6 +23,7 @@ class Order extends Model
         'amount_paid',
         'amount_unpaid',
         'type',
+        'product_service_owner_id',
         'wards',  "created_at", "updated_at"
     ];
 
@@ -66,6 +67,10 @@ class Order extends Model
         if (isset($filters['payment_method'])) {
 
             $query->where('payment_method', $filters['payment_method']);
+        }
+        if (isset($filters['type'])) {
+
+            $query->where('type', $filters['type']);
         }
     }
 

@@ -17,7 +17,7 @@ const props = defineProps({
 
 <template>
     <div>
-        <div @click.prevent="toggleContent" class=" grid grid-cols-6 gap-4 text-sm px-3 py-3 text-gray-400">
+        <div @click.prevent="toggleContent" class=" grid grid-cols-7 gap-5 text-sm px-3 py-3 text-gray-400">
             <div>
                 <a class="flex items-center">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -38,11 +38,15 @@ const props = defineProps({
             <div>
                 <p>{{ order.status }}</p>
             </div>
+
+            <div>
+                <p>{{ order.type =='gift_delivery' ? 'Quà tặng':'Đơn hàng' }}</p>
+            </div>
             <div>
                 <Link v-if="order.payment_method == 'cash' || order.payment_method == 'banking'"
                     :href="route('admin.payment.orderCashBankingPayment', order.id)"
                     class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
-                Chi tiết thanh toán
+                Chi tiết
                 </Link>
             </div>
         </div>
@@ -120,12 +124,13 @@ const props = defineProps({
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
                 <p>Ưu đãi</p>
-                <input :value="`${order.discount_deal} %`" class="px-3 py-2 border border-gray-400 rounded-lg w-24"
-                    readonly />
+                <p v-if="order.discount_deal >0">{{ order.discount_deal }} %</p>
+                <p v-else>0%</p>
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
                 <p>VAT</p>
-                <input :value="`${order.vat} %`" class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
+                <p v-if="order.vat >0">{{ order.vat }} %</p>
+                <p v-else>0%</p>
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
                 <p>Phí ship</p>

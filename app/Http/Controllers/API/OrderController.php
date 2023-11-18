@@ -26,13 +26,19 @@ class OrderController extends Base2Controller
 
         foreach ($request->items as $item) {
         }
-
+        $user= Auth::user();
         $order = Order::create([
             'order_number'      =>  'ORD-' . strtoupper(uniqid()),
             'user_id'           => Auth::user()->id,
             'status'            =>  'pending',
             'payment_status'    =>  0,
             'payment_method'    =>  null,
+            'type' => 'retail',
+            'address' => $user->address,
+            'city' => $user->city,
+            'district' => $user->district,
+            'wards' => $user->wards,
+            'phone_number' =>$user->phone_number,
         ]);
 
         if ($order) {
@@ -56,6 +62,7 @@ class OrderController extends Base2Controller
                 }
             }
             $order->grand_total = $totalPrice;
+            $order->grand_total = $totalPrice;
             $order->save();
         }
 
@@ -69,8 +76,11 @@ class OrderController extends Base2Controller
             $order->save();
         } else {
             $order->last_price = $order->grand_total;
+            
             $order->save();
         }
+        $order->amount_unpaid = $order->last_price;
+        $order->save();
         return $order->load('orderItems.product.images');
     }
 
