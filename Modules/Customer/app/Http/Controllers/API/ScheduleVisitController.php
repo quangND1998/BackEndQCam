@@ -47,12 +47,9 @@ class ScheduleVisitController extends Base2Controller
     public function getsheduleCustomer(Request $request)
     {
             $customer = Auth::user();
-            $customer = User::with('product_service_owners.visit' ,'product_service_owners.product')->whereHas('product_service_owners.visit')->find($customer->id);
-            $visits = [];
-            foreach ($customer->product_service_owners as $product_owner) {
-                $visits['visit'] = $product_owner->visit;
-                $visits['product'] = $product_owner->product;
-            }
+            $product_owner = $customer->product_service_owners->pluck('id')->toArray();
+            $visits = ScheduleVisit::with('product_owner_service.product')->whereHas('product_owner_service.product')->whereIn('product_service_owner_id', $product_owner)->get();
+        //    return $visit;
 
             return $this->sendResponse($visits, 'danh sách lịch tham quan');
         }
