@@ -408,6 +408,7 @@ const date = ref(new Date());
                     </div>
                 </div>
             </div>
+    
             <ProductGiff v-if="form.type == 'gift_delivery'" :products="product_retails" :user="user" />
 
             <NewOrderProduct v-if="form.type == 'retail'" :products="product_retails" :user="user" :cart="cart"

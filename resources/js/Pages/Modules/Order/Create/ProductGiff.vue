@@ -30,12 +30,6 @@ const form = useForm({
     price: null,
     count: null
 });
-const product = computed(() => {
-    return props.products.find((e) => e.id == product_selectd.value)
-});
-
-
-const product_selectd = toRef(props.products.length > 0 ? props.products[0].id : null)
 
 const quantity = ref(1)
 const props = defineProps({
@@ -44,6 +38,13 @@ const props = defineProps({
     type: String,
 
 });
+
+const product = computed(() => {
+    return props.products.find((e) => e.id == product_selectd.value)
+});
+
+
+const product_selectd = toRef(props.products.length > 0 ? props.products[0].id : null)
 
 const selectAllproduct = computed({
     get() {
@@ -120,19 +121,16 @@ const addToCart = () => {
                                 <MazInputNumber v-model="quantity" label="Enter number" :min="1" :max="10000" :step="1"
                                     size="md" color="secondary" />
                             </td>
-                            <td class="px-6 py-4">
-                                <input type="number" readonly :value="product?.price"
-                                    class="border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 hover:border-gray-500 w-28">
-                            </td>
+                        
                             <!-- <td class="px-6 py-4">
                                 <input type="number"
                                     class="border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 hover:border-gray-500 w-32">
                             </td> -->
                             <td class="px-6 py-4">
 
-                                <!-- <BaseButton color="info" @click="addToCart()"
+                                <BaseButton color="info" @click="addToCart()"
                                     class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
-                                    label="Thêm sản phẩm" /> -->
+                                    label="Thêm sản phẩm" />
 
                             </td>
                         </tr>
