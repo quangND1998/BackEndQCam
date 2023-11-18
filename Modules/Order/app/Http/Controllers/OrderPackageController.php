@@ -12,9 +12,12 @@ use Carbon\Carbon;
 use App\Contracts\OrderContract;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Modules\Tree\app\Models\Tree;
 use Modules\Order\app\Models\OrderPackage;
 use App\Models\User;
+use Modules\Customer\app\Models\ProductServiceOwner;
+use Modules\Customer\app\Models\HistoryExtend;
 class OrderPackageController extends Controller
 {
     protected $orderRepository;
@@ -38,9 +41,34 @@ class OrderPackageController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
-        $orders =  $this->orderRepository->getOrder($request, $status);
+        $orders =  OrderPackage::with('customer','product_service')->where('status','pending')->get();
+        //return $orders;
         $statusGroup = $this->orderRepository->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
+    public function listOrderCancel(Request $request)
+    {
+        // $order = Order::with('discount')->find(1);
+        // return $order;
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'pending';
+        $orders =  OrderPackage::with('customer','product_service')->where('status','decline')->get();
+        //return $orders;
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+        return Inertia::render('Modules/Order/Package/OrderCancel', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
+    public function listOrderComplete(Request $request)
+    {
+        // $order = Order::with('discount')->find(1);
+        // return $order;
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'pending';
+        $orders =  OrderPackage::with('customer','product_service')->where('status','complete')->get();
+        //return $orders;
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+        return Inertia::render('Modules/Order/Package/OrderComplete', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function orderPackage(Request $request){
         $user = Auth::user();
@@ -60,6 +88,9 @@ class OrderPackageController extends Controller
             $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
             $total_price = $product_service->price + (($request->vat * $product_service->price) / 100) - (($request->discount_deal *$product_service->price) / 100);
             $customer = User::where('phone_number',$request->phone_number)->first();
+            if(!$customer){
+                $customer = $this->createCustomerDefault($request);
+            }
             $order = OrderPackage::create([
                 'order_number'      =>  'ORD-' . strtoupper(uniqid()),
                 'user_id'           => $customer->id,
@@ -84,6 +115,7 @@ class OrderPackageController extends Controller
             ]);
             // $oldCart = $request->session()->get('cartPackage');
             // dd($oldCart);
+
             return redirect()->route('admin.orders.package.pending',[$order->id]);
         }
     }
@@ -107,5 +139,74 @@ class OrderPackageController extends Controller
                 return $lif_time*365;
                 break;
         }
+    }
+    public function orderCancel(Request $request, OrderPackage $order)
+    {
+        $request->validate([
+            'reason' => 'required',
+
+        ], [
+            'reason.required' => 'Điền lý do hủy đơn'
+        ]);
+        $order->update([
+            'status' => 'decline',
+            'reason' => $request->reason
+        ]);
+
+        return back()->with('success', 'Hủy đơn thành công');
+    }
+    public function orderComplete(Request $request, OrderPackage $order)
+    {
+
+        $order->update([
+            'status' => $request->status,
+        ]);
+        $this->storeOrderPackage($order);
+        return back()->with('success', `Đơn hàng đã được chuyển sang trạng thái:$request->status`);
+    }
+    public function storeOrderPackage($order){
+
+        $customer = $order->customer;
+        $product_service = $order->product_service;
+        if ($product_service) {
+
+            $new_product_owner = new ProductServiceOwner;
+            $new_product_owner->time_approve = $order->time_approve;
+            $new_product_owner->time_end = $order->time_end;
+
+            $new_product_owner->description = $customer->name . " sử dụng gói " . $product_service->name;
+            $new_product_owner->state = "active"; //active, expired, stop
+            $new_product_owner->user_id = $customer->id;
+            $new_product_owner->product_service_id = $product_service->id;
+            $new_product_owner->save();
+
+            $trees = Tree::where('state','public')->where('product_service_owner_id',null)->first();
+
+            $new_product_owner->trees()->save($trees);
+
+            $customer->save();
+
+            //history
+
+            $history_extend = new HistoryExtend;
+            $history_extend->price = $product_service->price;
+            $history_extend->product_name = $product_service->name;
+            $history_extend->date_from = $order->time_approve;
+            $history_extend->date_to = $order->time_end;
+            $history_extend->description = "tạo mới";
+            $new_product_owner->history_extend()->save($history_extend);
+        }
+
+
+    }
+    public function createCustomerDefault($request){
+        $customer = new User;
+        $customer->name = $request->name;
+        $customer->phone_number = $request->phone_number;
+        $roles = 'customer';
+        $customer->assignRole($roles);
+        $customer->password = Hash::make('cammattroi');
+        $customer->save();
+        return $customer;
     }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive } from "vue";
+import { computed, ref, inject, reactive, toRef, onMounted } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
@@ -28,6 +28,7 @@ import NewOrderProduct from '@/Pages/Modules/Order/Create/NewOrderProduct.vue'
 import ProductGiff from '@/Pages/Modules/Order/Create/ProductGiff.vue'
 import axios from "axios";
 import MazSelect from 'maz-ui/components/MazSelect'
+import { useCartStore } from "@/stores/cart";
 const swal = inject("$swal");
 
 const props = defineProps({
@@ -37,11 +38,12 @@ const props = defineProps({
     sub_total: Number,
     customers: Array
 });
-
+const store = useCartStore();
 const search = ref(null)
 // const user = ref(null);
 const flash = ref(null);
 const provinces = ref(null)
+
 const form = useForm({
     user_id: null,
     name: null,
@@ -56,7 +58,7 @@ const form = useForm({
     type: 'retail',
     payment_method: 'cash',
     shipping_fee: 0,
-    product_service_owner: null,
+    product_service_owner_id: null,
     amount_paid: 0,
 
 
@@ -188,6 +190,58 @@ const saveOrder = () => {
     }
 }
 
+const onChangeType =(event)=>{
+    console.log(event.target.value);
+    form.get(route('admin.cart.fetchCart'), {
+        preserveState:true,
+        preserveScroll:false
+
+
+    },{only:['cart', 'total_price', 'sub_total']} );
+}
+
+const saveGift= () => {
+    if (user.value == null ) {
+        swal.fire({
+            title: "Lỗi?",
+            text: "Chưa có thông tin khách hàng!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+            }
+        });
+    }
+    else if(form.type =='gift_delivery' && form.product_service_owner_id ==null)  {
+        swal.fire({
+            title: "Lỗi?",
+            text: "Chưa chọn dịch vụ sản phẩm để giao quà!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+            }
+        });
+    }
+    else{
+        form.post(route('admin.orders.saveOrderGift', user.value.id), {
+            onError: () => {
+
+
+            },
+            onSuccess: () => {
+                form.reset()
+
+            }
+        });
+    }
+}
 const date = ref(new Date());
 
 </script>
@@ -346,7 +400,7 @@ const date = ref(new Date());
                         <div class="mb-3">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Loại hình</label>
-                            <select id="countries" v-model="form.type"
+                            <select id="countries" v-model="form.type" @change="onChangeType"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="retail">Bán lẻ</option>
                                 <option value="gift_delivery">Giao quà</option>
@@ -357,11 +411,11 @@ const date = ref(new Date());
                         <div class="mb-3" v-if="form.type == 'gift_delivery' && user">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Theo gói</label>
-                            <select id="countries" v-model="form.product_service_owner"
+                            <select id="countries" v-model="form.product_service_owner_id"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option v-for="(service, index) in user.product_service_owners" :key="index"
                                     :value="service.id">{{
-                                        service.name }}
+                                        service.product.name }} ({{ service.trees.length >0 ?service.trees[0].name :null }})
                                 </option>
 
 
@@ -408,8 +462,8 @@ const date = ref(new Date());
                     </div>
                 </div>
             </div>
-    
-            <ProductGiff v-if="form.type == 'gift_delivery'" :products="product_retails" :user="user" />
+           
+            <ProductGiff @saveGift="saveGift" v-if="form.type == 'gift_delivery'" :products="product_retails" :user="user"  :cart="cart"/>
 
             <NewOrderProduct v-if="form.type == 'retail'" :products="product_retails" :user="user" :cart="cart"
                 :total_price="total_price" :vat="form.vat" :discount_deal="form.discount_deal"

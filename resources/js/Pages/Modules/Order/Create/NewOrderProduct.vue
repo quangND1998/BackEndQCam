@@ -68,9 +68,8 @@
                         <!-- <font-awesome-icon :icon="['fas', 'cart-shopping']" class="mt-1" /> -->
                         <span class="text-xl font-semibold ml-2">Giỏ hàng</span>
                     </div>
-                    <button v-if="cart" class="flex text-red-600 mx-3 text-sm">
-                        <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700 mx-1 "
-                            @click="DeleteCart()"></BaseIcon>
+                    <button v-if="cart" class="flex text-red-600 mx-3 text-sm" @click="DeleteCart()">
+                        <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700 mx-1 "></BaseIcon>
                         Hủy đơn hàng
                     </button>
                 </div>
@@ -261,6 +260,8 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import MazInputNumber from 'maz-ui/components/MazInputNumber'
 import Swal from 'sweetalert2'
+import { useCartStore } from "@/stores/cart";
+const store = useCartStore();
 export default {
     components: {
         BaseButton,
@@ -397,6 +398,10 @@ export default {
                     this.carts = res.data.cart
                     this.totalPrice = res.data.total_price
                     this.subTotal = res.data.sub_total;
+                    store.updateCart({ 
+                        cart: res.data.cart,
+                        total_price: res.data.total_price,
+                        sub_total: res.data.sub_total })
                     this.quantity = 1;
                 }).catch(err => {
 
@@ -434,6 +439,10 @@ export default {
                         this.totalPrice = response.data.total_price;
                         this.subTotal = response.data.sub_total;
                         this.carts[product.id] = response.data.item;
+                        store.updateCart({ 
+                            cart: res.data.cart,
+                            total_price: res.data.total_price,
+                            sub_total: res.data.sub_total })
                     })
                     .catch(error => { });
             }
@@ -464,6 +473,10 @@ export default {
                         this.totalPrice = response.data.total_price;
                         this.subTotal = response.data.subTotal;
                         this.carts[product.id] = response.data.item;
+                        store.updateCart({ 
+                            cart:  this.carts,
+                            total_price: res.data.total_price,
+                            sub_total: res.data.sub_total })
                     })
                     .catch(error => { });
             }
@@ -488,6 +501,10 @@ export default {
                             this.totalPrice = response.data.total_price;
                             this.subTotal = response.data.subTotal;
                             this.carts = response.data.cart;
+                            store.updateCart({ 
+                            cart:  this.carts,
+                            total_price: res.data.total_price,
+                            sub_total: res.data.sub_total })
                         })
                         .catch(error => { });
                 } else {
@@ -498,7 +515,7 @@ export default {
         DeleteCart() {
             Swal.fire({
                 title: "Thông báo?",
-                text: "Bạn đơn hàng!",
+                text: "Bạn muốn xóa giỏ hàng!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -512,6 +529,7 @@ export default {
                             this.totalPrice = response.data.total_price;
                             this.subTotal = response.data.subTotal;
                             this.carts = response.data.cart;
+                   
                         })
                         .catch(error => { });
                 } else {

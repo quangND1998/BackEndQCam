@@ -344,7 +344,6 @@ const limit_tree = computed(() =>{
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                         #
                     </th>
-                            <th scope="col" class="py-3 px-6 text-xs">STT</th>
                             <th scope="col" class="py-3 px-6 text-xs">name</th>
                             <th scope="col" class="py-3 px-6 text-xs">email</th>
                             <th scope="col" class="py-3 px-6 text-xs">phone</th>

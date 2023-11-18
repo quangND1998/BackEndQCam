@@ -67,15 +67,20 @@ Route::middleware(['auth'])->group(
                 Route::get('/searchUser', [OrderController::class, 'searchUser'])->name('searchUser');
                 Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
                 Route::post('saveOrder/{user}', [OrderController::class, 'saveOrder'])->name('saveOrder');
-            
+                Route::post('saveOrderGift/{user}', [OrderController::class, 'saveOrderGift'])->name('saveOrderGift');
+                
 
                 Route::prefix('package')->as('package.')->group(function () {
                     Route::get('all', [OrderPackageController::class, 'index'])->name('index');
+                    Route::get('listCancel', [OrderPackageController::class, 'listOrderCancel'])->name('listOrderCancel');
+                    Route::get('listComplete', [OrderPackageController::class, 'listOrderComplete'])->name('listOrderComplete');
+
                     Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
                     Route::get('pending/{id}', [OrderPackageController::class, 'OrderPending'])->name('pending');
                     Route::post('/addToCartPackage', [OrderPackageController::class, 'addToCart'])->name('addToCartPackage');
+                    Route::post('orderCancel/{order}', [OrderPackageController::class, 'orderCancel'])->name('orderCancel');
+                    Route::post('orderComplete/{order}', [OrderPackageController::class, 'orderComplete'])->name('orderComplete');
                 });
-
             });
 
             Route::prefix('cart')->as('cart.')->group(function () {
@@ -85,7 +90,8 @@ Route::middleware(['auth'])->group(
                 Route::post('/removeItem', [OrderController::class, 'removeItem'])->name('removeItem');
                 Route::post('/removeCart', [OrderController::class, 'removeCart'])->name('removeCart');
                 Route::post('/deleteCarts', [OrderController::class, 'deleteMultipleItem'])->name('deleteCarts');
-
+                Route::get('/fetchCart', [OrderController::class, 'fetchCart'])->name('fetchCart');
+                
                 // Route::put('/update/{shipping}', [PaymentMethodsController::class, 'update'])->name('update');
                 // Route::delete('/delete/{shipping}', [PaymentMethodsController::class, 'destroy'])->name('destroy');
             });
