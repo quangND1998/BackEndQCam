@@ -16,6 +16,7 @@ use Modules\Order\app\Models\Order;
 use Modules\Tree\app\Models\ProductRetail;
 use Cart;
 use Modules\Customer\app\Resources\UserResource;
+use Modules\Order\app\Http\Requests\OrderGiftPostRequest;
 use Modules\Order\app\Http\Requests\SaveOrderRequest;
 use Modules\Order\app\Models\OrderItem;
 
@@ -236,10 +237,10 @@ class OrderController extends Controller
     public function createOrder(Request $request)
     {
 
-        $customers = User::with(['product_service_owners' => function ($q) {
-            $q->where('state', 1);
+        $customers = User::with(['product_service_owners.trees','product_service_owners.product','product_service_owners' => function ($q) {
+            $q->where('state', 'active');
         }])->role('customer')->get();
-
+   
         $cart = Cart::getContent();
         $total_price = Cart::getSubTotalWithoutConditions();
         $sub_total = Cart::getSubTotal();
@@ -259,6 +260,8 @@ class OrderController extends Controller
             return response()->json('Không tìm thấy Khách hàng!', 404);
         }
     }
+
+    
 
     public function addToCart(Request $request)
     {
@@ -380,7 +383,6 @@ class OrderController extends Controller
                 'notes'         =>  $request->notes,
                 'grand_total' => Cart::getSubTotalWithoutConditions(),
                 'last_price' => Cart::getSubTotal(),
-                'last_price' => Cart::getSubTotal(),
                 'item_count' => Cart::getTotalQuantity(),
                 'vat' => $request->vat,
                 'discount_deal' => $request->discount_deal,
@@ -479,5 +481,71 @@ class OrderController extends Controller
         //     ));
         //     Cart::condition($conditionPaid);
         // }
+    }
+
+    public function fetchCart(){
+        $response = [
+            'cart' => Cart::getContent(),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
+            'sub_total' =>  Cart::getSubTotal()
+        ];
+        Cart::clear();
+        Cart::clearCartConditions();
+        return back();
+    }
+
+
+    public function saveOrderGift(OrderGiftPostRequest $request ,User $user){
+      
+        if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
+            return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
+        }
+        $this->addConditionToCart($request);
+
+        if ($user) {
+            $order = Order::create([
+                'order_number'      =>  'ORD-' . strtoupper(uniqid()),
+                'user_id'           => $user->id,
+                'status'            =>  'pending',
+                'payment_status'    =>  0,
+                'payment_method' => null,
+                'address' => $request->address,
+                'city' => $request->city,
+                'district' => $request->district,
+                'wards' => $request->wards,
+                'phone_number'        =>  $request->phone_number,
+                'notes'         =>  $request->notes,
+                'grand_total' =>0,
+                'last_price' => 0,
+                'item_count' => Cart::getTotalQuantity(),
+                'type' => $request->type,    
+                'product_service_owner_id' => $request->product_service_owner_id
+
+            ]);
+            $order->save();
+
+            if ($order) {
+
+                $items = Cart::getContent();
+
+                foreach ($items as $item) {
+                    // A better way will be to bring the product id with the cart items
+                    // you can explore the package documentation to send product id with the cart
+                    // $product = Product::where('name', $item->name)->first();
+                    if ($item->quantity > 0) {
+                        $orderItem = new OrderItem([
+                            'product_id' => $item->id,
+                            'quantity'      =>  $item->quantity,
+                            'price'         =>  $item->price,
+                            'total_price' => $item->getPriceSum(),
+                        ]);
+                        $order->orderItems()->save($orderItem);
+                    }
+                }
+            }
+        }
+        Cart::clear();
+        Cart::clearCartConditions();
+        return redirect('admin.orders.pending')->with('success', 'Đã tạo đơn quà');
     }
 }

@@ -151,19 +151,13 @@ const changeDate = () => {
                         <!-- <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p> -->
                     </h2>
                 </div>
-                <div class="flex">
-                    <div>
-                        <Link :href="route('admin.orders.create')"
-                            class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
-                        <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn lẻ
-                        </Link>
-                    </div>
-                    <!-- <div>
-                        <Link :href="route('orderPackage.create')"
-                            class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
-                        <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn hàng hợp đồng
-                        </Link>
-                    </div> -->
+
+                <div>
+
+                    <Link :href="route('admin.orders.create')"
+                        class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
+                    Tạo đơn hàng
+                    </Link>
                 </div>
             </div>
             <div>

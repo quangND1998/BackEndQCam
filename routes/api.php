@@ -37,6 +37,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         // logout
         Route::post('logout', [LoginController::class, 'logout']);
+        Route::post('updatePassword', [LoginController::class, 'updatePassword']);
 
 
         // Product-retail

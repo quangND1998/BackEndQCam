@@ -35,7 +35,6 @@ return new class extends Migration
 
             $table->decimal('amount_unpaid', 25, 6)->default(0)->nullable();
             $table->decimal('last_price', 25, 6)->default(0)->nullable();
-            $table->integer('last_price')->nullable();
             $table->string('name')->nullable();
             $table->text('specific_address')->nullable();
             $table->text('address')->nullable();

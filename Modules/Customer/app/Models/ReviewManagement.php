@@ -9,7 +9,7 @@ use Modules\Customer\Database\factories\ReviewManagementFactory;
 class ReviewManagement extends Model
 {
     use HasFactory;
-    protected $table = 'complaint_management';
+    protected $table = 'review_management';
     /**
      * The attributes that are mass assignable.
      */

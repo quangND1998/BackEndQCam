@@ -61,6 +61,18 @@ const props = defineProps({
 const  cart = toRef(props.cart);
 const  total_price = toRef(props.total_price);
 const  sub_total = toRef(props.sub_total);
+onMounted(()=>{
+   cart.value.forEach(element => {
+      this.form.skus.push({
+        id: element.id,
+        price: element.price,
+        stock: element.stock,
+        name: element.name,
+        barcode: element.barcode
+      });
+    });
+    
+})
 const selectAllCart = computed({
     get() {
         return props.cart
