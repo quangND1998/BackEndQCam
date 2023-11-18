@@ -546,6 +546,6 @@ class OrderController extends Controller
         }
         Cart::clear();
         Cart::clearCartConditions();
-        return redirect('admin.orders.pending')->with('success', 'Đã tạo đơn quà');
+        return redirect()->route('admin.orders.pending')->with('success', 'Đã tạo đơn quà');
     }
 }
