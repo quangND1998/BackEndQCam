@@ -35,13 +35,13 @@ const handleNativeClick =()=>{
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
                 :class="{ 'bg-white  text-blue-500': $page.url === '/admin/orders/package/listOrderCancel' }">
             Đã hủy
-            <span class="text-gray-400 ml-1">({{ totalOrder('packing') }})</span>
+            <span class="text-gray-400 ml-1">({{ totalOrder('decline') }})</span>
             </Link>
             <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('admin.orders.package.listOrderComplete')"
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
                 :class="{ 'bg-white  text-blue-500': $page.url === '/admin/orders/package/listComplete' }">
             Đã duyệt
-            <span class="text-gray-400 ml-1">({{ totalOrder('shipping') }})</span>
+            <span class="text-gray-400 ml-1">({{ totalOrder('complete') }})</span>
             </Link>
         </div>
         <div>

@@ -9,6 +9,8 @@ use Modules\Customer\Database\factories\ProductServiceOwnerFactory;
 use Modules\Tree\app\Models\ProductService;
 use Modules\Tree\app\Models\Tree;
 use Modules\Customer\app\Models\Contract;
+use Modules\Order\app\Models\Order;
+
 class ProductServiceOwner extends Model
 {
     use HasFactory;
@@ -60,5 +62,9 @@ class ProductServiceOwner extends Model
     }
     public function visit(){
         return $this->hasMany(ScheduleVisit::class,'product_service_owner_id');
+    }
+    public function history_gift()
+    {
+        return $this->hasMany(Order::class,'product_service_owner_id');
     }
 }

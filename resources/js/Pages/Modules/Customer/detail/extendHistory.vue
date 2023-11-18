@@ -97,7 +97,8 @@ const save = () => {
                     </div>
                 </div>
             </CardBoxModal>
-            <div class="p-6 flex-auto sm:w-full">
+            <div class="p-2 flex-auto sm:w-full"> <Link :href="`/customer/${customer?.id}/products`" class="text-blue"> Gói dịch vụ {{product_owner?.product?.name}}</Link> > Lịch sử gia hạn</div>
+            <div class="p-2 flex-auto sm:w-full">
                 <!-- <div class="flex justify-between">
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                         small @click="
@@ -107,7 +108,7 @@ const save = () => {
                         form_reset();
                         " label="Tải scan hợp đồng" />
                 </div> -->
-                <div class=" relative shadow-md sm:rounded-lg mt-5 min-h-[400px]">
+                <div class=" relative shadow-md sm:rounded-lg mt-1 min-h-[400px]">
                     <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>

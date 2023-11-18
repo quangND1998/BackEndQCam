@@ -228,10 +228,6 @@ const limit_tree = computed(() =>{
             </div>
 
             <!-- Modal -->
-            <CardBoxModal v-model="isModalDangerActive" title="Please confirm" button="danger" has-cancel>
-                <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-                <p>This is sample modal</p>
-            </CardBoxModal>
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                 :title="editMode ? 'Update User' : 'Create User'">
                 <div class="p-6 flex-auto">

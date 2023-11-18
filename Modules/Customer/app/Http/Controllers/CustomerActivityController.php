@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\User;
 use Inertia\Inertia;
+use Modules\Order\app\Models\Order;
+
 class CustomerActivityController extends Controller
 {
     /**
@@ -22,6 +24,12 @@ class CustomerActivityController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function gift($id){
+        $customer = User::findOrFail($id);
+        $gifts = Order::with('orderItems.product','product_service.product')->whereHas('product_service')->where('user_id',$customer->id)->paginate(20);
+        //  return $gifts;
+        return Inertia::render('Modules/Customer/detail/gift', compact('customer','gifts'));
+    }
     public function create()
     {
         return view('customer::create');
