@@ -40,7 +40,7 @@ const props = defineProps({
             </div>
 
             <div>
-                <p>{{ order.type =='gift_delivery' ? 'Quà tặng':'Đơn hàng' }}</p>
+                <p>{{ order.type =='gift_delivery' ? 'Giao quà':'Đơn lẻ' }}</p>
             </div>
             <div>
                 <Link v-if="order.payment_method == 'cash' || order.payment_method == 'banking'"

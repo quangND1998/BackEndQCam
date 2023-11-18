@@ -15,24 +15,26 @@ class OrderController extends Base2Controller
 {
     public function saveOrder(Request $request)
     {
-
-        $validator = Validator::make($request->only('items', 'voucher'), [
+      
+        $validator = Validator::make($request->only('items', 'voucher','payment_method'), [
             'items' => 'required|array',
-            'voucher' => 'nullable'
+            'voucher' => 'nullable',
+            'payment_method' => 'required'
+        ],[
+            'payment_method.required' => 'Hãy chọn phương thức thanh toán'
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
 
-        foreach ($request->items as $item) {
-        }
+ 
         $user= Auth::user();
         $order = Order::create([
             'order_number'      =>  'ORD-' . strtoupper(uniqid()),
             'user_id'           => Auth::user()->id,
             'status'            =>  'pending',
             'payment_status'    =>  0,
-            'payment_method'    =>  null,
+            'payment_method'    =>  $request->payment_method,
             'type' => 'retail',
             'address' => $user->address,
             'city' => $user->city,
