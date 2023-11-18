@@ -31,6 +31,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
             Route::post('visit/save', [ScheduleVisitController::class, 'saveScheduleVisit']);
             Route::get('visit', [ScheduleVisitController::class, 'getsheduleCustomer']);
+            Route::get('visit/{id}', [ScheduleVisitController::class, 'getVisitWithProduct']);
 
 
             Route::prefix('complaint')->as('customer.')->group(function () {

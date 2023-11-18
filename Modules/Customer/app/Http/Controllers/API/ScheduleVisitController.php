@@ -52,6 +52,11 @@ class ScheduleVisitController extends Base2Controller
         //    return $visit;
 
             return $this->sendResponse($visits, 'danh sách lịch tham quan');
-        }
+    }
+    public function  getVisitWithProduct($id)
+    {
+        $visits = ScheduleVisit::where('product_service_owner_id', $id)->get();
+        return $this->sendResponse($visits, 'danh sách lịch tham quan');
+    }
 
 }
