@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -26,7 +27,11 @@ class OrderController extends Base2Controller
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-
+        
+        if($request->voucher){
+          return   $this->checkVoucher($request->voucher);
+        }
+       
  
         $user= Auth::user();
         $order = Order::create([
@@ -92,5 +97,20 @@ class OrderController extends Base2Controller
 
         $orders = Order::with('orderItems.product', 'discount')->where('status', '!=', 'refund')->orWhere('status', '!=', 'decline')->where('user_id', $user->id)->get();
         return $orders;
+    }
+
+    public function checkVoucher($data){
+        
+        $voucher = Voucher::find($data["id"]);
+        if($voucher ==null){
+            return response()->json('Voucher không còn được sử dụng!', 404);
+
+        }
+        elseif($voucher->is_fixed==0){
+            return response()->json('Voucher không còn được sử dụng!', 404);
+        }
+        elseif($voucher->expires_at < Carbon::now()){
+            return response()->json('Voucher đã hết hạn!', 404);
+        }
     }
 }
