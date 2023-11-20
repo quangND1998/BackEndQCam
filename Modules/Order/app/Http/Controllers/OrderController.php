@@ -5,6 +5,8 @@ namespace Modules\Order\app\Http\Controllers;
 use App\Contracts\OrderContract;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\OrderPackingNotification;
+use App\Notifications\OrderShippingNotification;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +21,7 @@ use Modules\Customer\app\Resources\UserResource;
 use Modules\Order\app\Http\Requests\OrderGiftPostRequest;
 use Modules\Order\app\Http\Requests\SaveOrderRequest;
 use Modules\Order\app\Models\OrderItem;
+use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
@@ -223,6 +226,12 @@ class OrderController extends Controller
         $order->update([
             'status' => $request->status,
         ]);
+        if ($order->status == 'packing') {
+            Notification::send($order->customer, new OrderPackingNotification($order));
+        }
+        if ($order->status == 'shipping') {
+            Notification::send($order->customer, new OrderShippingNotification($order));
+        }
         return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
     }
 
@@ -238,7 +247,7 @@ class OrderController extends Controller
     public function createOrder(Request $request)
     {
 
-        $customers = User::with(['product_service_owners.trees','product_service_owners.product','product_service_owners' => function ($q) {
+        $customers = User::with(['product_service_owners.trees', 'product_service_owners.product', 'product_service_owners' => function ($q) {
             $q->where('state', 'active');
         }])->role('customer')->get();
 
@@ -484,7 +493,8 @@ class OrderController extends Controller
         // }
     }
 
-    public function fetchCart(){
+    public function fetchCart()
+    {
         $response = [
             'cart' => Cart::getContent(),
             'total_price' => Cart::getSubTotalWithoutConditions(),
@@ -496,7 +506,8 @@ class OrderController extends Controller
     }
 
 
-    public function saveOrderGift(OrderGiftPostRequest $request ,User $user){
+    public function saveOrderGift(OrderGiftPostRequest $request, User $user)
+    {
 
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
@@ -516,7 +527,7 @@ class OrderController extends Controller
                 'wards' => $request->wards,
                 'phone_number'        =>  $request->phone_number,
                 'notes'         =>  $request->notes,
-                'grand_total' =>0,
+                'grand_total' => 0,
                 'last_price' => 0,
                 'item_count' => Cart::getTotalQuantity(),
                 'type' => $request->type,

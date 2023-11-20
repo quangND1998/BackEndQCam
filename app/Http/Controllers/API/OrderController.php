@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\OrderPendingNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Modules\Order\app\Models\Order;
 use Modules\Order\app\Models\OrderItem;
@@ -94,6 +96,7 @@ class OrderController extends Base2Controller
         }
         $order->amount_unpaid = $order->last_price;
         $order->save();
+        Notification::send($order->customer, new OrderPendingNotification($order));
         return $order->load('orderItems.product.images');
     }
 
