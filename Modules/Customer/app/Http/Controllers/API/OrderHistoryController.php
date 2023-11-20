@@ -31,12 +31,16 @@ class OrderHistoryController extends Base2Controller
         if($customer){
             $orders = Order::with('orderItems.product','product_service.product')->where('type','gift_delivery')->where('user_id',$customer->id)->get();
             $orderComplete = [];
-            $orderPending = $orders->where('status','!=','completed');
+            $orderPending = [];
             $index = 0;
+            $index2 = 0;
             foreach($orders as $order){
                 if($order->status == "completed"){
                     $orderComplete[$index] = $order;
                     $index++;
+                }else{
+                    $orderPending[] = $order;
+                    $index2++;
                 }
 
             }
