@@ -6,62 +6,43 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-
-class OrderHistoryController extends Controller
+use Illuminate\Support\Facades\Auth;
+use Modules\Order\app\Models\Order;
+use App\Http\Controllers\API\Base2Controller;
+class OrderHistoryController extends Base2Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function getListOrderRetail()
     {
-        return view('customer::index');
+        $customer = Auth::user();
+        if($customer){
+            $products = Order::with('orderItems.product','product_service.product')->where('type','retail')->where('user_id',$customer->id)->paginate(20);
+            return  $products;
+
+            return $this->sendResponse($products, 'san pham le');
+        }
+        return response()->json('Chua login', 200);
+    }
+    public function getListGift()
+    { 
+        $customer = Auth::user();
+        if($customer){
+            $products = Order::with('orderItems.product','product_service.product')->where('type','gift_delive')->where('user_id',$customer->id)->get();
+
+            $productComplete = $products->where('status','==','completed');
+            $productPending = $products->where('status','!=','completed');
+            $response = [
+                'success' => false,
+                'productPending' => $productPending,
+                'productComplete' => $productComplete
+            ];
+            return response()->json($response, 200);
+        }
+        return response()->json('Chua login', 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('customer::create');
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
-    {
-        //
-    }
 
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('customer::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('customer::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

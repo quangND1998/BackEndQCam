@@ -27,6 +27,7 @@ Route::middleware(['auth'])->group(
         Route::get('info', [CustomerDetailController::class, 'info'])->name('info');
 
         Route::resource('products', CustomerProductController::class)->names('products');
+        Route::get('gift', [CustomerActivityController::class,"gift"])->name('gift');
         Route::resource('activity', CustomerActivityController::class)->names('activity');
         Route::resource('service', CustomerServiceController::class)->names('service');
     });

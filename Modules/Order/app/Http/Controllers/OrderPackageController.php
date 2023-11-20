@@ -18,6 +18,7 @@ use Modules\Order\app\Models\OrderPackage;
 use App\Models\User;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\HistoryExtend;
+use Illuminate\Support\Facades\DB;
 class OrderPackageController extends Controller
 {
     protected $orderRepository;
@@ -43,7 +44,7 @@ class OrderPackageController extends Controller
         $status = 'pending';
         $orders =  OrderPackage::with('customer','product_service')->where('status','pending')->get();
         //return $orders;
-        $statusGroup = $this->orderRepository->groupByOrderStatus();
+        $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listOrderCancel(Request $request)
@@ -55,7 +56,7 @@ class OrderPackageController extends Controller
         $status = 'pending';
         $orders =  OrderPackage::with('customer','product_service')->where('status','decline')->get();
         //return $orders;
-        $statusGroup = $this->orderRepository->groupByOrderStatus();
+        $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/OrderCancel', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listOrderComplete(Request $request)
@@ -65,9 +66,9 @@ class OrderPackageController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
-        $orders =  OrderPackage::with('customer','product_service')->where('status','complete')->get();
+        $orders =  OrderPackage::with('customer','product_service')->where('status','complete')->orderBy('created_at','desc')->get();
         //return $orders;
-        $statusGroup = $this->orderRepository->groupByOrderStatus();
+        $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/OrderComplete', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function orderPackage(Request $request){
@@ -181,10 +182,11 @@ class OrderPackageController extends Controller
             $new_product_owner->save();
 
             $trees = Tree::where('state','public')->where('product_service_owner_id',null)->first();
-
-            $new_product_owner->trees()->save($trees);
-
-            $customer->save();
+            if($trees){
+                $new_product_owner->trees()->save($trees);
+                $customer->save();
+            }
+            
 
             //history
 
@@ -208,5 +210,32 @@ class OrderPackageController extends Controller
         $customer->password = Hash::make('cammattroi');
         $customer->save();
         return $customer;
+    }
+    public function groupByOrderStatus()
+    {
+        $array_status = ['pending','complete', 'decline'];
+        $statusGroup = OrderPackage::select('status', DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->get();
+        foreach ($array_status as $status) {
+
+            $filtered = $statusGroup->where('status', $status)->first();
+
+            if ($filtered == null) {
+
+                $newCollections[] = array(
+                    'status' => $status,
+                    'total' => 0,
+                );
+            } else {
+
+                $newCollections[] = array(
+                    'status' => $status,
+                    'total' => $filtered->total,
+
+                );
+            }
+        }
+        return $newCollections;
     }
 }

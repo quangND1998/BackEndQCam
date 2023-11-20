@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, inject, watch, toRef } from 'vue'
 import LayoutProfileDetail from '@/Layouts/LayoutProfileDetail.vue';
-import { useForm } from '@inertiajs/vue3';
+import { Link,useForm } from '@inertiajs/vue3';
 import SectionMain from '@/Components/SectionMain.vue'
 import { Head } from '@inertiajs/vue3'
 import CardBoxModal from '@/Components/CardBoxModal.vue'
@@ -118,7 +118,8 @@ const save = () => {
                     </div>
                 </div>
             </CardBoxModal>
-            <div class="p-6 flex-auto sm:w-full">
+            <div class="p-2 flex-auto sm:w-full"> <Link :href="`/customer/${history_extend?.product_service_owner?.customer?.id}/products`" class="text-blue"> Gói dịch vụ </Link> > <Link class="text-blue" :href="`/product_owner/${history_extend?.product_service_owner?.id}/extend`"> Lịch sử gia hạn</Link> > hợp đồng </div>
+            <div class="p-2 flex-auto sm:w-full">
                 <div class="flex justify-between">
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                         small @click="
@@ -128,7 +129,7 @@ const save = () => {
                         form_reset();
                         " label="Tải scan hợp đồng" />
                 </div>
-                <div class=" relative shadow-md sm:rounded-lg mt-5">
+                <div class=" relative shadow-md sm:rounded-lg mt-1">
                     <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -143,6 +144,7 @@ const save = () => {
                         <tbody v-if="history_extend?.contract?.history_contact">
                             <tr v-for="(history_contract, index) in history_extend?.contract?.history_contact" :key="index"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <!-- {{ history_extend?.product_service_owner?.id }} -->
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ index + 1 }}

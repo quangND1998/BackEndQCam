@@ -141,7 +141,7 @@ const props = defineProps({
                 <p class="text-red-600 text-xl">{{ formatPrice(order.amount_unpaid) }} ₫</p>
 
             </div>
-            <OrderAction :order="order" :status="status"></OrderAction>
+            <OrderAction :order="order" :status="order.status"></OrderAction>
         </div>
     </div>
 </template>

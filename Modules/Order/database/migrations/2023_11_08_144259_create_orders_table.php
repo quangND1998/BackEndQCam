@@ -43,6 +43,8 @@ return new class extends Migration
             $table->string('wards')->nullable();
             $table->text('notes')->nullable();
             $table->text('reason')->nullable();
+
+            $table->integer('product_service_owner_id')->nullable();
             $table->timestamps();
         });
     }

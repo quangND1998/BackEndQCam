@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ReviewManagement;
 use Modules\Order\Database\factories\OrderFactory;
 
@@ -83,5 +84,9 @@ class Order extends Model
     public function reviews()
     {
         return $this->hasMany(ReviewManagement::class, 'order_id');
+    }
+    public function product_service()
+    {
+        return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
     }
 }

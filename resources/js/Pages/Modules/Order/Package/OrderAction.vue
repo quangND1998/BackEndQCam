@@ -1,8 +1,10 @@
 <template>
     <div class="flex justify-between">
-        <button v-if="status == 'pending' || status == 'packing'"
+        <button v-if="status == 'pending'"
             class="border text-red-700 rounded-lg bg-gray-100 px-3 py-2" data-toggle="modal"
-            data-target="#exampleModalDecline" @click="openDecline(order)">Hủy gói</button>
+            data-target="#exampleModalDecline" @click="openDecline(order)">{{status}} Hủy gói</button>
+         <!-- <button v-if="status == 'complete'" class="border rounded-lg bg-gray-100 px-3 py-2"
+            data-toggle="modal" data-target="#exampleModalRefund" @click="openRefund(order)">Hoàn đơn</button> -->
         <div class="flex">
             <select v-if="status == 'pending' || status == 'packing' || status == 'shipping' || status == 'completed'"
                 id="countries" @change="orderChangePayment( $event)"

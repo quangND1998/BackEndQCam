@@ -269,7 +269,7 @@ const changeDate = () => {
                                 </div>
 
                                 <div v-for="(order, index) in orders" :key="index">
-                                    <OrderRow :order="order" :status="status" />
+                                    <OrderRow :order="order" :status="order.status" />
 
                                 </div>
 

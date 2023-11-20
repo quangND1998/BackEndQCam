@@ -63,8 +63,6 @@ class CustomerController extends Controller
             $history_extend->description = "tạo mới";
             $new_product_owner->history_extend()->save($history_extend);
         }
-
-
     }
     public function paymentPending(Request $request)
     {
@@ -87,7 +85,7 @@ class CustomerController extends Controller
     {
         $user = Auth::user();
         $filters = $request->all('search');
-        $customers = User::with('product_service_owners.product','product_service_owners.trees')->whereHas(
+        $customers = User::with('product_service_owners.product','product_service_owners.trees','product_service_owners.history_gift')->whereHas(
             'roles',
             function ($query) {
                 $query->where('name', 'Customer');
@@ -99,6 +97,7 @@ class CustomerController extends Controller
             $query->orwhere('phone_number', 'LIKE', '%' . $request->search . '%');
         })->paginate(20)->appends($request->search);
 
+        // return $customers;
         $product_services = ProductService::where("status", 1)->get();
         $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();
 
@@ -119,8 +118,6 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
        // return $request;
-
-
         $this->validate(
             $request,
             [

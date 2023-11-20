@@ -52,6 +52,7 @@ class OrderController extends Controller
         $status = 'pending';
         $orders =  $this->orderRepository->getOrder($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
+        // dd($statusGroup);
         return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
 

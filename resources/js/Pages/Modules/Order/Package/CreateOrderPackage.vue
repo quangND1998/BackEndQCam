@@ -37,8 +37,10 @@ const props = defineProps({
 });
 
 const search = ref(null)
-const user = ref(null);
+
 const flash = ref(null);
+const provinces = ref(null)
+
 const form = useForm({
     name: null,
     phone_number: null,
@@ -57,7 +59,78 @@ const form = useForm({
     product_selected: props.product_services.length > 0 ? props.product_services[0].id : null,
     time_approve: new Date(),
 })
+const getProvinces = async () => {
+    const response = await fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
+    const jsonData = await response.json();
+    provinces.value = jsonData
+};
+getProvinces();
 
+const districts = computed(() => {
+    if (form.city == null) {
+        return [];
+    } else {
+        return provinces.value.find(pro => {
+            return pro.Name == form.city;
+        });
+    }
+})
+const user = computed({
+
+
+    get() {
+        if (form.user_id) {
+            const user = props.customers.find((customer) => customer.id == form.user_id)
+            if (user) {
+                foundUser(user)
+                return user
+            }
+
+        }
+        else {
+            form.reset()
+            return null
+        }
+    },
+    // setter
+    set(newValue) {
+        return newValue
+        // Note: we are using destructuring assignment syntax here.
+        console.log(newValue)
+    }
+})
+const wards = computed(() => {
+    if (form.city == null && form.district == null) {
+        return [];
+    } else if (form.city !== null && form.district == null) {
+        return [];
+    } else {
+        if (provinces.value) {
+            let array = provinces.value.find(pro => {
+                return pro.Name == form.city;
+            });
+            console.log('wards', array)
+            if (array.Districts) {
+                return array.Districts.find(district => {
+                    return district.Name == form.district;
+                });
+            }
+            return []
+
+        }
+        return []
+    }
+})
+const onChangeCity = (event) => {
+    form.district = null;
+    form.wards = null;
+}
+const onChangeUser = (event) => {
+    form.user_id = event.target.value
+}
+const onChangeDistrict = (event) => {
+    // this.form.wards = null;
+}
 const foundUser = (data) => {
     form.name = data.name
     form.phone_number = data.phone_number
@@ -210,26 +283,41 @@ const date = ref(new Date());
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Tỉnh/Thành Phố *</label>
-                                        <input type="text" id="first_name" v-model="form.city"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" required>
+                                        <select id="city" v-model="form.city" @change="onChangeCity($event)"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option :value="null">Chọn tỉnh thành</option>
+                                            <option v-for="(city, index) in provinces" :value="city.Name" :key="index">{{
+                                                city.Name }}</option>
+                                        </select>
+                                        <InputError class="mt-2" :message="form.errors.city" />
                                     </div>
                                     <div class="my-3 min-[320px]:block md:flex">
                                         <div class="min-[320px]:w-full md:w-1/2 mr-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
-                                            <input type="text" id="first_name" v-model="form.district"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                placeholder="" required>
+                                            <select id="city" v-model="form.district" @change="onChangeDistrict($event)"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option :value="null">Chọn quận huyện</option>
+                                                <option v-for="(district, index) in districts.Districts"
+                                                    :value="district.Name" :key="index">
+                                                    {{
+                                                        district.Name }}
+                                                </option>
+                                            </select>
+                                            <InputError class="mt-2" :message="form.errors.district" />
                                         </div>
                                         <div class="min-[320px]:w-full md:w-1/2 ml-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Phường xã*</label>
-                                            <input type="text" id="first_name" v-model="form.wards"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                placeholder="" required>
+                                            <select v-model="form.wards" id="wards"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option :value="null">Chọn phường xã</option>
+                                                <option v-for="(ward, index) in wards.Wards" :value="ward.Name"
+                                                    :key="index">{{ ward.Name }}</option>
+                                            </select>
+                                            <InputError class="mt-2" :message="form.errors.wards" />
                                         </div>
                                     </div>
                                 </div>

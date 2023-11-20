@@ -208,7 +208,8 @@ const limit_tree = computed(() => {
                     </div>
                 </div>
             </CardBoxModal>
-            <div class="p-6 flex-auto sm:w-full">
+
+            <div class="p-2 flex-auto sm:w-full">
                 <div class="flex justify-between">
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                         small @click="
@@ -218,6 +219,7 @@ const limit_tree = computed(() => {
                         form_reset();
                         " label="Thêm gói sản phẩm" />
                 </div>
+               
                 <div class=" relative shadow-md sm:rounded-lg mt-5">
                     <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

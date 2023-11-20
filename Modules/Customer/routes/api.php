@@ -6,6 +6,7 @@ use Modules\Customer\app\Http\Controllers\API\ComplaintController;
 use Modules\Customer\app\Http\Controllers\API\CustomerProductOwerController;
 use Modules\Customer\app\Http\Controllers\API\ReviewManagerController;
 use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
+use Modules\Customer\app\Http\Controllers\API\OrderHistoryController;
 /*
     |--------------------------------------------------------------------------
     | API Routes
@@ -31,6 +32,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
             Route::post('visit/save', [ScheduleVisitController::class, 'saveScheduleVisit']);
             Route::get('visit', [ScheduleVisitController::class, 'getsheduleCustomer']);
+            Route::get('visit/{id}', [ScheduleVisitController::class, 'getVisitWithProduct']);
+
+            Route::get('orderRetail', [OrderHistoryController::class, 'getListOrderRetail']);
+            Route::get('orderGift', [OrderHistoryController::class, 'getListGift']);
 
 
             Route::prefix('complaint')->as('customer.')->group(function () {
