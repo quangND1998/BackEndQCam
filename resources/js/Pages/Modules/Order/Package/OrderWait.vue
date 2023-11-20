@@ -1,4 +1,4 @@
-<script setup>
+mig<script setup>
 import { computed, ref, inject, reactive } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";

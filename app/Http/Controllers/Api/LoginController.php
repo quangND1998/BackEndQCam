@@ -148,4 +148,14 @@ class LoginController extends Base2Controller
 
         return response()->json('Cập nhật mật khẩu thành công.', Response::HTTP_OK);
     }
+
+    public function getFireBaseToken(Request $request)
+    {
+        $user = Auth::user();
+
+        $user->fcm_token = $request->token;
+        $user->save();
+        $success['user'] =  $user;
+        return $this->sendResponse($success, 'Get Token successfully.');
+    }
 }

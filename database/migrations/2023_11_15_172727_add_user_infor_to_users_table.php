@@ -28,7 +28,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('specific_address');
+            $table->dropColumn('fcm_token');
+            $table->dropColumn('city');
+            $table->dropColumn('district');
+            $table->dropColumn('wards');
+            $table->dropColumn('wards');
+            $table->dropColumn('cic_date_expried');
         });
     }
 };

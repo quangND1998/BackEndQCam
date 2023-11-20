@@ -16,24 +16,30 @@ class OrderController extends Base2Controller
 {
     public function saveOrder(Request $request)
     {
-      
-        $validator = Validator::make($request->only('items', 'voucher','payment_method'), [
+
+        $validator = Validator::make($request->only('items', 'voucher', 'payment_method'), [
             'items' => 'required|array',
             'voucher' => 'nullable',
             'payment_method' => 'required'
-        ],[
+        ], [
             'payment_method.required' => 'Hãy chọn phương thức thanh toán'
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-        
-        if($request->voucher){
-          return   $this->checkVoucher($request->voucher);
+
+        if ($request->voucher) {
+            $voucher = Voucher::find($request->voucher["id"]);
+            if ($voucher == null) {
+                return response()->json('Voucher không còn được sử dụng!', 404);
+            } elseif ($voucher->is_fixed == 0) {
+                return response()->json('Voucher không còn được sử dụng!', 404);
+            } elseif ($voucher->expires_at < Carbon::now()) {
+                return response()->json('Voucher đã hết hạn!', 404);
+            }
         }
-       
- 
-        $user= Auth::user();
+
+        $user = Auth::user();
         $order = Order::create([
             'order_number'      =>  'ORD-' . strtoupper(uniqid()),
             'user_id'           => Auth::user()->id,
@@ -45,7 +51,7 @@ class OrderController extends Base2Controller
             'city' => $user->city,
             'district' => $user->district,
             'wards' => $user->wards,
-            'phone_number' =>$user->phone_number,
+            'phone_number' => $user->phone_number,
         ]);
 
         if ($order) {
@@ -83,7 +89,7 @@ class OrderController extends Base2Controller
             $order->save();
         } else {
             $order->last_price = $order->grand_total;
-            
+
             $order->save();
         }
         $order->amount_unpaid = $order->last_price;
@@ -99,17 +105,15 @@ class OrderController extends Base2Controller
         return $orders;
     }
 
-    public function checkVoucher($data){
-        
-        $voucher = Voucher::find($data["id"]);
-        if($voucher ==null){
-            return response()->json('Voucher không còn được sử dụng!', 404);
+    public function checkVoucher($data)
+    {
 
-        }
-        elseif($voucher->is_fixed==0){
+        $voucher = Voucher::find($data["id"]);
+        if ($voucher == null) {
             return response()->json('Voucher không còn được sử dụng!', 404);
-        }
-        elseif($voucher->expires_at < Carbon::now()){
+        } elseif ($voucher->is_fixed == 0) {
+            return response()->json('Voucher không còn được sử dụng!', 404);
+        } elseif ($voucher->expires_at < Carbon::now()) {
             return response()->json('Voucher đã hết hạn!', 404);
         }
     }

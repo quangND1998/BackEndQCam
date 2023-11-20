@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Home\ScheduleVisitController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TestController;
 use Modules\Landingpage\app\Http\Controllers\TermsConditionController;
 
@@ -78,6 +79,11 @@ Route::middleware(['auth'])->group(
             Route::get('confirm', [ScheduleVisitController::class, 'getConfirm'])->name('confirm');
             Route::get('cancel', [ScheduleVisitController::class, 'getCancel'])->name('cancel');
             Route::get('completed', [ScheduleVisitController::class, 'getComplete'])->name('completed');
+        });
+
+
+        Route::prefix('notification')->as('notification.')->group(function () {
+            Route::get('all', [NotificationController::class, 'index'])->name('all');
         });
     }
 
