@@ -34,8 +34,9 @@ class OrderHistoryController extends Base2Controller
             $productPending = $products->where('status','!=','completed');
             $response = [
                 'success' => false,
+                'productComplete' => $productComplete,
                 'productPending' => $productPending,
-                'productComplete' => $productComplete
+
             ];
             return response()->json($response, 200);
         }
