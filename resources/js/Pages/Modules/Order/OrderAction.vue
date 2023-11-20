@@ -60,7 +60,7 @@ const orderChangePending = () => {
         .then((result) => {
             if (result.isConfirmed) {
 
-                router.post(route("admin.orders.orderChangeStatus", props.voucher.id), query,
+                router.post(route("admin.orders.orderChangeStatus", props.order.id), query,
                     {
                         preserveState: true,
                         preserveScroll: true

@@ -50,6 +50,7 @@ class ReviewManagerController extends Base2Controller
             'type' => 'required',
             'evaluate' => 'required',
             'description' => 'required|string',
+            'star' => 'required|number'
 
         ]);
         if ($validator->fails()) {
@@ -60,6 +61,7 @@ class ReviewManagerController extends Base2Controller
             'evaluate' => $request->evaluate,
             'description' => $request->description,
             'user_id' => Auth::user()->id,
+            'star' => $request->star,
             'order_id' => $order->id,
         ]);
         return $this->sendResponse('Cảm ơn bạn Góp ý cho chúng tôi!', 200);
