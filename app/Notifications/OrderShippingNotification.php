@@ -16,7 +16,7 @@ use NotificationChannels\Fcm\Resources\AndroidNotification;
 use NotificationChannels\Fcm\Resources\ApnsConfig;
 use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
 
-class OrderShippingNotification extends Notification implements ShouldQueue
+class OrderShippingNotification extends Notification 
 {
     use Queueable;
     private $order;

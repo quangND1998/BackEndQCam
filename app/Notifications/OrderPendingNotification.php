@@ -16,7 +16,7 @@ use NotificationChannels\Fcm\Resources\AndroidNotification;
 use NotificationChannels\Fcm\Resources\ApnsConfig;
 use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
 
-class OrderPendingNotification extends Notification implements ShouldQueue
+class OrderPendingNotification extends Notification 
 {
     use Queueable;
 
