@@ -42,7 +42,7 @@ class OrderHistoryController extends Base2Controller
             }
             $response = [
                 'success' => true,
-                'productComplete' => json_encode($orderComplete),
+                'productComplete' =>$orderComplete,
                 'orderPending' => $orderPending,
             ];
             return response()->json($response, 200);
