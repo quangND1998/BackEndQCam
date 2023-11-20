@@ -30,7 +30,7 @@ class OrderHistoryController extends Base2Controller
         $customer = Auth::user();
         if($customer){
             $products = Order::with('orderItems.product','product_service.product')->where('type','gift_delivery')->where('user_id',$customer->id)->get();
-            $productComplete = $products->where('status','!=','completed');
+            $productComplete = $products->where('status','==','completed');
             $productPending = $products->where('status','!=','completed');
             $response = [
                 'success' => false,
