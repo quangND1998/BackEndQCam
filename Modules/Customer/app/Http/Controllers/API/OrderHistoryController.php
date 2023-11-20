@@ -29,13 +29,21 @@ class OrderHistoryController extends Base2Controller
     {
         $customer = Auth::user();
         if($customer){
-            $products = Order::with('orderItems.product','product_service.product')->where('type','gift_delivery')->where('user_id',$customer->id)->get();
-            $productComplete = $products->where('status','==','completed');
-            $productPending = $products->where('status','!=','completed');
+            $orders = Order::with('orderItems.product','product_service.product')->where('type','gift_delivery')->where('user_id',$customer->id)->get();
+            $orderComplete = [];
+            $orderPending = $orders->where('status','!=','completed');
+            $index = 0;
+            foreach($orders as $order){
+                if($order->status == "completed"){
+                    $orderComplete[$index] = $order;
+                    $index++;
+                }
+
+            }
             $response = [
-                'success' => false,
-                'productComplete' => $productComplete,
-                'productPending' => $productPending,
+                'success' => true,
+                'productComplete' => json_encode($orderComplete),
+                'orderPending' => $orderPending,
             ];
             return response()->json($response, 200);
         }
