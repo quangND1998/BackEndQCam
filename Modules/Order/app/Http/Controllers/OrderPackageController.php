@@ -163,7 +163,7 @@ class OrderPackageController extends Controller
             'status' => $request->status,
         ]);
         $this->storeOrderPackage($order);
-        return back()->with('success', `Đơn hàng đã được chuyển sang trạng thái:$request->status`);
+        return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
     }
     public function storeOrderPackage($order){
 
@@ -186,7 +186,7 @@ class OrderPackageController extends Controller
                 $new_product_owner->trees()->save($trees);
                 $customer->save();
             }
-            
+
 
             //history
 

@@ -223,7 +223,7 @@ class OrderController extends Controller
         $order->update([
             'status' => $request->status,
         ]);
-        return back()->with('success', `Đơn hàng đã được chuyển sang trạng thái:$request->status`);
+        return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
     }
 
 
@@ -241,7 +241,7 @@ class OrderController extends Controller
         $customers = User::with(['product_service_owners.trees','product_service_owners.product','product_service_owners' => function ($q) {
             $q->where('state', 'active');
         }])->role('customer')->get();
-   
+
         $cart = Cart::getContent();
         $total_price = Cart::getSubTotalWithoutConditions();
         $sub_total = Cart::getSubTotal();
@@ -262,7 +262,7 @@ class OrderController extends Controller
         }
     }
 
-    
+
 
     public function addToCart(Request $request)
     {
@@ -497,7 +497,7 @@ class OrderController extends Controller
 
 
     public function saveOrderGift(OrderGiftPostRequest $request ,User $user){
-      
+
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
@@ -519,7 +519,7 @@ class OrderController extends Controller
                 'grand_total' =>0,
                 'last_price' => 0,
                 'item_count' => Cart::getTotalQuantity(),
-                'type' => $request->type,    
+                'type' => $request->type,
                 'product_service_owner_id' => $request->product_service_owner_id
 
             ]);
