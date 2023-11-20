@@ -15,7 +15,7 @@ use NotificationChannels\Fcm\Resources\AndroidNotification;
 use NotificationChannels\Fcm\Resources\ApnsConfig;
 use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
 
-class OrderPackingNotification extends Notification 
+class OrderPackingNotification extends Notification
 {
     use Queueable;
     private $order;
@@ -74,7 +74,7 @@ class OrderPackingNotification extends Notification
         return FcmMessage::create()
             ->setData([])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
-                ->setTitle('[Đơn hàng] Đơn hàng' . $this->order->order_number )
+                ->setTitle('[Đơn hàng] Đơn hàng ' . $this->order->order_number)
                 ->setBody('Đang được đóng gói.'))
             ->setAndroid(
                 AndroidConfig::create()
