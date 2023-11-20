@@ -17,17 +17,18 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique()->nullable();
             $table->string('cic_number')->unique()->nullable();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+
+             $table->string('password');
             $table->string('phone_number')->unique()->nullable();
             $table->boolean('isVerified')->default(false);
             $table->string('sex')->nullable();
             $table->string('address')->nullable();
-            $table->string('phone_number2')->unique()->nullable();
+            $table->string('phone_number2')->nullable();
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->date('date_of_birth')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
     }
