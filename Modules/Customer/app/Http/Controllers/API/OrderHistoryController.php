@@ -26,7 +26,7 @@ class OrderHistoryController extends Base2Controller
         return response()->json('Chua login', 200);
     }
     public function getListGift()
-    { 
+    {
         $customer = Auth::user();
         if($customer){
             $products = Order::with('orderItems.product','product_service.product')->where('type','gift_delive')->where('user_id',$customer->id)->get();
@@ -35,6 +35,7 @@ class OrderHistoryController extends Base2Controller
             $productPending = $products->where('status','!=','completed');
             $response = [
                 'success' => false,
+                'product' => $products,
                 'productPending' => $productPending,
                 'productComplete' => $productComplete
             ];
