@@ -34,7 +34,7 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import Contract from '@/Pages/Test/Contract.vue'
-import InvoiceInformation from '@/Pages/Test/InvoiceInformation.vue'
+import InvoiceInformation from './InvoiceInformation.vue'
 
 
 const props = defineProps({
@@ -56,7 +56,7 @@ const props = defineProps({
             <div class="mx-5">
                 <div class="min-[320px]:block sm:block md:grid grid-cols-3 gap-4">
                     <div class="col-span-2">
-                       <InvoiceInformation />
+                       <InvoiceInformation :order="order" />
                         <div class="mt-5">
                             <h3 class="text-[17px] font-bold">Thông tin liên hệ</h3>
                             <p class="text-[#686868] text-base my-2">Khách hàng: <strong class="ml-3">

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Order\Database\factories\OrderPackageFactory;
 use Modules\Tree\app\Models\ProductService;
 use App\Models\User;
+use Carbon\Carbon;
 class OrderPackage extends Model
 {
     use HasFactory;
@@ -36,6 +37,36 @@ class OrderPackage extends Model
     public function product_service()
     {
         return $this->belongsTo(ProductService::class, 'product_selected');
+    }
+    public function discount()
+    {
+        return $this->belongsTo(Voucher::class, 'discount');
+    }
+    public function scopeFillter($query, array $filters)
+    {
+        if (isset($filters['search']) && isset($filters['search'])) {
+
+            $query->where('order_number', 'like', '%' . $filters['search'] . '%');
+        }
+        if (isset($filters['from']) && isset($filters['to'])) {
+
+            $query->whereBetween('created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+        }
+
+        if (isset($filters['payment_status'])) {
+
+            $query->where('payment_status', $filters['payment_status']);
+        }
+
+
+        if (isset($filters['payment_method'])) {
+
+            $query->where('payment_method', $filters['payment_method']);
+        }
+        if (isset($filters['type'])) {
+
+            $query->where('type', $filters['type']);
+        }
     }
 
 }

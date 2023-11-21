@@ -31,15 +31,15 @@ const handleNativeClick =()=>{
             Chờ thanh toán
             <span class="text-gray-400 ml-1">({{ totalOrder('pending') }})</span>
             </Link>
-            <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.orders.package.listOrderCancel')" @click.prevent
+            <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.orders.package.decline')" @click.prevent
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                :class="{ 'bg-white  text-blue-500': $page.url === '/admin/orders/package/listOrderCancel' }">
+                :class="{ 'bg-white  text-blue-500': $page.url === '/admin/orders/package/decline' }">
             Đã hủy
             <span class="text-gray-400 ml-1">({{ totalOrder('decline') }})</span>
             </Link>
-            <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('admin.orders.package.listOrderComplete')"
+            <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('admin.orders.package.complete')"
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                :class="{ 'bg-white  text-blue-500': $page.url === '/admin/orders/package/listComplete' }">
+                :class="{ 'bg-white  text-blue-500': $page.url === '/admin/orders/package/complete' }">
             Đã duyệt
             <span class="text-gray-400 ml-1">({{ totalOrder('complete') }})</span>
             </Link>

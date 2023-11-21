@@ -48,6 +48,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        // return $request;
         // $order = Order::with('discount')->find(1);
         // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');

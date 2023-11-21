@@ -80,8 +80,8 @@ const state = reactive({
 initFlowbite();
 
 const searchCustomer = () => {
-    router.get(route(`admin.orders.${props.status}`),
-        { customer: filter.customer },
+    router.get(route(`admin.orders.package.${props.status}`),
+        filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -90,8 +90,8 @@ const searchCustomer = () => {
 }
 
 const search = () => {
-    router.get(route(`admin.orders.${props.status}`),
-        { search: filter.search },
+    router.get(route(`admin.orders.package.${props.status}`),
+        filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -112,7 +112,7 @@ const changeDate = () => {
         from: filter.fromDate,
         to: filter.toDate
     };
-    router.get(route(`admin.orders.${props.status}`), query, {
+    router.get(route(`admin.orders.package.${props.status}`), query, {
         preserveScroll: true
     });
 }
@@ -268,7 +268,7 @@ const changeDate = () => {
                                     </div>
                                 </div>
 
-                                <div v-for="(order, index) in orders" :key="index">
+                                <div v-for="(order, index) in orders.data" :key="index">
                                     <OrderRow :order="order" :status="status" />
 
                                 </div>

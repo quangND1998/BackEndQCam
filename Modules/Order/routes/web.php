@@ -73,8 +73,8 @@ Route::middleware(['auth'])->group(
 
                 Route::prefix('package')->as('package.')->group(function () {
                     Route::get('all', [OrderPackageController::class, 'index'])->name('index');
-                    Route::get('listCancel', [OrderPackageController::class, 'listOrderCancel'])->name('listOrderCancel');
-                    Route::get('listComplete', [OrderPackageController::class, 'listOrderComplete'])->name('listOrderComplete');
+                    Route::get('decline', [OrderPackageController::class, 'listOrderCancel'])->name('decline');
+                    Route::get('complete', [OrderPackageController::class, 'listOrderComplete'])->name('complete');
 
                     Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
                     Route::get('pending/{id}', [OrderPackageController::class, 'OrderPending'])->name('pending');
