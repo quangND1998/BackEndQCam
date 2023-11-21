@@ -62,7 +62,7 @@ class OrderShippingNotification extends Notification
         return FcmMessage::create()
             ->setData([])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
-                ->setTitle('[Đơn hàng] Đơn hàng ' . $this->order->order_number . 'Đã thành công')
+                ->setTitle('[Đơn hàng] Đơn hàng ' . $this->order->order_number)
                 ->setBody('Đang được vận chuyển.'))
             ->setAndroid(
                 AndroidConfig::create()

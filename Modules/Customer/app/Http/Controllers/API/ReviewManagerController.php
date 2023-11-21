@@ -52,6 +52,7 @@ class ReviewManagerController extends Base2Controller
             'evaluate' => 'required',
             'data' => 'nullable',
             'description' => 'required|string',
+            'star' => 'required|number'
 
         ]);
         if ($validator->fails()) {

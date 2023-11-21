@@ -12,7 +12,7 @@ class NotificationController extends Controller
     public function index()
     {
         $user = Auth::user();
-
+      
         Notification::send($user, new TestNotification());
     }
 }

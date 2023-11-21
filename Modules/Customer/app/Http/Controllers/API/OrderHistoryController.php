@@ -19,7 +19,7 @@ class OrderHistoryController extends Base2Controller
     {
         $customer = Auth::user();
         if($customer){
-            $products = Order::with('orderItems.product','product_service.product')->where('type','retail')->where('user_id',$customer->id)->paginate(20);
+            $products = Order::with('reviews','orderItems.product','product_service.product')->where('type','retail')->where('user_id',$customer->id)->paginate(20);
             return  $products;
 
             return $this->sendResponse($products, 'san pham le');
@@ -57,7 +57,7 @@ class OrderHistoryController extends Base2Controller
     public function getHistoryGift($id){
         $customer = Auth::user();
         if($customer){
-            $orders = Order::with('orderItems.product','product_service.product')->where('type','gift_delivery')->where('product_service_owner_id',$id)->where('user_id',$customer->id)->get();
+            $orders = Order::with('orderItems.product','product_service.product','reviews')->where('type','gift_delivery')->where('product_service_owner_id',$id)->where('user_id',$customer->id)->get();
             $orderComplete = [];
             $orderPending = [];
             $index = 0;
@@ -79,6 +79,14 @@ class OrderHistoryController extends Base2Controller
             return response()->json($response, 200);
         }
         return response()->json('Chua login', 200);
+    }
+    public function orderDetail($id){
+         $order = Order::with('orderItems.product','product_service.product','reviews')->findOrFail($id);
+         $response = [
+                'success' => true,
+                'data' =>$order,
+            ];
+            return response()->json($response, 200);
     }
 
 }

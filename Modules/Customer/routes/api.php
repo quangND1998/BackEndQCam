@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('orderGift', [OrderHistoryController::class, 'getListGift']);
             Route::get('orderGift/{id}', [OrderHistoryController::class, 'getHistoryGift']);
             // getHistoryGift
+            Route::get('orderDetail/{id}', [OrderHistoryController::class, 'orderDetail']);
 
 
             Route::prefix('complaint')->as('customer.')->group(function () {

@@ -68,6 +68,7 @@ class TestNotification extends Notification
     }
     public function toFcm($notifiable): FcmMessage
     {
+       
         return FcmMessage::create()
             ->setData(['data1' => 'value', 'data2' => 'value2'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
