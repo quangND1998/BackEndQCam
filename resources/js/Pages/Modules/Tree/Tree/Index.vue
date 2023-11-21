@@ -150,7 +150,7 @@ const Delete = (id) => {
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                 tree.name }}</th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                                tree.addess }}</th>
+                                tree.address }}</th>
                             <th scope="row"
                                 class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-wrap">
                                 <img  :src="tree.thumb_image?.[0]?.original_url" class="w-20 h-20 " />

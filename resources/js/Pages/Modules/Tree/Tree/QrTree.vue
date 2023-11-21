@@ -34,7 +34,7 @@ const props = defineProps({
             <div v-if="tree?.product_service_owner">
                 <p class="text-sm font-medium text-[#8A8585]">Người nhận nuôi: <span class="text-[#FF0000]">Ông (Bà) {{ tree?.product_service_owner?.customer.name }}</span> </p>
                 <p class="text-sm font-medium text-[#8A8585]">Thời gian nhận nuôi:</p>
-                <p class="text-sm font-bold">từ ngày: {{ tree?.product_service_owner?.time_approve }} đến ngày {{ tree?.product_service_owner?.time_end }}</p>
+                <p class="text-sm font-bold">từ ngày: {{formatDateOnly(tree?.product_service_owner?.time_approve) }} đến ngày {{ formatDateOnly(tree?.product_service_owner?.time_end) }}</p>
             </div>
         </div>
     </div>
@@ -89,7 +89,7 @@ const props = defineProps({
             <p class="text-sm">Địa chỉ: {{ contact?.address }}</p>
             <p class="text-sm">Điện thoại: {{ contact?.hotline }} </p>
             <p class="text-sm">Địa chỉ trang trại: </p>
-            {{ contact.map }}
+           <div v-html="contact.map"></div>
         </div>
 
     </div>
@@ -128,4 +128,9 @@ const props = defineProps({
 .swiper-button-prev:after {
     content: '<';
 } */
+iframe{
+    width: 90vw !important;
+    height: 300px;
+    margin-top: 5px;
+}
 </style>
