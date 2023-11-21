@@ -68,6 +68,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('saveOrder', [OrderController::class, 'saveOrder'])->name('saveOrder');
 
             Route::get('lisOrder', [OrderController::class, 'getUserOrders'])->name('lisOrder');
+
+            Route::put('{id}/orderCompeleted', [OrderController::class, 'orderCompeleted'])->name('orderCompeleted');
         });
     });
 });
