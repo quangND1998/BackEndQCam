@@ -13,9 +13,9 @@ class NotificationController extends Controller
     public function index()
     {
         $notifications = ModelsNotification::get();
-        return $notifications;
+        // return $notifications;
 
-        // Notification::send($user, new TestNotification());
+        Notification::send(Auth::user(), new TestNotification());
     }
 
     public function getNotifications()

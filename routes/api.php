@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\FAQsController;
 use App\Http\Controllers\API\LoginController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductRetailController;
 use App\Http\Controllers\API\SettingAndInforController;
@@ -70,6 +71,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('lisOrder', [OrderController::class, 'getUserOrders'])->name('lisOrder');
 
             Route::put('{id}/orderCompeleted', [OrderController::class, 'orderCompeleted'])->name('orderCompeleted');
+        });
+
+
+        Route::prefix('notification')->as('notification.')->group(function () {
+
+            Route::get('all', [NotificationController::class, 'notifications'])->name('all');
+            
+            Route::get('unreadNotifications', [NotificationController::class, 'getUnreadNotifications'])->name('unreadNotifications');
+            Route::post('readNotifications', [NotificationController::class, 'readNotifications'])->name('readNotifications');
+            Route::delete('deleteNotifications', [NotificationController::class, 'deleteNotifications'])->name('deleteNotifications');
         });
     });
 });
