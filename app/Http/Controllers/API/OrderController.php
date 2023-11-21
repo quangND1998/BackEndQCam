@@ -96,7 +96,7 @@ class OrderController extends Base2Controller
         }
         $order->amount_unpaid = $order->last_price;
         $order->save();
-        Notification::send($order->customer, new OrderPendingNotification($order));
+        // Notification::send($order->customer, new OrderPendingNotification($order));
         return $order->load('orderItems.product.images');
     }
 
@@ -118,6 +118,19 @@ class OrderController extends Base2Controller
             return response()->json('Voucher không còn được sử dụng!', 404);
         } elseif ($voucher->expires_at < Carbon::now()) {
             return response()->json('Voucher đã hết hạn!', 404);
+        }
+    }
+
+    public function orderCompeleted($id)
+    {
+        $order = Order::find($id);
+        if ($order) {
+            $order->update([
+                'status' => 'completed'
+            ]);
+            return response()->json('successfully', 200);
+        } else {
+            return response()->json('Not found', 404);
         }
     }
 }

@@ -47,6 +47,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('review')->as('review.')->group(function () {
                 Route::post('saveApp', [ReviewManagerController::class, 'saveApp']);
                 Route::post('saveOrder/{id}', [ReviewManagerController::class, 'saveOrder']);
+                Route::get('getReviewOrder/{id}', [ReviewManagerController::class, 'getReviewOrder']);
+             
             });
         });
     });

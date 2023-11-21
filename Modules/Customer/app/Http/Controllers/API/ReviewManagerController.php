@@ -47,26 +47,52 @@ class ReviewManagerController extends Base2Controller
             return $this->sendError('Không tìm thấy đơn hàng.', 404);
         }
         $validator = Validator::make($request->all(), [
-            'type' => 'required',
-            'evaluate' => 'required',
-            'description' => 'required|string',
-            'star' => 'required|number'
 
+            'star' => 'required',
+            'evaluate' => 'nullable',
+            'data' => 'nullable',
+            'description' => 'nullable|string',
+
+        ], [
+            'star.required' => 'Vui lòng đánh giá'
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-        ReviewManagement::create([
-            'type' => $request->type,
-            'evaluate' => $request->evaluate,
-            'description' => $request->description,
-            'user_id' => Auth::user()->id,
-            'star' => $request->star,
-            'order_id' => $order->id,
-        ]);
+        if ($order->reviews) {
+            $order->reviews->update([
+                'evaluate' => $request->evaluate,
+                'description' => $request->description,
+                'star' => $request->star,
+                'data' => $request->data,
+            ]);
+        } else {
+            ReviewManagement::create([
+                'evaluate' => $request->evaluate,
+                'description' => $request->description,
+                'user_id' => Auth::user()->id,
+                'star' => $request->star,
+                'data' => $request->data,
+                'order_id' => $order->id,
+            ]);
+        }
+
         return $this->sendResponse('Cảm ơn bạn Góp ý cho chúng tôi!', 200);
     }
 
+
+    public function getReviewOrder($id)
+    {
+        $order = Order::with('reviews')->find($id);
+
+        if ($order == null) {
+            return $this->sendError('Không tìm thấy đơn hàng.', 404);
+        }
+        return response()->json($order, 200);
+    }
+
+
+   
 
     public function get()
     {

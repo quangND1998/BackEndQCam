@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification as ModelsNotification;
 use App\Notifications\TestNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +12,13 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-      
-        Notification::send($user, new TestNotification());
+        $notifications = ModelsNotification::get();
+        return $notifications;
+
+        // Notification::send($user, new TestNotification());
+    }
+
+    public function getNotifications()
+    {
     }
 }
