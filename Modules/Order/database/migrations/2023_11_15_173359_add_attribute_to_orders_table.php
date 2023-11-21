@@ -15,7 +15,7 @@ return new class extends Migration
             $table->integer('vat')->nullable();
             $table->integer("discount_deal")->nullable();
             $table->string("type")->nullable();
-            $table->string("amount_paid")->nullable();
+            // $table->string("amount_paid")->nullable();
             // $table->unsignedBigInteger('product_service_owner_id')->nullable();
         });
     }

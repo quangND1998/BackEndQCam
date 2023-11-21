@@ -11,6 +11,7 @@ use Modules\Tree\app\Http\Requests\Tree\StoreRequest;
 use Modules\Tree\app\Models\Land;
 use Modules\Tree\app\Models\Tree;
 use Illuminate\Support\Str;
+use Modules\Landingpage\app\Models\Contact;
 
 class TreeController extends Controller
 {
@@ -113,5 +114,14 @@ class TreeController extends Controller
         $tree->clearMediaCollection('tree_thumb');
         $tree->delete();
         return back()->with('success', 'Delete successfully');
+    }
+    public function treeDetail(Request $request,$qrcode){
+        $tree = Tree::with('land','thumb_image','images','product_service_owner.customer')->where('qr_code',$qrcode)->first();
+        $contact = Contact::find(1);
+        if($tree){
+            // return $tree;
+            return Inertia::render('Modules/Tree/Tree/QrTree', compact('contact','tree'));
+        }
+
     }
 }

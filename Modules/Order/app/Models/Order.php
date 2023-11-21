@@ -83,7 +83,7 @@ class Order extends Model
 
     public function reviews()
     {
-        return $this->hasMany(ReviewManagement::class, 'order_id');
+        return $this->hasOne(ReviewManagement::class, 'order_id');
     }
     public function product_service()
     {
