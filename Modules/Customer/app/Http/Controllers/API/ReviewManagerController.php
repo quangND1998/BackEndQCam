@@ -49,11 +49,12 @@ class ReviewManagerController extends Base2Controller
         $validator = Validator::make($request->all(), [
 
             'star' => 'required',
-            'evaluate' => 'required',
+            'evaluate' => 'nullable',
             'data' => 'nullable',
-            'description' => 'required|string',
-            'star' => 'required|number'
+            'description' => 'nullable|string',
 
+        ], [
+            'star.required' => 'Vui lòng đánh giá'
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
@@ -63,6 +64,7 @@ class ReviewManagerController extends Base2Controller
             'description' => $request->description,
             'user_id' => Auth::user()->id,
             'star' => $request->star,
+            'data' => $request->data,
             'order_id' => $order->id,
         ]);
         return $this->sendResponse('Cảm ơn bạn Góp ý cho chúng tôi!', 200);

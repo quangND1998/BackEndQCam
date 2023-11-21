@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
+use Modules\Customer\app\Models\ReviewManagement;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
