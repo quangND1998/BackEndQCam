@@ -20,6 +20,7 @@ use Modules\Order\app\Http\Controllers\OrderPackageController;
 
 Route::group([], function () {
     Route::resource('order', OrderController::class)->names('order');
+    Route::get('order/qrcode/{qr}', [OrderController::class, 'scanOrderDetail'])->name('qrcode_order');
 });
 
 Route::middleware(['auth'])->group(
@@ -68,7 +69,7 @@ Route::middleware(['auth'])->group(
                 Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
                 Route::post('saveOrder/{user}', [OrderController::class, 'saveOrder'])->name('saveOrder');
                 Route::post('saveOrderGift/{user}', [OrderController::class, 'saveOrderGift'])->name('saveOrderGift');
-                
+
 
                 Route::prefix('package')->as('package.')->group(function () {
                     Route::get('all', [OrderPackageController::class, 'index'])->name('index');
@@ -91,7 +92,7 @@ Route::middleware(['auth'])->group(
                 Route::post('/removeCart', [OrderController::class, 'removeCart'])->name('removeCart');
                 Route::post('/deleteCarts', [OrderController::class, 'deleteMultipleItem'])->name('deleteCarts');
                 Route::get('/fetchCart', [OrderController::class, 'fetchCart'])->name('fetchCart');
-                
+
                 // Route::put('/update/{shipping}', [PaymentMethodsController::class, 'update'])->name('update');
                 // Route::delete('/delete/{shipping}', [PaymentMethodsController::class, 'destroy'])->name('destroy');
             });

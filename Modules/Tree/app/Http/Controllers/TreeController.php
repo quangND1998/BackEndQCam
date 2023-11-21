@@ -122,6 +122,6 @@ class TreeController extends Controller
             // return $tree;
             return Inertia::render('Modules/Tree/Tree/QrTree', compact('contact','tree'));
         }
-
+        return response()->json('Không tìm thấy cây nào', 404);
     }
 }

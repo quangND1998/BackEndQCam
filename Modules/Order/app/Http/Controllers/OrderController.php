@@ -22,7 +22,7 @@ use Modules\Order\app\Http\Requests\OrderGiftPostRequest;
 use Modules\Order\app\Http\Requests\SaveOrderRequest;
 use Modules\Order\app\Models\OrderItem;
 use Illuminate\Support\Facades\Notification;
-
+use Modules\Landingpage\app\Models\Contact;
 class OrderController extends Controller
 {
     protected $allowStoreCustomer = [
@@ -559,5 +559,15 @@ class OrderController extends Controller
         Cart::clear();
         Cart::clearCartConditions();
         return redirect()->route('admin.orders.pending')->with('success', 'Đã tạo đơn quà');
+    }
+
+    public function scanOrderDetail($id){
+        $order = Order::with('orderItems.product','product_service.product','product_service.trees','reviews')->where('order_number',$id)->first();
+        $contact = Contact::find(1);
+        if($order){
+        //   return $order;
+            return Inertia::render('Modules/Order/QrOrder', compact('contact','order'));
+        }
+        return response()->json('Không tìm thấy đơn hàng', 404);
     }
 }
