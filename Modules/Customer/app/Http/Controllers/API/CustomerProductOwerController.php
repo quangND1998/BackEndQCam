@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Illuminate\Support\Facades\Auth;
 use Modules\Customer\app\Models\HistoryExtend;
+use Modules\Order\app\Models\Order;
 use Modules\Tree\app\Models\ProductService;
 class CustomerProductOwerController extends Base2Controller
 {
@@ -78,4 +79,19 @@ class CustomerProductOwerController extends Base2Controller
         ];
         return response()->json($response, 200);
    }
+   public function checkOrder($id){
+    $customer = Auth::user();
+    $product_owner = Order::where('user_id',$customer->id)->find($id);
+    if($product_owner){
+       $response = [
+           'success' => true
+       ];
+       return response()->json($response, 200);
+    }
+    $response = [
+           'success' => false
+       ];
+       return response()->json($response, 200);
+  }
+
 }
