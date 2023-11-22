@@ -23,7 +23,7 @@ class CustomerProductOwerController extends Base2Controller
             $customer = Auth::user();
             if($customer){
                 // $product_owner = $customer->product_service_owners;
-                $product_owner = ProductServiceOwner::with('product.images')->where('user_id',$customer->id)->get();
+                $product_owner = ProductServiceOwner::with('product.images','history_gift')->where('user_id',$customer->id)->get();
                 $product_not_owner = ProductService::with('images')->whereDoesntHave('productServiceOwner')->get();
 
                 $response = [
