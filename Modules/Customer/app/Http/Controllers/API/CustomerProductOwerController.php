@@ -81,10 +81,11 @@ class CustomerProductOwerController extends Base2Controller
    }
    public function checkOrder($id){
     $customer = Auth::user();
-    $product_owner = Order::where('user_id',$customer->id)->find($id);
-    if($product_owner){
+    $order = Order::where('user_id',$customer->id)->find($id);
+    if($order){
        $response = [
-           'success' => true
+           'success' => true,
+           'data' =>$order
        ];
        return response()->json($response, 200);
     }
