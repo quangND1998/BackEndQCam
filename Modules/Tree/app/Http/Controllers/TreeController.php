@@ -116,7 +116,7 @@ class TreeController extends Controller
         return back()->with('success', 'Delete successfully');
     }
     public function treeDetail(Request $request,$qrcode){
-        $tree = Tree::with('land','thumb_image','images','product_service_owner.customer')->where('qr_code',$qrcode)->first();
+        $tree = Tree::with('land','thumb_image','images','product_service_owner.customer')->find($qrcode);
         $contact = Contact::find(1);
         if($tree){
             // return $tree;

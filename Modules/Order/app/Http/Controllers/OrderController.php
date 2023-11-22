@@ -563,7 +563,7 @@ class OrderController extends Controller
     }
 
     public function scanOrderDetail($id){
-        $order = Order::with('orderItems.product','product_service.product','product_service.trees','reviews')->where('order_number',$id)->first();
+        $order = Order::with('orderItems.product','product_service.product','product_service.trees','reviews')->find($qrcode);
         $contact = Contact::find(1);
         if($order){
         //   return $order;
