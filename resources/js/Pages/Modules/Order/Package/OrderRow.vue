@@ -24,23 +24,23 @@ const props = defineProps({
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5 5 1 1 5" />
-                    </svg>{{ order.order_number }}</a>
+                    </svg>{{ order?.order_number }}</a>
             </div>
             <div>
-                <p>{{ order.customer.name }}</p>
+                <p>{{ order?.customer?.name }}</p>
             </div>
             <div>
-                <p>{{ order.customer.phone_number }}</p>
+                <p>{{ order?.customer?.phone_number }}</p>
             </div>
             <div>
-                <p>{{ formatTimeDayMonthyear(order.created_at) }}</p>
+                <p>{{ formatTimeDayMonthyear(order?.created_at) }}</p>
             </div>
             <div>
-                <p>{{ order.status }}</p>
+                <p>{{ order?.status }}</p>
             </div>
             <div>
-                <Link v-if="order.payment_method == 'cash' || order.payment_method == 'banking'"
-                    :href="route('admin.orders.package.pending', order.id)"
+                <Link v-if="order?.payment_method == 'cash' || order?.payment_method == 'banking'"
+                    :href="route('admin.orders.package.pending', order?.id)"
                     class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
                 Chi tiết thanh toán
                 </Link>

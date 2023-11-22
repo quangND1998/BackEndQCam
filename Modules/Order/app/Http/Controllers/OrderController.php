@@ -50,6 +50,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        // return $request;
         // $order = Order::with('discount')->find(1);
         // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
@@ -588,9 +589,8 @@ class OrderController extends Controller
         return redirect()->route('admin.orders.pending')->with('success', 'Đã tạo đơn quà');
     }
 
-    public function scanOrderDetail($id)
-    {
-        $order = Order::with('orderItems.product', 'product_service.product', 'product_service.trees', 'reviews')->where('order_number', $id)->first();
+    public function scanOrderDetail($id){
+        $order = Order::with('orderItems.product','product_service.product','product_service.trees','reviews')->find($id);
         $contact = Contact::find(1);
         if ($order) {
             //   return $order;
