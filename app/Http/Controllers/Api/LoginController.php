@@ -27,7 +27,8 @@ class LoginController extends Base2Controller
             $user = Auth::user();
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
             $success['user'] =  $user;
-
+            $success['user'] =  $user;
+            $success['user']['can'] = $user->getRolesArray();
             return $this->sendResponse($success, 'User login successfully.');
         } else {
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
@@ -103,6 +104,7 @@ class LoginController extends Base2Controller
             Auth::login($user);
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
             $success['user'] =  $user;
+            $success['user']['can'] = $user->getRolesArray();
             return $this->sendResponse($success, 'User login successfully.');
         }
 

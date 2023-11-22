@@ -6,6 +6,7 @@ use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductRetailController;
 use App\Http\Controllers\API\SettingAndInforController;
+use App\Http\Controllers\API\ShipperController;
 use App\Http\Controllers\API\VoucherController;
 use Illuminate\Http\Request;
 use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
@@ -77,10 +78,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('notification')->as('notification.')->group(function () {
 
             Route::get('all', [NotificationController::class, 'notifications'])->name('all');
-            
+
             Route::get('unreadNotifications', [NotificationController::class, 'getUnreadNotifications'])->name('unreadNotifications');
             Route::post('readNotifications', [NotificationController::class, 'readNotifications'])->name('readNotifications');
             Route::delete('deleteNotifications', [NotificationController::class, 'deleteNotifications'])->name('deleteNotifications');
+        });
+
+        Route::prefix('shipper')->as('shipper.')->group(function () {
+
+            Route::get('ordersRetailShipper', [ShipperController::class, 'ordersRetailShipper'])->name('ordersRetailShipper');
         });
     });
 });

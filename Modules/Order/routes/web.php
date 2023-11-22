@@ -69,7 +69,7 @@ Route::middleware(['auth'])->group(
                 Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
                 Route::post('saveOrder/{user}', [OrderController::class, 'saveOrder'])->name('saveOrder');
                 Route::post('saveOrderGift/{user}', [OrderController::class, 'saveOrderGift'])->name('saveOrderGift');
-
+                Route::post('/{order}/orderChangeShipping', [OrderController::class, 'orderChangeShipping'])->name('orderChangeShipping');
 
                 Route::prefix('package')->as('package.')->group(function () {
                     Route::get('all', [OrderPackageController::class, 'index'])->name('index');

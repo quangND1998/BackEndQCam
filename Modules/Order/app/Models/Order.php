@@ -25,6 +25,7 @@ class Order extends Model
         'amount_unpaid',
         'type',
         'product_service_owner_id',
+        'shipper_id',
         'wards',  "created_at", "updated_at"
     ];
 
@@ -87,6 +88,19 @@ class Order extends Model
     }
     public function product_service()
     {
-        return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
+        return $this->belongsTo(ProductServiceOwner::class, 'product_service_owner_id');
+    }
+
+    public function shipper()
+    {
+        return $this->belongsTo(User::class, 'shipper_id');
+    }
+
+    public function scopeTime($query, $filters)
+    {
+        if (isset($filters['date'])) {
+
+            $query->whereBetween('created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+        }
     }
 }
