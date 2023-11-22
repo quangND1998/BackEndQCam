@@ -64,4 +64,18 @@ class CustomerProductOwerController extends Base2Controller
         return $this->sendResponse($response, 'Get HistoryExtend successfully');
     }
    }
+   public function checkProduct($id){
+     $customer = Auth::user();
+     $product_owner = ProductServiceOwner::where('user_id',$customer->id)->find($id);
+     if($product_owner){
+        $response = [
+            'success' => true
+        ];
+        return response()->json($response, 200);
+     }
+     $response = [
+            'success' => false
+        ];
+        return response()->json($response, 200);
+   }
 }

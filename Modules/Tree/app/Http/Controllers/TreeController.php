@@ -124,4 +124,5 @@ class TreeController extends Controller
         }
         return response()->json('Không tìm thấy cây nào', 404);
     }
+    
 }

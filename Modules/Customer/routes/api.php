@@ -27,6 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('v1')->name('api.')->group(function () {
         Route::prefix('customer')->as('customer.')->group(function () {
             Route::get('product_service', [CustomerProductOwerController::class, 'getProductService']);
+            Route::post('checkProduct', [CustomerProductOwerController::class, 'checkProduct']);
             Route::get('productWithID/{id}', [CustomerProductOwerController::class, 'getOneProductActivity']);
             Route::get('getDetailExtendHistory', [CustomerProductOwerController::class, 'getDetailExtendHistory']);
 
@@ -48,7 +49,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::post('saveApp', [ReviewManagerController::class, 'saveApp']);
                 Route::post('saveOrder/{id}', [ReviewManagerController::class, 'saveOrder']);
                 Route::get('getReviewOrder/{id}', [ReviewManagerController::class, 'getReviewOrder']);
-             
+
             });
         });
     });
