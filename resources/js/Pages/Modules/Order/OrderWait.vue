@@ -222,7 +222,7 @@ const changeDate = () => {
                                 <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
-                                    <option value="reail">Đơn lẻ</option>
+                                    <option value="retail">Đơn lẻ</option>
                                     <option value="gift_delivery">Giao quà</option>
 
                                 </select>

@@ -4,6 +4,8 @@ import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
+import Dropdown from 'primevue/dropdown';
+import BaseIcon from '@/Components/BaseIcon.vue'
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -43,7 +45,7 @@ const search = ref(null)
 // const user = ref(null);
 const flash = ref(null);
 const provinces = ref(null)
-
+const images = ref([])
 const form = useForm({
     user_id: null,
     name: null,
@@ -60,6 +62,7 @@ const form = useForm({
     shipping_fee: 0,
     product_service_owner_id: null,
     amount_paid: 0,
+    images: []
 
 
 })
@@ -133,7 +136,7 @@ const onChangeUser = (event) => {
     form.user_id = event.target.value
 }
 const onChangeDistrict = (event) => {
-    // this.form.wards = null;
+    form.wards = null;
 }
 
 const foundUser = (data) => {
@@ -190,18 +193,18 @@ const saveOrder = () => {
     }
 }
 
-const onChangeType =(event)=>{
+const onChangeType = (event) => {
     console.log(event.target.value);
     form.get(route('admin.cart.fetchCart'), {
-        preserveState:true,
-        preserveScroll:false
+        preserveState: true,
+        preserveScroll: false
 
 
-    },{only:['cart', 'total_price', 'sub_total']} );
+    }, { only: ['cart', 'total_price', 'sub_total'] });
 }
 
-const saveGift= () => {
-    if (user.value == null ) {
+const saveGift = () => {
+    if (user.value == null) {
         swal.fire({
             title: "Lỗi?",
             text: "Chưa có thông tin khách hàng!",
@@ -215,7 +218,7 @@ const saveGift= () => {
             }
         });
     }
-    else if(form.type =='gift_delivery' && form.product_service_owner_id ==null)  {
+    else if (form.type == 'gift_delivery' && form.product_service_owner_id == null) {
         swal.fire({
             title: "Lỗi?",
             text: "Chưa chọn dịch vụ sản phẩm để giao quà!",
@@ -229,7 +232,7 @@ const saveGift= () => {
             }
         });
     }
-    else{
+    else {
         form.post(route('admin.orders.saveOrderGift', user.value.id), {
             onError: () => {
 
@@ -241,6 +244,26 @@ const saveGift= () => {
             }
         });
     }
+}
+
+const onFileChange = (e) => {
+    const files = e.target.files;
+
+    if (files.length > 0) {
+        for (var i = 0; i < files.length; i++) {
+            form.images.push(files[i])
+            images.value.push({
+                name: files[i].name,
+                image: URL.createObjectURL(files[i])
+            });
+        }
+    }
+    console.log(form.images)
+}
+
+const DeleteImage = (index) => {
+    form.images.splice(index, 1);
+    images.value.splice(index, 1);
 }
 const date = ref(new Date());
 
@@ -298,17 +321,6 @@ const date = ref(new Date());
                                             Khách
                                             Hàng
                                             *</label>
-                                        <!-- <input type="text" id="name"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" required> -->
-                                        <!-- <select id="name" v-model="form.user_id" @change="onChangeUser($event)"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option :value="null">Chọn Khách hàng</option>
-                                            <option v-for="(customer, index) in customers" :value="customer.id"
-                                                :key="index">{{
-                                                    customer.name }}</option>
-                                        </select> -->
-
                                         <MazSelect v-model="form.user_id" @change="onChangeUser($event)"
                                             label="Chọn Khách hàng" search option-value-key="id" option-label-key="name"
                                             option-input-value-key="name" :options="customers" />
@@ -342,6 +354,8 @@ const date = ref(new Date());
                                     </div>
                                 </div>
                                 <div class="min-[320px]:ml-0 md:ml-3">
+
+
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Địa chỉ *</label>
@@ -349,15 +363,28 @@ const date = ref(new Date());
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                     </div>
+
                                     <div class="my-3">
-                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                            Tỉnh/Thành Phố *</label>
-                                        <select id="city" v-model="form.city" @change="onChangeCity($event)"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option :value="null">Chọn tỉnh thành</option>
-                                            <option v-for="(city, index) in provinces" :value="city.Name" :key="index">{{
-                                                city.Name }}</option>
-                                        </select>
+                                        <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name"
+                                            @change="onChangeCity($event)" optionValue="Name" placeholder="Chọn tỉnh thành"
+                                            class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm ">
+                                            <template #value="slotProps">
+
+                                                <div v-if="slotProps.value" class="flex align-items-center">
+
+                                                    <div>{{ slotProps.value }}</div>
+                                                </div>
+                                                <span v-else>
+                                                    {{ slotProps.placeholder }}
+                                                </span>
+                                            </template>
+                                            <template #option="slotProps">
+                                                <div class="flex align-items-center">
+
+                                                    <div>{{ slotProps.option.Name }}</div>
+                                                </div>
+                                            </template>
+                                        </Dropdown>
                                         <InputError class="mt-2" :message="form.errors.city" />
                                     </div>
                                     <div class="my-3 min-[320px]:block md:flex">
@@ -365,35 +392,92 @@ const date = ref(new Date());
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
-                                            <select id="city" v-model="form.district" @change="onChangeDistrict($event)"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <option :value="null">Chọn quận huyện</option>
-                                                <option v-for="(district, index) in districts.Districts"
-                                                    :value="district.Name" :key="index">
-                                                    {{
-                                                        district.Name }}
-                                                </option>
-                                            </select>
+
+                                            <Dropdown v-model="form.district" :options="districts.Districts" filter
+                                                @change="onChangeDistrict($event)" optionLabel="Name" optionValue="Name"
+                                                placeholder="Chọn Quận/huyện"
+                                                class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm ">
+                                                <template #value="slotProps">
+
+                                                    <div v-if="slotProps.value" class="flex align-items-center">
+
+                                                        <div>{{ slotProps.value }}</div>
+                                                    </div>
+                                                    <span v-else>
+                                                        {{ slotProps.placeholder }}
+                                                    </span>
+                                                </template>
+                                                <template #option="slotProps">
+                                                    <div class="flex align-items-center">
+
+                                                        <div>{{ slotProps.option.Name }}</div>
+                                                    </div>
+                                                </template>
+                                            </Dropdown>
                                             <InputError class="mt-2" :message="form.errors.district" />
                                         </div>
                                         <div class="min-[320px]:w-full md:w-1/2 ml-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Phường xã*</label>
-                                            <select v-model="form.wards" id="wards"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <option :value="null">Chọn phường xã</option>
-                                                <option v-for="(ward, index) in wards.Wards" :value="ward.Name"
-                                                    :key="index">{{ ward.Name }}</option>
-                                            </select>
+
+
+                                            <Dropdown v-model="form.wards" :options="wards.Wards" filter optionLabel="Name"
+                                                optionValue="Name" placeholder="Chọn Phường xã"
+                                                class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm ">
+                                                <template #value="slotProps">
+
+                                                    <div v-if="slotProps.value" class="flex align-items-center">
+
+                                                        <div>{{ slotProps.value }}</div>
+                                                    </div>
+                                                    <span v-else>
+                                                        {{ slotProps.placeholder }}
+                                                    </span>
+                                                </template>
+                                                <template #option="slotProps">
+                                                    <div class="flex align-items-center">
+
+                                                        <div>{{ slotProps.option.Name }}</div>
+                                                    </div>
+                                                </template>
+                                            </Dropdown>
                                             <InputError class="mt-2" :message="form.errors.wards" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="my-3">
 
-                    
+                            <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
+                            <div class="flex mt-2">
+                                <div class="mr-2 inline-block" v-for="(img, index) in images " :key="index">
+                                    <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
+                                        @click="DeleteImage(index)" size="16">
+                                    </BaseIcon>
+                                    <img :src="img.image" class="w-20 h-20 object-cover rounded-lg" alt="">
+                                </div>
+
+                                <label for="uploadFile"
+                                    class="mr-2 cursor-pointer border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg w-20 h-20">
+                                    <svg width="10" height="11" viewBox="0 0 10 11" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M3.88228 10.1406V0.311079H6.11239V10.1406H3.88228ZM0.0825639 6.34091V4.1108H9.91211V6.34091H0.0825639Z"
+                                            fill="#D9D9D9" />
+                                    </svg>
+                                </label>
+                                <input id="uploadFile" @change="onFileChange" multiple type="file" class="hidden"
+                                    accept="image/*">
+                            </div>
+                            <InputError class="mt-2" :message="form.errors.images" />
+                            <div v-for="(error, index) in images" :key="index">
+
+                                <InputError class="mt-2" :message="form.errors[`images.${index}`]" />
+                            </div>
+                        </div>
+
 
                     </div>
                     <div class="min-[320px]:mx-0 md:mx-5">
@@ -415,7 +499,7 @@ const date = ref(new Date());
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option v-for="(service, index) in user.product_service_owners" :key="index"
                                     :value="service.id">{{
-                                        service.product.name }} ({{ service.trees.length >0 ?service.trees[0].name :null }})
+                                        service.product.name }} ({{ service.trees.length > 0 ? service.trees[0].name : null }})
                                 </option>
 
 
@@ -462,8 +546,9 @@ const date = ref(new Date());
                     </div>
                 </div>
             </div>
-           
-            <ProductGiff @saveGift="saveGift" v-if="form.type == 'gift_delivery'" :products="product_retails" :user="user"  :cart="cart"/>
+
+            <ProductGiff @saveGift="saveGift" v-if="form.type == 'gift_delivery'" :products="product_retails" :user="user"
+                :cart="cart" />
 
             <NewOrderProduct v-if="form.type == 'retail'" :products="product_retails" :user="user" :cart="cart"
                 :total_price="total_price" :vat="form.vat" :discount_deal="form.discount_deal"

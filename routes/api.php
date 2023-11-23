@@ -87,6 +87,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('shipper')->as('shipper.')->group(function () {
 
             Route::get('ordersRetailShipper', [ShipperController::class, 'ordersRetailShipper'])->name('ordersRetailShipper');
+            Route::get('ordersGiftShipper', [ShipperController::class, 'ordersGiftShipper'])->name('ordersGiftShipper');
+
+            Route::get('{id}/orderDetail', [ShipperController::class, 'orderDetail'])->name('orderDetail');
         });
     });
 });
