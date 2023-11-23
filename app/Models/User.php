@@ -125,4 +125,9 @@ class User extends Authenticatable implements HasMedia
     }
 
 
+    public function shipper_orders()
+    {
+
+        return $this->hasMany(Order::class, 'shipper_id');
+    }
 }

@@ -68,7 +68,7 @@ class OrderRepository implements OrderContract
 
     public function getOrder($request, $status)
     {
-        return Order::with(['customer', 'orderItems.product', 'discount'])->whereHas(
+        return Order::with(['customer', 'orderItems.product', 'discount', 'shipper'])->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');

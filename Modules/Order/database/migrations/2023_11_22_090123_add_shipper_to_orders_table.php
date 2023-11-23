@@ -12,11 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->integer('vat')->nullable();
-            $table->integer("discount_deal")->nullable();
-            $table->string("type")->nullable();
-            // $table->string("amount_paid")->nullable();
-            // $table->unsignedBigInteger('product_service_owner_id')->nullable();
+            $table->unsignedBigInteger('shipper_id')->nullable();
         });
     }
 
@@ -26,9 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('vat');
-            $table->dropColumn('discount_deal');
-            $table->dropColumn('type');
+            $table->dropColumn('shipper_id');
         });
     }
 };

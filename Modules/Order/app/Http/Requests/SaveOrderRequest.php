@@ -23,6 +23,8 @@ class SaveOrderRequest extends FormRequest
             'type' => 'required',
             'shipping_fee' => 'nullable|nullable|gt:-1',
             'amount_paid' => 'nullable|nullable|gt:-1',
+            'images' => 'required',
+            'images.*' => 'mimes:jpeg,png,jpg|max:2048',
         ];
     }
 
@@ -33,5 +35,13 @@ class SaveOrderRequest extends FormRequest
     {
         return true;
         // return auth()->user()->can('users.create');
+    }
+
+    public function messages()
+    {
+        return [
+            'images.required' => 'Ảnh chứng từ liên quan phải có',
+            "images.*.mimes" => 'Phải là định dạng ảnh',
+        ];
     }
 }

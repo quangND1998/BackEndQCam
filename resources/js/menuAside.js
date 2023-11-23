@@ -47,7 +47,7 @@ export default [{
 // },
 {
     label: 'Phân quyền',
-    icon: mdiAccountKey ,
+    icon: mdiAccountKey,
     permissions: ['view-user'],
     route_list: ['permissions.index', 'roles.index', 'users.index'],
     menu: [{
@@ -76,10 +76,9 @@ export default [{
 {
     label: 'Hoạt động',
     icon: mdiFileTreeOutline,
-    permissions: ['super-admin','order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
-    route_list: ['admin.orders.package.index','admin.orders.index','admin.orders.pending','visit.pending','visit.confirm','visit.completed'],
-    menu: [
-        {
+    permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+    route_list: ['admin.orders.package.index', 'admin.orders.index', 'admin.orders.pending', 'visit.pending', 'visit.confirm', 'visit.completed'],
+    menu: [{
         route: 'admin.orders.index',
         label: 'Đơn hàng',
 
@@ -97,7 +96,7 @@ export default [{
         label: 'Đặt lịch tham quan',
 
         permissions: ['super-admin'],
-        route_list: ['visit.pending','visit.confirm','visit.completed']
+        route_list: ['visit.pending', 'visit.confirm', 'visit.completed']
     },
     {
         route: '',
@@ -119,7 +118,7 @@ export default [{
     label: 'Sản phẩm',
     icon: mdiSale,
     permissions: ['view-user'],
-    route_list: ['admin.land.index', 'admin.product-retail.index', 'admin.product-service.index','admin.land.tree.index','admin.voucher.index'],
+    route_list: ['admin.land.index', 'admin.product-retail.index', 'admin.product-service.index', 'admin.land.tree.index', 'admin.voucher.index'],
     menu: [{
         route: 'admin.land.index',
         label: 'Cây',
@@ -153,7 +152,7 @@ export default [{
     label: 'Quản lý người dùng',
     icon: mdiFileTreeOutline,
     permissions: ['view-user'],
-    route_list: ['customer.index'],
+    route_list: ['customer.index', 'shippers.index'],
     menu: [{
         route: 'customer.index',
         label: 'Customer',
@@ -161,7 +160,7 @@ export default [{
         route_list: null
     },
     {
-        route: 'admin.land.index',
+        route: 'shippers.index',
         label: 'Shipper',
         permissions: ['super-admin'],
         route_list: null
@@ -178,7 +177,7 @@ export default [{
     label: 'Cài đặt',
     icon: mdiCogOutline,
     permissions: ['view-user'],
-    route_list: ['news.index','admin.terms.index','admin.contact.index','admin.FAQs.index'],
+    route_list: ['news.index', 'admin.terms.index', 'admin.contact.index', 'admin.FAQs.index'],
     menu: [{
         route: '',
         label: 'Thông báo',

@@ -25,6 +25,7 @@ class Order extends Model
         'amount_unpaid',
         'type',
         'product_service_owner_id',
+        'shipper_id',
         'wards',  "created_at", "updated_at"
     ];
 
@@ -87,6 +88,33 @@ class Order extends Model
     }
     public function product_service()
     {
-        return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
+        return $this->belongsTo(ProductServiceOwner::class, 'product_service_owner_id');
+    }
+
+    public function shipper()
+    {
+        return $this->belongsTo(User::class, 'shipper_id');
+    }
+
+    public function scopeTime($query, $filters)
+    {
+        if (isset($filters['date'])) {
+            if ($filters['date'] == 'day') {
+                $query->whereBetween('created_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
+            } elseif ($filters['date'] == 'week') {
+                $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            } elseif ($filters['date'] == 'month') {
+                $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            } else {
+                $query->whereBetween('created_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
+            }
+        } else {
+            $query->whereBetween('created_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
+        }
+    }
+
+    public function order_related_images()
+    {
+        return $this->media()->where('collection_name', 'order_related_images');
     }
 }

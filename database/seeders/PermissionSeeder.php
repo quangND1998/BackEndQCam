@@ -60,5 +60,8 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'order-completed']);
         Permission::create(['name' => 'order-refund']);
         Permission::create(['name' => 'order-decline']);
+
+
+        Permission::create(['name' => 'shipper']);
     }
 }

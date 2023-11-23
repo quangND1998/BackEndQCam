@@ -10,6 +10,7 @@ import CardBoxModal from "@/Components/CardBoxModal.vue";
 import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
 import ModalDecline from "./ModalDecline.vue";
 import ModelRefund from "./ModelRefund.vue";
+import ModalShipping from "./ModalShipping.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -43,7 +44,8 @@ const props = defineProps({
     status: String,
     from: String,
     to: String,
-    statusGroup: Array
+    statusGroup: Array,
+    shippers: Array
 });
 const filter = reactive({
     customer: null,
@@ -53,7 +55,7 @@ const filter = reactive({
     search: null,
     payment_status: null,
     payment_method: null,
-    type:null
+    type: null
 
 })
 const customer = ref()
@@ -163,6 +165,7 @@ const changeDate = () => {
             </div>
             <div>
                 <OrderBar :statusGroup="statusGroup"></OrderBar>
+                <ModalShipping :shippers="shippers" />
                 <ModalDecline></ModalDecline>
                 <ModelRefund></ModelRefund>
                 <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4">
@@ -219,9 +222,9 @@ const changeDate = () => {
                                 <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
-                                    <option value="reail">Đơn lẻ</option>
+                                    <option value="retail">Đơn lẻ</option>
                                     <option value="gift_delivery">Giao quà</option>
-                                   
+
                                 </select>
                             </div>
                         </div>

@@ -19,8 +19,12 @@
             </select>
             <button v-if="status == 'pending'" @click="orderChangePacking(order)"
                 class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Đóng gói hàng</button>
-            <button v-if="status == 'packing'" @click="orderChangeShipping(order)"
-                class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Bắt đầu giao hàng</button>
+            <button v-if="status == 'packing'" data-toggle="modal" data-target="#exampleModalShipping"
+                @click="orderChangeShipping(order)" class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Bắt đầu
+                giao hàng</button>
+            <button v-if="status == 'shipping'" data-toggle="modal" data-target="#exampleModalShipping"
+                @click="orderChangeShipping(order)" class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Thay đổi
+                người vận chuyển</button>
             <button v-if="status == 'shipping'" @click="orderChangeCompleted(order)"
                 class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Hoàn thành đơn hàng</button>
         </div>
@@ -73,7 +77,7 @@ const orderChangePending = () => {
         });
 }
 const orderChangePayment = (event) => {
-
+    emitter.emit('OpenModalDecline', props.order)
     let query = {
         payment_status: event.target.value,
         id: props.order.id
@@ -105,34 +109,8 @@ const orderChangePayment = (event) => {
         });
 }
 const orderChangeShipping = () => {
-    let query = {
-        status: "shipping"
-    };
-    swal
-        .fire({
-            title: "Bạn có muốn?",
-            text: `Chuyển trạng thái đơn hàng ${props.order.order_number} sang bắt đầu vận chuyển!`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Có",
-        })
-        .then((result) => {
-            if (result.isConfirmed) {
+    emitter.emit('openModalShipping', props.order)
 
-
-                router.post(route("admin.orders.orderChangeStatus", props.order.id), query,
-                    {
-                        preserveState: true,
-                        preserveScroll: true
-                    }, {
-                    onSuccess: () => {
-                        swal.fire("Thành Công!", "Đã thêm các sản phẩm vào mã giảm giá.", "success");
-                    },
-                });
-            }
-        });
 }
 const orderChangeCompleted = () => {
     let query = {

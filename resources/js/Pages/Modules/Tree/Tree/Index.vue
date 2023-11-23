@@ -2,7 +2,7 @@
 import { computed, ref, inject } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
@@ -96,6 +96,16 @@ const Delete = (id) => {
             }
         });
 };
+
+const searchTree = () => {
+    router.get(route(`admin.land.tree.index`, props.land.id),
+        { search: searchVal.value },
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -114,7 +124,8 @@ const Delete = (id) => {
                 <div class="left">
                     <div class="flex content-center items-center">
                         <BaseButton color="default" :icon="mdiFilter" small class="p-2 m-2 bg-white" :iconSize="20" />
-                        <SearchInput v-model="searchVal" placeholder="Search" aria-label="Search" size="24" />
+                        <SearchInput v-model="searchVal" @keyup="searchTree" placeholder="Search" aria-label="Search"
+                            size="24" />
                     </div>
                 </div>
                 <div class="right">
@@ -153,17 +164,20 @@ const Delete = (id) => {
                                 tree.address }}</th>
                             <th scope="row"
                                 class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-wrap">
-                                <img  :src="tree.thumb_image?.[0]?.original_url" class="w-20 h-20 " />
+                                <img :src="tree.thumb_image?.[0]?.original_url" class="w-20 h-20 " />
                             </th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <strong>{{
-                                    formatPrice(tree.price_origin) }}</strong></th>
+                                    formatPrice(tree.price_origin) }}</strong>
+                            </th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <strong>{{
-                                    formatPrice(tree.price) }}</strong></th>
-                                    <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <strong>{{
-                                    formatPrice(tree.transfer_value) }}</strong></th>
+                                    formatPrice(tree.price) }}</strong>
+                            </th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <strong>{{
+                                    formatPrice(tree.transfer_value) }}</strong>
+                            </th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <div class=" flex justify-center">
                                     <span v-if="tree.state == 'public'"
@@ -180,7 +194,8 @@ const Delete = (id) => {
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <strong>{{ tree.status }}</strong>
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">link</th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                link</th>
                             <td class="py-4 px-6 text-right">
                                 <BaseButtons type="justify-start lg:justify-end" no-wrap>
                                     <BaseButton color="contrast" :icon="mdiPencilOutline" small @click="edit(tree)"

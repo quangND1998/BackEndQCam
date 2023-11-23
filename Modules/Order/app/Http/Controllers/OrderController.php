@@ -23,18 +23,20 @@ use Modules\Order\app\Http\Requests\SaveOrderRequest;
 use Modules\Order\app\Models\OrderItem;
 use Illuminate\Support\Facades\Notification;
 use Modules\Landingpage\app\Models\Contact;
+use Modules\Order\Repositories\ShipperRepository;
+
 class OrderController extends Controller
 {
     protected $allowStoreCustomer = [
         "address",    "city",    "district", "wards",    "country"
 
     ];
-    protected $orderRepository;
-    public function __construct(OrderContract $orderRepository)
+    protected $orderRepository, $shipperRepository;
+    public function __construct(OrderContract $orderRepository, ShipperRepository $shipperRepository)
     {
 
         $this->orderRepository = $orderRepository;
-
+        $this->shipperRepository = $shipperRepository;
         // $this->middleware('permission:users-manager', ['only' => ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline']]);
         $this->middleware('permission:order-pending', ['only' => ['index', 'pending', 'create']]);
         $this->middleware('permission:order-packing', ['only' => ['index', 'packing']]);
@@ -56,8 +58,10 @@ class OrderController extends Controller
         $status = 'pending';
         $orders =  $this->orderRepository->getOrder($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
+        $shippers = $this->shipperRepository->getShipper();
+
         // dd($statusGroup);
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
 
@@ -68,7 +72,8 @@ class OrderController extends Controller
         $status = 'pending';
         $orders =  $this->orderRepository->getOrder($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
 
@@ -82,8 +87,8 @@ class OrderController extends Controller
         $orders = $this->orderRepository->getOrder($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
-
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
 
@@ -98,7 +103,8 @@ class OrderController extends Controller
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
 
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
     public function completed(Request $request)
@@ -113,7 +119,8 @@ class OrderController extends Controller
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
 
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
     public function refund(Request $request)
@@ -130,7 +137,8 @@ class OrderController extends Controller
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
 
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
 
@@ -147,7 +155,8 @@ class OrderController extends Controller
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
 
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
     /**
@@ -230,6 +239,24 @@ class OrderController extends Controller
         if ($order->status == 'packing') {
             Notification::send($order->customer, new OrderPackingNotification($order));
         }
+        if ($order->status == 'shipping') {
+            Notification::send($order->customer, new OrderShippingNotification($order));
+        }
+        return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
+    }
+
+    public function orderChangeShipping(Request $request, Order $order)
+    {
+        $request->validate([
+            'shipper' => 'required',
+        ], [
+            'shipper.required' => 'Chọn Shipper cho đơn hàng'
+        ]);
+        $order->update([
+            'status' => $request->status,
+            'shipper_id' => $request->shipper
+        ]);
+
         if ($order->status == 'shipping') {
             Notification::send($order->customer, new OrderShippingNotification($order));
         }
@@ -426,6 +453,10 @@ class OrderController extends Controller
                 }
             }
         }
+
+        foreach ($request->images as $image) {
+            $user->addMedia($image)->toMediaCollection('order_related_images');
+        }
         Cart::clear();
         Cart::clearCartConditions();
         if ($order->payment_method == 'cash' || $order->payment_method == 'banking') {
@@ -557,17 +588,22 @@ class OrderController extends Controller
                 }
             }
         }
+
+        foreach ($request->images as $image) {
+            $user->addMedia($image)->toMediaCollection('order_related_images');
+        }
         Cart::clear();
         Cart::clearCartConditions();
         return redirect()->route('admin.orders.pending')->with('success', 'Đã tạo đơn quà');
     }
 
-    public function scanOrderDetail($id){
-        $order = Order::with('orderItems.product','product_service.product','product_service.trees','reviews')->find($id);
+    public function scanOrderDetail($id)
+    {
+        $order = Order::with('orderItems.product', 'product_service.product', 'product_service.trees', 'reviews')->find($id);
         $contact = Contact::find(1);
-        if($order){
-        //   return $order;
-            return Inertia::render('Modules/Order/QrOrder', compact('contact','order'));
+        if ($order) {
+            //   return $order;
+            return Inertia::render('Modules/Order/QrOrder', compact('contact', 'order'));
         }
         return response()->json('Không tìm thấy đơn hàng', 404);
     }

@@ -23,7 +23,7 @@ class NotificationController extends Controller
     public function readNotifications(){
         $user = Auth::user();
         $user->unreadNotifications->markAsRead();
-        return response()->json($user->unreadNotifications, 200);
+        return response()->json($user->notifications, 200);
     }
 
     public function deleteNotifications(){
