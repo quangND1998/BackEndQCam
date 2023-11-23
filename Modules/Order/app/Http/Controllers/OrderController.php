@@ -51,8 +51,6 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         // return $request;
-        $order = Order::with('discount', 'order_shipper_images')->find(23);
-        return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
