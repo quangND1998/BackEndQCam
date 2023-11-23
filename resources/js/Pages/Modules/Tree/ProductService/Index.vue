@@ -127,7 +127,8 @@ const edit = (product) => {
     form.life_time = product.life_time;
     form.description = product.description;
     form.unit = product.unit;
-
+    form.transfer_value = product.transfer_value;
+    form.price_origin = product.price_origin;
 
 };
 const isModalActive = ref(false);
