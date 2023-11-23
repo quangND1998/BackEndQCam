@@ -55,6 +55,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::get('getReviewOrder/{id}', [ReviewManagerController::class, 'getReviewOrder']);
 
             });
+            // saveOrderPackage
+            Route::post('saveOrderPackage', [OrderHistoryController::class, 'saveOrderPackageFromApp']);
         });
     });
 });

@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Order\app\Models\Order;
 use App\Http\Controllers\API\Base2Controller;
 use Modules\Customer\app\Models\ProductServiceOwner;
+use Illuminate\Support\Facades\Validator;
+use Modules\Order\app\Models\OrderPackage;
+use Modules\Tree\app\Models\ProductService;
+use Carbon\Carbon;
 class OrderHistoryController extends Base2Controller
 {
     /**
@@ -87,6 +91,47 @@ class OrderHistoryController extends Base2Controller
                 'data' =>$order,
             ];
             return response()->json($response, 200);
+    }
+    public function saveOrderPackageFromApp(Request $request){
+        $validator = Validator::make($request->only('items', 'payment_method'), [
+            'package_id' => 'required',
+            'payment_method' => 'required'
+        ], [
+            'payment_method.required' => 'Hãy chọn phương thức thanh toán'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors(), 422);
+        }
+        $user = Auth::user();
+        $time_life  = 0;
+        $product_service = ProductService::find($request->package_id);
+        if(!$product_service){
+            return response()->json('Gói dịch vụ không tồn tại', 404);
+        }else{
+            $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
+        }
+        $order = OrderPackage::create([
+            'order_number'      =>  'ORD-' . strtoupper(uniqid()),
+            'user_id'           => $user->id,
+            'status'            =>  'pending',
+            'payment_status'    =>  0,
+            'payment_method' => $request->payment_method,
+            'address' => $user->address,
+            'city' => $user->city,
+            'district' => $user->district,
+            'wards' => $user->wards,
+            'phone_number'        =>  $user->phone_number,
+            'grand_total' => $product_service->price,
+            'type' => 'gift_delivery',
+            'product_selected' => $request->package_id,
+            'time_end' => Carbon::now()->addDays($time_life),
+        ]);
+        $response = [
+            'success' => true,
+            'msg' => "save order package success",
+            'data' =>$order,
+        ];
+        return response()->json($response, 200);
     }
 
 }
