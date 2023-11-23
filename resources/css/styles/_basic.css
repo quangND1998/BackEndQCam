@@ -1,13 +1,15 @@
 @layer components {
   .style-basic:not(.dark) {
     .aside {
-      @apply bg-bg_green_default;
+      /* @apply bg-bg_green_default; */
+      @apply bg-white text-black;
     }
     .aside-scrollbars {
       @apply aside-scrollbars-gray;
     }
     .aside-brand {
-      @apply bg-bg_green text-white;
+      /* @apply bg-bg_green text-white; */
+      @apply bg-white text-black; 
     }
     .aside-menu-item {
       @apply text-white hover:text-green;

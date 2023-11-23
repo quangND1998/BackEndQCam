@@ -168,7 +168,7 @@ const changeDate = () => {
                 <ModalShipping :shippers="shippers" />
                 <ModalDecline></ModalDecline>
                 <ModelRefund></ModelRefund>
-                <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4">
+                <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4 ">
                     <div>
                         <div class="min-[320px]:block sm:flex">
                             <div class="min-[320px]:w-full sm:w-1/5 mr-3 text-gray-500">
@@ -288,7 +288,7 @@ const changeDate = () => {
                     <div class="panel panel-default">
                         <div class="panel-body relative overflow-x-auto shadow-md sm:rounded-lg">
                             <div>
-                                <div class="grid grid-cols-7 gap-5 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400">
+                                <div class="grid grid-cols-7 gap-5 text-xs  uppercase bg-gray-50  px-3 py-4 text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
