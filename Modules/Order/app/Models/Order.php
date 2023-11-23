@@ -9,9 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ReviewManagement;
 use Modules\Order\Database\factories\OrderFactory;
-
-class Order extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+class Order extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     use HasFactory;
     protected $table = 'orders';
     protected $fillable = [
@@ -100,21 +102,26 @@ class Order extends Model
     {
         if (isset($filters['date'])) {
             if ($filters['date'] == 'day') {
-                $query->whereBetween('created_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
+                $query->whereBetween('updated_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
             } elseif ($filters['date'] == 'week') {
-                $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+                $query->whereBetween('updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
             } elseif ($filters['date'] == 'month') {
-                $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+                $query->whereBetween('updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
             } else {
-                $query->whereBetween('created_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
+                $query->whereBetween('updated_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
             }
         } else {
-            $query->whereBetween('created_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
+            $query->whereBetween('updated_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
         }
     }
 
     public function order_related_images()
     {
         return $this->media()->where('collection_name', 'order_related_images');
+    }
+
+    public function order_shipper_images()
+    {
+        return $this->media()->where('collection_name', 'order_shipper_images');
     }
 }
