@@ -12,6 +12,7 @@ use App\Http\Controllers\API\Base2Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 use Modules\Customer\app\Models\ProductServiceOwner;
+use Modules\Tree\app\Models\ProductService;
 
 class ScheduleVisitController extends Base2Controller
 {
@@ -47,13 +48,16 @@ class ScheduleVisitController extends Base2Controller
     public function getsheduleCustomer(Request $request)
     {
             $customer = Auth::user();
-            $customer = User::with('product_service_owners.visit')->find($customer->id);
-            $visits = [];
-            foreach ($customer->product_service_owners as $product_owner) {
-                $visits[] = $product_owner->visit;
-            }
+            $product_owner = $customer->product_service_owners->pluck('id')->toArray();
+            $visits = ScheduleVisit::with('product_owner_service.product')->whereHas('product_owner_service.product')->whereIn('product_service_owner_id', $product_owner)->get();
+        //    return $visit;
 
             return $this->sendResponse($visits, 'danh sách lịch tham quan');
-        }
+    }
+    public function  getVisitWithProduct($id)
+    {
+        $visits = ScheduleVisit::where('product_service_owner_id', $id)->get();
+        return $this->sendResponse($visits, 'danh sách lịch tham quan');
+    }
 
 }

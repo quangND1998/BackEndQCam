@@ -68,9 +68,8 @@
                         <!-- <font-awesome-icon :icon="['fas', 'cart-shopping']" class="mt-1" /> -->
                         <span class="text-xl font-semibold ml-2">Giỏ hàng</span>
                     </div>
-                    <button v-if="cart" class="flex text-red-600 mx-3 text-sm">
-                        <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700 mx-1 "
-                            @click="DeleteCart()"></BaseIcon>
+                    <button v-if="cart" class="flex text-red-600 mx-3 text-sm" @click="DeleteCart()">
+                        <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700 mx-1 "></BaseIcon>
                         Hủy đơn hàng
                     </button>
                 </div>
@@ -79,7 +78,8 @@
                     <input v-if="cart_selected" id="default-checkbox" type="checkbox" v-model="selectAllCart"
                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                     <div>
-                        <button v-if="cart_selected.length > 0" class="flex text-red-600 mx-3 text-sm" @click="DeleteCheckbox()">
+                        <button v-if="cart_selected.length > 0" class="flex text-red-600 mx-3 text-sm"
+                            @click="DeleteCheckbox()">
                             <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700"></BaseIcon>Xóa
                             <span>({{ cart_selected.length }})</span> sản phẩm đã chọn
                         </button>
@@ -93,7 +93,8 @@
                             class="icon_checkbox w-4 h-4 mt-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
 
                     </div>
-                    <img v-if="item.images && item.images.length > 0 && item.images[0].image" :src="item.images[0].image"
+
+                    <img v-if="item.attributes && item.attributes.length > 0" :src="item.attributes[0].image"
                         class="w-16 h-16 object-cover ml-3" alt="">
                     <div class="flex  justify-between items-center w-full">
                         <div class=" ml-4">
@@ -179,32 +180,33 @@
                 <p class="text-sm text-[#686868] font-bold">{{ formatPrice(totalPrice) }}đ</p>
             </div>
             <div class="flex justify-between my-2">
-                <p class="text-sm text-[#686868] font-bold">VAT(x%)</p>
-                <p class="text-sm text-[#686868] font-bold">{{ vat }}đ</p>
+                <p class="text-sm text-[#686868] font-bold">Ưu đãi({{ discount_deal }})%</p>
+                <p class="text-sm text-[#686868] font-bold">{{ discount_deal }} %</p>
             </div>
+            <div class="flex justify-between my-2">
+                <p class="text-sm text-[#686868] font-bold">VAT({{ vat }}%)</p>
+                <p class="text-sm text-[#686868] font-bold">{{ vat }} %</p>
+            </div>
+
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
                 <p class="text-sm text-[#686868] font-bold" v-if="shipping_fee == 0">Miễn phí</p>
                 <p class="text-sm text-[#686868] font-bold" v-else>{{ formatPrice(shipping_fee) }}</p>
             </div>
             <div class="flex justify-between my-2">
-                <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
-                <p class="text-sm text-[#686868] font-bold">{{ discount_deal }}đ</p>
-            </div>
-            <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
-                <p class="text-sm text-[#686868]">1.000.000đ</p>
+                <p class="text-sm text-[#686868]">{{ formatPrice(subTotal) }}đ</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868]">Đã thanh toán</p>
-                <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(amount_paid) }}đ</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Còn lại</p>
-                <p class="text-sm text-[#686868] font-bold">1.000.000đ</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(lastPrice) }}đ</p>
             </div>
             <div class="my-3">
-                <BaseButton color="info"  @click="save()"
+                <BaseButton color="info" @click="save()"
                     class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center rounded-lg"
                     :icon="mdiContentSaveMove" small label="Lưu đơn hàng" />
             </div>
@@ -258,6 +260,8 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import MazInputNumber from 'maz-ui/components/MazInputNumber'
 import Swal from 'sweetalert2'
+import { useCartStore } from "@/stores/cart";
+const store = useCartStore();
 export default {
     components: {
         BaseButton,
@@ -280,7 +284,8 @@ export default {
         shipping_fee: Number,
         payment_method: String,
         type: String,
-        sub_total: Number
+        sub_total: Number,
+        amount_paid: Number
     },
     data() {
         return {
@@ -299,26 +304,7 @@ export default {
             totalPrice: this.total_price
         }
     },
-    mounted: function () {
-        $("input.input-qty").each(function () {
-            var $this = $(this),
-                qty = $this.parent().find(".is-form"),
-                min = Number($this.attr("min")),
-                max = Number($this.attr("max"));
-            if (min == 0) {
-                var d = 0;
-            } else d = min;
-            $(qty).on("click", function () {
-                if ($(this).hasClass("minus")) {
-                    if (d > min) d += -1;
-                } else if ($(this).hasClass("plus")) {
-                    var x = Number($this.val()) + 1;
-                    if (x <= max) d += 1;
-                }
-                $this.attr("value", d).val(d);
-            });
-        });
-    },
+
     computed: {
         selectAllCart: {
             get: function () {
@@ -338,13 +324,36 @@ export default {
         },
         product() {
             return this.products.find((e) => e.id == this.product_selected)
+        },
+        lastPrice() {
+            if (this.totalPrice > 0) {
+                let lastPrice = this.totalPrice
+                if (this.discount_deal > 0) {
+                    lastPrice = this.totalPrice - ((this.totalPrice * this.discount_deal) / 100)
+                }
+                if (this.vat > 0) {
+                    lastPrice = lastPrice + ((lastPrice * this.vat) / 100)
+                }
+                if (this.shipping_fee > 0) {
+                    lastPrice = lastPrice + this.shipping_fee
+                }
+                if (this.amount_paid > 0) {
+                    lastPrice = lastPrice - this.amount_paid
+                }
+                return lastPrice;
+            }
+            else {
+                return 0
+            }
+
+
         }
     },
     methods: {
 
-        save(){
+        save() {
 
-            if (this.carts.length ==0) {
+            if (this.carts.length == 0) {
                 Swal.fire({
                     title: "Lỗi?",
                     text: "Chưa sản phẩm!",
@@ -359,7 +368,7 @@ export default {
                 });
                 return
             }
-            else{
+            else {
                 this.$emit('confirm')
             }
 
@@ -385,10 +394,15 @@ export default {
             }
             else {
                 axios.post('/admin/orders/addToCart', { product: this.product, quantity: this.quantity }).then(res => {
-                    console.log(res.data.cart)
+                    console.log(res.data.sub_total)
                     this.carts = res.data.cart
                     this.totalPrice = res.data.total_price
-                    this.subTotal = res.data.sub_total
+                    this.subTotal = res.data.sub_total;
+                    store.updateCart({ 
+                        cart: res.data.cart,
+                        total_price: res.data.total_price,
+                        sub_total: res.data.sub_total })
+                    this.quantity = 1;
                 }).catch(err => {
 
                 })
@@ -423,8 +437,12 @@ export default {
                     .then(response => {
                         console.log(response)
                         this.totalPrice = response.data.total_price;
-                        this.subTotal = response.data.subTotal;
+                        this.subTotal = response.data.sub_total;
                         this.carts[product.id] = response.data.item;
+                        store.updateCart({ 
+                            cart: res.data.cart,
+                            total_price: res.data.total_price,
+                            sub_total: res.data.sub_total })
                     })
                     .catch(error => { });
             }
@@ -455,6 +473,10 @@ export default {
                         this.totalPrice = response.data.total_price;
                         this.subTotal = response.data.subTotal;
                         this.carts[product.id] = response.data.item;
+                        store.updateCart({ 
+                            cart:  this.carts,
+                            total_price: res.data.total_price,
+                            sub_total: res.data.sub_total })
                     })
                     .catch(error => { });
             }
@@ -474,13 +496,17 @@ export default {
                 if (result.isConfirmed) {
 
                     axios
-                    .post("/admin/cart/removeItem", query)
-                    .then(response => {
-                        this.totalPrice = response.data.total_price;
-                        this.subTotal = response.data.subTotal;
-                        this.carts= response.data.cart;
-                    })
-                    .catch(error => { });
+                        .post("/admin/cart/removeItem", query)
+                        .then(response => {
+                            this.totalPrice = response.data.total_price;
+                            this.subTotal = response.data.subTotal;
+                            this.carts = response.data.cart;
+                            store.updateCart({ 
+                            cart:  this.carts,
+                            total_price: res.data.total_price,
+                            sub_total: res.data.sub_total })
+                        })
+                        .catch(error => { });
                 } else {
                     return
                 }
@@ -489,7 +515,7 @@ export default {
         DeleteCart() {
             Swal.fire({
                 title: "Thông báo?",
-                text: "Bạn đơn hàng!",
+                text: "Bạn muốn xóa giỏ hàng!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -498,13 +524,14 @@ export default {
                 if (result.isConfirmed) {
 
                     axios
-                    .post("/admin/cart/removeCart", query)
-                    .then(response => {
-                        this.totalPrice = response.data.total_price;
-                        this.subTotal = response.data.subTotal;
-                        this.carts= response.data.cart;
-                    })
-                    .catch(error => { });
+                        .post("/admin/cart/removeCart")
+                        .then(response => {
+                            this.totalPrice = response.data.total_price;
+                            this.subTotal = response.data.subTotal;
+                            this.carts = response.data.cart;
+                   
+                        })
+                        .catch(error => { });
                 } else {
                     return
                 }
@@ -523,21 +550,21 @@ export default {
                 cancelButtonColor: "#d33",
             }).then(result => {
                 if (result.isConfirmed) {
-                axios
-                    .post("/admin/cart/deleteCarts", query)
-                    .then(response => {
-                        this.totalPrice = response.data.total_price;
-                        this.subTotal = response.data.subTotal;
-                        this.carts= response.data.cart;
-                        this.cart_selected = [];
-                    })
-                    .catch(error => { });
+                    axios
+                        .post("/admin/cart/deleteCarts", query)
+                        .then(response => {
+                            this.totalPrice = response.data.total_price;
+                            this.subTotal = response.data.subTotal;
+                            this.carts = response.data.cart;
+                            this.cart_selected = [];
+                        })
+                        .catch(error => { });
 
                 } else {
                     return
                 }
             });
-            },
+        },
     }
 }
 </script>

@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from "vue";
 import OrderAction from "@/Pages/Modules/Order/OrderAction.vue"
+import { Head, Link } from "@inertiajs/vue3";
+import BaseButton from "@/Components/BaseButton.vue";
 const showContent = ref(false);
-
 // Hàm để toggle trạng thái của nội dung
 const toggleContent = () => {
     showContent.value = !showContent.value;
@@ -16,7 +17,7 @@ const props = defineProps({
 
 <template>
     <div>
-        <div @click="toggleContent" class=" grid grid-cols-5 gap-4 text-sm px-3 py-3 text-gray-400">
+        <div @click.prevent="toggleContent" class=" grid grid-cols-7 gap-5 text-sm px-3 py-3 text-gray-400">
             <div>
                 <a class="flex items-center">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -37,6 +38,17 @@ const props = defineProps({
             <div>
                 <p>{{ order.status }}</p>
             </div>
+
+            <div>
+                <p>{{ order.type =='gift_delivery' ? 'Giao quà':'Đơn lẻ' }}</p>
+            </div>
+            <div>
+                <Link v-if="order.payment_method == 'cash' || order.payment_method == 'banking'"
+                    :href="route('admin.payment.orderCashBankingPayment', order.id)"
+                    class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
+                Chi tiết
+                </Link>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 gap-4 bg-gray-300 p-3 border rounded-lg  " v-if="showContent">
@@ -50,7 +62,8 @@ const props = defineProps({
                     <div class="block">
                         <p class="text-gray-500">Số nhà/ Địa chỉ cụ thể</p>
                         <div class="item_information p-2 bg-gray-100 rounded-lg">
-                            <p class="text-gray-600"> {{ order.customer.address }}</p>
+                            <p class="text-gray-600"> {{ order.address + ',' + order.wards + ',' + order.district + ',' +
+                                order.city }}</p>
                         </div>
                     </div>
                     <div class="block">
@@ -104,14 +117,39 @@ const props = defineProps({
                 <p>{{ formatPrice(order.grand_total) }}₫</p>
 
             </div>
-            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
-                <p>Chiết khấu</p>
+            <div v-if="order.discount" class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Voucher</p>
                 <input v-if="order.discount" :value="formatPrice(order.discount.discount_mount)"
                     class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
-                <p>Khách phải trả</p>
+                <p>Ưu đãi</p>
+                <p v-if="order.discount_deal >0">{{ order.discount_deal }} %</p>
+                <p v-else>0%</p>
+            </div>
+            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>VAT</p>
+                <p v-if="order.vat >0">{{ order.vat }} %</p>
+                <p v-else>0%</p>
+            </div>
+            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Phí ship</p>
+                <p class="text-red-600 text-xl">{{ formatPrice(order.shipping_fee) }} ₫</p>
+            </div>
+            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Tổng giá trị</p>
                 <p class="text-red-600 text-xl">{{ formatPrice(order.last_price) }} ₫</p>
+            </div>
+
+            <!-- <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Khách đã trả</p>
+                <p class="text-red-600 text-xl">{{ formatPrice(order.amount_paid) }} ₫</p>
+
+            </div> -->
+
+            <div v-if="order.amount_unpaid" class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+                <p>Khách phải trả</p>
+                <p class="text-red-600 text-xl">{{ formatPrice(order.amount_unpaid) }} ₫</p>
 
             </div>
             <OrderAction :order="order" :status="status"></OrderAction>

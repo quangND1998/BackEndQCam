@@ -5,16 +5,25 @@ namespace Modules\Order\app\Http\Controllers;
 use App\Contracts\OrderContract;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\OrderPackingNotification;
+use App\Notifications\OrderShippingNotification;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+
 use Inertia\Inertia;
 use Modules\Order\app\Models\Order;
 use Modules\Tree\app\Models\ProductRetail;
 use Cart;
+use Modules\Customer\app\Resources\UserResource;
+use Modules\Order\app\Http\Requests\OrderGiftPostRequest;
+use Modules\Order\app\Http\Requests\SaveOrderRequest;
 use Modules\Order\app\Models\OrderItem;
+use Illuminate\Support\Facades\Notification;
+use Modules\Landingpage\app\Models\Contact;
+use Modules\Order\Repositories\ShipperRepository;
 
 class OrderController extends Controller
 {
@@ -22,12 +31,12 @@ class OrderController extends Controller
         "address",    "city",    "district", "wards",    "country"
 
     ];
-    protected $orderRepository;
-    public function __construct(OrderContract $orderRepository)
+    protected $orderRepository, $shipperRepository;
+    public function __construct(OrderContract $orderRepository, ShipperRepository $shipperRepository)
     {
 
         $this->orderRepository = $orderRepository;
-
+        $this->shipperRepository = $shipperRepository;
         // $this->middleware('permission:users-manager', ['only' => ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline']]);
         $this->middleware('permission:order-pending', ['only' => ['index', 'pending', 'create']]);
         $this->middleware('permission:order-packing', ['only' => ['index', 'packing']]);
@@ -41,6 +50,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        // return $request;
         // $order = Order::with('discount')->find(1);
         // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
@@ -48,7 +58,10 @@ class OrderController extends Controller
         $status = 'pending';
         $orders =  $this->orderRepository->getOrder($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+
+        // dd($statusGroup);
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
 
@@ -59,7 +72,8 @@ class OrderController extends Controller
         $status = 'pending';
         $orders =  $this->orderRepository->getOrder($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
 
@@ -73,8 +87,8 @@ class OrderController extends Controller
         $orders = $this->orderRepository->getOrder($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
-
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
 
@@ -89,7 +103,8 @@ class OrderController extends Controller
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
 
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
     public function completed(Request $request)
@@ -104,7 +119,8 @@ class OrderController extends Controller
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
 
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
     public function refund(Request $request)
@@ -121,7 +137,8 @@ class OrderController extends Controller
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
 
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
 
@@ -138,7 +155,8 @@ class OrderController extends Controller
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
 
-        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
     /**
@@ -218,7 +236,31 @@ class OrderController extends Controller
         $order->update([
             'status' => $request->status,
         ]);
-        return back()->with('success', `Đơn hàng đã được chuyển sang trạng thái:$request->status`);
+        if ($order->status == 'packing') {
+            Notification::send($order->customer, new OrderPackingNotification($order));
+        }
+        if ($order->status == 'shipping') {
+            Notification::send($order->customer, new OrderShippingNotification($order));
+        }
+        return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
+    }
+
+    public function orderChangeShipping(Request $request, Order $order)
+    {
+        $request->validate([
+            'shipper' => 'required',
+        ], [
+            'shipper.required' => 'Chọn Shipper cho đơn hàng'
+        ]);
+        $order->update([
+            'status' => $request->status,
+            'shipper_id' => $request->shipper
+        ]);
+
+        if ($order->status == 'shipping') {
+            Notification::send($order->customer, new OrderShippingNotification($order));
+        }
+        return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
     }
 
 
@@ -233,24 +275,35 @@ class OrderController extends Controller
     public function createOrder(Request $request)
     {
 
+        $customers = User::with(['product_service_owners.trees', 'product_service_owners.product', 'product_service_owners' => function ($q) {
+            $q->where('state', 'active');
+        }])->role('customer')->get();
+
         $cart = Cart::getContent();
-        $total_price = Cart::getTotal();
+        $total_price = Cart::getSubTotalWithoutConditions();
         $sub_total = Cart::getSubTotal();
         $product_retails = ProductRetail::with('images')->get();
-        return Inertia::render('Modules/Order/Create/CreateOrder', compact( 'product_retails', 'cart', 'total_price', 'sub_total'));
+        return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails', 'cart', 'total_price', 'sub_total'));
     }
 
     public function searchUser(Request $request)
     {
-        $customer = User::role('customer')->where('phone_number',  $request->search)->first();
+        $customer = User::with(['product_service_owners' => function ($q) {
+            $q->where('state', 1);
+        }])->role('customer')->where('phone_number',  $request->search)->first();
 
         if ($customer) {
-            return response()->json($customer, 200);
+            return new UserResource($customer);
         } else {
             return response()->json('Không tìm thấy Khách hàng!', 404);
         }
     }
-    public function addToCart(Request $request){
+
+
+
+    public function addToCart(Request $request)
+    {
+
         $request->validate([
             'product' => 'required',
             'quantity' => 'required|gt:0',
@@ -264,17 +317,16 @@ class OrderController extends Controller
             'price' => $product->price,
             'quantity' =>  $request->quantity,
             'attributes' => array([
-                'image' => count($product->images) >0 ? $product->images[0]->original_url : null
+                'image' => count($product->images) > 0 ? $product->images[0]->original_url : null
             ]),
             // 'conditions' => $saleCondition
         ));
-        $response= [
-            'cart' =>Cart::getContent(),
-            'total_price' => Cart::getTotal(),
+        $response = [
+            'cart' => Cart::getContent(),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
             'sub_total' =>  Cart::getSubTotal()
         ];
-        return response()->json($response,200);
-
+        return response()->json($response, 200);
     }
 
 
@@ -289,12 +341,12 @@ class OrderController extends Controller
             }
         }
 
-        $response= [
-            'cart' =>Cart::getContent(),
-            'total_price' => Cart::getTotal(),
+        $response = [
+            'cart' => Cart::getContent(),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
             'sub_total' =>  Cart::getSubTotal()
         ];
-        return response()->json($response,200);
+        return response()->json($response, 200);
     }
 
 
@@ -310,19 +362,21 @@ class OrderController extends Controller
 
         $respone = [
             'total_price' => Cart::getSubTotal(),
-            'item' => Cart::get($request->product_id)
+            'item' => Cart::get($request->product_id),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
+            'sub_total' =>  Cart::getSubTotal()
         ];
         return response()->json($respone, 200);
     }
     public function removeItem(Request $request)
     {
         Cart::remove($request->product_id);
-        $response= [
-            'cart' =>Cart::getContent(),
-            'total_price' => Cart::getTotal(),
+        $response = [
+            'cart' => Cart::getContent(),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
             'sub_total' =>  Cart::getSubTotal()
         ];
-        return response()->json($response,200);
+        return response()->json($response, 200);
     }
 
 
@@ -331,25 +385,26 @@ class OrderController extends Controller
     {
 
         Cart::clear();
-        $response= [
-            'cart' =>Cart::getContent(),
-            'total_price' => Cart::getTotal(),
+        Cart::clearCartConditions();
+        $response = [
+            'cart' => Cart::getContent(),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
             'sub_total' =>  Cart::getSubTotal()
         ];
-        return response()->json($response,200);
+        return response()->json($response, 200);
     }
 
 
 
     // Save Order
-    public function saveOrder(Request $request, User $user)
+    public function saveOrder(SaveOrderRequest $request, User $user)
     {
         // OrderStoreRequest
-        dd($request);
+
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
-
+        $this->addConditionToCart($request);
 
         if ($user) {
             $order = Order::create([
@@ -358,19 +413,25 @@ class OrderController extends Controller
                 'status'            =>  'pending',
                 'payment_status'    =>  0,
                 'payment_method' => $request->payment_method,
-                // 'specific_address' => $request->specific_address,
                 'address' => $request->address,
                 'city' => $request->city,
                 'district' => $request->district,
                 'wards' => $request->wards,
                 'phone_number'        =>  $request->phone_number,
                 'notes'         =>  $request->notes,
-                'grand_total' => Cart::getSubTotal(),
+                'grand_total' => Cart::getSubTotalWithoutConditions(),
+                'last_price' => Cart::getSubTotal(),
                 'item_count' => Cart::getTotalQuantity(),
-                'vat' =>$request->vat,
-                'discount_deal' =>$request->discount_deal,
-                'type' =>$request->type,
+                'vat' => $request->vat,
+                'discount_deal' => $request->discount_deal,
+                'type' => $request->type,
+                'shipping_fee' => $request->shipping_fee,
+                'amount_paid' => $request->amount_paid
+
             ]);
+
+            $order->amount_unpaid = $order->last_price - $request->amount_paid;
+            $order->save();
 
             if ($order) {
 
@@ -393,9 +454,148 @@ class OrderController extends Controller
             }
         }
         Cart::clear();
-        return redirect()->route('orders.pending')->with('success', "Tạo đơn hàng thành công");
+        Cart::clearCartConditions();
+        if ($order->payment_method == 'cash' || $order->payment_method == 'banking') {
+
+            return  redirect()->route('admin.payment.orderCashBankingPayment', [$order]);
+        }
     }
 
 
+    public function addConditionToCart($request)
+    {
 
+        if ($request->discount_deal) {
+            $conditionDiscount = new \Darryldecode\Cart\CartCondition(array(
+                'name' => 'DISCOUNT',
+                'type' => 'tax',
+                'target' => 'subtotal',
+                'value' => "-" . $request->discount_deal . '%',
+                // 'order' => 1
+            ));
+            Cart::condition($conditionDiscount);
+        }
+
+        if ($request->vat) {
+            $conditionVat = new \Darryldecode\Cart\CartCondition(array(
+                'name' => 'VAT',
+                'type' => 'tax',
+                'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'value' => $request->vat . '%',
+
+            ));
+            Cart::condition($conditionVat);
+        }
+
+        if ($request->shipping_fee) {
+            $conditionShipping = new \Darryldecode\Cart\CartCondition(array(
+                'name' => 'SHIPPING',
+                'type' => 'tax',
+                'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'value' => $request->shipping_fee,
+
+            ));
+            Cart::condition($conditionShipping);
+        }
+
+        if ($request->shipping_fee) {
+            $conditionShipping = new \Darryldecode\Cart\CartCondition(array(
+                'name' => 'SHIPPING',
+                'type' => 'tax',
+                'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'value' => $request->shipping_fee,
+
+            ));
+            Cart::condition($conditionShipping);
+        }
+
+        // if ($request->amount_paid) {
+        //     $conditionPaid = new \Darryldecode\Cart\CartCondition(array(
+        //         'name' => 'PAID',
+        //         'type' => 'tax',
+        //         'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+        //         'value' => '-' . $request->amount_paid,
+
+        //     ));
+        //     Cart::condition($conditionPaid);
+        // }
+    }
+
+    public function fetchCart()
+    {
+        $response = [
+            'cart' => Cart::getContent(),
+            'total_price' => Cart::getSubTotalWithoutConditions(),
+            'sub_total' =>  Cart::getSubTotal()
+        ];
+        Cart::clear();
+        Cart::clearCartConditions();
+        return back();
+    }
+
+
+    public function saveOrderGift(OrderGiftPostRequest $request, User $user)
+    {
+
+        if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
+            return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
+        }
+        $this->addConditionToCart($request);
+
+        if ($user) {
+            $order = Order::create([
+                'order_number'      =>  'ORD-' . strtoupper(uniqid()),
+                'user_id'           => $user->id,
+                'status'            =>  'pending',
+                'payment_status'    =>  0,
+                'payment_method' => null,
+                'address' => $request->address,
+                'city' => $request->city,
+                'district' => $request->district,
+                'wards' => $request->wards,
+                'phone_number'        =>  $request->phone_number,
+                'notes'         =>  $request->notes,
+                'grand_total' => 0,
+                'last_price' => 0,
+                'item_count' => Cart::getTotalQuantity(),
+                'type' => $request->type,
+                'product_service_owner_id' => $request->product_service_owner_id
+
+            ]);
+            $order->save();
+
+            if ($order) {
+
+                $items = Cart::getContent();
+
+                foreach ($items as $item) {
+                    // A better way will be to bring the product id with the cart items
+                    // you can explore the package documentation to send product id with the cart
+                    // $product = Product::where('name', $item->name)->first();
+                    if ($item->quantity > 0) {
+                        $orderItem = new OrderItem([
+                            'product_id' => $item->id,
+                            'quantity'      =>  $item->quantity,
+                            'price'         =>  $item->price,
+                            'total_price' => $item->getPriceSum(),
+                        ]);
+                        $order->orderItems()->save($orderItem);
+                    }
+                }
+            }
+        }
+        Cart::clear();
+        Cart::clearCartConditions();
+        return redirect()->route('admin.orders.pending')->with('success', 'Đã tạo đơn quà');
+    }
+
+    public function scanOrderDetail($id){
+        $order = Order::with('orderItems.product','product_service.product','product_service.trees','reviews')->find($id);
+        $contact = Contact::find(1);
+        if ($order) {
+            //   return $order;
+            return Inertia::render('Modules/Order/QrOrder', compact('contact', 'order'));
+        }
+        return response()->json('Không tìm thấy đơn hàng', 404);
+    }
 }

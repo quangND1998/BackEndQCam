@@ -10,6 +10,7 @@ import CardBoxModal from "@/Components/CardBoxModal.vue";
 import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
 import ModalDecline from "./ModalDecline.vue";
 import ModelRefund from "./ModelRefund.vue";
+import ModalShipping from "./ModalShipping.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -43,14 +44,18 @@ const props = defineProps({
     status: String,
     from: String,
     to: String,
-    statusGroup: Array
+    statusGroup: Array,
+    shippers: Array
 });
 const filter = reactive({
     customer: null,
     name: null,
     fromDate: null,
     toDate: null,
-    search: null
+    search: null,
+    payment_status: null,
+    payment_method: null,
+    type: null
 
 })
 const customer = ref()
@@ -81,7 +86,7 @@ initFlowbite();
 
 const searchCustomer = () => {
     router.get(route(`admin.orders.${props.status}`),
-        { customer: filter.customer },
+        filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -89,9 +94,28 @@ const searchCustomer = () => {
     );
 }
 
+const Fillter = (event) => {
+    router.get(route(`admin.orders.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
+
+const fillterPaymentMethod = (event) => {
+    router.get(route(`admin.orders.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 const search = () => {
     router.get(route(`admin.orders.${props.status}`),
-        { search: filter.search },
+        filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -108,13 +132,13 @@ const contents = ref([
 
 
 const changeDate = () => {
-    let query = {
-        from: filter.fromDate,
-        to: filter.toDate
-    };
-    router.get(route(`admin.orders.${props.status}`), query, {
-        preserveScroll: true
-    });
+    router.get(route(`admin.orders.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
 }
 
 </script>
@@ -123,31 +147,25 @@ const changeDate = () => {
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain>
-            <SectionTitleLineWithButton title="Quản lý đơn hàng" main></SectionTitleLineWithButton>
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
                 <div>
                     <h2 class="min-[320px]:text-xl sm:text-2xl font-semibold lg:text-3xl flex mr-2">
                         Quản lý đơn hàng
-                        <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p>
+                        <!-- <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p> -->
                     </h2>
                 </div>
-                <div class="flex">
-                    <div>
-                        <Link :href="route('admin.orders.create')"
-                            class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
-                        <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn lẻ
-                        </Link>
-                    </div>
-                    <div>
-                        <Link :href="route('orderPackage.create')"
-                            class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
-                        <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn hàng hợp đồng
-                        </Link>
-                    </div>
+
+                <div>
+
+                    <Link :href="route('admin.orders.create')"
+                        class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
+                    Tạo đơn hàng
+                    </Link>
                 </div>
             </div>
             <div>
                 <OrderBar :statusGroup="statusGroup"></OrderBar>
+                <ModalShipping :shippers="shippers" />
                 <ModalDecline></ModalDecline>
                 <ModelRefund></ModelRefund>
                 <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4">
@@ -196,6 +214,21 @@ const changeDate = () => {
                             </div>
                         </div>
 
+                        <div class="min-[320px]:block sm:flex my-3">
+                            <div class="min-[320px]:w-full sm:w-3/12 mr-3 text-gray-500">
+                                <label for>Phương thức TT</label>
+                            </div>
+                            <div class="min-[320px]:w-full sm:w-9/12">
+                                <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                    <option :value="null">Tất cả</option>
+                                    <option value="reail">Đơn lẻ</option>
+                                    <option value="gift_delivery">Giao quà</option>
+
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
                     <div>
                         <div class="min-[320px]:block sm:flex sm:my-2">
@@ -227,11 +260,12 @@ const changeDate = () => {
                                 <label for>Phương thức TT</label>
                             </div>
                             <div class="min-[320px]:w-full sm:w-9/12">
-                                <select id="countries"
+                                <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
-                                    <option selected>Tất cả</option>
-                                    <option value="US">Còn hàng</option>
-                                    <option value="CA">Hết hàng</option>
+                                    <option :value="null">Tất cả</option>
+                                    <option value="cash">Tiền mặt</option>
+                                    <option value="banking">Chuyển khoản ngân hàng</option>
+                                    <option value="payoo">Payoo</option>
                                 </select>
                             </div>
                         </div>
@@ -240,7 +274,7 @@ const changeDate = () => {
                                 <label for>Trạng thái TT</label>
                             </div>
                             <div class="min-[320px]:w-full sm:w-9/12">
-                                <select id="countries"
+                                <select id="countries" v-model="filter.payment_status" @change="Fillter()"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tình trạng</option>
                                     <option :value="1">Đã thanh toán</option>
@@ -254,7 +288,7 @@ const changeDate = () => {
                     <div class="panel panel-default">
                         <div class="panel-body relative overflow-x-auto shadow-md sm:rounded-lg">
                             <div>
-                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400">
+                                <div class="grid grid-cols-7 gap-5 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
@@ -270,6 +304,13 @@ const changeDate = () => {
                                     <div>
                                         <p>Trạng thái</p>
                                     </div>
+                                    <div>
+                                        <p>Loại đơn</p>
+                                    </div>
+                                    <div>
+                                        <p>Chi tiết</p>
+                                    </div>
+
                                 </div>
 
                                 <div v-for="(order, index) in orders.data" :key="index">
@@ -284,7 +325,7 @@ const changeDate = () => {
                     </div>
                 </div>
 
-
+                <Pagination :links="orders.links" />
 
             </div>
 
@@ -293,3 +334,29 @@ const changeDate = () => {
     </LayoutAuthenticated>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped>
+.list_icon_crud {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+    right: -40px;
+    top: 20px;
+    z-index: 111;
+    display: inline-grid;
+}
+
+.btn_crud {
+    font-size: 20px;
+}
+
+.title_information {
+    background-color: #f3f4f6;
+}
+
+.item_information {
+    height: 100px;
+}
+
+.collapse {
+    visibility: inherit;
+}
+</style>

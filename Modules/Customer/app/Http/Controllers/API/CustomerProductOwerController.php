@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Illuminate\Support\Facades\Auth;
 use Modules\Customer\app\Models\HistoryExtend;
+use Modules\Order\app\Models\Order;
 use Modules\Tree\app\Models\ProductService;
 class CustomerProductOwerController extends Base2Controller
 {
@@ -23,7 +24,7 @@ class CustomerProductOwerController extends Base2Controller
             $customer = Auth::user();
             if($customer){
                 // $product_owner = $customer->product_service_owners;
-                $product_owner = ProductServiceOwner::with('product.images')->where('user_id',$customer->id)->get();
+                $product_owner = ProductServiceOwner::with('product.images','history_gift')->where('user_id',$customer->id)->get();
                 $product_not_owner = ProductService::with('images')->whereDoesntHave('productServiceOwner')->get();
 
                 $response = [
@@ -64,4 +65,34 @@ class CustomerProductOwerController extends Base2Controller
         return $this->sendResponse($response, 'Get HistoryExtend successfully');
     }
    }
+   public function checkProduct($id){
+     $customer = Auth::user();
+     $product_owner = ProductServiceOwner::where('user_id',$customer->id)->find($id);
+     if($product_owner){
+        $response = [
+            'success' => true
+        ];
+        return response()->json($response, 200);
+     }
+     $response = [
+            'success' => false
+        ];
+        return response()->json($response, 200);
+   }
+   public function checkOrder($id){
+    $customer = Auth::user();
+    $order = Order::where('user_id',$customer->id)->find($id);
+    if($order){
+       $response = [
+           'success' => true,
+           'data' =>$order
+       ];
+       return response()->json($response, 200);
+    }
+    $response = [
+           'success' => false
+       ];
+       return response()->json($response, 200);
+  }
+
 }

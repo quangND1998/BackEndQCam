@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\OrderPendingNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Modules\Order\app\Models\Order;
 use Modules\Order\app\Models\OrderItem;
@@ -16,23 +19,41 @@ class OrderController extends Base2Controller
     public function saveOrder(Request $request)
     {
 
-        $validator = Validator::make($request->only('items', 'voucher'), [
+        $validator = Validator::make($request->only('items', 'voucher', 'payment_method'), [
             'items' => 'required|array',
-            'voucher' => 'nullable'
+            'voucher' => 'nullable',
+            'payment_method' => 'required'
+        ], [
+            'payment_method.required' => 'Hãy chọn phương thức thanh toán'
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
 
-        foreach ($request->items as $item) {
+        if ($request->voucher) {
+            $voucher = Voucher::find($request->voucher["id"]);
+            if ($voucher == null) {
+                return response()->json('Voucher không còn được sử dụng!', 404);
+            } elseif ($voucher->is_fixed == 0) {
+                return response()->json('Voucher không còn được sử dụng!', 404);
+            } elseif ($voucher->expires_at < Carbon::now()) {
+                return response()->json('Voucher đã hết hạn!', 404);
+            }
         }
 
+        $user = Auth::user();
         $order = Order::create([
             'order_number'      =>  'ORD-' . strtoupper(uniqid()),
             'user_id'           => Auth::user()->id,
             'status'            =>  'pending',
             'payment_status'    =>  0,
-            'payment_method'    =>  null,
+            'payment_method'    =>  $request->payment_method,
+            'type' => 'retail',
+            'address' => $user->address,
+            'city' => $user->city,
+            'district' => $user->district,
+            'wards' => $user->wards,
+            'phone_number' => $user->phone_number,
         ]);
 
         if ($order) {
@@ -56,6 +77,7 @@ class OrderController extends Base2Controller
                 }
             }
             $order->grand_total = $totalPrice;
+            $order->grand_total = $totalPrice;
             $order->save();
         }
 
@@ -69,18 +91,46 @@ class OrderController extends Base2Controller
             $order->save();
         } else {
             $order->last_price = $order->grand_total;
+
             $order->save();
         }
+        $order->amount_unpaid = $order->last_price;
+        $order->save();
+        // Notification::send($order->customer, new OrderPendingNotification($order));
         return $order->load('orderItems.product.images');
     }
 
-    public function getUserOrders(){
-        $user= Auth::user();
+    public function getUserOrders()
+    {
+        $user = Auth::user();
 
-        $orders= Order::with('orderItems.product', 'discount')->where('status','!=','refund')->orWhere('status','!=','decline')->where('user_id', $user->id)->get();
+        $orders = Order::with('orderItems.product', 'discount')->where('status', '!=', 'refund')->orWhere('status', '!=', 'decline')->where('user_id', $user->id)->get();
         return $orders;
     }
 
+    public function checkVoucher($data)
+    {
 
-   
+        $voucher = Voucher::find($data["id"]);
+        if ($voucher == null) {
+            return response()->json('Voucher không còn được sử dụng!', 404);
+        } elseif ($voucher->is_fixed == 0) {
+            return response()->json('Voucher không còn được sử dụng!', 404);
+        } elseif ($voucher->expires_at < Carbon::now()) {
+            return response()->json('Voucher đã hết hạn!', 404);
+        }
+    }
+
+    public function orderCompeleted($id)
+    {
+        $order = Order::find($id);
+        if ($order) {
+            $order->update([
+                'status' => 'completed'
+            ]);
+            return response()->json('successfully', 200);
+        } else {
+            return response()->json('Not found', 404);
+        }
+    }
 }

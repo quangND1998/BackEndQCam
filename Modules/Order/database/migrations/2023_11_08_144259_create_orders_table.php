@@ -31,7 +31,10 @@ return new class extends Migration
             //phí ship
             $table->integer('shipping_fee')->nullable();
             //giá phải trả 
-            $table->integer('last_price')->nullable();
+            $table->decimal('amount_paid', 25, 6)->default(0)->nullable();
+
+            $table->decimal('amount_unpaid', 25, 6)->default(0)->nullable();
+            $table->decimal('last_price', 25, 6)->default(0)->nullable();
             $table->string('name')->nullable();
             $table->text('specific_address')->nullable();
             $table->text('address')->nullable();
@@ -40,6 +43,8 @@ return new class extends Migration
             $table->string('wards')->nullable();
             $table->text('notes')->nullable();
             $table->text('reason')->nullable();
+
+            $table->integer('product_service_owner_id')->nullable();
             $table->timestamps();
         });
     }

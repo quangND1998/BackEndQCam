@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive } from "vue";
+import { computed, ref, inject, reactive, toRef, onMounted } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
@@ -25,20 +25,27 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import NewOrderProduct from '@/Pages/Modules/Order/Create/NewOrderProduct.vue'
+import ProductGiff from '@/Pages/Modules/Order/Create/ProductGiff.vue'
 import axios from "axios";
+import MazSelect from 'maz-ui/components/MazSelect'
+import { useCartStore } from "@/stores/cart";
 const swal = inject("$swal");
 
 const props = defineProps({
     product_retails: Array,
     cart: Object,
     total_price: Number,
-    sub_total: Number
+    sub_total: Number,
+    customers: Array
 });
-
+const store = useCartStore();
 const search = ref(null)
-const user = ref(null);
+// const user = ref(null);
 const flash = ref(null);
+const provinces = ref(null)
+
 const form = useForm({
+    user_id: null,
     name: null,
     phone_number: null,
     sex: null,
@@ -50,11 +57,87 @@ const form = useForm({
     discount_deal: 0,
     type: 'retail',
     payment_method: 'cash',
-    shipping_fee: 0
+    shipping_fee: 0,
+    product_service_owner_id: null,
+    amount_paid: 0,
+
 
 })
+const getProvinces = async () => {
+    const response = await fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
+    const jsonData = await response.json();
+    provinces.value = jsonData
+};
+getProvinces();
+
+const districts = computed(() => {
+    if (form.city == null) {
+        return [];
+    } else {
+        return provinces.value.find(pro => {
+            return pro.Name == form.city;
+        });
+    }
+})
+const user = computed({
+
+
+    get() {
+        if (form.user_id) {
+            const user = props.customers.find((customer) => customer.id == form.user_id)
+            if (user) {
+                foundUser(user)
+                return user
+            }
+
+        }
+        else {
+            form.reset()
+            return null
+        }
+    },
+    // setter
+    set(newValue) {
+        return newValue
+        // Note: we are using destructuring assignment syntax here.
+        console.log(newValue)
+    }
+})
+const wards = computed(() => {
+    if (form.city == null && form.district == null) {
+        return [];
+    } else if (form.city !== null && form.district == null) {
+        return [];
+    } else {
+        if (provinces.value) {
+            let array = provinces.value.find(pro => {
+                return pro.Name == form.city;
+            });
+            console.log('wards', array)
+            if (array.Districts) {
+                return array.Districts.find(district => {
+                    return district.Name == form.district;
+                });
+            }
+            return []
+
+        }
+        return []
+    }
+})
+const onChangeCity = (event) => {
+    form.district = null;
+    form.wards = null;
+}
+const onChangeUser = (event) => {
+    form.user_id = event.target.value
+}
+const onChangeDistrict = (event) => {
+    // this.form.wards = null;
+}
 
 const foundUser = (data) => {
+    form.user_id = data.id
     form.name = data.name
     form.phone_number = data.phone_number
     form.sex = data.sex
@@ -70,14 +153,16 @@ const onSearchUser = async () => {
             foundUser(res.data)
         }
     }).catch(err => {
-        user.value = null
+        // user.value = null
         flash.value = err.response.data
         form.reset()
     })
 
 }
-const save = () => {
-    if (user.value ==null) {
+
+
+const saveOrder = () => {
+    if (user.value == null) {
         swal.fire({
             title: "Lỗi?",
             text: "Chưa có thông tin khách hàng!",
@@ -91,20 +176,72 @@ const save = () => {
             }
         });
     }
-    else{
+    else {
         form.post(route('admin.orders.saveOrder', user.value.id), {
-                    onError: () => {
+            onError: () => {
 
 
-                    },
-                    onSuccess: () => {
-                        form.reset()
+            },
+            onSuccess: () => {
+                form.reset()
 
-                    }
-                });
+            }
+        });
     }
 }
 
+const onChangeType =(event)=>{
+    console.log(event.target.value);
+    form.get(route('admin.cart.fetchCart'), {
+        preserveState:true,
+        preserveScroll:false
+
+
+    },{only:['cart', 'total_price', 'sub_total']} );
+}
+
+const saveGift= () => {
+    if (user.value == null ) {
+        swal.fire({
+            title: "Lỗi?",
+            text: "Chưa có thông tin khách hàng!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+            }
+        });
+    }
+    else if(form.type =='gift_delivery' && form.product_service_owner_id ==null)  {
+        swal.fire({
+            title: "Lỗi?",
+            text: "Chưa chọn dịch vụ sản phẩm để giao quà!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+            }
+        });
+    }
+    else{
+        form.post(route('admin.orders.saveOrderGift', user.value.id), {
+            onError: () => {
+
+
+            },
+            onSuccess: () => {
+                form.reset()
+
+            }
+        });
+    }
+}
 const date = ref(new Date());
 
 </script>
@@ -112,6 +249,7 @@ const date = ref(new Date());
     <LayoutAuthenticated>
 
         <Head title="Quản lý đơn hàng" />
+
         <SectionMain>
             <div class="lg:container m-auto mt-10">
                 <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
@@ -160,9 +298,20 @@ const date = ref(new Date());
                                             Khách
                                             Hàng
                                             *</label>
-                                        <input type="text" id="name" v-model="form.name"
+                                        <!-- <input type="text" id="name"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" required>
+                                            placeholder="" required> -->
+                                        <!-- <select id="name" v-model="form.user_id" @change="onChangeUser($event)"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option :value="null">Chọn Khách hàng</option>
+                                            <option v-for="(customer, index) in customers" :value="customer.id"
+                                                :key="index">{{
+                                                    customer.name }}</option>
+                                        </select> -->
+
+                                        <MazSelect v-model="form.user_id" @change="onChangeUser($event)"
+                                            label="Chọn Khách hàng" search option-value-key="id" option-label-key="name"
+                                            option-input-value-key="name" :options="customers" />
                                     </div>
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -203,93 +352,103 @@ const date = ref(new Date());
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Tỉnh/Thành Phố *</label>
-                                        <input type="text" id="first_name" v-model="form.city"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" required>
+                                        <select id="city" v-model="form.city" @change="onChangeCity($event)"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option :value="null">Chọn tỉnh thành</option>
+                                            <option v-for="(city, index) in provinces" :value="city.Name" :key="index">{{
+                                                city.Name }}</option>
+                                        </select>
+                                        <InputError class="mt-2" :message="form.errors.city" />
                                     </div>
                                     <div class="my-3 min-[320px]:block md:flex">
                                         <div class="min-[320px]:w-full md:w-1/2 mr-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
-                                            <input type="text" id="first_name" v-model="form.district"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                placeholder="" required>
+                                            <select id="city" v-model="form.district" @change="onChangeDistrict($event)"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option :value="null">Chọn quận huyện</option>
+                                                <option v-for="(district, index) in districts.Districts"
+                                                    :value="district.Name" :key="index">
+                                                    {{
+                                                        district.Name }}
+                                                </option>
+                                            </select>
+                                            <InputError class="mt-2" :message="form.errors.district" />
                                         </div>
                                         <div class="min-[320px]:w-full md:w-1/2 ml-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Phường xã*</label>
-                                            <input type="text" id="first_name" v-model="form.wards"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                placeholder="" required>
+                                            <select v-model="form.wards" id="wards"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option :value="null">Chọn phường xã</option>
+                                                <option v-for="(ward, index) in wards.Wards" :value="ward.Name"
+                                                    :key="index">{{ ward.Name }}</option>
+                                            </select>
+                                            <InputError class="mt-2" :message="form.errors.wards" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="my-3">
-                            <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
-                            <div class="flex mt-2">
-                                <div class="mr-2 inline-block">
-                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div>
-                                <div class="mr-2 inline-block">
-                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div>
-                                <div class="mr-2 inline-block">
-                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div>
-                                <label for="uploadFile"
-                                    class="mr-2 cursor-pointer border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg w-20 h-20">
-                                    <svg width="10" height="11" viewBox="0 0 10 11" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M3.88228 10.1406V0.311079H6.11239V10.1406H3.88228ZM0.0825639 6.34091V4.1108H9.91211V6.34091H0.0825639Z"
-                                            fill="#D9D9D9" />
-                                    </svg>
-                                </label>
-                                <input id="uploadFile" type="file" class="hidden">
-                            </div>
-                        </div>
-
+                    
 
                     </div>
                     <div class="min-[320px]:mx-0 md:mx-5">
                         <div class="mb-3">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Loại hình</label>
-                            <select id="countries" v-model="form.type"
+                            <select id="countries" v-model="form.type" @change="onChangeType"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="retail" selected>Bán lẻ</option>
-                                <option value="gif" selected>Giao quà</option>
+                                <option value="retail">Bán lẻ</option>
+                                <option value="gift_delivery">Giao quà</option>
 
                             </select>
                         </div>
-                        <div class="my-3">
+
+                        <div class="mb-3" v-if="form.type == 'gift_delivery' && user">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Theo gói</label>
+                            <select id="countries" v-model="form.product_service_owner_id"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option v-for="(service, index) in user.product_service_owners" :key="index"
+                                    :value="service.id">{{
+                                        service.product.name }} ({{ service.trees.length >0 ?service.trees[0].name :null }})
+                                </option>
+
+
+                            </select>
+                        </div>
+                        <div class="my-3" v-if="form.type == 'retail'">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 VAT(%)</label>
                             <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
                         </div>
-                        <div class="my-2">
+                        <div class="my-2" v-if="form.type == 'retail'">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Ưu đãi (%)</label>
                             <input type="number" id="first_name" v-model="form.discount_deal"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
                         </div>
-                        <div class="my-2">
+                        <div class="my-2" v-if="form.type == 'retail'">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Vận chuyển</label>
                             <MazInputPrice v-model="form.shipping_fee" label="Enter your price" currency="VND"
                                 locale="vi-VN" :min="0" @formatted="formattedPrice = $event" />
                         </div>
+                        <!-- <div class="my-2" v-if="form.type == 'retail'">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Số tiền đã thanh toán</label>
+                            <MazInputPrice v-model="form.amount_paid" label="Enter your price" currency="VND" locale="vi-VN"
+                                :min="0" @formatted="formattedPrice = $event" />
+                        </div> -->
 
-
-                        <div class="my-2">
+                        <div class="my-2" v-if="form.type == 'retail'">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Hình thức thanh toán</label>
                             <select id="countries" v-model="form.payment_method"
@@ -303,9 +462,13 @@ const date = ref(new Date());
                     </div>
                 </div>
             </div>
-            <NewOrderProduct :products="product_retails" :user="user" :cart="cart" :total_price="total_price"
-                :vat="form.vat" :discount_deal="form.discount_deal" :shipping_fee="form.shipping_fee"
-                :payment_method="form.payment_method" :type="form.type" :sub_total="sub_total" @confirm="save" />
+           
+            <ProductGiff @saveGift="saveGift" v-if="form.type == 'gift_delivery'" :products="product_retails" :user="user"  :cart="cart"/>
+
+            <NewOrderProduct v-if="form.type == 'retail'" :products="product_retails" :user="user" :cart="cart"
+                :total_price="total_price" :vat="form.vat" :discount_deal="form.discount_deal"
+                :shipping_fee="form.shipping_fee" :payment_method="form.payment_method" :type="form.type"
+                :amount_paid="form.amount_paid" :sub_total="sub_total" @confirm="saveOrder" />
 
         </SectionMain>
     </LayoutAuthenticated>

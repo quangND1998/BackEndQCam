@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Order\app\Http\Controllers\OrderController;
+use Modules\Order\app\Http\Controllers\PaymentController;
 use Modules\Order\app\Http\Controllers\ProductServiceVoucherController;
 use Modules\Order\app\Http\Controllers\ProductVoucherController;
 use Modules\Order\app\Http\Controllers\VoucherController;
-
+use Modules\Order\app\Http\Controllers\OrderPackageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,6 +20,7 @@ use Modules\Order\app\Http\Controllers\VoucherController;
 
 Route::group([], function () {
     Route::resource('order', OrderController::class)->names('order');
+    Route::get('order/qrcode/{qr}', [OrderController::class, 'scanOrderDetail'])->name('qrcode_order');
 });
 
 Route::middleware(['auth'])->group(
@@ -65,20 +67,39 @@ Route::middleware(['auth'])->group(
                 Route::get('/create', [OrderController::class, 'createOrder'])->name('create');
                 Route::get('/searchUser', [OrderController::class, 'searchUser'])->name('searchUser');
                 Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
-                Route::post('saveOrder/user',[OrderController::class, 'saveOrder'])->name('saveOrder');
+                Route::post('saveOrder/{user}', [OrderController::class, 'saveOrder'])->name('saveOrder');
+                Route::post('saveOrderGift/{user}', [OrderController::class, 'saveOrderGift'])->name('saveOrderGift');
+                Route::post('/{order}/orderChangeShipping', [OrderController::class, 'orderChangeShipping'])->name('orderChangeShipping');
 
+                Route::prefix('package')->as('package.')->group(function () {
+                    Route::get('all', [OrderPackageController::class, 'index'])->name('index');
+                    Route::get('decline', [OrderPackageController::class, 'listOrderCancel'])->name('decline');
+                    Route::get('complete', [OrderPackageController::class, 'listOrderComplete'])->name('complete');
+
+                    Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
+                    Route::get('pending/{id}', [OrderPackageController::class, 'OrderPending'])->name('pending');
+                    Route::post('/addToCartPackage', [OrderPackageController::class, 'addToCart'])->name('addToCartPackage');
+                    Route::post('orderCancel/{order}', [OrderPackageController::class, 'orderCancel'])->name('orderCancel');
+                    Route::post('orderComplete/{order}', [OrderPackageController::class, 'orderComplete'])->name('orderComplete');
+                });
             });
 
             Route::prefix('cart')->as('cart.')->group(function () {
 
-              
+
                 Route::post('/updateCart', [OrderController::class, 'updateCart'])->name('updateCart');
                 Route::post('/removeItem', [OrderController::class, 'removeItem'])->name('removeItem');
                 Route::post('/removeCart', [OrderController::class, 'removeCart'])->name('removeCart');
                 Route::post('/deleteCarts', [OrderController::class, 'deleteMultipleItem'])->name('deleteCarts');
-    
+                Route::get('/fetchCart', [OrderController::class, 'fetchCart'])->name('fetchCart');
+
                 // Route::put('/update/{shipping}', [PaymentMethodsController::class, 'update'])->name('update');
                 // Route::delete('/delete/{shipping}', [PaymentMethodsController::class, 'destroy'])->name('destroy');
+            });
+
+
+            Route::prefix('payment')->as('payment.')->group(function () {
+                Route::get('/{order}/Cash&Banking', [PaymentController::class, 'orderCashBankingPayment'])->name('orderCashBankingPayment');
             });
         });
     }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Tree\Database\factories\TreeFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-
+use Modules\Customer\app\Models\ProductServiceOwner;
 class Tree extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -17,10 +17,6 @@ class Tree extends Model implements HasMedia
      * The attributes that are mass assignable.
      */
     protected $fillable = ["id",    "name",    "qr_code",    "land_id", "address", "price",    "state", "status",    "description", "user_manual",    "terms_policy", "product_service_owner_id","transfer_value","price_origin" ,   "created_at",    "updated_at"];
-
-
-
-
 
     protected static function newFactory(): TreeFactory
     {

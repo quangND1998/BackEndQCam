@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\API\FAQsController;
 use App\Http\Controllers\API\LoginController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductRetailController;
 use App\Http\Controllers\API\SettingAndInforController;
+use App\Http\Controllers\API\ShipperController;
 use App\Http\Controllers\API\VoucherController;
 use Illuminate\Http\Request;
 use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
@@ -37,10 +39,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         // logout
         Route::post('logout', [LoginController::class, 'logout']);
+        Route::post('updatePassword', [LoginController::class, 'updatePassword']);
+        Route::post('getFireBaseToken', [LoginController::class, 'getFireBaseToken']);
 
 
         // Product-retail
         Route::get('product-retail', [ProductRetailController::class, 'getProducts']);
+        Route::get('product-retail/{id}/detail', [ProductRetailController::class, 'productDetail']);
         // FAQs
         Route::get('faqs', [SettingAndInforController::class, 'FAQs']);
 
@@ -65,6 +70,23 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('saveOrder', [OrderController::class, 'saveOrder'])->name('saveOrder');
 
             Route::get('lisOrder', [OrderController::class, 'getUserOrders'])->name('lisOrder');
+
+            Route::put('{id}/orderCompeleted', [OrderController::class, 'orderCompeleted'])->name('orderCompeleted');
+        });
+
+
+        Route::prefix('notification')->as('notification.')->group(function () {
+
+            Route::get('all', [NotificationController::class, 'notifications'])->name('all');
+
+            Route::get('unreadNotifications', [NotificationController::class, 'getUnreadNotifications'])->name('unreadNotifications');
+            Route::post('readNotifications', [NotificationController::class, 'readNotifications'])->name('readNotifications');
+            Route::delete('deleteNotifications', [NotificationController::class, 'deleteNotifications'])->name('deleteNotifications');
+        });
+
+        Route::prefix('shipper')->as('shipper.')->group(function () {
+
+            Route::get('ordersRetailShipper', [ShipperController::class, 'ordersRetailShipper'])->name('ordersRetailShipper');
         });
     });
 });

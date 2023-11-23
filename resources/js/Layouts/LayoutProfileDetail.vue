@@ -89,20 +89,20 @@ const state = reactive({
                 </li>
                 
                 <li
-                :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('product') }"
+                :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('product','extend') }"
                 class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"
 
                   >
 
                     <Link  :href="route('customer.detail.products.index', customer.id)" class="flex">
-                    <Icon icon="buildings" class=" mr-2" />Sản phẩm</Link>
+                    <Icon icon="buildings" class=" mr-2" /> Gói dịch vụ </Link>
                 </li>
                 <li
-                    :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('service') }"
+                    :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('gift') }"
                     class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"
                    >
-                    <Link :href="route('customer.detail.activity.index', customer?.id)" class="flex">
-                    <Icon icon="amentities" class=" mr-2" />Service</Link>
+                    <Link :href="route('customer.detail.gift', customer?.id)" class="flex">
+                    <Icon icon="amentities" class=" mr-2" />Giao quà</Link>
                 </li>
                 <li
                 :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('activity') }"

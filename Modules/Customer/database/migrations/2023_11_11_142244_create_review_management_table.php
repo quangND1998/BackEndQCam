@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::create('review_management', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('order_id')->nullable();
+            $table->string('type')->nullable();
+            $table->string('evaluate')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->longText('description')->nullable();
             $table->boolean('state')->default(false)->nullable();
             $table->float('star')->default(0)->nullable();

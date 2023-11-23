@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
+use Modules\Customer\app\Models\ReviewManagement;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -59,7 +60,7 @@ class UserController extends Controller
 
     public function edit(Request $request, User $user)
     {
-       
+
         $user->load('roles');
         $user_auth = Auth::user();
         if ($user_auth->hasRole('super-admin')) {
@@ -86,13 +87,13 @@ class UserController extends Controller
                 'sex' => 'required',
                 'address' => 'required',
 
-                'city' => 'required',
-                'wards' => 'required',
-                'district' => 'required',
-                'date_of_birth' => 'required|date',
+                'city' => 'nullable',
+                'wards' => 'nullable',
+                'district' => 'nullable',
+                'date_of_birth' => 'nullable|date',
 
-                'cic_date' => 'required|date',
-                'cic_date_expried' => 'required|date|after:cic_date',
+                'cic_date' => 'nullable|date',
+                'cic_date_expried' => 'nullable|date|after:cic_date',
 
                 'created_byId' => 'nullable',
                 'password' => 'nullable',
@@ -128,13 +129,13 @@ class UserController extends Controller
                 'sex' => 'required',
                 'address' => 'required',
                 'password' => 'nullable',
-                'city' => 'required',
-                'wards' => 'required',
-                'district' => 'required',
-                'date_of_birth' => 'required|date',
+                'city' => 'nullable',
+                'wards' => 'nullable',
+                'district' => 'nullable',
+                'date_of_birth' => 'nullable|date',
 
-                'cic_date' => 'required|date',
-                'cic_date_expried' => 'required|date|after:cic_date',
+                'cic_date' => 'nullable|date',
+                'cic_date_expried' => 'nullable|date|after:cic_date',
 
                 'created_byId' => 'nullable',
                 'password' => 'nullable',

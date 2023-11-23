@@ -19,8 +19,8 @@ use Modules\Tree\app\Http\Controllers\TreeController;
 
 Route::group([], function () {
     Route::resource('tree', TreeController::class)->names('tree');
+    Route::get('tree/qrcode/{qr}', [TreeController::class, 'treeDetail'])->name('qrcode_tree');
 });
-
 
 Route::middleware(['auth'])->group(
     function () {

@@ -37,7 +37,7 @@ class User extends Authenticatable implements HasMedia
         'username',
         'email',
         'password',
-        'phone_number', 'isVerified',  'address', 'date_of_brith', 'cic_number', 'sex', 'adrress', 'date_of_birth', 'city', 'district', 'wards', 'cic_date', 'cic_date_expried', 'phone_number2', 'date_of_birth'
+        'phone_number', 'isVerified',  'address', 'date_of_brith', 'cic_number', 'sex', 'adrress', 'date_of_birth', 'city', 'district', 'wards', 'cic_date', 'cic_date_expried', 'phone_number2', 'date_of_birth', 'fcm_token'
     ];
 
     /**
@@ -117,5 +117,17 @@ class User extends Authenticatable implements HasMedia
     public function related_images()
     {
         return $this->media()->where('collection_name', 'related_images');
+    }
+
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
+    }
+
+
+    public function shipper_orders()
+    {
+
+        return $this->hasMany(Order::class, 'shipper_id');
     }
 }

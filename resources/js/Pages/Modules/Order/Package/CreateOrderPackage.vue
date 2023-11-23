@@ -3,6 +3,7 @@ import { computed, ref, inject, reactive } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
+import BaseButton from "@/Components/BaseButton.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import {
     mdiEye,
@@ -30,14 +31,16 @@ const swal = inject("$swal");
 
 const props = defineProps({
     product_services: Array,
-    trees : Array,
+    trees: Array,
     total_price: Number,
     sub_total: Number
 });
 
 const search = ref(null)
-const user = ref(null);
+
 const flash = ref(null);
+const provinces = ref(null)
+
 const form = useForm({
     name: null,
     phone_number: null,
@@ -51,11 +54,83 @@ const form = useForm({
     type: 'retail',
     payment_method: 'cash',
     shipping_fee: 0,
-    time_reservations : 1,
+    time_reservations: 1,
     price_percent: null,
-
+    product_selected: props.product_services.length > 0 ? props.product_services[0].id : null,
+    time_approve: new Date(),
 })
+const getProvinces = async () => {
+    const response = await fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
+    const jsonData = await response.json();
+    provinces.value = jsonData
+};
+getProvinces();
 
+const districts = computed(() => {
+    if (form.city == null) {
+        return [];
+    } else {
+        return provinces.value.find(pro => {
+            return pro.Name == form.city;
+        });
+    }
+})
+const user = computed({
+
+
+    get() {
+        if (form.user_id) {
+            const user = props.customers.find((customer) => customer.id == form.user_id)
+            if (user) {
+                foundUser(user)
+                return user
+            }
+
+        }
+        else {
+            form.reset()
+            return null
+        }
+    },
+    // setter
+    set(newValue) {
+        return newValue
+        // Note: we are using destructuring assignment syntax here.
+        console.log(newValue)
+    }
+})
+const wards = computed(() => {
+    if (form.city == null && form.district == null) {
+        return [];
+    } else if (form.city !== null && form.district == null) {
+        return [];
+    } else {
+        if (provinces.value) {
+            let array = provinces.value.find(pro => {
+                return pro.Name == form.city;
+            });
+            console.log('wards', array)
+            if (array.Districts) {
+                return array.Districts.find(district => {
+                    return district.Name == form.district;
+                });
+            }
+            return []
+
+        }
+        return []
+    }
+})
+const onChangeCity = (event) => {
+    form.district = null;
+    form.wards = null;
+}
+const onChangeUser = (event) => {
+    form.user_id = event.target.value
+}
+const onChangeDistrict = (event) => {
+    // this.form.wards = null;
+}
 const foundUser = (data) => {
     form.name = data.name
     form.phone_number = data.phone_number
@@ -79,7 +154,7 @@ const onSearchUser = async () => {
 
 }
 const save = () => {
-    if (user.value ==null) {
+    if (form.name == null ||  form.phone_number == null ) {
         swal.fire({
             title: "Lỗi?",
             text: "Chưa có thông tin khách hàng!",
@@ -93,18 +168,24 @@ const save = () => {
             }
         });
     }
-    else{
-        form.post(route('admin.orders.saveOrder', user.value.id), {
-                    onError: () => {
-                    },
-                    onSuccess: () => {
-                        form.reset()
+    else {
+        form.post(route('admin.orders.package.addToCartPackage'), {
+            onError: () => {
+            },
+            onSuccess: () => {
+                form.reset()
 
-                    }
-                });
+            }
+        });
     }
 }
-
+const changeProduct = (event)  => {
+    form.product_selected = event.target.value
+}
+const  product = computed(() => {
+// props.products.find(e => e.id == form.product_service);
+    return props.product_services.find((e) => e.id == form.product_selected)
+})
 const date = ref(new Date());
 </script>
 <template>
@@ -202,26 +283,41 @@ const date = ref(new Date());
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Tỉnh/Thành Phố *</label>
-                                        <input type="text" id="first_name" v-model="form.city"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" required>
+                                        <select id="city" v-model="form.city" @change="onChangeCity($event)"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option :value="null">Chọn tỉnh thành</option>
+                                            <option v-for="(city, index) in provinces" :value="city.Name" :key="index">{{
+                                                city.Name }}</option>
+                                        </select>
+                                        <InputError class="mt-2" :message="form.errors.city" />
                                     </div>
                                     <div class="my-3 min-[320px]:block md:flex">
                                         <div class="min-[320px]:w-full md:w-1/2 mr-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
-                                            <input type="text" id="first_name" v-model="form.district"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                placeholder="" required>
+                                            <select id="city" v-model="form.district" @change="onChangeDistrict($event)"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option :value="null">Chọn quận huyện</option>
+                                                <option v-for="(district, index) in districts.Districts"
+                                                    :value="district.Name" :key="index">
+                                                    {{
+                                                        district.Name }}
+                                                </option>
+                                            </select>
+                                            <InputError class="mt-2" :message="form.errors.district" />
                                         </div>
                                         <div class="min-[320px]:w-full md:w-1/2 ml-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Phường xã*</label>
-                                            <input type="text" id="first_name" v-model="form.wards"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                placeholder="" required>
+                                            <select v-model="form.wards" id="wards"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option :value="null">Chọn phường xã</option>
+                                                <option v-for="(ward, index) in wards.Wards" :value="ward.Name"
+                                                    :key="index">{{ ward.Name }}</option>
+                                            </select>
+                                            <InputError class="mt-2" :message="form.errors.wards" />
                                         </div>
                                     </div>
                                 </div>
@@ -273,14 +369,14 @@ const date = ref(new Date());
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                               Thời gian giữ chỗ (ngày)</label>
+                                Thời gian giữ chỗ (ngày)</label>
                             <input type="number" id="first_name" v-model="form.time_reservations"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                              Số tiền thanh toán (%)</label>
+                                Số tiền thanh toán (vnd)</label>
                             <input type="number" id="first_name" v-model="form.price_percent"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
@@ -299,10 +395,130 @@ const date = ref(new Date());
                     </div>
                 </div>
             </div>
-            <NewOrderPackage :product_services="product_services" :trees="trees" :user="user" :cart="cart" :total_price="total_price"
+            <!-- <NewOrderPackage :product_services="product_services" :trees="trees" :user="user" :cart="cart" :total_price="total_price"
                 :vat="form.vat" :discount_deal="form.discount_deal" :shipping_fee="form.shipping_fee" :time_reservations="form.time_reservations"
-                :price="form.price_percent"
-                :payment_method="form.payment_method" :type="form.type" :sub_total="sub_total" @confirm="save" />
+                :price_percent="form.price_percent" :product_selected ="form.product_selected" :time_approve ="form.time_approve"
+                :payment_method="form.payment_method" :type="form.type" :sub_total="sub_total" @confirm="save" /> -->
+            <div class="min-[320x]:w-full grid grid-cols-3 gap-4">
+
+                <div class=" col-span-2 mt-2 w-full">
+                    <div class="relative shadow-md sm:rounded-lg mb-5 mt-4">
+                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        Gói sản phẩm
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Tổng
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white border-b ">
+                                    <td class="px-6 py-4 ">
+                                        <select id="countries" @change="changeProduct($event)" v-model="form.product_selected"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 ">
+                                            <option v-for="(product, index) in product_services" :key="index"
+                                                :value="product.id">{{
+                                                    product.name }}</option>
+
+                                        </select>
+                                        <label for="first_name"
+                                            class="block mb-1 mt-4 text-sm  text-gray-900 dark:text-white">
+                                            Áp dụng từ ngày</label>
+                                        <div class="flex items-center w-60 ">
+                                            <VueDatePicker v-model="form.time_approve" time-picker-inline />
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6  py-4">
+                                        <p type="number" class="border-[0px] text-[#686868] font-bold w-28">{{
+                                            formatPrice(product?.price) }}</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bg-white rounded-lg p-3">
+                        <div class="flex justify-between">
+                            <div>
+                                <!-- <font-awesome-icon :icon="['fas', 'cart-shopping']" class="mt-1" /> -->
+                                <span class="text-xl font-semibold ml-2">Quyền lợi nhận nuôi {{ product?.name }}</span>
+                            </div>
+
+                        </div>
+                        <hr />
+                        <div class="my-3">
+                            <div class="block ml-3 w-4/5">
+                                <h3 class="text-base font-semibold">1. Thăm vườn không giới hạn</h3>
+                                <p class="text-xs font-normal">Nhận {{ product?.free_visit }} lần tham quan miễn phí</p>
+                            </div>
+                            <div class="block ml-3 w-4/5">
+                                <h3 class="text-base font-semibold">2. Thu hoạch {{ product?.amount_products_received }} kg
+                                    cam</h3>
+                                <p class="text-xs font-normal">{{ product?.number_deliveries }} lần ship hàng về tận nhà</p>
+                            </div>
+                            <div class="block ml-3 w-4/5">
+                                <h3 class="text-base font-semibold">3. Tặng thẻ Membership</h3>
+                                <p class="text-xs font-normal">Hưởng đặc quyền riêng từ trang trại</p>
+                            </div>
+                            <div class="block ml-3 w-4/5">
+                                <h3 class="text-base font-semibold">4. Nhận nông sản sạch
+                                    {{ product?.number_receive_product }} lần/năm</h3>
+                                <p class="text-xs font-normal">Các sản phẩm nông sản như thanh long
+                                    sầu riêng là quà tặng đến cho bạn</p>
+                            </div>
+                            <div class="block ml-3 w-4/5">
+                                <h3 class="text-base font-semibold">5. Quà tặng thêm</h3>
+                                <p class="text-xs font-normal">Nhiều phần quà nông sản hấp dẫn trị tổng
+                                    trị giá xx triệu</p>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                </div>
+
+                <div class="mx-5">
+                    <div class="flex justify-between my-2">
+                        <p class="text-sm text-[#686868] font-bold">Tổng</p>
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(product?.price) }} vnđ</p>
+                    </div>
+                    <div class="flex justify-between my-2">
+                        <p class="text-sm text-[#686868] font-bold">VAT({{ vat }}%)</p>
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.vat * product?.price) / 100) }} vnd</p>
+                    </div>
+                    <div class="flex justify-between my-2">
+                        <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
+                        <p class="text-sm text-[#686868] font-bold">Miễn phí</p>
+                    </div>
+                    <div class="flex justify-between my-2">
+                        <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.discount_deal * product?.price) / 100) }}đ
+                        </p>
+                    </div>
+                    <div class="flex justify-between my-2">
+                        <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
+                        <p class="text-sm text-[#686868]">{{ formatPrice((product?.price + ((form.vat * product?.price) / 100) -
+                            ((form.discount_deal * product?.price) / 100))) }} vnd</p>
+                    </div>
+                    <div class="flex justify-between my-2">
+                        <p class="text-sm text-[#686868]">Đã thanh toán</p>
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.price_percent) }} vnđ</p>
+                    </div>
+                    <div class="flex justify-between my-2">
+                        <p class="text-sm text-[#686868] font-bold">Còn lại</p>
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((product?.price +
+                            ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) - form.price_percent) }}</p>
+                    </div>
+                    <div class="my-3">
+                        <BaseButton color="info" @click="save()"
+                            class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center rounded-lg"
+                            :icon="mdiContentSaveMove" small label="Lưu hợp đồng" />
+                    </div>
+
+                </div>
+            </div>
 
         </SectionMain>
     </LayoutAuthenticated>

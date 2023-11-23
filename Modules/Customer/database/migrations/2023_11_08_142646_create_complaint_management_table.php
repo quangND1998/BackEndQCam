@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('complaint_management', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('type')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->longText('description')->nullable();
             $table->boolean('state')->default(false)->nullable();

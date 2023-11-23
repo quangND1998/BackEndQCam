@@ -296,7 +296,8 @@ const save = () => {
                                 </div>
                             </div>
                         </div>
-
+                        <label for="phone" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                            Quyền *</label>
                         <Multiselect v-model="form.roles" mode="tags" :appendNewTag="false" :createTag="false"
                             :searchable="true" label="name" valueProp="id" trackBy="name" :options="roles"
                             class="form-control" :classes="{

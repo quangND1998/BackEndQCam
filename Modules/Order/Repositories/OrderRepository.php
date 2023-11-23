@@ -18,7 +18,6 @@ class OrderRepository implements OrderContract
 
     public function storeOrderDetails($params, $user)
     {
-        dd($params);
         $order = Order::create([
             'order_number'      =>  'ORD-' . strtoupper(uniqid()),
             'user_id'           => $user->id,
@@ -69,7 +68,7 @@ class OrderRepository implements OrderContract
 
     public function getOrder($request, $status)
     {
-        return Order::whereHas(
+        return Order::with(['customer', 'orderItems.product', 'discount', 'shipper'])->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
@@ -79,7 +78,7 @@ class OrderRepository implements OrderContract
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->name . '%');
             }
-        )->with(['customer', 'orderItems.product', 'discount'])->where('status', $status)->fillter($request->only('search', 'from', 'to'))->orderBy('created_at', 'desc')->paginate(10);
+        )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(10);
     }
 
 

@@ -21,7 +21,6 @@ class ProductRetailResource extends JsonResource
             "description" => $this->description,
             "status" => $this->status == 1 ? true : false,
             "price" => $this->price,
-            "description" => $this->description,
             "images" => ImageResource::collection($this->images),
             // 'vouchers' => VoucherResource::collection($this->vouchers)
         ];
