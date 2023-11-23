@@ -133,5 +133,19 @@ class OrderHistoryController extends Base2Controller
         ];
         return response()->json($response, 200);
     }
+    public function checkDay($lif_time, $unit)
+    {
+        switch ($unit) {
+            case "day":
+                return $lif_time;
+                break;
+            case "month":
+                return $lif_time*30;
+                break;
+            case "year":
+                return $lif_time*365;
+                break;
+        }
+    }
 
 }
