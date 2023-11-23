@@ -260,14 +260,13 @@ const Delete = (id) => {
                                     <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)
                                     </p>
                                 </div>
-                                <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.file[0]" type="file"
+                                <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.files" multiple type="file"
                                     class="hidden" accept="image/*" />
                                 <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
                                     class="hidden" accept="image/*" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.images" />
                         </div>
-
 
 
                     </div>
@@ -350,7 +349,9 @@ const Delete = (id) => {
                                 <th scope="col" class="px-6 py-3">
                                     Tên
                                 </th>
-
+                                <th scope="col" class="px-6 py-3">
+                                    Ảnh thumb
+                                </th>
                                 <th scope="col" class="px-6 py-3">
                                     Số lượng cây
                                 </th>
@@ -400,6 +401,9 @@ const Delete = (id) => {
                                 </th>
                                 <td class="px-6 py-4">
                                     {{ product_service.name }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <img :src="product_service?.images.length >0?product_service?.images[0].original_url :null" >
                                 </td>
 
                                 <td class="px-6 py-4">
