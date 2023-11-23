@@ -26,7 +26,7 @@ return new class extends Migration
             // gia tam thoi
             $table->decimal('grand_total', 20)->nullable();
             // triết khấu
-            $table->integer('discount')->default(0)->nullable();
+            $table->unsignedBigInteger('discount')->nullable();
 
             //phí ship
             $table->integer('shipping_fee')->nullable();

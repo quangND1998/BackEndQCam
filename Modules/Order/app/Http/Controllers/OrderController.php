@@ -453,6 +453,10 @@ class OrderController extends Controller
                 }
             }
         }
+
+        foreach ($request->images as $image) {
+            $user->addMedia($image)->toMediaCollection('order_related_images');
+        }
         Cart::clear();
         Cart::clearCartConditions();
         if ($order->payment_method == 'cash' || $order->payment_method == 'banking') {
@@ -584,13 +588,18 @@ class OrderController extends Controller
                 }
             }
         }
+
+        foreach ($request->images as $image) {
+            $user->addMedia($image)->toMediaCollection('order_related_images');
+        }
         Cart::clear();
         Cart::clearCartConditions();
         return redirect()->route('admin.orders.pending')->with('success', 'Đã tạo đơn quà');
     }
 
-    public function scanOrderDetail($id){
-        $order = Order::with('orderItems.product','product_service.product','product_service.trees','reviews')->find($id);
+    public function scanOrderDetail($id)
+    {
+        $order = Order::with('orderItems.product', 'product_service.product', 'product_service.trees', 'reviews')->find($id);
         $contact = Contact::find(1);
         if ($order) {
             //   return $order;
