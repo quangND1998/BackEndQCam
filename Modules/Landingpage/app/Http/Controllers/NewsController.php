@@ -73,12 +73,11 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, News $new) : RedirectResponse
+    public function update(UpdateRequest $request, $new) : RedirectResponse
     {
-        //
+        $new = News::findOrFail($new);
         $new->update([
             'title' => $request->title,
-            'link' => changeTitle($request->title),
             'state' => $request->state,
             'type' =>$request->type,
             'short_description' =>$request->short_description,

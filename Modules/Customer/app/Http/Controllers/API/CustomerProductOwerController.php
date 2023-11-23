@@ -37,7 +37,16 @@ class CustomerProductOwerController extends Base2Controller
             return response()->json('Chua login', 200);
 
    }
-
+   public function getProductServiceDetail($id){
+        $customer = Auth::user();
+        if($customer){
+            $product_not_owner = ProductService::with('images')->findOrfail($id);
+            $response = [
+                'product_detail' =>$product_not_owner
+            ];
+            return $this->sendResponse($response, 'Get apartmentDetail successfully');
+        }
+    }
    public function getOneProductActivity($id)
    {
         $customer = Auth::user();

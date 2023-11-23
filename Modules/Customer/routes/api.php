@@ -29,6 +29,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('product_service', [CustomerProductOwerController::class, 'getProductService']);
             Route::get('checkProduct/{id}', [CustomerProductOwerController::class, 'checkProduct']);
             Route::get('productWithID/{id}', [CustomerProductOwerController::class, 'getOneProductActivity']);
+            // getProductServiceDetail
+            Route::get('productService/{id}', [CustomerProductOwerController::class, 'getProductServiceDetail']);
             Route::get('getDetailExtendHistory', [CustomerProductOwerController::class, 'getDetailExtendHistory']);
 
             Route::post('visit/save', [ScheduleVisitController::class, 'saveScheduleVisit']);
@@ -53,6 +55,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::get('getReviewOrder/{id}', [ReviewManagerController::class, 'getReviewOrder']);
 
             });
+            // saveOrderPackage
+            Route::post('saveOrderPackage', [OrderHistoryController::class, 'saveOrderPackageFromApp']);
         });
     });
 });
