@@ -35,6 +35,13 @@ class OrderPackageController extends Controller
         $this->middleware('permission:order-refund', ['only' => ['index', 'refund']]);
         $this->middleware('permission:order-decline', ['only' => ['index', 'decline']]);
     }
+    public function orderChangeStatus(Request $request, OrderPackage $order)
+    {
+        $order->update([
+            'status' => $request->status,
+        ]);
+        return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
+    }
     public function index(Request $request)
     {
         // $order = Order::with('discount')->find(1);
@@ -150,11 +157,21 @@ class OrderPackageController extends Controller
         ], [
             'reason.required' => 'Điền lý do hủy đơn'
         ]);
-        $order->update([
-            'status' => 'decline',
-            'reason' => $request->reason
-        ]);
+        // $order->update([
+        //     'status' => 'decline',
+        //     'reason' => $request->reason
+        // ]);
 
+        dd($order);
+        $product_service_owner = ProductServiceOwner::where('user_id',$order->user_id)->where('product_service_id',$order->product_service)->first();
+        
+        dd($product_service_owner);
+
+        foreach($product_service_owner->trees as $tree){
+            $tree->product_service_owner_id = null;
+            $tree->save();
+        }
+       // $product_service_owner->delete();
         return back()->with('success', 'Hủy đơn thành công');
     }
     public function orderComplete(Request $request, OrderPackage $order)

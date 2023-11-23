@@ -1,10 +1,9 @@
 <template>
     <div class="flex justify-between">
-        <button v-if="status == 'pending'"
+        <button v-if="status == 'pending' || status == 'complete' "
             class="border text-red-700 rounded-lg bg-gray-100 px-3 py-2" data-toggle="modal"
-            data-target="#exampleModalDecline" @click="openDecline(order)">{{status}} Hủy gói</button>
-         <!-- <button v-if="status == 'complete'" class="border rounded-lg bg-gray-100 px-3 py-2"
-            data-toggle="modal" data-target="#exampleModalRefund" @click="openRefund(order)">Hoàn đơn</button> -->
+            data-target="#exampleModalDecline" @click="openDecline(order)">Hủy gói</button>
+         <button v-if="status == 'decline'" class="border rounded-lg bg-gray-100 px-3 py-2" @click="orderChangePending(order)">Làm mới hợp đồng</button>
         <div class="flex">
             <select v-if="status == 'pending' || status == 'packing' || status == 'shipping' || status == 'completed'"
                 id="countries" @change="orderChangePayment( $event)"
@@ -13,7 +12,7 @@
 
                 <option :value="1" :selected="order.payment_status == 1 ? true : false">Đã thanh toán</option>
             </select>
-            <button v-if="status == 'pending'" @click="orderChangePacking(order)"
+            <button v-if="status == 'pending' && order.payment_status == 1" @click="orderChangePacking(order)"
                 class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Đuyệt gói</button>
             <button v-if="status == 'packing'" @click="orderChangeShipping(order)"
                 class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Bắt đầu giao hàng</button>
@@ -46,7 +45,7 @@ const orderChangePending = () => {
     swal
         .fire({
             title: "Bạn có muốn?",
-            text: `Làm mới đơn hàng ${props.order.order_number} !`,
+            text: `Làm mới gói dịch vụ ${props.order.order_number} !`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -56,13 +55,13 @@ const orderChangePending = () => {
         .then((result) => {
             if (result.isConfirmed) {
 
-                router.post(route("admin.orders.orderChangeStatus", props.voucher.id), query,
+                router.post(route("admin.orders.package.orderChangeStatus", props.order.id), query,
                     {
                         preserveState: true,
                         preserveScroll: true
                     }, {
                     onSuccess: () => {
-                        swal.fire("Thành Công!", "Đã thêm các sản phẩm vào mã giảm giá.", "success");
+                        swal.fire("Thành Công!", "Đã làm mới hợp đồng, chuyển sang trạng thái chờ duyệt.", "success");
                     },
                 });
             }
@@ -88,7 +87,7 @@ const orderChangePayment = (event) => {
             if (result.isConfirmed) {
 
 
-                router.post(route("admin.orders.orderChangePayment"), query,
+                router.post(route("admin.orders.package.orderChangePayment"), query,
                     {
                         preserveState: true,
                         preserveScroll: true
@@ -147,7 +146,7 @@ const orderChangeCompleted = () => {
         .then((result) => {
             if (result.isConfirmed) {
 
-                router.post(route("admin.orders.orderChangeStatus", props.order.id), query,
+                router.post(route("admin.orders.package.orderChangeStatus", props.order.id), query,
                     {
                         preserveState: true,
                         preserveScroll: true
@@ -182,7 +181,7 @@ const orderChangePacking = () => {
                         preserveScroll: true
                     }, {
                     onSuccess: () => {
-                        swal.fire("Thành Công!", "Đã thêm các sản phẩm vào mã giảm giá.", "success");
+                        swal.fire("Thành Công!", "Đã thêm hợp đồng với khách hàng.", "success");
                     },
                 });
 
