@@ -49,6 +49,8 @@ const form = useForm({
     description: null,
     unit: null,
     images:null,
+    transfer_value: null,
+    price_origin: null
 });
 
 
