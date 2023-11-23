@@ -14,7 +14,7 @@ use Modules\Tree\app\Models\ProductService;
 class ProductServiceController extends Controller
 {
     protected $allowStoreField = [
-        'name', 'number_tree', "acreage",  "free_visit", "amount_products_received", "price",    "number_deliveries", "life_time", "description", "number_receive_product",   "unit"
+        'name', 'number_tree', "acreage",  "free_visit", "amount_products_received", "price",    "number_deliveries", "life_time", "description", "number_receive_product",   "unit","transfer_value","price_origin"
     ];
     public function __construct()
     {

@@ -218,10 +218,21 @@ const Delete = (id) => {
                             <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required />
                             <InputError class="mt-2" :message="form.errors.name" />
                         </div>
-                        <div class="my-2">
-                            <InputLabel for="name" value="Diện tích vườn rau" />
-                            <TextInput id="name" v-model="form.acreage" type="text" class="mt-1 block w-full" required />
-                            <InputError class="mt-2" :message="form.errors.acreage" />
+                        <div class="">
+                            <InputLabel for="number_deliveries" value="Giá bán" />
+                            <label class="input w-full" >
+                                <MazInputPrice v-model="form.price"  currency="VND" locale="vi-VN"
+                                    :min="0" @formatted="formattedPrice = $event" />
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.price" />
+                        </div>
+                        <div class="">
+                            <InputLabel for="number_deliveries" value="Giá gốc" />
+                            <label class="input w-full" >
+                                <MazInputPrice v-model="form.price_origin"  currency="VND" locale="vi-VN"
+                                    :min="0" @formatted="formattedPrice = $event" />
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.price_origin" />
                         </div>
                         <div class="my-2">
                             <InputLabel for="name" value="Số lượng cây" />
@@ -270,12 +281,18 @@ const Delete = (id) => {
                     </div>
                     <div>
                         <div class="">
-                            <InputLabel for="number_deliveries" value="Giá" />
+                            <InputLabel for="name" value="Diện tích vườn rau" />
+                            <TextInput id="name" v-model="form.acreage" type="text" class="mt-1 block w-full" required />
+                            <InputError class="mt-2" :message="form.errors.acreage" />
+                        </div>
+
+                        <div class="">
+                            <InputLabel for="transfer_value" value="Giá chuyển nhượng" />
                             <label class="input w-full" >
-                                <MazInputPrice v-model="form.price"  currency="VND" locale="vi-VN"
+                                <MazInputPrice v-model="form.transfer_value"  currency="VND" locale="vi-VN"
                                     :min="0" @formatted="formattedPrice = $event" />
                             </label>
-                            <InputError class="mt-2" :message="form.errors.price" />
+                            <InputError class="mt-2" :message="form.errors.transfer_value" />
                         </div>
                         <div class="my-2">
                             <InputLabel for="number_deliveries" value="Số lần nhận nông sản" />
@@ -312,7 +329,7 @@ const Delete = (id) => {
                             </label>
                             <InputError class="mt-2" :message="form.errors.state" />
                         </div>
-                        <div class="h-[120px] rounded-lg">
+                        <div class="h-[160px] rounded-lg">
                             <InputLabel for="name" value="Mô tả" />
                             <label class="input w-full" for="recipient-name">
 
