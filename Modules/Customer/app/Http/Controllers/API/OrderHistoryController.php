@@ -93,7 +93,7 @@ class OrderHistoryController extends Base2Controller
             return response()->json($response, 200);
     }
     public function saveOrderPackageFromApp(Request $request){
-        $validator = Validator::make($request->only('items', 'payment_method'), [
+        $validator = Validator::make($request->only('package_id', 'payment_method'), [
             'package_id' => 'required',
             'payment_method' => 'required'
         ], [
