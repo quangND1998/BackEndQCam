@@ -267,14 +267,12 @@ const Delete = (id) => {
                             </label>
                             <InputError class="mt-2" :message="form.errors.images" />
                         </div>
-
-
                     </div>
                     <div>
                         <div class="">
                             <InputLabel for="number_deliveries" value="Giá" />
                             <label class="input w-full" >
-                                <MazInputPrice v-model="form.price" label="Enter your price" currency="VND" locale="vi-VN"
+                                <MazInputPrice v-model="form.price"  currency="VND" locale="vi-VN"
                                     :min="0" @formatted="formattedPrice = $event" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.price" />
