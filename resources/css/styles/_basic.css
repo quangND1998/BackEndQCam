@@ -15,10 +15,12 @@
       @apply text-white hover:text-green;
     }
     .aside-menu-item-active {
-      @apply text-aside_menu_item_active;
+      /* @apply text-aside_menu_item_active; */
+      @apply bg-[#f6f7fa] text-black font-semibold py-2
     }
     .aside-menu-dropdown {
-      @apply bg-bg_green_default;
+      /* @apply bg-bg_green_default; */
+      @apply bg-white text-black
     }
     .navbar-item-label {
       @apply text-black hover:text-blue-500;

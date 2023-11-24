@@ -68,11 +68,11 @@ const checkOpenMenu = () => {
 </script>
 
 <template>
-  <li>
+  <li class="text-black py-2">
 
     <component v-if="hasAnyPermission(item.permissions)" :is="item.route ? Link : 'div'" :href="itemHref"
       v-tooltip="item.label" :target="item.target ?? null" class="flex cursor-pointer"
-      :class="[componentClass, activeInactiveStyle]" @click="menuClick">
+      :class="[activeInactiveStyle]" @click="menuClick">
       <BaseIcon v-if="item.icon" :path="item.icon" class="flex-none " :class="activeInactiveStyle" w="w-16" :size="20" />
       <div v-else class="flex-none p-2" />
       <span v-if="item.icon" class="grow text-ellipsis line-clamp-1 text-[14px]" ::class="[{ 'pr-12': !hasDropdown }, activeInactiveStyle]">{{
@@ -87,3 +87,25 @@ const checkOpenMenu = () => {
       :class="['aside-menu-dropdown', isDropdownActive ? 'block ' : 'hidden']" is-dropdown-list />
   </li>
 </template>
+<style scoped>
+/* scroll */
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1a8;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d4d1d17e;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #cecccc5b;
+}
+</style>

@@ -32,8 +32,8 @@ const asideLgCloseClick = (event) => {
 
 <template>
   <aside id="aside" class=" w-[260px] fixed flex z-40 top-0 h-screen transition-position overflow-hidden">
-    <div class="aside flex-1 flex flex-col overflow-hidden  bg-bg_green_default text-white">
-      <div class="aside-brand flex flex-row h-[80px] items-center justify-between bg-white text-white">
+    <div class="aside flex-1 flex flex-col overflow-hidden  bg-bg_green_default">
+      <div class="aside-brand flex flex-row h-[80px] items-center justify-between bg-white">
         <div class="flex items-center text-center flex-1 p-3">
             <img class="h-10 mr-4" src="/assets/Images/avatar.png" alt="">
           <b class="font-[700]">{{ $page.props.auth.user.name }}</b>
@@ -55,6 +55,7 @@ const asideLgCloseClick = (event) => {
 </template>
 
 <style scope>
+
 .aside-menu-dropdown li{
     width: 75%;
     margin-left: 20%;
