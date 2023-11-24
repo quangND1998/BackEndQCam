@@ -8,8 +8,12 @@ use Modules\Order\Database\factories\OrderPackageFactory;
 use Modules\Tree\app\Models\ProductService;
 use App\Models\User;
 use Carbon\Carbon;
-class OrderPackage extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class OrderPackage extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     use HasFactory;
     protected $table = 'order_packages';
     protected $fillable = [
@@ -67,6 +71,10 @@ class OrderPackage extends Model
 
             $query->where('type', $filters['type']);
         }
+    }
+    public function order_package_images()
+    {
+        return $this->media()->where('collection_name', 'order_package_images');
     }
 
 }

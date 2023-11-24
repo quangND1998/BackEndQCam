@@ -314,7 +314,7 @@ const limit_tree = computed(() =>{
                     </div>
                 </div>
             </CardBoxModal>
-            <div class="flex justify-end my-3">
+            <!-- <div class="flex justify-end my-3">
                 <BaseButton color="info" class="bg-blue-500 mx-2 text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                         small @click="
                             isModalActive = true;
@@ -327,7 +327,7 @@ const limit_tree = computed(() =>{
                         small @click="
                             isModalActive = true;
                         " label="Create User" />
-            </div>
+            </div> -->
             <div v-if="selected>1 ">
                 <p class="text-red-600 text-end">Xóa (5) Customer</p>
             </div>

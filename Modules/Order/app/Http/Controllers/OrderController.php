@@ -464,10 +464,8 @@ class OrderController extends Controller
         }
     }
 
-
     public function addConditionToCart($request)
     {
-
         if ($request->discount_deal) {
             $conditionDiscount = new \Darryldecode\Cart\CartCondition(array(
                 'name' => 'DISCOUNT',
@@ -478,14 +476,12 @@ class OrderController extends Controller
             ));
             Cart::condition($conditionDiscount);
         }
-
         if ($request->vat) {
             $conditionVat = new \Darryldecode\Cart\CartCondition(array(
                 'name' => 'VAT',
                 'type' => 'tax',
                 'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
                 'value' => $request->vat . '%',
-
             ));
             Cart::condition($conditionVat);
         }
@@ -507,7 +503,6 @@ class OrderController extends Controller
                 'type' => 'tax',
                 'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
                 'value' => $request->shipping_fee,
-
             ));
             Cart::condition($conditionShipping);
         }

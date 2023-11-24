@@ -124,7 +124,9 @@ class OrderPackageController extends Controller
             ]);
             // $oldCart = $request->session()->get('cartPackage');
             // dd($oldCart);
-
+            foreach ($request->images as $image) {
+                $order->addMedia($image)->toMediaCollection('order_related_images');
+            }
             return redirect()->route('admin.orders.package.pending',[$order->id]);
         }
     }
@@ -157,19 +159,18 @@ class OrderPackageController extends Controller
         ], [
             'reason.required' => 'Điền lý do hủy đơn'
         ]);
-        // $order->update([
-        //     'status' => 'decline',
-        //     'reason' => $request->reason
-        // ]);
+        $order->update([
+            'status' => 'decline',
+            'reason' => $request->reason
+        ]);
 
-        dd($order);
-        $product_service_owner = ProductServiceOwner::where('user_id',$order->user_id)->where('product_service_id',$order->product_service)->first();
-        
-        dd($product_service_owner);
+        $product_service_owner = ProductServiceOwner::where('user_id',$order->user_id)->whereHas('trees')->where('product_service_id',$order->product_service)->first();
 
-        foreach($product_service_owner->trees as $tree){
-            $tree->product_service_owner_id = null;
-            $tree->save();
+        if($product_service_owner){
+            foreach($product_service_owner->trees as $tree){
+                $tree->product_service_owner_id = null;
+                $tree->save();
+            }
         }
        // $product_service_owner->delete();
         return back()->with('success', 'Hủy đơn thành công');

@@ -182,8 +182,6 @@ const saveOrder = () => {
     else {
         form.post(route('admin.orders.saveOrder', user.value.id), {
             onError: () => {
-
-
             },
             onSuccess: () => {
                 form.reset()
@@ -198,8 +196,6 @@ const onChangeType = (event) => {
     form.get(route('admin.cart.fetchCart'), {
         preserveState: true,
         preserveScroll: false
-
-
     }, { only: ['cart', 'total_price', 'sub_total'] });
 }
 
@@ -235,8 +231,6 @@ const saveGift = () => {
     else {
         form.post(route('admin.orders.saveOrderGift', user.value.id), {
             onError: () => {
-
-
             },
             onSuccess: () => {
                 form.reset()

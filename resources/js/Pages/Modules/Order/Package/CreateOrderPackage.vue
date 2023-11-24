@@ -25,6 +25,8 @@ import InputError from "@/Components/InputError.vue";
 import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
+import Dropdown from 'primevue/dropdown';
+import BaseIcon from '@/Components/BaseIcon.vue'
 import NewOrderPackage from '@/Pages/Modules/Order/Create/NewOrderPackage.vue'
 import axios from "axios";
 const swal = inject("$swal");
@@ -40,7 +42,7 @@ const search = ref(null)
 
 const flash = ref(null);
 const provinces = ref(null)
-
+const images = ref([])
 const form = useForm({
     name: null,
     phone_number: null,
@@ -58,6 +60,7 @@ const form = useForm({
     price_percent: null,
     product_selected: props.product_services.length > 0 ? props.product_services[0].id : null,
     time_approve: new Date(),
+    images: []
 })
 const getProvinces = async () => {
     const response = await fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
@@ -154,7 +157,7 @@ const onSearchUser = async () => {
 
 }
 const save = () => {
-    if (form.name == null ||  form.phone_number == null ) {
+    if (form.name == null || form.phone_number == null) {
         swal.fire({
             title: "Lỗi?",
             text: "Chưa có thông tin khách hàng!",
@@ -179,13 +182,31 @@ const save = () => {
         });
     }
 }
-const changeProduct = (event)  => {
+const changeProduct = (event) => {
     form.product_selected = event.target.value
 }
-const  product = computed(() => {
-// props.products.find(e => e.id == form.product_service);
+const product = computed(() => {
+    // props.products.find(e => e.id == form.product_service);
     return props.product_services.find((e) => e.id == form.product_selected)
 })
+const DeleteImage = (index) => {
+    form.images.splice(index, 1);
+    images.value.splice(index, 1);
+}
+const onFileChange = (e) => {
+    const files = e.target.files;
+
+    if (files.length > 0) {
+        for (var i = 0; i < files.length; i++) {
+            form.images.push(files[i])
+            images.value.push({
+                name: files[i].name,
+                image: URL.createObjectURL(files[i])
+            });
+        }
+    }
+    console.log(form.images)
+}
 const date = ref(new Date());
 </script>
 <template>
@@ -280,15 +301,28 @@ const date = ref(new Date());
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                     </div>
+
                                     <div class="my-3">
-                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                            Tỉnh/Thành Phố *</label>
-                                        <select id="city" v-model="form.city" @change="onChangeCity($event)"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option :value="null">Chọn tỉnh thành</option>
-                                            <option v-for="(city, index) in provinces" :value="city.Name" :key="index">{{
-                                                city.Name }}</option>
-                                        </select>
+                                        <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name"
+                                            @change="onChangeCity($event)" optionValue="Name" placeholder="Chọn tỉnh thành"
+                                            class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm ">
+                                            <template #value="slotProps">
+
+                                                <div v-if="slotProps.value" class="flex align-items-center">
+
+                                                    <div>{{ slotProps.value }}</div>
+                                                </div>
+                                                <span v-else>
+                                                    {{ slotProps.placeholder }}
+                                                </span>
+                                            </template>
+                                            <template #option="slotProps">
+                                                <div class="flex align-items-center">
+
+                                                    <div>{{ slotProps.option.Name }}</div>
+                                                </div>
+                                            </template>
+                                        </Dropdown>
                                         <InputError class="mt-2" :message="form.errors.city" />
                                     </div>
                                     <div class="my-3 min-[320px]:block md:flex">
@@ -296,27 +330,56 @@ const date = ref(new Date());
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
-                                            <select id="city" v-model="form.district" @change="onChangeDistrict($event)"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <option :value="null">Chọn quận huyện</option>
-                                                <option v-for="(district, index) in districts.Districts"
-                                                    :value="district.Name" :key="index">
-                                                    {{
-                                                        district.Name }}
-                                                </option>
-                                            </select>
+
+                                            <Dropdown v-model="form.district" :options="districts.Districts" filter
+                                                @change="onChangeDistrict($event)" optionLabel="Name" optionValue="Name"
+                                                placeholder="Chọn Quận/huyện"
+                                                class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm ">
+                                                <template #value="slotProps">
+
+                                                    <div v-if="slotProps.value" class="flex align-items-center">
+
+                                                        <div>{{ slotProps.value }}</div>
+                                                    </div>
+                                                    <span v-else>
+                                                        {{ slotProps.placeholder }}
+                                                    </span>
+                                                </template>
+                                                <template #option="slotProps">
+                                                    <div class="flex align-items-center">
+
+                                                        <div>{{ slotProps.option.Name }}</div>
+                                                    </div>
+                                                </template>
+                                            </Dropdown>
                                             <InputError class="mt-2" :message="form.errors.district" />
                                         </div>
                                         <div class="min-[320px]:w-full md:w-1/2 ml-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Phường xã*</label>
-                                            <select v-model="form.wards" id="wards"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <option :value="null">Chọn phường xã</option>
-                                                <option v-for="(ward, index) in wards.Wards" :value="ward.Name"
-                                                    :key="index">{{ ward.Name }}</option>
-                                            </select>
+
+
+                                            <Dropdown v-model="form.wards" :options="wards.Wards" filter optionLabel="Name"
+                                                optionValue="Name" placeholder="Chọn Phường xã"
+                                                class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm ">
+                                                <template #value="slotProps">
+
+                                                    <div v-if="slotProps.value" class="flex align-items-center">
+
+                                                        <div>{{ slotProps.value }}</div>
+                                                    </div>
+                                                    <span v-else>
+                                                        {{ slotProps.placeholder }}
+                                                    </span>
+                                                </template>
+                                                <template #option="slotProps">
+                                                    <div class="flex align-items-center">
+
+                                                        <div>{{ slotProps.option.Name }}</div>
+                                                    </div>
+                                                </template>
+                                            </Dropdown>
                                             <InputError class="mt-2" :message="form.errors.wards" />
                                         </div>
                                     </div>
@@ -325,17 +388,16 @@ const date = ref(new Date());
                         </div>
 
                         <div class="my-3">
+
                             <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
-                                <div class="mr-2 inline-block">
-                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
+                                <div class="mr-2 inline-block" v-for="(img, index) in images " :key="index">
+                                    <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
+                                        @click="DeleteImage(index)" size="16">
+                                    </BaseIcon>
+                                    <img :src="img.image" class="w-20 h-20 object-cover rounded-lg" alt="">
                                 </div>
-                                <div class="mr-2 inline-block">
-                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div>
-                                <div class="mr-2 inline-block">
-                                    <img src="/assets/images/new4.png" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div>
+
                                 <label for="uploadFile"
                                     class="mr-2 cursor-pointer border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg w-20 h-20">
                                     <svg width="10" height="11" viewBox="0 0 10 11" fill="none"
@@ -345,7 +407,13 @@ const date = ref(new Date());
                                             fill="#D9D9D9" />
                                     </svg>
                                 </label>
-                                <input id="uploadFile" type="file" class="hidden">
+                                <input id="uploadFile" @change="onFileChange" multiple type="file" class="hidden"
+                                    accept="image/*">
+                            </div>
+                            <InputError class="mt-2" :message="form.errors.images" />
+                            <div v-for="(error, index) in images" :key="index">
+
+                                <InputError class="mt-2" :message="form.errors[`images.${index}`]" />
                             </div>
                         </div>
 
@@ -417,7 +485,8 @@ const date = ref(new Date());
                             <tbody>
                                 <tr class="bg-white border-b ">
                                     <td class="px-6 py-4 ">
-                                        <select id="countries" @change="changeProduct($event)" v-model="form.product_selected"
+                                        <select id="countries" @change="changeProduct($event)"
+                                            v-model="form.product_selected"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 ">
                                             <option v-for="(product, index) in product_services" :key="index"
                                                 :value="product.id">{{
@@ -486,7 +555,8 @@ const date = ref(new Date());
                     </div>
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">VAT({{ vat }}%)</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.vat * product?.price) / 100) }} vnd</p>
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.vat * product?.price) / 100) }} vnd
+                        </p>
                     </div>
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
@@ -494,12 +564,14 @@ const date = ref(new Date());
                     </div>
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.discount_deal * product?.price) / 100) }}đ
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.discount_deal * product?.price) /
+                            100) }}đ
                         </p>
                     </div>
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
-                        <p class="text-sm text-[#686868]">{{ formatPrice((product?.price + ((form.vat * product?.price) / 100) -
+                        <p class="text-sm text-[#686868]">{{ formatPrice((product?.price + ((form.vat * product?.price) /
+                            100) -
                             ((form.discount_deal * product?.price) / 100))) }} vnd</p>
                     </div>
                     <div class="flex justify-between my-2">
@@ -509,7 +581,8 @@ const date = ref(new Date());
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">Còn lại</p>
                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice((product?.price +
-                            ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) - form.price_percent) }}</p>
+                            ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
+                            form.price_percent) }}</p>
                     </div>
                     <div class="my-3">
                         <BaseButton color="info" @click="save()"

@@ -55,10 +55,16 @@ const asideLgCloseClick = (event) => {
 </template>
 
 <style scope>
-
-.aside-menu-dropdown li{
+.aside-menu-dropdown li:hover{
+    background-color: rgb(246 247 250 / var(--tw-bg-opacity))
+}
+.aside-menu-dropdown li a{
     width: 75%;
     margin-left: 20%;
+}
+.aside-menu-dropdown li span{
+    width: 10px;
+    margin-right: 5px;
 }
 .aside-menu-dropdown li .aside-menu-item{
 
@@ -67,10 +73,12 @@ const asideLgCloseClick = (event) => {
     padding: 10px 2px;
 }
 .aside-menu-dropdown li .aside-menu-item-active{
-    background-color: #C5E4CA;
+    /* background-color: #C5E4CA;
     color: black !important;
-    border-radius: 8px;
-    margin-left: 10px;
-    padding: 10px 2px;
+    border-radius: 8px; */
+    /* margin-left: 10px;
+    padding: 10px 2px; */
+    color: blue !important;
+    background-color: none;
 }
 </style>

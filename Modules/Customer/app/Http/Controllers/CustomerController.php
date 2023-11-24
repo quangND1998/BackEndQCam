@@ -257,4 +257,5 @@ class CustomerController extends Controller
         $user->save();
         return back()->with('success', 'Update user successfully');
     }
+
 }
