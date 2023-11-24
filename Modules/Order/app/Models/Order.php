@@ -11,6 +11,7 @@ use Modules\Customer\app\Models\ReviewManagement;
 use Modules\Order\Database\factories\OrderFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+
 class Order extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -28,6 +29,7 @@ class Order extends Model implements HasMedia
         'type',
         'product_service_owner_id',
         'shipper_id',
+        'sale_id',
         'wards',  "created_at", "updated_at"
     ];
 
@@ -123,5 +125,10 @@ class Order extends Model implements HasMedia
     public function order_shipper_images()
     {
         return $this->media()->where('collection_name', 'order_shipper_images');
+    }
+
+    public function saler()
+    {
+        return $this->belongsTo(User::class, 'sale_id');
     }
 }

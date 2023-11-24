@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Order\app\Models\Order;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+
 class ShipperController extends Base2Controller
 {
     public function ordersRetailShipper(Request $request)
@@ -32,14 +33,15 @@ class ShipperController extends Base2Controller
     {
         $user = Auth::user();
         $orders_detail = Order::with('product_service.product', 'orderItems.product', 'discount', 'customer')->where('shipper_id', $user->id)->find($id);
-   
+
         if ($orders_detail) {
-             return response()->json($orders_detail, 200);
+            return response()->json($orders_detail, 200);
         }
         return response()->json('Không tìm thấy', 404);
     }
 
-    public function saveImageCompleted(Request $request, $id){
+    public function saveImageCompleted(Request $request, $id)
+    {
 
         $validator = Validator::make($request->all(), [
             'images' => 'required',
@@ -49,16 +51,14 @@ class ShipperController extends Base2Controller
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
         $orders_detail = Order::find($id);
-        if($orders_detail){
+        if ($orders_detail) {
             foreach ($request->images as $image) {
-                $orders_detail->addMediaFromBase64($image['data'])->usingFileName(Str::random(10).'.png')->toMediaCollection('order_shipper_images');
+                $orders_detail->addMediaFromBase64($image['data'])->usingFileName(Str::random(10) . '.png')->toMediaCollection('order_shipper_images');
             }
             $orders_detail->status = 'completed';
             $orders_detail->save();
             return response()->json($orders_detail->load('product_service.product', 'orderItems.product', 'discount', 'customer'), 200);
         }
         return response()->json('Không tìm thấy', 404);
-    
-        
     }
 }

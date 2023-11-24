@@ -28,8 +28,17 @@ class ShipperController extends Controller
 
     public function shipperDetail(Request $request, User $shipper)
     {
-        $shipper->load('shipper_orders');
-        $order_shippers = Order::with('customer')->where('shipper_id', $shipper->id)->paginate(15);
+
+        $order_shippers = Order::with('customer', 'order_shipper_images')->whereHas(
+            'customer',
+            function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->customer . '%');
+                $q->orwhere('phone_number', 'LIKE', '%' . $request->customer . '%');
+            }
+        )->where('shipper_id', $shipper->id)->where(function ($query) use ($request) {
+            $query->where('order_number', 'like', '%' . $request->search . '%');
+            // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
+        })->orderBy('updated_at', 'desc')->paginate(15);
         return Inertia::render('Shipper/ShipperDetail', compact('shipper', 'order_shippers'));
     }
 }
