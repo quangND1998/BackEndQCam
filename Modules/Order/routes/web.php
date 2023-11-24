@@ -76,6 +76,8 @@ Route::middleware(['auth'])->group(
                     Route::get('decline', [OrderPackageController::class, 'listOrderCancel'])->name('decline');
                     Route::get('complete', [OrderPackageController::class, 'listOrderComplete'])->name('complete');
 
+                    Route::post('orderChangeStatus/{order}', [OrderPackageController::class, 'orderChangeStatus'])->name('orderChangeStatus');
+
                     Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
                     Route::get('pending/{id}', [OrderPackageController::class, 'OrderPending'])->name('pending');
                     Route::post('/addToCartPackage', [OrderPackageController::class, 'addToCart'])->name('addToCartPackage');
