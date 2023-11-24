@@ -87,11 +87,11 @@ const checkOpenMenu = () => {
       :class="['aside-menu-dropdown', isDropdownActive ? 'block ' : 'hidden']" is-dropdown-list />
   </li>
 </template>
-<style scoped>
+<style >
 /* scroll */
 /* width */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 
 /* Track */
