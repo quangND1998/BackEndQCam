@@ -130,4 +130,9 @@ class User extends Authenticatable implements HasMedia
 
         return $this->hasMany(Order::class, 'shipper_id');
     }
+
+    public function teams()
+    {
+        return $this->belongsToMany(User::class, Teams::class, 'team_user', 'user_id', 'team_id');
+    }
 }

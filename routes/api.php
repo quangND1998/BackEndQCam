@@ -91,7 +91,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
             Route::get('{id}/orderDetail', [ShipperController::class, 'orderDetail'])->name('orderDetail');
             Route::post('{id}/saveImageCompleted', [ShipperController::class, 'saveImageCompleted'])->name('saveImageCompleted');
-   
         });
     });
 });

@@ -424,7 +424,8 @@ class OrderController extends Controller
                 'discount_deal' => $request->discount_deal,
                 'type' => $request->type,
                 'shipping_fee' => $request->shipping_fee,
-                'amount_paid' => $request->amount_paid
+                'amount_paid' => $request->amount_paid,
+                'sale_id' => Auth::user()->id
 
             ]);
 
@@ -561,7 +562,8 @@ class OrderController extends Controller
                 'last_price' => 0,
                 'item_count' => Cart::getTotalQuantity(),
                 'type' => $request->type,
-                'product_service_owner_id' => $request->product_service_owner_id
+                'product_service_owner_id' => $request->product_service_owner_id,
+                'sale_id' => Auth::user()->id,
 
             ]);
             $order->save();
