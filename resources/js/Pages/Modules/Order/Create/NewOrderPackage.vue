@@ -1,9 +1,5 @@
 <template>
-    <div class="min-[320x]:w-full grid grid-cols-3 gap-4">
-
-        <div class=" col-span-2 mt-2 w-full">
-
-            <div class="relative shadow-md sm:rounded-lg mb-5 mt-4">
+    <div class="relative shadow-md sm:rounded-lg mb-5 mt-4">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
@@ -39,6 +35,11 @@
                     </tbody>
                 </table>
             </div>
+    <div class="min-[320x]:w-full grid grid-cols-3 gap-4">
+
+        <div class=" col-span-2 mt-2 w-full">
+
+            
             <div class="bg-white rounded-lg p-3">
                 <div class="flex justify-between">
                     <div>

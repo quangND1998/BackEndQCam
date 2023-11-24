@@ -53,7 +53,7 @@ const props = defineProps({
         <Head title="Quản lý đơn hàng" />
         <SectionMain>
             <div class="lg:container m-auto mt-10">
-                <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
+                <div class="min-[320px]:block sm:block md:grid lg:grid grid-cols-3 gap-4 mt-10">
                     <div class="col-span-2">
                         <div class="min-[320px]:block md:flex border-b border-gray-200 pb-4">
                             <div class="min-[320px]:w-full md:w-1/2 px-2">
@@ -165,7 +165,60 @@ const props = defineProps({
                                 </div>
                             </div>
                         </div>
-                        <div class="my-3">
+                       
+
+
+                    </div>
+                    <div class="min-[320px]:mx-0 md:mx-5">
+
+                        <div class="mb-3">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                VAT(%)</label>
+                            <input type="number" id="first_name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" required>
+                        </div>
+                        <div class="my-2">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Ưu đãi (%)</label>
+                            <input type="number" id="first_name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" required>
+                        </div>
+                        <div class="my-2">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Thời gian giữ chỗ (ngày)</label>
+                            <input type="number" id="first_name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" required>
+                        </div>
+
+                        <div class="my-2">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Số tiền thanh toán</label>
+                            <input type="number" id="first_name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" required>
+                        </div>
+                        <div class="my-2">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Hình thức thanh toán</label>
+                            <select id="countries"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option selected>Tiền mặt</option>
+                                <option value="US">United States</option>
+                                <option value="CA">Canada</option>
+                                <option value="FR">France</option>
+                                <option value="DE">Germany</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="min-[320px]:block md:grid grid-cols-3 gap-4">
+                <div class="col-span-2">
+                    <div class="my-3">
                             <h3 class="text-[17px] font-bold">Thông tin giấy tờ</h3>
                             <div class="min-[320px]:block md:grid grid-cols-2 gap-4">
                                 <div>
@@ -227,153 +280,95 @@ const props = defineProps({
                                 <input id="uploadFile" type="file" class="hidden">
                             </div>
                         </div>
-
+                    <div class="flex justify-between bg-[#F0F0F0] px-5 py-2">
+                        <p class="text-[#686868]">Gói sản phẩm</p>
+                        <p class="text-[#686868]">Tổng</p>
+                    </div>
+                    <div class="flex justify-between  px-5 py-2 my-2">
+                        <select id="countries"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected>Gói nhận nuôi 1 năm</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="FR">France</option>
+                            <option value="DE">Germany</option>
+                        </select>
+                        <p class="text-[#686868] font-semibold">1.000.000đ</p>
+                    </div>
+                    <div class="   mx-5 py-2 mt-2 pb-5  border-b border-gray-200">
+                        <p class="text-[#686868] mb-2">Áp dụng từ ngày</p>
+                        <div class="relative w-1/5">
+                            <VueDatePicker v-model="date" time-picker-inline />
+                        </div>
 
                     </div>
-                    <div class="min-[320px]:mx-0 md:mx-5">
-                        <div class="mb-3">
-                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                Loại hình</label>
-                            <select id="countries"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option selected>Tiền mặt</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="FR">France</option>
-                                <option value="DE">Germany</option>
-                            </select>
+                    <div class="flex mt-3 mx-5">
+                        <div class="w-2/5">
+                            <h1 class="text-[17px] font-bold my-2">Quyền lợi nhận nuôi cây 1 năm</h1>
+                            <p class="text-[#686868]">Khách hàng sẽ được </p>
                         </div>
-                        <div class="my-3">
-                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                VAT(%)</label>
-                            <input type="text" id="first_name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="" required>
+                        <div class="w-3/5">
+                            <div class="flex justify-between my-2">
+                                <p class="font-bold text-lg text-[#686868]">Tổng</p>
+                                <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
+                            </div>
+                            <div class="flex justify-between my-2">
+                                <p class="font-bold text-lg text-[#686868]">VAT(x%)</p>
+                                <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
+                            </div>
+                            <div class="flex justify-between my-2">
+                                <p class="font-bold text-lg text-[#686868]">Vận chuyển</p>
+                                <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
+                            </div>
+                            <div class="flex justify-between my-2">
+                                <p class="font-bold text-lg text-[#686868]">Ưu đãi</p>
+                                <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
+                            </div>
+                            <div class="flex justify-between my-2">
+                                <p class="font-bold text-lg text-[#686868]">Tổng cộng</p>
+                                <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
+                            </div>
+                            <div class="flex justify-between my-2">
+                                <p class="font-bold text-lg text-[#686868]">Tổng cộng</p>
+                                <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
+                            </div>
+                            <div class="flex justify-between my-2">
+                                <p class="font-bold text-lg text-[#686868]">Còn lại</p>
+                                <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
+                            </div>
                         </div>
-                        <div class="my-2">
-                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                Ưu đãi (%)</label>
-                            <input type="text" id="first_name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="" required>
-                        </div>
-                        <div class="my-2">
-                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                Vận chuyển</label>
-                            <input type="text" id="first_name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="" required>
-                        </div>
-
-                        <div class="my-2">
-                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                Số tiền thanh toán</label>
-                            <input type="number" id="first_name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="" required>
-                        </div>
-                        <div class="my-2">
-                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                Hình thức thanh toán</label>
-                            <select id="countries"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option selected>Tiền mặt</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="FR">France</option>
-                                <option value="DE">Germany</option>
-                            </select>
-                        </div>
-
                     </div>
                 </div>
-            </div>
-            <div class="grid grid-cols-3 gap-4">
                 <div>
                     <div class="my-3">
-                    <BaseButton color="info"
-                        class="bg-[#F78F43] text-white p-2 w-full text-center justify-center rounded-lg"
-                        :icon="mdiContentSaveMove" small label="Lưu đơn hàng" />
-                </div>
-                <div class="my-3">
-                    <BaseButton color="info" class="bg-green-500 text-white p-2 w-full text-center justify-center"
-                        :icon="mdiEye" small label="Xem đơn hàng" />
-                </div>
-                <div class="my-3">
-                    <BaseButton color="info" class="bg-blue-400 text-white p-2 w-full text-center justify-center"
-                        :icon="mdiCreditCardSettingsOutline" small label="Thanh toán ngay" />
-                </div>
-                <div class="my-3">
-                    <BaseButton color="info" class="bg-gray-700 text-white p-2 w-full text-center justify-center"
-                        :icon="mdiContentCopy" small label="Sao chép đường dẫn" />
-                </div>
-                <div class="my-3">
-                    <BaseButton color="info" class="bg-black text-white p-2 w-full text-center justify-center"
-                        :icon="mdiImport" small label="In đơn hàng" />
-                </div>
+                        <BaseButton color="info"
+                            class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center rounded-lg"
+                            :icon="mdiContentSaveMove" small label="Lưu đơn hàng" />
+                    </div>
+                    <div class="my-3">
+                        <BaseButton color="info"
+                            class="bg-lime-600 hover:bg-lime-700 text-white p-2 w-full text-center justify-center"
+                            :icon="mdiEye" small label="Xem đơn hàng" />
+                    </div>
+                    <div class="my-3">
+                        <BaseButton color="info"
+                            class="bg-blue-900 hover:bg-blue-900 text-white p-2 w-full text-center justify-center"
+                            :icon="mdiCreditCardSettingsOutline" small label="Thanh toán ngay" />
+                    </div>
+                    <div class="my-3">
+                        <BaseButton color="info"
+                            class="bg-gray-700 hover:bg-gray-800 text-white p-2 w-full text-center justify-center"
+                            :icon="mdiContentCopy" small label="Sao chép đường dẫn" />
+                    </div>
+                    <div class="my-3">
+                        <BaseButton color="info" class="bg-black text-white p-2 w-full text-center justify-center"
+                            :icon="mdiImport" small label="In đơn hàng" />
+                    </div>
                 </div>
             </div>
-            <div class="w-4/5">
-                <div class="flex justify-between bg-[#F0F0F0] px-5 py-2">
-                    <p class="text-[#686868]">Gói sản phẩm</p>
-                    <p class="text-[#686868]">Tổng</p>
-                </div>
-                <div class="flex justify-between  px-5 py-2 my-2">
-                    <select id="countries"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>Gói nhận nuôi 1 năm</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="FR">France</option>
-                        <option value="DE">Germany</option>
-                    </select>
-                    <p class="text-[#686868] font-semibold">1.000.000đ</p>
-                </div>
-                <div class="   mx-5 py-2 mt-2 pb-5  border-b border-gray-200">
-                    <p class="text-[#686868] mb-2">Áp dụng từ ngày</p>
-                    <div class="relative w-1/5">
-                        <VueDatePicker v-model="date" time-picker-inline />
-                    </div>
 
-                </div>
-                <div class="flex mt-3 mx-5">
-                    <div class="w-2/5">
-                        <h1 class="text-[17px] font-bold my-2">Quyền lợi nhận nuôi cây 1 năm</h1>
-                        <p class="text-[#686868]">Khách hàng sẽ được </p>
-                    </div>
-                    <div class="w-3/5">
-                        <div class="flex justify-between my-2">
-                            <p class="font-bold text-lg text-[#686868]">Tổng</p>
-                            <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
-                        </div>
-                        <div class="flex justify-between my-2">
-                            <p class="font-bold text-lg text-[#686868]">VAT(x%)</p>
-                            <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
-                        </div>
-                        <div class="flex justify-between my-2">
-                            <p class="font-bold text-lg text-[#686868]">Vận chuyển</p>
-                            <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
-                        </div>
-                        <div class="flex justify-between my-2">
-                            <p class="font-bold text-lg text-[#686868]">Ưu đãi</p>
-                            <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
-                        </div>
-                        <div class="flex justify-between my-2">
-                            <p class="font-bold text-lg text-[#686868]">Tổng cộng</p>
-                            <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
-                        </div>
-                        <div class="flex justify-between my-2">
-                            <p class="font-bold text-lg text-[#686868]">Tổng cộng</p>
-                            <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
-                        </div>
-                        <div class="flex justify-between my-2">
-                            <p class="font-bold text-lg text-[#686868]">Còn lại</p>
-                            <p class="font-bold text-lg text-[#686868]">1.000.000đ</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         </SectionMain>
-</LayoutAuthenticated></template>
+    </LayoutAuthenticated>
+</template>
 <style src="@vueform/multiselect/themes/default.css"></style>
