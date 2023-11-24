@@ -112,7 +112,7 @@ const state = reactive({
                     <Icon icon="gallery" class=" mr-2" />Hoạt động</Link>
                 </li>
                 <li
-                :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('activity') }"
+                :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('document') }"
                 class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2">
 
                     <Link :href="route('customer.detail.document', customer?.id)" class="flex">
