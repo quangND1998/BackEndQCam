@@ -35,7 +35,6 @@ const edit = (contract) => {
     isModalActive.value = true
     editMode.value = true
     form.id = contract.id;
-    form.images = contract.images,
     form.state = contract.state
 }
 
@@ -46,7 +45,7 @@ const save = () => {
 
     console.log(form);
     if (editMode.value == true) {
-        form.put(route("product_owner.contract.update", form.id), {
+        form.put(route("product_owner.contract.update", [ form.id , form.id]), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = true;
@@ -56,6 +55,7 @@ const save = () => {
                 form.reset();
                 isModalActive.value = false;
                 editMode.value = false;
+                form.reset('id', 'name', 'description', 'images');
             },
         });
     } else {
@@ -74,10 +74,37 @@ const save = () => {
                     form.reset();
                     isModalActive.value = false;
                     editMode.value = false;
+                    form.reset('id', 'name', 'description', 'images');
                 },
             });
     }
 
+};
+const Delete = (id) => {
+    swal
+        .fire({
+            title: "Are you sure?",
+            text: "Bạn muốn xóa hợp đồng!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                console.log(id);
+                form.delete(route("product_owner.contract.destroy", [props.history_extend?.id, id]), {
+                    onSuccess: () => {
+                        swal.fire(
+                            "Deleted!",
+                            "Đã xóa hợp đồng",
+                            "success"
+                        );
+                    },
+                });
+            }
+        });
 };
 </script>
 
@@ -106,9 +133,8 @@ const save = () => {
                                     <p class="text-xs text-gray-500 dark:text-gray-400">FPD
                                     </p>
                                 </div>
-                                <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.file[0]" type="file"
-                                    class="hidden" accept="application/pdf,application/vnd.ms-excel" />
-                                <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
+                               
+                                <input id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
                                     class="hidden" accept="application/pdf,application/vnd.ms-excel" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.images" />
@@ -125,6 +151,7 @@ const save = () => {
                         small @click="
                             isModalActive = true;
                         editMode = false;
+                        form.reset('id', 'name', 'description', 'images');
                         form.reset();
                         form_reset();
                         " label="Tải scan hợp đồng" />
@@ -198,4 +225,4 @@ const save = () => {
         </SectionMain>
     </LayoutProfileDetail>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style src="@vueform/multiselect/themes/default.css"></style>vv

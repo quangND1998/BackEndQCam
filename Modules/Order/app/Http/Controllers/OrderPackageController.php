@@ -125,7 +125,7 @@ class OrderPackageController extends Controller
             // $oldCart = $request->session()->get('cartPackage');
             // dd($oldCart);
             foreach ($request->images as $image) {
-                $order->addMedia($image)->toMediaCollection('order_related_images');
+                $order->addMedia($image)->toMediaCollection('order_package_images');
             }
             return redirect()->route('admin.orders.package.pending',[$order->id]);
         }

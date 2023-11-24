@@ -14,6 +14,7 @@ import {
     mdiFilter,
     mdiMagnify,
     mdiFileDocumentOutline,
+    mdiDotsVertical
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -31,9 +32,8 @@ import mapValues from "lodash/mapValues";
 import pickBy from "lodash/pickBy";
 import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
-
+import Dropdown from '@/Components/Dropdown.vue';
 import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput';
-
 const phoneNumber = ref()
 const results = ref()
 const props = defineProps({
@@ -331,7 +331,7 @@ const limit_tree = computed(() =>{
             <div v-if="selected>1 ">
                 <p class="text-red-600 text-end">Xóa (5) Customer</p>
             </div>
-            <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+            <div class=" relative shadow-md sm:rounded-lg mt-5">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
@@ -386,20 +386,45 @@ const limit_tree = computed(() =>{
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ formatDate(user.created_at) }}
                             </th>
-                            <td class="py-4 px-6 text-right">
+                            <td class="py-4 px-6 flex text-right">
                                 <Link :href="route('customer.detail.info', user.id)" type="button"
                                     class="inline-block px-6 py-2.5 bg-blue-600 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                 Detail
                                 </Link>
-                                <button @click="edit(user)" type="button" data-toggle="modal" data-target="#exampleModal"
-                                    class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
-                                    Edit
-                                </button>
-                                <button type=" button" @click="Delete(user.id)"
-                                    class="inline-block px-6 py-2.5 bg-red-500 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-red-600 hover:text-white hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">
-                                    Delete
-                                </button>
-                            </td>
+                                    <div class="flex ">
+                                        <Dropdown align="right" width="40" class="ml-5">
+                                            <template #trigger>
+                                                <span class="inline-flex rounded-md">
+                                                    <BaseButton class="bg-[#D9D9D9] border-[#D9D9D9]"
+                                                        :icon="mdiDotsVertical" small />
+                                                </span>
+                                            </template>
+
+                                            <template #content>
+                                                <div class="w-40">
+                                                    <div
+                                                        class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+
+                                                    </div>
+                                                    <div @click="edit(user)" type="button" data-toggle="modal" data-target="#exampleModal"
+                                                        class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+                                                        <p class="hover:text-blue-700"> Edit</p>
+                                                        <BaseButton :icon="mdiPencil" small class="text-[#2264E5]"
+                                                            type="button" data-toggle="modal" data-target="#exampleModal" />
+                                                    </div>
+                                                    <div type=" button" @click="Delete(user.id)"
+                                                        class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
+                                                        <p class="hover:text-red-700"> Delete</p>
+                                                        <BaseButton :icon="mdiTrashCanOutline" small
+                                                            class="text-[#D12953]" />
+                                                    </div>
+
+                                                </div>
+                                            </template>
+                                        </Dropdown>
+                                    </div>
+
+                                </td>
                         </tr>
                         <pagination :links="customers.links" />
                     </tbody>
