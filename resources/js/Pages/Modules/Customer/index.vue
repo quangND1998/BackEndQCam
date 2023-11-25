@@ -205,7 +205,7 @@ const limit_tree = computed(() =>{
     <LayoutAuthenticated>
 
         <Head title="Customer" />
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <SectionTitleLineWithButton :icon="mdiAccountLockOpen" title="User" main></SectionTitleLineWithButton>
 
             <div class="flex justify-between">
@@ -218,7 +218,7 @@ const limit_tree = computed(() =>{
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                         small @click="
                             isModalActive = true;
                             form.reset();
@@ -331,7 +331,7 @@ const limit_tree = computed(() =>{
             <div v-if="selected>1 ">
                 <p class="text-red-600 text-end">Xóa (5) Customer</p>
             </div>
-            <div class=" relative shadow-md sm:rounded-lg mt-5">
+            <div class="  relative  sm:rounded-lg mt-5">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>

@@ -192,7 +192,7 @@ const    updateCartInput =(product)=> {
 <template>
  
 
-    <div class="min-[320x]:w-full grid grid-cols-3 gap-4">
+    <div class="min-[320x]:w-full  grid grid-cols-3 gap-4">
        
         <div class=" col-span-2 mt-2 w-full">
           

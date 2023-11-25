@@ -267,7 +267,7 @@ const date = ref(new Date());
 
         <Head title="Quản lý đơn hàng" />
 
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <div class="lg:container m-auto mt-10">
                 <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
                     <div class="col-span-2">
@@ -294,7 +294,7 @@ const date = ref(new Date());
                                     <div class="flex items-center w-full my-4">
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Ngày</p>
                                         <div class="relative w-full">
-                                            <VueDatePicker v-model="date" time-picker-inline />
+                                            <VueDatePicker v-model="date" time-picker-inline class="bg-gray-50" />
                                         </div>
                                     </div>
                                 </div>

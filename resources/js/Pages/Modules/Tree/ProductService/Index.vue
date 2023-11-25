@@ -191,7 +191,7 @@ const Delete = (id) => {
     <LayoutAuthenticated>
 
         <Head title="Product Service" />
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <SectionTitleLineWithButton title="Product Service" main></SectionTitleLineWithButton>
 
             <!-- Modal -->
@@ -204,7 +204,7 @@ const Delete = (id) => {
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
                         @click="
                             isModalActive = true;
                         form.reset();

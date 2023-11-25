@@ -1,5 +1,5 @@
 <template>
-    <div class="min-[320x]:w-full grid grid-cols-3 gap-4">
+    <div class="min-[320x]:block md:grid grid-cols-3 gap-4">
 
         <div class=" col-span-2 mt-2 w-full">
 
@@ -62,14 +62,14 @@
                     </tbody>
                 </table>
             </div>
-            <div class="bg-white rounded-lg p-3">
+            <div class=" rounded-lg p-3">
                 <div class="flex justify-between">
                     <div>
                         <!-- <font-awesome-icon :icon="['fas', 'cart-shopping']" class="mt-1" /> -->
-                        <span class="text-xl font-semibold ml-2">Giỏ hàng</span>
+                        <span class="text-xl font-semibold ml-0">Giỏ hàng</span>
                     </div>
-                    <button v-if="cart" class="flex text-red-600 mx-3 text-sm" @click="DeleteCart()">
-                        <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700 mx-1 "></BaseIcon>
+                    <button v-if="cart" class="flex text-red-600  text-sm items-center" @click="DeleteCart()">
+                        <BaseIcon :path="mdiTrashCanOutline" class="text-red-600 hover:text-red-700 mx-1 text-sm "></BaseIcon>
                         Hủy đơn hàng
                     </button>
                 </div>
@@ -174,7 +174,7 @@
                 </div>
             </div> -->
         </div>
-        <div class="mx-5">
+        <div class="mx-3">
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Tổng</p>
                 <p class="text-sm text-[#686868] font-bold">{{ formatPrice(totalPrice) }}đ</p>
@@ -642,5 +642,25 @@ export default {
 .input-qty::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+/* scroll */
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1a8;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d4d1d17e;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #cecccc5b;
 }
 </style>

@@ -122,7 +122,7 @@ const Delete = (id) => {
         <Head title="Lands" />
         <!-- <Multiselect v-model="value" :options="options" mode="tags" :close-on-select="false" :searchable="true"
             :create-option="true" /> -->
-        <SectionMain>
+        <SectionMain class="pl-0 mt-5 p-3" >
             <SectionTitleLineWithButton title="Lands" main></SectionTitleLineWithButton>
 
             <!-- Modal -->
@@ -138,7 +138,7 @@ const Delete = (id) => {
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 " :icon="mdiPlus" small
                         @click="
                             isModalActive = true;
                         form.reset();

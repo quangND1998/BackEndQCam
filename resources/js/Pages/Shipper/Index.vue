@@ -89,7 +89,7 @@ const searchShipper = () => {
 
         <Head title="User" />
 
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
@@ -104,7 +104,7 @@ const searchShipper = () => {
 
 
 
-            <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+            <div class="overflow-x-auto relative  sm:rounded-lg mt-5">
                 <table class="w-full text-xs text-left text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>

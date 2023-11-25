@@ -115,7 +115,7 @@ const Delete = (id) => {
         <Head title="Permissions" />
         <!-- <Multiselect v-model="value" :options="options" mode="tags" :close-on-select="false" :searchable="true"
             :create-option="true" /> -->
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <SectionTitleLineWithButton title="Permissions" main></SectionTitleLineWithButton>
 
             <!-- Modal -->
@@ -131,7 +131,7 @@ const Delete = (id) => {
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-color_green" :icon="mdiPlus" small @click="
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small @click="
                         isModalActive = true;
                     form.reset();
                     " label="Create Permission" />
@@ -145,7 +145,7 @@ const Delete = (id) => {
                 <InputError class="mt-2" :message="form.errors.name" />
             </CardBoxModal>
             <!-- End Modal -->
-            <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+            <div class="overflow-x-auto relative  sm:rounded-lg mt-0">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
@@ -168,11 +168,11 @@ const Delete = (id) => {
                             <td class="py-4 px-6 text-right">
                                 <button @click="edit(permission)" type="button" data-toggle="modal"
                                     data-target="#exampleModal"
-                                    class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
+                                    class="inline-block px-3 py-2 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                     Edit
                                 </button>
                                 <button type="button" @click="Delete(permission.id)"
-                                    class="inline-block px-6 py-2.5 bg-red-500 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-red-600 hover:text-white hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">
+                                    class="inline-block px-3 py-2 bg-red-500 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-red-600 hover:text-white hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">
                                     Delete
                                 </button>
                             </td>
