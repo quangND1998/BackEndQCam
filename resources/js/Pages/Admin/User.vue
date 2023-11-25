@@ -303,7 +303,6 @@ const Delete = (id) => {
                             <th scope="col" class="py-3 px-6 text-xs">email</th>
                             <th scope="col" class="py-3 px-6 text-xs">phone</th>
                             <th scope="col" class="py-3 px-6 text-xs">role</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Assign Project</th>
                             <th scope="col" class="py-3 px-6 text-xs">Active</th>
                             <th scope="col" class="py-3 px-6 text-xs">created at</th>
                             <th scope="col" class="py-3 px-6 text-xs">
@@ -334,12 +333,7 @@ const Delete = (id) => {
                                         :label="role.name" small outline=""></PillTag>
                                 </BaseButtons>
                             </th>
-                            <th class="item-center">
-                                <BaseButton type="a" label="Project list" color="default" :icon="mdiFileDocumentOutline"
-                                    small :iconSize="20" class="border-0 hover:border-0" />
-                                <BaseButton type="a" label="Assign project" color="default" :icon="mdiPlus" small
-                                    :iconSize="20" class="border-0 hover:border-0 text-color_Orange" />
-                            </th>
+                          
                             <th class="py-3 px-6 text-xs">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" value="" class="sr-only peer"

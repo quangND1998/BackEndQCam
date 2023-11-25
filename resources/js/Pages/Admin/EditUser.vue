@@ -40,6 +40,7 @@ const form = useForm({
     wards: props.user.wards,
     name: props.user.name,
     phone_number: props.user.phone_number,
+    password: null,
     address: props.user.address,
     email: props.user.email,
     cic_date: props.user.cic_date,

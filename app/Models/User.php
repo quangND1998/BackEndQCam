@@ -139,4 +139,14 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->belongsToMany(User::class, Teams::class, 'team_user', 'user_id', 'team_id');
     }
+
+    public function infors()
+    {
+        return $this->hasMany(UserInfor::class, 'user_id');
+    }
+
+    public function lastInfoChange()
+    {
+        return $this->hasOne(UserInfor::class)->latest();
+    }
 }

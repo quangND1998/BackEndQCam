@@ -92,5 +92,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('{id}/orderDetail', [ShipperController::class, 'orderDetail'])->name('orderDetail');
             Route::post('{id}/saveImageCompleted', [ShipperController::class, 'saveImageCompleted'])->name('saveImageCompleted');
         });
+
+
+        Route::prefix('user')->as('user.')->group(function () {
+
+            Route::post('updateUserInfor', [LoginController::class, 'updateUserInfor'])->name('updateUserInfor');
+            Route::get('getUser', [LoginController::class, 'getUser'])->name('getUser');
+        });
     });
 });

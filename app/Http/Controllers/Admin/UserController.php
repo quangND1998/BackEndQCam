@@ -161,9 +161,41 @@ class UserController extends Controller
     }
     public function setActive(Request $request)
     {
+
+
         $user = User::findOrFail($request->id);
         $user->isActive = $request->active;
         $user->save();
         return back()->with('success', 'Update user successfully');
+    }
+
+
+    public function approveUserInfor(User $user)
+    {
+        $infor = $user->lastInfoChange;
+        if ($infor) {
+            if ($infor->status == 0) {
+                $user->update([
+                    'name' => $infor->name,
+                    'email' => $infor->email,
+                    'cic_number' => $infor->cic_number,
+                    'phone_number' => $infor->phone_number,
+                    'sex' => $infor->sex,
+                    'address' => $infor->address,
+                    'date_of_birth' => $infor->date_of_birth,
+                    'city' => $infor->city,
+                    'district' => $infor->district,
+                    'wards' => $infor->wards,
+                    'cic_date' => $infor->cic_date,
+                    'cic_date_expried' => $infor->cic_date_expried,
+                    'status' => true,
+                ]);
+                return back()->with('success', 'Cập nhật thành công');
+            } else {
+                return back()->with('warning', 'Thông tin này đã được cập nhật rồi ');
+            }
+            return back()->with('success', 'Cập nhật thành công');
+        }
+        return back()->with('warning', 'Không tìm thấy thông tin  ');
     }
 }
