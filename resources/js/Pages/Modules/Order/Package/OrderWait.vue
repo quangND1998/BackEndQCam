@@ -247,12 +247,15 @@ const changeDate = () => {
                     <div class="panel panel-default">
                         <div class="panel-body relative overflow-x-auto shadow-md sm:rounded-lg">
                             <div>
-                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400 grid grid-cols-6 gap-4 text-sm px-3 py-3 text-gray-400">
+                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-600  text-gray-400 grid grid-cols-6 gap-4 text-sm px-3 py-3 text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
                                     <div>
                                         <p>Số tiền</p>
+                                    </div>
+                                    <div>
+                                        <p>Gói dịch vụ</p>
                                     </div>
                                     <div>
                                         <p>Ngày</p>

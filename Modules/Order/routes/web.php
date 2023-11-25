@@ -83,6 +83,10 @@ Route::middleware(['auth'])->group(
                     Route::post('/addToCartPackage', [OrderPackageController::class, 'addToCart'])->name('addToCartPackage');
                     Route::post('orderCancel/{order}', [OrderPackageController::class, 'orderCancel'])->name('orderCancel');
                     Route::post('orderComplete/{order}', [OrderPackageController::class, 'orderComplete'])->name('orderComplete');
+                    Route::post('historyPayment/{order}', [OrderPackageController::class, 'saveHistoryPaymentOrder'])->name('historyPayment');
+                    Route::post('{order}/deleteHistoryPayment/{id}', [OrderPackageController::class, 'deleteHistoryPayment'])->name('deleteHistoryPayment');
+                    //
+                    // saveHistoryPaymentOrder
                 });
             });
 
