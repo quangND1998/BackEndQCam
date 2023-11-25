@@ -73,16 +73,21 @@ Route::middleware(['auth'])->group(
 
                 Route::prefix('package')->as('package.')->group(function () {
                     Route::get('all', [OrderPackageController::class, 'index'])->name('index');
+                    Route::get('pending', [OrderPackageController::class, 'index'])->name('pending');
                     Route::get('decline', [OrderPackageController::class, 'listOrderCancel'])->name('decline');
                     Route::get('complete', [OrderPackageController::class, 'listOrderComplete'])->name('complete');
 
                     Route::post('orderChangeStatus/{order}', [OrderPackageController::class, 'orderChangeStatus'])->name('orderChangeStatus');
 
                     Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
-                    Route::get('pending/{id}', [OrderPackageController::class, 'OrderPending'])->name('pending');
+                    Route::get('detail/{id}', [OrderPackageController::class, 'OrderPending'])->name('detail');
                     Route::post('/addToCartPackage', [OrderPackageController::class, 'addToCart'])->name('addToCartPackage');
                     Route::post('orderCancel/{order}', [OrderPackageController::class, 'orderCancel'])->name('orderCancel');
                     Route::post('orderComplete/{order}', [OrderPackageController::class, 'orderComplete'])->name('orderComplete');
+                    Route::post('historyPayment/{order}', [OrderPackageController::class, 'saveHistoryPaymentOrder'])->name('historyPayment');
+                    Route::post('{order}/deleteHistoryPayment/{id}', [OrderPackageController::class, 'deleteHistoryPayment'])->name('deleteHistoryPayment');
+                    //
+                    // saveHistoryPaymentOrder
                 });
             });
 

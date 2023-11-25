@@ -28,7 +28,7 @@ const handleNativeClick =()=>{
             <Link v-if="hasAnyPermission(['order-pending'])" :href="route('admin.orders.package.index')" @click.prevent
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mr-1 bg-gray-100 hover:bg-white text-gray-500"
                 :class="{ 'bg-white  text-blue-500': $page.url === '/admin/orders/package/all' }">
-            Chờ thanh toán
+            Chờ duyệt
             <span class="text-gray-400 ml-1">({{ totalOrder('pending') }})</span>
             </Link>
             <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.orders.package.decline')" @click.prevent

@@ -289,7 +289,7 @@ const changeDate = () => {
                     <div class="panel panel-default">
                         <div class="panel-body relative overflow-x-auto  sm:rounded-lg">
                             <div>
-                                <div class="grid grid-cols-8 gap-5 text-xs  uppercase bg-gray-50  px-3 py-4 text-gray-400">
+                                <div class="grid grid-cols-8 gap-5 text-xs bg-gray-200  uppercase px-3 py-4 text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>

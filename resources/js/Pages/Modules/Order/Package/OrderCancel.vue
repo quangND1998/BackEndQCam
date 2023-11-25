@@ -127,7 +127,6 @@ const changeDate = () => {
                 <div>
                     <h2 class="min-[320px]:text-xl sm:text-2xl font-semibold lg:text-3xl flex mr-2">
                         Quản lý đơn hủy
-                        <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p>
                     </h2>
                 </div>
                 <div class="flex">
@@ -186,7 +185,7 @@ const changeDate = () => {
                                     <button @click.prevent="changeDate" name="search"
                                     class="block p-2 ml-3 text-xs text-gray-900 border border-gray-300 rounded-lg bg-blue-500 text-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">Search</button>
                                 </div>
-                                
+
                             </div>
                         </div>
 
@@ -248,7 +247,7 @@ const changeDate = () => {
                     <div class="panel panel-default">
                         <div class="panel-body relative overflow-x-auto  sm:rounded-lg">
                             <div>
-                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-50  px-3 py-4 text-gray-400 grid grid-cols-6 gap-4 text-sm px-3 py-3 text-gray-400">
+                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-200 px-3 py-4 text-gray-400 grid grid-cols-6 gap-4 text-sm px-3 py-3 text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>

@@ -98,20 +98,20 @@ export default [{
         permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
         route_list: ['visit.pending', 'visit.confirm', 'visit.completed']
     },
-    {
-        route: 'admin.orders.index',
-        label: 'Khiếu nại',
+    // {
+    //     route: 'visit.pending',
+    //     label: 'Khiếu nại',
 
-        permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
-        route_list: null
-    },
-    {
-        route: 'admin.orders.index',
-        label: 'Đánh giá',
+    //     permissions: ['super-admin'],
+    //     route_list: null
+    // },
+    // {
+    //     route: 'visit.pending',
+    //     label: 'Đánh giá',
 
-        permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
-        route_list: null
-    }
+    //     permissions: ['super-admin'],
+    //     route_list: null
+    // }
     ]
 },
 {

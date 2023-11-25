@@ -76,5 +76,13 @@ class OrderPackage extends Model implements HasMedia
     {
         return $this->media()->where('collection_name', 'order_package_images');
     }
+    public function historyPayment()
+    {
+        return $this->hasMany(HistoryPayment::class, 'order_package_id');
+    }
+    public function totalPayment()
+    {
+        return $this->historyPayment()->sum('amount_received');
+    }
 
 }
