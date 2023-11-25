@@ -241,7 +241,7 @@ class CustomerController extends Controller
     {
         $user = User::findOrFail($id);
         foreach($user->product_service_owners as $product_service_owner){
-            foreach($product_service_owner->trees() as $tree){
+            foreach($product_service_owner->trees as $tree){
                 $tree->product_service_owner_id = null;
                 $tree->save();
             }
@@ -257,4 +257,5 @@ class CustomerController extends Controller
         $user->save();
         return back()->with('success', 'Update user successfully');
     }
+
 }

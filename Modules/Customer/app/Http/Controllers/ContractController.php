@@ -27,6 +27,7 @@ class ContractController extends Controller
 
     public function store(Request $request, $id)
     {
+
         $history_extend = HistoryExtend::with('contract')->findOrfail($id);
         if($history_extend != null && $history_extend->contract){
             $contract = $history_extend->contract;
@@ -44,15 +45,13 @@ class ContractController extends Controller
 
         return back()->with('success', 'Create successffully');
     }
-    public function update(Request $request, $id)
+    public function update(Request $request,$idcontract)
     {
-        $contract = Contract::findOrfail($id);
-        if($request->images){
+        $contract = HistoryContract::findOrfail($idcontract);
             $contract->clearMediaCollection('contract_images');
             foreach ($request->images as $image) {
                 $contract->addMedia($image)->toMediaCollection('contract_images');
             }
-        }
         return back()->with('success', 'Update successffully');
     }
     public function extend(Request $request, $id){
@@ -61,9 +60,12 @@ class ContractController extends Controller
         /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id,$idcontract)
     {
-        //
+        $contract = HistoryContract::findOrfail($idcontract);
+        $contract->clearMediaCollection('contract_images');
+        $contract->delete();
+        return back()->with('success', 'Delete successfully');
     }
 
 }

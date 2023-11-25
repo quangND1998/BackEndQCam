@@ -138,12 +138,6 @@ const Delete = (id) => {
             :create-option="true" /> -->
         <SectionMain>
             <SectionTitleLineWithButton title="news" main></SectionTitleLineWithButton>
-
-            <!-- Modal -->
-            <CardBoxModal v-model="isModalDangerActive" title="Please confirm" button="danger" has-cancel>
-                <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-                <p>This is sample modal</p>
-            </CardBoxModal>
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
@@ -157,6 +151,7 @@ const Delete = (id) => {
                             isModalActive = true;
                             editMode = false;
                         form.reset();
+                        reset();
                         " label="Create Land" />
                 </div>
             </div>
@@ -178,14 +173,16 @@ const Delete = (id) => {
 
                 <select id="category_project_id" v-model="form.type"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="news">tin tức trang trại</option>
-                    <option value="activity">các hoạt động trang trại</option>
+                    <option value="news">Tin tức trang trại</option>
+                    <option value="activity">Các hoạt động trang trại</option>
                 </select>
 
-                <InputLabel for="name" value="Mô tả ngắnt" />
+                <InputLabel for="name" value="Mô tả ngắn (Tối đa 220 kí tự)" />
                 <label class="input w-full" for="recipient-name">
 
-                    <quill-editor v-model:content="form.short_description" contentType="html"></quill-editor>
+                    <TextInput id="short_description" v-model="form.short_description" type="text" class="mt-1 block w-full" required autofocus
+                    autocomplete="short_description" maxlength="220" />
+                    <!-- <quill-editor v-model:content="form.short_description" contentType="html"></quill-editor> -->
 
                 </label>
                 <InputLabel for="name" value="Chi tiết bài viết" />
@@ -224,12 +221,12 @@ const Delete = (id) => {
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="py-3 px-6 text-xs">STT</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Title</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Type</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Description</th>
-                            <th scope="col" class="py-3 px-6 text-xs">State</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Tiêu đề</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Loại</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Mô tả</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
                             <th scope="col" class="py-3 px-6 text-xs">
-                                <span class="sr-only">Edit</span>
+                                <span class="sr-only">Chỉnh sửa</span>
                             </th>
                         </tr>
                     </thead>

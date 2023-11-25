@@ -49,6 +49,8 @@ const form = useForm({
     description: null,
     unit: null,
     images:null,
+    transfer_value: null,
+    price_origin: null
 });
 
 
@@ -127,7 +129,8 @@ const edit = (product) => {
     form.life_time = product.life_time;
     form.description = product.description;
     form.unit = product.unit;
-
+    form.transfer_value = product.transfer_value;
+    form.price_origin = product.price_origin;
 
 };
 const isModalActive = ref(false);
@@ -218,10 +221,21 @@ const Delete = (id) => {
                             <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required />
                             <InputError class="mt-2" :message="form.errors.name" />
                         </div>
-                        <div class="my-2">
-                            <InputLabel for="name" value="Diện tích vườn rau" />
-                            <TextInput id="name" v-model="form.acreage" type="text" class="mt-1 block w-full" required />
-                            <InputError class="mt-2" :message="form.errors.acreage" />
+                        <div class="">
+                            <InputLabel for="number_deliveries" value="Giá bán" />
+                            <label class="input w-full" >
+                                <MazInputPrice v-model="form.price"  currency="VND" locale="vi-VN"
+                                    :min="0" @formatted="formattedPrice = $event" />
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.price" />
+                        </div>
+                        <div class="">
+                            <InputLabel for="number_deliveries" value="Giá gốc" />
+                            <label class="input w-full" >
+                                <MazInputPrice v-model="form.price_origin"  currency="VND" locale="vi-VN"
+                                    :min="0" @formatted="formattedPrice = $event" />
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.price_origin" />
                         </div>
                         <div class="my-2">
                             <InputLabel for="name" value="Số lượng cây" />
@@ -260,25 +274,28 @@ const Delete = (id) => {
                                     <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)
                                     </p>
                                 </div>
-                                <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.file[0]" type="file"
+                                <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.files" multiple type="file"
                                     class="hidden" accept="image/*" />
                                 <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
                                     class="hidden" accept="image/*" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.images" />
                         </div>
-
-
-
                     </div>
                     <div>
                         <div class="">
-                            <InputLabel for="number_deliveries" value="Giá" />
+                            <InputLabel for="name" value="Diện tích vườn rau" />
+                            <TextInput id="name" v-model="form.acreage" type="text" class="mt-1 block w-full" required />
+                            <InputError class="mt-2" :message="form.errors.acreage" />
+                        </div>
+
+                        <div class="">
+                            <InputLabel for="transfer_value" value="Giá chuyển nhượng" />
                             <label class="input w-full" >
-                                <MazInputPrice v-model="form.price" label="Enter your price" currency="VND" locale="vi-VN"
+                                <MazInputPrice v-model="form.transfer_value"  currency="VND" locale="vi-VN"
                                     :min="0" @formatted="formattedPrice = $event" />
                             </label>
-                            <InputError class="mt-2" :message="form.errors.price" />
+                            <InputError class="mt-2" :message="form.errors.transfer_value" />
                         </div>
                         <div class="my-2">
                             <InputLabel for="number_deliveries" value="Số lần nhận nông sản" />
@@ -315,7 +332,7 @@ const Delete = (id) => {
                             </label>
                             <InputError class="mt-2" :message="form.errors.state" />
                         </div>
-                        <div class="h-[120px] rounded-lg">
+                        <div class="h-[160px] rounded-lg">
                             <InputLabel for="name" value="Mô tả" />
                             <label class="input w-full" for="recipient-name">
 
@@ -350,7 +367,9 @@ const Delete = (id) => {
                                 <th scope="col" class="px-6 py-3">
                                     Tên
                                 </th>
-
+                                <th scope="col" class="px-6 py-3">
+                                    Ảnh thumb
+                                </th>
                                 <th scope="col" class="px-6 py-3">
                                     Số lượng cây
                                 </th>
@@ -400,6 +419,9 @@ const Delete = (id) => {
                                 </th>
                                 <td class="px-6 py-4">
                                     {{ product_service.name }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <img :src="product_service?.images.length >0?product_service?.images[0].original_url :null" >
                                 </td>
 
                                 <td class="px-6 py-4">

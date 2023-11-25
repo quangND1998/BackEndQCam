@@ -60,7 +60,7 @@ const menuClick = (event, item) => {
         </NotificationBar>
       </SectionMain>
 
-      <NavBar :menu="menuNavBar" :class="['ml-0', { 'ml-60 lg:ml-0': isAsideMobileExpanded }]"
+      <NavBar :menu="menuNavBar" :class=" ['ml-0', { 'ml-60 lg:ml-0': isAsideMobileExpanded }]"
         @menu-click="menuClick">
         <NavBarItemPlain display="flex lg:hidden" @click.prevent="isAsideMobileExpanded = !isAsideMobileExpanded">
           <BaseIcon :path="isAsideMobileExpanded ? mdiBackburger : mdiForwardburger" size="24" />

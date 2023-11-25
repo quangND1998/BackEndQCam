@@ -51,8 +51,6 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         // return $request;
-        // $order = Order::with('discount')->find(1);
-        // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
@@ -426,7 +424,8 @@ class OrderController extends Controller
                 'discount_deal' => $request->discount_deal,
                 'type' => $request->type,
                 'shipping_fee' => $request->shipping_fee,
-                'amount_paid' => $request->amount_paid
+                'amount_paid' => $request->amount_paid,
+                'sale_id' => Auth::user()->id
 
             ]);
 
@@ -465,10 +464,8 @@ class OrderController extends Controller
         }
     }
 
-
     public function addConditionToCart($request)
     {
-
         if ($request->discount_deal) {
             $conditionDiscount = new \Darryldecode\Cart\CartCondition(array(
                 'name' => 'DISCOUNT',
@@ -479,14 +476,12 @@ class OrderController extends Controller
             ));
             Cart::condition($conditionDiscount);
         }
-
         if ($request->vat) {
             $conditionVat = new \Darryldecode\Cart\CartCondition(array(
                 'name' => 'VAT',
                 'type' => 'tax',
                 'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
                 'value' => $request->vat . '%',
-
             ));
             Cart::condition($conditionVat);
         }
@@ -508,7 +503,6 @@ class OrderController extends Controller
                 'type' => 'tax',
                 'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
                 'value' => $request->shipping_fee,
-
             ));
             Cart::condition($conditionShipping);
         }
@@ -563,7 +557,8 @@ class OrderController extends Controller
                 'last_price' => 0,
                 'item_count' => Cart::getTotalQuantity(),
                 'type' => $request->type,
-                'product_service_owner_id' => $request->product_service_owner_id
+                'product_service_owner_id' => $request->product_service_owner_id,
+                'sale_id' => Auth::user()->id,
 
             ]);
             $order->save();

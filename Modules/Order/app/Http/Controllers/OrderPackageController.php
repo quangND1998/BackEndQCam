@@ -35,6 +35,13 @@ class OrderPackageController extends Controller
         $this->middleware('permission:order-refund', ['only' => ['index', 'refund']]);
         $this->middleware('permission:order-decline', ['only' => ['index', 'decline']]);
     }
+    public function orderChangeStatus(Request $request, OrderPackage $order)
+    {
+        $order->update([
+            'status' => $request->status,
+        ]);
+        return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
+    }
     public function index(Request $request)
     {
         // $order = Order::with('discount')->find(1);
@@ -117,7 +124,9 @@ class OrderPackageController extends Controller
             ]);
             // $oldCart = $request->session()->get('cartPackage');
             // dd($oldCart);
-
+            foreach ($request->images as $image) {
+                $order->addMedia($image)->toMediaCollection('order_package_images');
+            }
             return redirect()->route('admin.orders.package.pending',[$order->id]);
         }
     }
@@ -155,6 +164,15 @@ class OrderPackageController extends Controller
             'reason' => $request->reason
         ]);
 
+        $product_service_owner = ProductServiceOwner::where('user_id',$order->user_id)->whereHas('trees')->where('product_service_id',$order->product_service)->first();
+
+        if($product_service_owner){
+            foreach($product_service_owner->trees as $tree){
+                $tree->product_service_owner_id = null;
+                $tree->save();
+            }
+        }
+       // $product_service_owner->delete();
         return back()->with('success', 'Hủy đơn thành công');
     }
     public function orderComplete(Request $request, OrderPackage $order)

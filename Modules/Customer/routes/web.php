@@ -28,6 +28,7 @@ Route::middleware(['auth'])->group(
         Route::prefix('customer/{id}')->as('customer.detail.')->group(function () {
             Route::get('info', [CustomerDetailController::class, 'info'])->name('info');
 
+            Route::get('document', [CustomerDetailController::class, "listDocument"])->name('document');
             Route::resource('products', CustomerProductController::class)->names('products');
             Route::get('gift', [CustomerActivityController::class, "gift"])->name('gift');
             Route::resource('activity', CustomerActivityController::class)->names('activity');
@@ -36,6 +37,8 @@ Route::middleware(['auth'])->group(
         Route::prefix('product_owner/{id}')->as('product_owner.')->group(function () {
             Route::resource('contract', ContractController::class)->names('contract');
             Route::post('extend', [CustomerProductController::class, 'extend'])->name('extend');
+            Route::post('contract/{idContract}/PostUpdate', [ContractController::class, 'update'])->name('contract.PostUpdate');
+
             Route::get('extend', [CustomerProductController::class, 'getExtendHistory'])->name('getExtendHistory');
 
             Route::post('history_extend', [CustomerProductController::class, 'editHistoryExtend'])->name('history_extend');

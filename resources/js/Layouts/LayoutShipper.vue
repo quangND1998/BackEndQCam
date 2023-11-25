@@ -77,23 +77,16 @@ const state = reactive({
 
             </div>
 
-            <div class="  my-5 bg-white  dark:bg-gray-500 rounded-lg"
-                style="box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
+            <div class="  my-5 bg-white  rounded-lg" style="box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
                 <ul class="flex flex-wrap">
-                    <li :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('info') }"
-                        class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] dark:text-white inline-block my-2">
+                    <li :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('ShipperDetail') }"
+                        class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] inline-block my-2">
 
                         <Link :href="route('shippers.detail', shipper.id)" class="flex">
                         <Icon icon="info" class=" mr-2" />Đơn hàng
                         </Link>
                     </li>
 
-                    <li :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('product', 'extend') }"
-                        class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2">
-
-                        <!-- <Link :href="route('customer.detail.products.index', customer.id)" class="flex">
-                        <Icon icon="buildings" class=" mr-2" /> Gói dịch vụ </Link> -->
-                    </li>
 
 
 

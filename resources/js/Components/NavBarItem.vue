@@ -91,7 +91,7 @@ onBeforeUnmount(() => {
   <component :is="is" v-else ref="root" class="block lg:flex items-center relative cursor-pointer" :class="componentClass"
     :href="itemHref" :target="item.target ?? null" @click="menuClick">
     <div class="flex items-center" :class="{
-      'bg-gray-100 dark:bg-slate-800 lg:bg-transparent lg:dark:bg-transparent p-3 lg:p-0':
+      'bg-gray-100 dark:bg-slate-800 lg:bg-transparent lg:dark:bg-transparent p-1 lg:p-0':
         item.menu
     }">
       <UserAvatarCurrentUser v-if="item.isCurrentUser" class="w-6 h-6 mr-3 inline-flex" />

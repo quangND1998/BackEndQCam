@@ -14,6 +14,7 @@ use Modules\Customer\app\Models\ComplaintManagement;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ReviewManagement;
 use Modules\Order\app\Models\Order;
+use Modules\Order\app\Models\OrderPackage;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -88,7 +89,10 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(Order::class, 'user_id');
     }
-
+    public function orderPackage()
+    {
+        return $this->hasMany(OrderPackage::class, 'user_id');
+    }
 
     public function address()
     {
@@ -129,5 +133,10 @@ class User extends Authenticatable implements HasMedia
     {
 
         return $this->hasMany(Order::class, 'shipper_id');
+    }
+
+    public function teams()
+    {
+        return $this->belongsToMany(User::class, Teams::class, 'team_user', 'user_id', 'team_id');
     }
 }

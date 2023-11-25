@@ -74,4 +74,5 @@ class CustomerActivityController extends Controller
     {
         //
     }
+
 }

@@ -94,7 +94,6 @@ const checkOpenMenu = () => {
   width: 4px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   background: #f1f1f1a8;
 }
