@@ -57,7 +57,7 @@ const form = useForm({
     payment_method: 'cash',
     shipping_fee: 0,
     time_reservations: 1,
-    price_percent: null,
+    price_percent: props.product_services.length > 0 ? props.product_services[0].price : null,
     product_selected: props.product_services.length > 0 ? props.product_services[0].id : null,
     time_approve: new Date(),
     images: []
@@ -445,9 +445,12 @@ const date = ref(new Date());
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Số tiền thanh toán (vnd)</label>
-                            <input type="number" id="first_name" v-model="form.price_percent"
+                            <!-- <input type="number" id="first_name" v-model="form.price_percent" min="0"  :max="product_services?.price"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="" required>
+                                placeholder="" required> -->
+                                <MazInputPrice  v-model="form.price_percent" currency="VND"  locale="vi-VN" :min="0" :max="product_services?.price"
+                                @formatted="formattedPrice = $event" />
+
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -544,7 +547,7 @@ const date = ref(new Date());
                                     trị giá xx triệu</p>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
