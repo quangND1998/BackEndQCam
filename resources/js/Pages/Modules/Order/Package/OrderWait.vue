@@ -243,7 +243,7 @@ const changeDate = () => {
                         </div>
                         
                 </div>
-                <div class="w-full mt-3 ">
+                <div class="w-full mt-6 ">
                     <div class="panel panel-default">
                         <div class="tableFixHead panel-body relative overflow-x-auto ">
                                 <div class="mr-2 px-2 mb-2 text-xs  uppercase bg-gray-200 grid grid-cols-6  py-2  text-gray-400">
