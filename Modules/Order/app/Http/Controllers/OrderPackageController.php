@@ -79,6 +79,21 @@ class OrderPackageController extends Controller
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
+    public function partiallyPaid(Request $request)
+    {
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'partiallyPaid';
+        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment'])->whereHas(
+            'customer',
+            function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->customer . '%');
+            }
+        )->whereColumn('price_percent', '<', 'grand_total')
+        ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(10);
+        $statusGroup = $this->groupByOrderStatus();
+        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
     public function orderPackage(Request $request){
         $user = Auth::user();
         $product_services = ProductService::where("status", 1)->get();
@@ -300,9 +315,19 @@ class OrderPackageController extends Controller
                     'total' => $filtered->total,
 
                 );
+
             }
         }
+        $newCollections[] = array(
+            'status' => 'partiallyPaid',
+            'total' => $this->groupByPayment(),
+
+        );
         return $newCollections;
+    }
+    public function groupByPayment(){
+        $paymentGroup = OrderPackage::whereColumn('price_percent', '<', 'grand_total')->count();
+        return $paymentGroup;
     }
     public function getOrder($request, $status)
     {
@@ -311,6 +336,6 @@ class OrderPackageController extends Controller
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
             }
-        )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(10);
+        )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(20);
     }
 }

@@ -43,6 +43,12 @@ const handleNativeClick =()=>{
             Đã duyệt
             <span class="text-gray-400 ml-1">({{ totalOrder('complete') }})</span>
             </Link>
+            <Link v-if="hasAnyPermission(['order-pending'])" :href="route('admin.orders.package.partiallyPaid')"
+                class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
+                :class="{ 'bg-white  text-blue-500': $page.url === '/admin/orders/package/partiallyPaid' }">
+                Thanh toán 1 phần
+            <span class="text-gray-400 ml-1">({{ totalOrder('partiallyPaid') }})</span>
+            </Link>
         </div>
         <div>
 

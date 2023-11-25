@@ -76,7 +76,8 @@ Route::middleware(['auth'])->group(
                     Route::get('pending', [OrderPackageController::class, 'index'])->name('pending');
                     Route::get('decline', [OrderPackageController::class, 'listOrderCancel'])->name('decline');
                     Route::get('complete', [OrderPackageController::class, 'listOrderComplete'])->name('complete');
-
+                    Route::get('partiallyPaid', [OrderPackageController::class, 'partiallyPaid'])->name('partiallyPaid');
+                    
                     Route::post('orderChangeStatus/{order}', [OrderPackageController::class, 'orderChangeStatus'])->name('orderChangeStatus');
 
                     Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
