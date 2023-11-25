@@ -41,7 +41,7 @@ const props = defineProps({
                 <p class="btn_label" :class=" order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">{{ order?.price_percent < order?.grand_total ? 'Thanh toán từng phần' : order?.price_percent == 0 ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
             </div>
             <div>
-                <Link v-if="order?.payment_method == 'cash' || order?.payment_method == 'banking'"
+                <Link
                     :href="route('admin.orders.package.pending', order?.id)"
                     class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
                 Chi tiết thanh toán
