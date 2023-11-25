@@ -45,7 +45,7 @@ const save = () => {
 
     console.log(form);
     if (editMode.value == true) {
-        form.put(route("product_owner.contract.update", [ form.id , form.id]), {
+        form.post(route("product_owner.contract.PostUpdate", [ props.history_extend.id , form.id]), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = true;
@@ -133,7 +133,7 @@ const Delete = (id) => {
                                     <p class="text-xs text-gray-500 dark:text-gray-400">FPD
                                     </p>
                                 </div>
-                               
+
                                 <input id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
                                     class="hidden" accept="application/pdf,application/vnd.ms-excel" />
                             </label>
