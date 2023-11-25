@@ -68,7 +68,8 @@ class OrderRepository implements OrderContract
 
     public function getOrder($request, $status)
     {
-        return Order::with(['customer', 'orderItems.product', 'discount', 'shipper'])->whereHas(
+
+        return  Order::with(['customer', 'orderItems.product', 'discount', 'shipper', 'saler'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
@@ -86,7 +87,7 @@ class OrderRepository implements OrderContract
     {
 
         $array_status = ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline'];
-        $statusGroup = Order::whereHas('orderItems')
+        $statusGroup = Order::role()->whereHas('orderItems')
             ->select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
             ->get();

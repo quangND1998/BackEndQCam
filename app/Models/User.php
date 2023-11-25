@@ -38,7 +38,7 @@ class User extends Authenticatable implements HasMedia
         'username',
         'email',
         'password',
-        'phone_number', 'isVerified',  'address', 'date_of_brith', 'cic_number', 'sex', 'adrress', 'date_of_birth', 'city', 'district', 'wards', 'cic_date', 'cic_date_expried', 'phone_number2', 'date_of_birth', 'fcm_token'
+        'phone_number', 'isVerified',  'address', 'date_of_brith', 'cic_number', 'sex', 'adrress', 'date_of_birth', 'city', 'district', 'wards', 'cic_date', 'cic_date_expried', 'phone_number2', 'date_of_birth', 'fcm_token', 'created_byId'
     ];
 
     /**
@@ -138,5 +138,30 @@ class User extends Authenticatable implements HasMedia
     public function teams()
     {
         return $this->belongsToMany(User::class, Teams::class, 'team_user', 'user_id', 'team_id');
+    }
+
+    public function infors()
+    {
+        return $this->hasMany(UserInfor::class, 'user_id');
+    }
+
+    public function lastInfoChange()
+    {
+        return $this->hasOne(UserInfor::class)->latest();
+    }
+
+    public function salers()
+    {
+        return $this->hasMany(User::class, 'created_byId')->role('saler');
+    }
+
+    public function leaders()
+    {
+        return $this->hasMany(User::class, 'created_byId')->role('leader-sale');
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(User::class, 'created_byId')->role('saler');
     }
 }

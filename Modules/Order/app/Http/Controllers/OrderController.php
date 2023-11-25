@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\OrderPackingNotification;
 use App\Notifications\OrderShippingNotification;
+use App\Notifications\ShipperNewOrderNotification;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -256,7 +257,9 @@ class OrderController extends Controller
         ]);
 
         if ($order->status == 'shipping') {
+            $shipper = User::find($request->shipper);
             Notification::send($order->customer, new OrderShippingNotification($order));
+            Notification::send($shipper, new ShipperNewOrderNotification($order));
         }
         return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
     }

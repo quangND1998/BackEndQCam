@@ -35,7 +35,6 @@ import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
 const phoneNumber = ref()
 const results = ref()
 const props = defineProps({
-    subadmins: Array,
     filters: Object,
     roles: Array,
     users: Object,
@@ -265,18 +264,7 @@ const Delete = (id) => {
                             <InputError class="mt-2" :message="form.errors.roles" />
                         </div>
 
-                        <div class="w-full md:w-1/2 px-3" v-if="hasAnyPermission(['super-admin'])">
-                            <InputLabel for="owner" value="Owner" />
-
-                            <select id="category_project_id" v-model="form.created_byId"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option :value="null">Choose a Category Project</option>
-                                <option v-for="(subadmin, index) in subadmins" :key="index" :value="subadmin.id">
-                                    {{ subadmin.name }}
-                                </option>
-                            </select>
-                            <InputError class="mt-2" :message="form.errors.created_byId" />
-                        </div>
+                     
                     </div>
                 </div>
                 <!-- <InputLabel for="name" value="Name" />
@@ -303,7 +291,6 @@ const Delete = (id) => {
                             <th scope="col" class="py-3 px-6 text-xs">email</th>
                             <th scope="col" class="py-3 px-6 text-xs">phone</th>
                             <th scope="col" class="py-3 px-6 text-xs">role</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Assign Project</th>
                             <th scope="col" class="py-3 px-6 text-xs">Active</th>
                             <th scope="col" class="py-3 px-6 text-xs">created at</th>
                             <th scope="col" class="py-3 px-6 text-xs">
@@ -334,12 +321,7 @@ const Delete = (id) => {
                                         :label="role.name" small outline=""></PillTag>
                                 </BaseButtons>
                             </th>
-                            <th class="item-center">
-                                <BaseButton type="a" label="Project list" color="default" :icon="mdiFileDocumentOutline"
-                                    small :iconSize="20" class="border-0 hover:border-0" />
-                                <BaseButton type="a" label="Assign project" color="default" :icon="mdiPlus" small
-                                    :iconSize="20" class="border-0 hover:border-0 text-color_Orange" />
-                            </th>
+                          
                             <th class="py-3 px-6 text-xs">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" value="" class="sr-only peer"

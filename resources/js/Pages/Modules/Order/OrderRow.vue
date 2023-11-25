@@ -17,7 +17,7 @@ const props = defineProps({
 
 <template>
     <div>
-        <div @click.prevent="toggleContent" class=" grid grid-cols-7 gap-5 text-sm px-0 py-3 text-gray-400">
+        <div @click.prevent="toggleContent" class=" grid grid-cols-8 gap-5 text-sm px-3 py-3 text-gray-400">
             <div>
                 <a class="flex items-center">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -40,7 +40,10 @@ const props = defineProps({
             </div>
 
             <div>
-                <p>{{ order.type =='gift_delivery' ? 'Giao quà':'Đơn lẻ' }}</p>
+                <p>{{ order.type == 'gift_delivery' ? 'Giao quà' : 'Đơn lẻ' }}</p>
+            </div>
+            <div>
+                <p v-if="order.saler">{{ order.saler.name }}</p>
             </div>
             <div>
                 <Link v-if="order.payment_method == 'cash' || order.payment_method == 'banking'"
@@ -124,12 +127,12 @@ const props = defineProps({
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
                 <p>Ưu đãi</p>
-                <p v-if="order.discount_deal >0">{{ order.discount_deal }} %</p>
+                <p v-if="order.discount_deal > 0">{{ order.discount_deal }} %</p>
                 <p v-else>0%</p>
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
                 <p>VAT</p>
-                <p v-if="order.vat >0">{{ order.vat }} %</p>
+                <p v-if="order.vat > 0">{{ order.vat }} %</p>
                 <p v-else>0%</p>
             </div>
             <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">

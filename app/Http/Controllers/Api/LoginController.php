@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\API\Base2Controller;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserInfor;
 use Illuminate\Support\Facades\Validator;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
@@ -26,7 +27,6 @@ class LoginController extends Base2Controller
 
             $user = Auth::user();
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
-            $success['user'] =  $user;
             $success['user'] =  $user;
             $success['user']['can'] = $user->getRolesArray();
             return $this->sendResponse($success, 'User login successfully.');
@@ -160,5 +160,58 @@ class LoginController extends Base2Controller
         $user->save();
         $success['user'] =  $user;
         return $this->sendResponse($success, 'Get Token successfully.');
+    }
+
+
+    public function updateUserInfor(Request $request)
+    {
+        $user = Auth::user();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'cic_number' => 'required|unique:users,cic_number,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone_number,' . $user->id,
+            'sex' => 'nullable',
+            'address' => 'required',
+            'city' => 'nullable',
+            'wards' => 'nullable',
+            'district' => 'nullable',
+            'date_of_birth' => 'nullable|date',
+
+            'cic_date' => 'nullable|date',
+            'cic_date_expried' => 'nullable|date|after:cic_date',
+        ], [
+            'name.required' => 'Vui lòng nhập Họ và Tên',
+            'cic_number.required' => 'Vui lòng nhập số căn cước công dân',
+            'cic_number.unique' => 'Số căn cước này đã đăng ký với 1 tài khoản khác',
+            'email.required' => 'Vui lòng nhập địa chỉ email',
+            'email.unique' => 'Địa chỉ Email này đã đăng ký với 1 tài khoản khác',
+            'city.required' => 'Địa chỉ nơi ở không bỏ trống , chúng tôi sẽ căn cứ vào địa chỉ này để giao hàng',
+            'wards.required' => 'Địa chỉ nơi ở không bỏ trống , chúng tôi sẽ căn cứ vào địa chỉ này để giao hàng',
+            'district.required' => 'Địa chỉ nơi ở không bỏ trống , chúng tôi sẽ căn cứ vào địa chỉ này để giao hàng',
+            'address.required' => 'Địa chỉ nơi ở không bỏ trống , chúng tôi sẽ căn cứ vào địa chỉ này để giao hàng',
+            'cic_date_expried.after' => 'Phải là một ngày sau Ngày Cấp trên căn cước',
+        ]);
+
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors(), 422);
+        }
+
+        $userInfor = UserInfor::create($request->all());
+        $userInfor->user_id = $user->id;
+        $response = [
+            'message' => 'Chúng tôi đã nhận yêu cầu thay đổi thông tin tài khoản của bạn',
+            'user' => $userInfor,
+        ];
+        return response()->json($response, 200);
+    }
+
+    public function getUser()
+    {
+        $user = Auth::user();
+        $success['user'] =  $user;
+        $success['user']['can'] = $user->getRolesArray();
+        return $this->sendResponse($success, 'User login successfully.');
     }
 }
