@@ -66,7 +66,7 @@ class OrderPackageController extends Controller
         // $orders =  OrderPackage::with('customer','product_service')->where('status','decline')->get();
         //return $orders;
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderCancel', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listOrderComplete(Request $request)
     {
@@ -77,7 +77,7 @@ class OrderPackageController extends Controller
         // return $orders;
         // $orders =  OrderPackage::with('customer','product_service')->where('status','complete')->orderBy('created_at','desc')->get();
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderComplete', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function orderPackage(Request $request){
         $user = Auth::user();
@@ -141,11 +141,12 @@ class OrderPackageController extends Controller
         }
         $order->save();
         $order = OrderPackage::find($id);
+        $order->price_percent = $order->totalPayment();
         if($order->totalPayment() >= $order->grand_total){
             $order->payment_status = 1;
             $order->save();
         }else{
-            $order->price_percent = $order->totalPayment();
+           
             $order->payment_status = 0;
             $order->save();
         }
