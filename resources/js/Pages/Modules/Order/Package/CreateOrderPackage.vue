@@ -213,12 +213,12 @@ const date = ref(new Date());
     <LayoutAuthenticated>
 
         <Head title="Quản lý đơn hàng" />
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <div class="lg:container m-auto mt-10">
                 <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
                     <div class="col-span-2">
                         <div class="min-[320px]:block md:flex border-b border-gray-200 pb-4">
-                            <div class="min-[320px]:w-full md:w-1/2 px-2">
+                            <div class="min-[320px]:w-full md:w-1/2 px-0">
                                 <div class="block">
                                     <img src="/assets/images/cammattroi.png" alt="">
                                     <h1 class="pt-2">CÔNG TY CỔ PHẦN CAM MẶT TRỜI</h1>
@@ -354,7 +354,7 @@ const date = ref(new Date());
                                             </Dropdown>
                                             <InputError class="mt-2" :message="form.errors.district" />
                                         </div>
-                                        <div class="min-[320px]:w-full md:w-1/2 ml-2">
+                                        <div class="min-[320px]:w-full md:w-1/2 ">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Phường xã*</label>
@@ -421,7 +421,7 @@ const date = ref(new Date());
                     </div>
                     <div class="min-[320px]:mx-0 md:mx-5">
 
-                        <div class="my-3">
+                        <div class="mb-3">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 VAT(%)</label>
                             <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
@@ -467,7 +467,7 @@ const date = ref(new Date());
                 :vat="form.vat" :discount_deal="form.discount_deal" :shipping_fee="form.shipping_fee" :time_reservations="form.time_reservations"
                 :price_percent="form.price_percent" :product_selected ="form.product_selected" :time_approve ="form.time_approve"
                 :payment_method="form.payment_method" :type="form.type" :sub_total="sub_total" @confirm="save" /> -->
-            <div class="min-[320x]:w-full grid grid-cols-3 gap-4">
+            <div class="min-[320x]:block sm:block md:grid grid-cols-3 gap-4">
 
                 <div class=" col-span-2 mt-2 w-full">
                     <div class="relative shadow-md sm:rounded-lg mb-5 mt-4">
@@ -511,7 +511,7 @@ const date = ref(new Date());
                     </div>
                     <div class="bg-white rounded-lg p-3">
                         <div class="flex justify-between">
-                            <div>
+                            <div class="mb-2">
                                 <!-- <font-awesome-icon :icon="['fas', 'cart-shopping']" class="mt-1" /> -->
                                 <span class="text-xl font-semibold ml-2">Quyền lợi nhận nuôi {{ product?.name }}</span>
                             </div>
@@ -519,36 +519,36 @@ const date = ref(new Date());
                         </div>
                         <hr />
                         <div class="my-3">
-                            <div class="block ml-3 w-4/5">
+                            <div class="block ml-2 w-4/5 mb-2">
                                 <h3 class="text-base font-semibold">1. Thăm vườn không giới hạn</h3>
                                 <p class="text-xs font-normal">Nhận {{ product?.free_visit }} lần tham quan miễn phí</p>
                             </div>
-                            <div class="block ml-3 w-4/5">
+                            <div class="block ml-2 w-4/5 mb-2">
                                 <h3 class="text-base font-semibold">2. Thu hoạch {{ product?.amount_products_received }} kg
                                     cam</h3>
                                 <p class="text-xs font-normal">{{ product?.number_deliveries }} lần ship hàng về tận nhà</p>
                             </div>
-                            <div class="block ml-3 w-4/5">
+                            <div class="block ml-2 w-4/5 mb-2">
                                 <h3 class="text-base font-semibold">3. Tặng thẻ Membership</h3>
                                 <p class="text-xs font-normal">Hưởng đặc quyền riêng từ trang trại</p>
                             </div>
-                            <div class="block ml-3 w-4/5">
+                            <div class="block ml-2 w-4/5 mb-2">
                                 <h3 class="text-base font-semibold">4. Nhận nông sản sạch
                                     {{ product?.number_receive_product }} lần/năm</h3>
                                 <p class="text-xs font-normal">Các sản phẩm nông sản như thanh long
                                     sầu riêng là quà tặng đến cho bạn</p>
                             </div>
-                            <div class="block ml-3 w-4/5">
+                            <div class="block ml-2 w-4/5 mb-2">
                                 <h3 class="text-base font-semibold">5. Quà tặng thêm</h3>
                                 <p class="text-xs font-normal">Nhiều phần quà nông sản hấp dẫn trị tổng
                                     trị giá xx triệu</p>
                             </div>
                         </div>
-                        <hr />
+                        
                     </div>
                 </div>
 
-                <div class="mx-5">
+                <div class="mx-4">
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">Tổng</p>
                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice(product?.price) }} vnđ</p>

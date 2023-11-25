@@ -205,20 +205,20 @@ const limit_tree = computed(() =>{
     <LayoutAuthenticated>
 
         <Head title="Customer" />
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <SectionTitleLineWithButton :icon="mdiAccountLockOpen" title="User" main></SectionTitleLineWithButton>
 
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
-                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 m-2 bg-white" :iconSize="20" />
+                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 my-2 mr-2 bg-white" :iconSize="20" />
                         <search-filter v-model="search" class="mr-4 w-full max-w-md" @reset="reset">
                             <label class="block text-gray-700">Trashed:</label>
                         </search-filter>
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                         small @click="
                             isModalActive = true;
                             form.reset();
@@ -331,22 +331,22 @@ const limit_tree = computed(() =>{
             <div v-if="selected>1 ">
                 <p class="text-red-600 text-end">Xóa (5) Customer</p>
             </div>
-            <div class=" relative shadow-md sm:rounded-lg mt-5">
+            <div class="  relative  sm:rounded-lg mt-5">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-6 py-3 flex items-center">
+                            <th scope="col" class="px-3 py-2 flex items-center">
                         <input type="checkbox" v-model="selectAll"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                         #
                     </th>
-                            <th scope="col" class="py-3 px-6 text-xs">name</th>
-                            <th scope="col" class="py-3 px-6 text-xs">email</th>
-                            <th scope="col" class="py-3 px-6 text-xs">phone</th>
-                            <th scope="col" class="py-3 px-6 text-xs">username</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Active</th>
-                            <th scope="col" class="py-3 px-6 text-xs">created at</th>
-                            <th scope="col" class="py-3 px-6 text-xs">
+                            <th scope="col" class="py-2 px-3 text-xs">name</th>
+                            <th scope="col" class="py-2 px-3 text-xs">email</th>
+                            <th scope="col" class="py-2 px-3 text-xs">phone</th>
+                            <th scope="col" class="py-2 px-3 text-xs">username</th>
+                            <th scope="col" class="py-2 px-3 text-xs">Active</th>
+                            <th scope="col" class="py-2 px-3 text-xs">created at</th>
+                            <th scope="col" class="py-2 px-3 text-xs">
                                 <span class="sr-only">Edit</span>
                             </th>
                         </tr>
@@ -355,26 +355,26 @@ const limit_tree = computed(() =>{
                         <tr v-for="(user, index) in customers.data" :key="index"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
 
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <input id="default-checkbox" type="checkbox"  v-model="selected" :value="user.id"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                                 {{ index + 1 }}
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.name }}
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.email }}
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.phone_number }}
                             </th>
 
 
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.username }}
                             </th>
-                            <th class="py-3 px-6 text-xs">
+                            <th class="py-3 px-3 text-xs">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" value="" class="sr-only peer"
                                         :checked="user.isActive == 1 ? true : false" @change="setActive(user, $event)" />
@@ -383,10 +383,10 @@ const limit_tree = computed(() =>{
                                     </div>
                                 </label>
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ formatDate(user.created_at) }}
                             </th>
-                            <td class="py-4 px-6 flex text-right">
+                            <td class="py-3 px-3 flex text-right">
                                 <Link :href="route('customer.detail.info', user.id)" type="button"
                                     class="inline-block px-6 py-2.5 bg-blue-600 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                 Detail

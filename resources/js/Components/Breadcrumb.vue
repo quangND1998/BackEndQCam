@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex px-5 pb-5" aria-label="Breadcrumb">
+  <nav class="flex pr-5 py-4" aria-label="Breadcrumb">
     <ol class="inline-flex items-center space-x-1 md:space-x-3">
       <li class="inline-flex items-center ">
         <a href="#"

@@ -267,7 +267,7 @@ const date = ref(new Date());
 
         <Head title="Quản lý đơn hàng" />
 
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <div class="lg:container m-auto mt-10">
                 <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
                     <div class="col-span-2">
@@ -294,7 +294,7 @@ const date = ref(new Date());
                                     <div class="flex items-center w-full my-4">
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Ngày</p>
                                         <div class="relative w-full">
-                                            <VueDatePicker v-model="date" time-picker-inline />
+                                            <VueDatePicker v-model="date" time-picker-inline class="bg-gray-50" />
                                         </div>
                                     </div>
                                 </div>
@@ -446,9 +446,9 @@ const date = ref(new Date());
 
                             <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
-                                <div class="mr-2 inline-block" v-for="(img, index) in images " :key="index">
-                                    <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
-                                        @click="DeleteImage(index)" size="16">
+                                <div class="mr-2 inline-block relative" v-for="(img, index) in images " :key="index">
+                                    <BaseIcon :path="mdiTrashCanOutline" class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  "
+                                        @click="DeleteImage(index)" size="17">
                                     </BaseIcon>
                                     <img :src="img.image" class="w-20 h-20 object-cover rounded-lg" alt="">
                                 </div>

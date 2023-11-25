@@ -191,7 +191,7 @@ const Delete = (id) => {
     <LayoutAuthenticated>
 
         <Head title="Quản lý Mã giảm giá" />
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <SectionTitleLineWithButton title=" Mã giảm giá" main></SectionTitleLineWithButton>
 
             <!-- Modal -->
@@ -202,13 +202,13 @@ const Delete = (id) => {
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
-                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 m-2 bg-white" :iconSize="20" />
+                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 my-2 mr-2 bg-white" :iconSize="20" />
                         <SearchInput v-model="searchVal" @keyup="searchFilter" placeholder="Search" aria-label="Search"
                             size="24" />
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
                         @click="
                             isModalActive = true;
 
@@ -262,19 +262,9 @@ const Delete = (id) => {
                                         Kích
                                         hoạt</a>.</label>
                             </div>
-
-
                         </div>
-
-
-
                     </div>
                     <div>
-
-
-
-
-
                         <div class="my-2">
                             <InputLabel for="name" value="Mô tả" />
                             <label class="input w-full" for="recipient-name">
@@ -444,13 +434,13 @@ const Delete = (id) => {
                                 <td class="px-6 py-4">
                                     {{ formatPrice(voucher.discount_max_value) }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-2 py-4">
 
                                     <span v-if="voucher.is_fixed == 0"
-                                        class="bg-red-500 text-white text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Chưa
+                                        class="bg-red-500 text-white text-sm font-medium  px-1 py-1 rounded dark:bg-red-900 dark:text-red-300">Chưa
                                         kích hoạt</span>
                                     <span v-else
-                                        class="bg-lime-500 text-white text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-lime-600 dark:text-green-300">Kích
+                                        class="bg-lime-500 text-white text-sm font-medium  px-1 py-1 rounded dark:bg-lime-600 dark:text-green-300">Kích
                                         hoạt</span>
                                 </td>
                                 <td class="px-6 py-4">

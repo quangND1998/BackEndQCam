@@ -99,14 +99,14 @@ export default [{
         route_list: ['visit.pending', 'visit.confirm', 'visit.completed']
     },
     {
-        route: '',
+        route: 'admin.orders.index',
         label: 'Khiếu nại',
 
         permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
         route_list: null
     },
     {
-        route: '',
+        route: 'admin.orders.index',
         label: 'Đánh giá',
 
         permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],

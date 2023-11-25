@@ -66,7 +66,7 @@ const orderChangePending = () => {
 
                 router.post(route("admin.orders.orderChangeStatus", props.order.id), query,
                     {
-                        preserveState: true,
+                        preserveState: false,
                         preserveScroll: true
                     }, {
                     onSuccess: () => {
@@ -98,7 +98,7 @@ const orderChangePayment = (event) => {
 
                 router.post(route("admin.orders.orderChangePayment"), query,
                     {
-                        preserveState: true,
+                        preserveState: false,
                         preserveScroll: true
                     }, {
                     onSuccess: () => {
@@ -131,7 +131,7 @@ const orderChangeCompleted = () => {
 
                 router.post(route("admin.orders.orderChangeStatus", props.order.id), query,
                     {
-                        preserveState: true,
+                        preserveState: false,
                         preserveScroll: true
                     }, {
                     onSuccess: () => {
@@ -160,7 +160,7 @@ const orderChangePacking = () => {
             if (result.isConfirmed) {
                 router.post(route("admin.orders.orderChangeStatus", props.order.id), query,
                     {
-                        preserveState: true,
+                        preserveState: false,
                         preserveScroll: true
                     }, {
                     onSuccess: () => {

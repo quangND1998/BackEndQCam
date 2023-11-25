@@ -126,7 +126,7 @@ const save = () => {
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain>
-            <div class="container m-auto mt-10">
+            <div class="container m-auto mt-10 pb-4">
                 <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
                     <div class="col-span-2">
 

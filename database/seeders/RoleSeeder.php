@@ -36,5 +36,22 @@ class RoleSeeder extends Seeder
 
         $role2 = Role::create(['name' => 'customer']);
         $role2->givePermissionTo(['login-app', 'order', 'review', 'complaint']);
+
+        $role3 = Role::create(['name' => 'shipper']);
+        $role3->givePermissionTo(['shipper']);
+
+        $role3 = Role::create(['name' => 'leader-sale']);
+        $role3->givePermissionTo([
+            'update-user',
+            'delete-user',
+            'create-user',
+            'view-user',
+            'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'
+        ]);
+
+        $role3 = Role::create(['name' => 'saler']);
+        $role3->givePermissionTo([
+            'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'
+        ]);
     }
 }

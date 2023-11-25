@@ -84,17 +84,17 @@ const cancelState = (visit) => {
     <LayoutAuthenticated>
 
         <Head title="Quản lý đặt lịch tham quan" />
-        <SectionMain>
-            <SectionTitleLineWithButton title="Quản lý dđặt lịch tham quan" main></SectionTitleLineWithButton>
+        <SectionMain class="p-3 mt-8">
+            <SectionTitleLineWithButton title="Quản lý đặt lịch tham quan" main></SectionTitleLineWithButton>
             <div>
                 <LayoutBar></LayoutBar>
-                <div class="p-2 lg:w-2/3 sm:w-full">
+                <div class="p-2 lg:w-1/2 sm:w-full">
                     <div>
                         <div class="min-[320px]:block sm:flex sm:my-2">
-                            <div class="min-[320px]:w-full sm:w-3/12 mr-3 text-gray-500">
+                            <div class="min-[320px]:w-full sm:w-3/12  md:w-3/12 mr-3 text-gray-500">
                                 <label for>Khách hàng</label>
                             </div>
-                            <div class="min-[320px]:w-full form_search sm:w-9/12">
+                            <div class="min-[320px]:w-full form_search sm:w-9/12  md:w-9/12">
                                 <form v-on:submit.prevent>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -114,12 +114,12 @@ const cancelState = (visit) => {
                             </div>
                         </div>
                         <div class="min-[320px]:block sm:flex lg:flex my-3">
-                            <div class="min-[320px]:w-full w-1/5 mr-3 text-gray-500">
+                            <div class="min-[320px]:w-full sm:w-3/12 md:w-3/12 mr-3 text-gray-500">
                                 <label for>Đặt lịch ngày</label>
                             </div>
-                            <div class="min-[320px]:w-full w-4/5">
-                                <div date-rangepicker class="flex items-center">
-                                    <div class="relative">
+                            <div class="min-[320px]:w-full sm:w-9/12  md:w-9/12">
+                                <div date-rangepicker class="flex items-center w-full justify-between">
+                                    <div class="relative  ">
                                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                             <svg aria-hidden="true" class="w-5 h-5 text-gray-500 text-gray-400"
                                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -153,7 +153,7 @@ const cancelState = (visit) => {
                 </div>
                 <div class="p-2 rounded-lg col-md-12">
                     <div class="panel panel-default">
-                        <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+                        <div class="overflow-x-auto relative  sm:rounded-lg mt-5">
                             <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                                 <thead
                                     class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

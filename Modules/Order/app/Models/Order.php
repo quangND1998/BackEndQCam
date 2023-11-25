@@ -61,9 +61,9 @@ class Order extends Model implements HasMedia
 
             $query->where('order_number', 'like', '%' . $filters['search'] . '%');
         }
-        if (isset($filters['from']) && isset($filters['to'])) {
+        if (isset($filters['fromDate']) && isset($filters['toDate'])) {
 
-            $query->whereBetween('created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+            $query->whereBetween('created_at', [Carbon::parse($filters['fromDate'])->format('Y-m-d H:i:s'), Carbon::parse($filters['toDate'])->format('Y-m-d H:i:s')]);
         }
 
         if (isset($filters['payment_status'])) {

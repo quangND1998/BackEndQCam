@@ -64,7 +64,7 @@ const state = reactive({
     <LayoutAuthenticated>
         <Breadcrumb :crumbs="crumbs" />
         <Head title="Profile Detail" />
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <SectionTitleLineWithButton title="Profile Detail" main></SectionTitleLineWithButton>
 
          <div class="h-52 w-96 bg-white rounded-xl " style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">

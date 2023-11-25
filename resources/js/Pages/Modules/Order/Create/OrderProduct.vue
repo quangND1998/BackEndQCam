@@ -192,7 +192,7 @@ const    updateCartInput =(product)=> {
 <template>
  
 
-    <div class="min-[320x]:w-full grid grid-cols-3 gap-4">
+    <div class="min-[320x]:w-full  grid grid-cols-3 gap-4">
        
         <div class=" col-span-2 mt-2 w-full">
           
@@ -310,14 +310,14 @@ const    updateCartInput =(product)=> {
                         />
                         <input
                           aria-label="quantity"
-                          class="input-qty_create"
+                          class="input-qty_create pb-0 border"
                           :ref="`quantity${item.id}`"
                         
                           :value="item.quantity"
                           max="100"
                           min="0"
                           name
-                          type="number"
+                          type="number" 
                         />
                         <input
                           class="plus is-form"

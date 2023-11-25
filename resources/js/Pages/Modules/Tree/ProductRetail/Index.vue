@@ -142,7 +142,7 @@ const searchFilter = () => {
     <LayoutAuthenticated>
 
         <Head title="Product Retail" />
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <SectionTitleLineWithButton title="Product Retail" main></SectionTitleLineWithButton>
 
             <!-- Modal -->
@@ -153,13 +153,13 @@ const searchFilter = () => {
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
-                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 m-2 bg-white" :iconSize="20" />
+                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 my-2 mr-2 bg-white" :iconSize="20" />
                         <SearchInput v-model="searchVal" @keyup="searchFilter()" placeholder="Search" aria-label="Search"
                             size="24" />
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
                         @click="
                             isModalActive = true;
                             editMode= false;
@@ -275,7 +275,7 @@ const searchFilter = () => {
                                         <input type="checkbox" class="sr-only peer" :checked="product.status"
                                             @change="changeStatus(product, $event)">
                                         <div
-                                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                         </div>
                                     </label>
                                 </td>

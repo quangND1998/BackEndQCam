@@ -73,13 +73,14 @@ class OrderRepository implements OrderContract
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
+                $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
             }
         )->whereHas(
             'orderItems.product',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->name . '%');
             }
-        )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(10);
+        )->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(10);
     }
 
 
