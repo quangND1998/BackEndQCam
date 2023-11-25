@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ReviewManagement;
 use Modules\Order\Database\factories\OrderFactory;
@@ -55,6 +56,7 @@ class Order extends Model implements HasMedia
 
     public function scopeFillter($query, array $filters)
     {
+
         if (isset($filters['search']) && isset($filters['search'])) {
 
             $query->where('order_number', 'like', '%' . $filters['search'] . '%');
@@ -130,5 +132,20 @@ class Order extends Model implements HasMedia
     public function saler()
     {
         return $this->belongsTo(User::class, 'sale_id');
+    }
+    public function scopeRole($query)
+    {
+        $user = Auth::user();
+
+        if (!$user->hasPermissionTo('super-admin')) {
+            if ($user->hasRole('leader-sale')) {
+                $query->whereIn('sale_id', $user->salers->pluck('id'));
+            } else {
+                $query->where('sale_id', $user->id);
+            }
+        } else {
+
+            $query->get();
+        }
     }
 }

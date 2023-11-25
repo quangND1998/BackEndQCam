@@ -77,39 +77,39 @@ export default [{
     label: 'Hoạt động',
     icon: mdiFileTreeOutline,
     permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
-    route_list: ['admin.orders.package.index', 'admin.orders.index','admin.orders.create','admin.orders.package.create', 'admin.orders.pending', 'visit.pending', 'visit.confirm', 'visit.completed'],
+    route_list: ['admin.orders.package.index', 'admin.orders.index', 'admin.orders.create', 'admin.orders.package.create', 'admin.orders.pending', 'visit.pending', 'visit.confirm', 'visit.completed'],
     menu: [{
         route: 'admin.orders.index',
         label: 'Đơn hàng',
 
-        permissions: ['super-admin'],
+        permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
         route_list: null
     },
     {
         route: 'admin.orders.package.index',
         label: 'Hợp đồng',
-        permissions: ['super-admin'],
+        permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
         route_list: null
     },
     {
         route: 'visit.pending',
         label: 'Đặt lịch tham quan',
 
-        permissions: ['super-admin'],
+        permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
         route_list: ['visit.pending', 'visit.confirm', 'visit.completed']
     },
     {
         route: '',
         label: 'Khiếu nại',
 
-        permissions: ['super-admin'],
+        permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
         route_list: null
     },
     {
         route: '',
         label: 'Đánh giá',
 
-        permissions: ['super-admin'],
+        permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
         route_list: null
     }
     ]

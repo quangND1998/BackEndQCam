@@ -16,6 +16,7 @@ class UserController extends Controller
 
     public function __construct()
     {
+
         $this->middleware('permission:view-user|create-user|delete-user|update-user', ['only' => ['index']]);
         $this->middleware('permission:create-user', ['only' => ['store']]);
         $this->middleware('permission:update-user', ['only' => ['update']]);
@@ -23,7 +24,8 @@ class UserController extends Controller
     }
     public function index(Request $request)
     {
-
+        // $user = Auth::user();
+        // return $user->leaders->pluck('id');
         $user = Auth::user();
         $filters = $request->all('search');
         $subadmins = User::whereHas(
@@ -39,10 +41,17 @@ class UserController extends Controller
                 // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
             })->paginate(20)->appends($request->search);
             $roles = Role::get();
+        } elseif ($user->hasRole('leader-sale')) {
+            $users =  User::with('roles', 'tokens')->where(function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->search . '%');
+                $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
+                // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
+            })->where('created_byId', $user->id)->paginate(20)->appends($request->search);
+            $roles = Role::where('name', 'saler')->get();
         } else {
             return  abort(403);
         }
-        return Inertia::render('Admin/User', compact('filters', 'users', 'roles', 'subadmins'));
+        return Inertia::render('Admin/User', compact('filters', 'users', 'roles'));
     }
 
 
@@ -52,8 +61,9 @@ class UserController extends Controller
         if ($user->hasRole('super-admin')) {
             $roles = Role::where('name', '!=', 'super-admin')->get();
         } else {
-            return  abort(403);
+            $roles = Role::where('name', 'saler')->get();
         }
+
         return Inertia::render('Admin/CreateUser', compact('roles'));
     }
 
@@ -67,7 +77,7 @@ class UserController extends Controller
 
             $roles = Role::where('name', '!=', 'super-admin')->get();
         } else {
-            return  abort(403);
+            $roles = Role::where('name', 'saler')->get();
         }
         return Inertia::render('Admin/EditUser', compact('roles', 'user'));
     }
@@ -102,9 +112,26 @@ class UserController extends Controller
             ]
         );
 
-        $user = User::create($request->all());
+        $user = User::create([
+            'name' => $request->name,
+            'cic_number' => $request->cic_number,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'sex' => $request->sex,
+            'address' => $request->address,
+            'city' => $request->city,
+            'wards' => $request->wards,
+            'district' => $request->district,
+            'date_of_birth' => $request->date_of_birth,
+            'cic_date' => $request->cic_date,
+            'cic_date_expried' => $request->cic_date_expried,
+        ]);
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->assignRole($roles);
+        if ($auth_user->hasRole('leader-sale')) {
+            $user->created_byId = $auth_user->id;
+            $user->save();
+        }
         if ($request->password) {
             $user->password = Hash::make($request->password);
         } else {
@@ -121,28 +148,37 @@ class UserController extends Controller
         $this->validate(
             $request,
             [
-
                 'name' => 'required',
                 'cic_number' => 'required|unique:users,cic_number,' . $user->id,
                 'email' => 'required|email|unique:users,email,' . $user->id,
                 'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone_number,' . $user->id,
                 'sex' => 'required',
                 'address' => 'required',
-                'password' => 'nullable',
                 'city' => 'nullable',
                 'wards' => 'nullable',
                 'district' => 'nullable',
                 'date_of_birth' => 'nullable|date',
-
                 'cic_date' => 'nullable|date',
                 'cic_date_expried' => 'nullable|date|after:cic_date',
-
                 'created_byId' => 'nullable',
-                'password' => 'nullable',
             ]
         );
 
-        $user->update($request->all());
+        $user->update([
+            'name' => $request->name,
+            'cic_number' => $request->cic_number,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'sex' => $request->sex,
+            'address' => $request->address,
+            'city' => $request->city,
+            'wards' => $request->wards,
+            'district' => $request->district,
+            'date_of_birth' => $request->date_of_birth,
+            'cic_date' => $request->cic_date,
+            'cic_date_expried' => $request->cic_date_expried,
+        ]);
+
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->syncRoles($roles);
 
