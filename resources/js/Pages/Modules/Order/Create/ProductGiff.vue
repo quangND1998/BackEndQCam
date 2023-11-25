@@ -360,9 +360,9 @@ const saveGift =()=> {
                                 <div class="buttons_added">
 
                                     <input class="minus is-form" type="button" value="-" @click="updateCart(item, -1)" />
-                                    <input aria-label="quantity" class="input-qty_create" @blur="updateCartInput(item)"
+                                    <input aria-label="quantity" class="input-qty_create pb-0 border" @blur="updateCartInput(item)"
                                         v-on:keyup.enter="updateCartInput(item)" v-model="form.quantities[index].quantity"
-                                        max="100" min="0" name type="number" />
+                                        max="100" min="0" name type="number"  />
 
                                     <input class="plus is-form" type="button" value="+" @click="updateCart(item, 1)" />
 

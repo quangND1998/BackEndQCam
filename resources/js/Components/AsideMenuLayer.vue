@@ -31,7 +31,7 @@ const asideLgCloseClick = (event) => {
 </script>
 
 <template>
-  <aside id="aside" class=" w-[260px] fixed flex z-40 top-0 h-screen transition-position overflow-hidden">
+  <aside id="aside" class=" w-[260px] fixed flex z-40 top-0 h-screen transition-position overflow-hidden" style="box-shadow: var(0 0 #0000,0 0 #0000),var(0 0 #0000,0 0 #0000),var(-0 0 #0000);">
     <div class="aside flex-1 flex flex-col overflow-hidden  bg-bg_green_default">
       <div class="aside-brand flex flex-row h-[80px] items-center justify-between bg-white">
         <div class="flex items-center text-center flex-1 p-3">

@@ -48,8 +48,8 @@ const menuClick = (event, item) => {
 
     <div :class="[layoutAsidePadding, { 'ml-60 lg:ml-0': isAsideMobileExpanded }]"
       class="pt-14 min-h-screen w-screen transition-position lg:w-auto bg-gray-50 dark:bg-slate-800 dark:text-slate-100">
-      <SectionMain>
-        <NotificationBar v-if="$page.props.flash.warning || Object.keys($page.props.errors).length > 0" color="warning"
+      <SectionMain >
+        <NotificationBar  v-if="$page.props.flash.warning || Object.keys($page.props.errors).length > 0" color="warning"
           :icon="mdiAlert">
           <span v-if="Object.keys($page.props.errors).length > 0">There are {{ Object.keys($page.props.errors).length }}
             form

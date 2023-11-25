@@ -244,7 +244,7 @@ const save = () => {
                             <td class="border-0">{{ formatPrice(order.grand_total) }}₫</td>
                             <td class="border-0">{{ formatPrice(order.price_percent) }}</td>
                             <td class="border-0 text-right">
-                                <Link :href="route('admin.orders.package.pending', order?.id)" class=" text-sm text-blue hover:opacity-0.8 mx-1">
+                                <Link :href="route('admin.orders.package.detail', order?.id)" class=" text-sm text-blue hover:opacity-0.8 mx-1">
                                 Chi tiết hóa đơn
                                 </Link>
 

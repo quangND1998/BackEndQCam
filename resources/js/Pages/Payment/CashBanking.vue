@@ -69,7 +69,7 @@ const priceVat = computed(() => {
     <LayoutAuthenticated>
 
         <Head title="Quản lý đơn hàng" />
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <div class="mx-5">
                 <div class="min-[320px]:block sm:block md:grid grid-cols-3 gap-4">
                     <div class="col-span-2">

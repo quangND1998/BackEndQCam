@@ -169,7 +169,7 @@ const Delete = (id) => {
 
         <!-- <Multiselect v-model="value" :options="options" mode="tags" :close-on-select="false" :searchable="true"
             :create-option="true" /> -->
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <!-- <search-filter v-model="search" class="mr-4 w-full max-w-md" @reset="reset">
                 <label class="block text-gray-700">Trashed:</label>
             </search-filter> -->
@@ -195,7 +195,7 @@ const Delete = (id) => {
                         " label="Create User" /> -->
 
                     <BaseButton :routeName="'users.create'" color="info"
-                        class="bg-btn_green text-white p-2 hover:bg-color_green" :icon="mdiPlus" small
+                        class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
                         label="Create User" />
                 </div>
             </div>
@@ -294,7 +294,7 @@ const Delete = (id) => {
                         }" />
                     <InputError class="mt-2" :message="form.errors.permission" /> -->
             </CardBoxModal>
-            <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+            <div class="overflow-x-auto relative sm:rounded-lg mt-5">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>

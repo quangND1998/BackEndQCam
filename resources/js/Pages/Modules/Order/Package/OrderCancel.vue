@@ -122,18 +122,17 @@ const changeDate = () => {
     <LayoutAuthenticated>
 
         <Head title="Quản lý đơn hàng" />
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
                 <div>
                     <h2 class="min-[320px]:text-xl sm:text-2xl font-semibold lg:text-3xl flex mr-2">
-                        Quản lý đơn hàng
-                        <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p>
+                        Quản lý đơn hủy
                     </h2>
                 </div>
                 <div class="flex">
                     <div>
                         <Link :href="route('admin.orders.package.create')"
-                            class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
+                            class="px-2 py-2 text-sm text-white  rounded-lg border mx-1 bg-btn_green hover:bg-[#318f02] hover:bg-[#008000]">
                         <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn hàng hợp đồng
                         </Link>
                     </div>
@@ -144,12 +143,12 @@ const changeDate = () => {
                 <ModalDecline></ModalDecline>
                 <ModelRefund></ModelRefund>
                 <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4">
-                    <div>
+                    <div class="min-[320px]:pr-0 md:pr-3">
                         <div class="min-[320px]:block sm:flex">
-                            <div class="min-[320px]:w-full sm:w-1/5 mr-3 text-gray-500">
+                            <div class="min-[320px]:w-full sm:w-3/12 mr-3 text-gray-500">
                                 <label for>Mã đơn hàng</label>
                             </div>
-                            <div class="min-[320px]:w-full form_search sm:w-4/5">
+                            <div class="min-[320px]:w-full form_search sm:w-9/12">
                                 <form v-on:submit.prevent>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -170,10 +169,10 @@ const changeDate = () => {
                             </div>
                         </div>
                         <div class="min-[320px]:block sm:flex lg:flex my-3">
-                            <div class="min-[320px]:w-full lg:w-1/5 mr-3 text-gray-500">
+                            <div class="min-[320px]:w-full lg:w-3/12 mr-3 text-gray-500">
                                 <label for>Ngày tạo đơn</label>
                             </div>
-                            <div class="min-[320px]:w-full lg: w-4/5 flex flex-wrap">
+                            <div class="min-[320px]:w-full lg:w-9/12 flex flex-wrap">
                                 <div class="flex ">
                                     <div class="relative">
 
@@ -183,15 +182,16 @@ const changeDate = () => {
                                     <div class="relative">
                                         <VueDatePicker v-model="filter.toDate" time-picker-inline />
                                     </div>
+                                    <button @click.prevent="changeDate" name="search"
+                                    class="block p-2 ml-3 text-xs text-gray-900 border border-gray-300 rounded-lg bg-blue-500 text-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">Search</button>
                                 </div>
-                                <button @click.prevent="changeDate" name="search"
-                                    class="block p-2 ml-3 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">Search</button>
+
                             </div>
                         </div>
 
                     </div>
-                    <div>
-                        <div class="min-[320px]:block sm:flex sm:my-2">
+                    <div class="min-[320px]:pl-0 md:pl-3">
+                        <div class="min-[320px]:block sm:flex sm:my-2 md:my-0 lg:my-0">
                             <div class="min-[320px]:w-full sm:w-3/12 mr-3 text-gray-500">
                                 <label for>Khách hàng</label>
                             </div>
@@ -245,9 +245,9 @@ const changeDate = () => {
                 </div>
                 <div class="p-2 rounded-lg col-md-12">
                     <div class="panel panel-default">
-                        <div class="panel-body relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <div class="panel-body relative overflow-x-auto  sm:rounded-lg">
                             <div>
-                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-600  px-3 py-4 text-gray-400 grid grid-cols-6 gap-4 text-sm px-3 py-3 text-gray-400">
+                                <div class="grid grid-cols-5 gap-4 text-xs  uppercase bg-gray-200 px-3 py-4 text-gray-400 grid grid-cols-6 gap-4 text-sm px-3 py-3 text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>

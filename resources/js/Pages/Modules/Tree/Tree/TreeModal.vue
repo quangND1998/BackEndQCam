@@ -166,7 +166,7 @@ const state = reactive({
                 <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
                     :style="`width: ${form.progress.percentage}%`"> {{ form.progress.percentage }}%</div>
             </div>
-            <div class="mt-4 pt-5 overflow-auto">
+            <div class="mt-0 pt-0 overflow-auto">
 
 
                 <div

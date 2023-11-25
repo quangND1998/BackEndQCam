@@ -112,7 +112,7 @@ const searchTree = () => {
 
         <Head title="Tree" />
         <Breadcrumb :crumbs="crumbs" />
-        <SectionMain>
+        <SectionMain class="p-3">
             <SectionTitleLineWithButton title="Tree" main></SectionTitleLineWithButton>
 
 
@@ -123,18 +123,18 @@ const searchTree = () => {
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
-                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 m-2 bg-white" :iconSize="20" />
+                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 my mr-2 bg-white" :iconSize="20" />
                         <SearchInput v-model="searchVal" @keyup="searchTree" placeholder="Search" aria-label="Search"
                             size="24" />
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
                         @click="createTree()" label="Create Tree" />
                 </div>
             </div>
             <TreeModal :land="land" />
-            <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+            <div class="overflow-x-auto relative  sm:rounded-lg mt-5">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>

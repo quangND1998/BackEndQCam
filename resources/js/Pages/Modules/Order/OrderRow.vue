@@ -17,7 +17,7 @@ const props = defineProps({
 
 <template>
     <div>
-        <div @click.prevent="toggleContent" class=" grid grid-cols-7 gap-5 text-sm px-3 py-3 text-gray-400">
+        <div @click.prevent="toggleContent" class=" grid grid-cols-7 gap-5 text-sm px-0 py-3 text-gray-400">
             <div>
                 <a class="flex items-center">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -51,7 +51,7 @@ const props = defineProps({
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-4 bg-gray-300 p-3 border rounded-lg  " v-if="showContent">
+        <div class="grid grid-cols-1 gap-4 bg-gray-50 p-3 border rounded-lg  " v-if="showContent">
 
             <div class="my-3 rounded-lg border">
                 <div class="title_information p-2">
@@ -94,51 +94,51 @@ const props = defineProps({
                 <tbody>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600"
                         v-for="(item, index) in order.order_items" :key="index">
-                        <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
+                        <td class="px-3 flex py-2 font-medium text-gray-900 whitespace-nowrap ">
                             <!-- <img src="/img/xop.png" alt="" /> -->
-                            <div class="ml-3">
+                            <div class="ml-0">
                                 <h4>
                                     {{ item.product.name }}
                                 </h4>
 
                             </div>
                         </td>
-                        <td class="px-6 py-4"> {{ item.quantity }}</td>
-                        <td class="px-6 py-4">{{ formatPrice(item.price) }}đ</td>
-                        <td class="px-6 py-4">{{ formatPrice(item.total_price) }}đ</td>
+                        <td class="px-3 py-2"> {{ item.quantity }}</td>
+                        <td class="px-3 py-2">{{ formatPrice(item.price) }}đ</td>
+                        <td class="px-3 py-2">{{ formatPrice(item.total_price) }}đ</td>
                         <!-- <td class="px-6 py-4">-10%</td>
                         <td class="px-6 py-4">225.000 đ7</td> -->
                     </tr>
 
                 </tbody>
             </table>
-            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+            <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
                 <p>Cộng tiền hàng</p>
                 <p>{{ formatPrice(order.grand_total) }}₫</p>
 
             </div>
-            <div v-if="order.discount" class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+            <div v-if="order.discount" class="flex justify-between mx-2 border-b border-gray-300 pb-3">
                 <p>Voucher</p>
                 <input v-if="order.discount" :value="formatPrice(order.discount.discount_mount)"
                     class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
             </div>
-            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+            <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
                 <p>Ưu đãi</p>
                 <p v-if="order.discount_deal >0">{{ order.discount_deal }} %</p>
                 <p v-else>0%</p>
             </div>
-            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+            <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
                 <p>VAT</p>
                 <p v-if="order.vat >0">{{ order.vat }} %</p>
                 <p v-else>0%</p>
             </div>
-            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+            <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
                 <p>Phí ship</p>
-                <p class="text-red-600 text-xl">{{ formatPrice(order.shipping_fee) }} ₫</p>
+                <p class="text-red-600 text-lg">{{ formatPrice(order.shipping_fee) }} ₫</p>
             </div>
-            <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+            <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
                 <p>Tổng giá trị</p>
-                <p class="text-red-600 text-xl">{{ formatPrice(order.last_price) }} ₫</p>
+                <p class="text-red-600 text-lg">{{ formatPrice(order.last_price) }} ₫</p>
             </div>
 
             <!-- <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
@@ -147,9 +147,9 @@ const props = defineProps({
 
             </div> -->
 
-            <div v-if="order.amount_unpaid" class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+            <div v-if="order.amount_unpaid" class="flex justify-between mx-2 border-b border-gray-300 pb-3">
                 <p>Khách phải trả</p>
-                <p class="text-red-600 text-xl">{{ formatPrice(order.amount_unpaid) }} ₫</p>
+                <p class="text-red-600 text-lg">{{ formatPrice(order.amount_unpaid) }} ₫</p>
 
             </div>
             <OrderAction :order="order" :status="status"></OrderAction>
