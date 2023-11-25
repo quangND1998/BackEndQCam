@@ -39,7 +39,7 @@ const searchFilter = () => {
     <LayoutShipper :shipper="shipper">
 
         <Head title="Đơn hàng shipper" />
-        <SectionMain>
+        <SectionMain class="p-3 mt-8">
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">

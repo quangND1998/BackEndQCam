@@ -202,7 +202,7 @@ const Delete = (id) => {
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
-                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 m-2 bg-white" :iconSize="20" />
+                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 my-2 mr-2 bg-white" :iconSize="20" />
                         <SearchInput v-model="searchVal" @keyup="searchFilter" placeholder="Search" aria-label="Search"
                             size="24" />
                     </div>
@@ -262,19 +262,9 @@ const Delete = (id) => {
                                         Kích
                                         hoạt</a>.</label>
                             </div>
-
-
                         </div>
-
-
-
                     </div>
                     <div>
-
-
-
-
-
                         <div class="my-2">
                             <InputLabel for="name" value="Mô tả" />
                             <label class="input w-full" for="recipient-name">

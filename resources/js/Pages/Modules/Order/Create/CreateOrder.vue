@@ -446,9 +446,9 @@ const date = ref(new Date());
 
                             <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
-                                <div class="mr-2 inline-block" v-for="(img, index) in images " :key="index">
-                                    <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
-                                        @click="DeleteImage(index)" size="16">
+                                <div class="mr-2 inline-block relative" v-for="(img, index) in images " :key="index">
+                                    <BaseIcon :path="mdiTrashCanOutline" class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  "
+                                        @click="DeleteImage(index)" size="17">
                                     </BaseIcon>
                                     <img :src="img.image" class="w-20 h-20 object-cover rounded-lg" alt="">
                                 </div>

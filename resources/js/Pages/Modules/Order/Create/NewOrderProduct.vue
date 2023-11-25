@@ -105,7 +105,7 @@
                                     size="xs" color="secondary" /> -->
                                 <div class="buttons_added">
                                     <input class="minus is-form" type="button" value="-" @click="updateCart(item, -1)" />
-                                    <input aria-label="quantity" class="input-qty_create" :ref="`quantity${item.id}`"
+                                    <input aria-label="quantity" class="input-qty_create pb-0 border" :ref="`quantity${item.id}`"
                                         @blur="updateCartInput(item)" v-on:keyup.enter="updateCartInput(item)"
                                         :value="item.quantity" max="100" min="0" name type="number" />
                                     <input class="plus is-form" type="button" value="+" @click="updateCart(item, 1)" />

@@ -123,7 +123,7 @@ const searchTree = () => {
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
-                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 m-2 bg-white" :iconSize="20" />
+                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 my mr-2 bg-white" :iconSize="20" />
                         <SearchInput v-model="searchVal" @keyup="searchTree" placeholder="Search" aria-label="Search"
                             size="24" />
                     </div>
