@@ -252,13 +252,13 @@ const changeDate = () => {
                                         <p>Mã đơn hàng</p>
                                     </div>
                                     <div>
+                                        <p>Số tiền</p>
+                                    </div>
+                                    <div>
+                                        <p>Ngày</p>
+                                    </div>
+                                    <div>
                                         <p>Khách hàng</p>
-                                    </div>
-                                    <div>
-                                        <p>SDT</p>
-                                    </div>
-                                    <div>
-                                        <p>Thời gian tạo</p>
                                     </div>
                                     <div>
                                         <p>Trạng thái</p>

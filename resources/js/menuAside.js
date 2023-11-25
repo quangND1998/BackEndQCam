@@ -98,20 +98,20 @@ export default [{
         permissions: ['super-admin'],
         route_list: ['visit.pending', 'visit.confirm', 'visit.completed']
     },
-    {
-        route: '',
-        label: 'Khiếu nại',
+    // {
+    //     route: 'visit.pending',
+    //     label: 'Khiếu nại',
 
-        permissions: ['super-admin'],
-        route_list: null
-    },
-    {
-        route: '',
-        label: 'Đánh giá',
+    //     permissions: ['super-admin'],
+    //     route_list: null
+    // },
+    // {
+    //     route: 'visit.pending',
+    //     label: 'Đánh giá',
 
-        permissions: ['super-admin'],
-        route_list: null
-    }
+    //     permissions: ['super-admin'],
+    //     route_list: null
+    // }
     ]
 },
 {

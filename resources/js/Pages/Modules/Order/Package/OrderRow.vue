@@ -27,16 +27,18 @@ const props = defineProps({
                     </svg>{{ order?.order_number }}</a>
             </div>
             <div>
-                <p>{{ order?.customer?.name }}</p>
+                <p>{{ formatPrice(order?.grand_total) }}</p>
             </div>
-            <div>
-                <p>{{ order?.customer?.phone_number }}</p>
-            </div>
+
             <div>
                 <p>{{ formatTimeDayMonthyear(order?.created_at) }}</p>
             </div>
             <div>
-                <p>{{ order?.status }}</p>
+                <p>{{ order?.customer?.name }}</p>
+            </div>
+            <div>
+                <!-- {{ order }} -->
+                <p class="btn_label" :class=" order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">{{ order?.price_percent < order?.grand_total ? 'Thanh toán từng phần' : order?.price_percent == 0 ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
             </div>
             <div>
                 <Link v-if="order?.payment_method == 'cash' || order?.payment_method == 'banking'"
@@ -148,4 +150,35 @@ const props = defineProps({
 
 
 
-<style></style>
+<style scope>
+.partiallyPaid{
+    background-color: rgb(254 252 232/var(--tw-bg-opacity));
+    border-color: rgb(254 240 138/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 1px;
+    color: rgb(202 138 4/var(--tw-text-opacity));
+}
+.paid{
+    background-color: rgb(240 253 244/var(--tw-bg-opacity));
+    border-color: rgb(187 247 208/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 1px;
+    color: rgb(22 163 74/var(--tw-text-opacity));
+}
+.unpaid{
+    background-color: rgb(254 242 242/var(--tw-bg-opacity));
+    border-color: rgb(254 226 226/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 1px;
+    color: rgb(220 38 38/var(--tw-text-opacity));
+}
+.btn_label{
+    align-items: center;
+    border-radius: 0.5rem;
+    display: inline-flex;
+    font-size: .75rem;
+    font-weight: 500;
+    line-height: 1rem;
+    padding: 0.25rem 0.625rem;
+}
+</style>

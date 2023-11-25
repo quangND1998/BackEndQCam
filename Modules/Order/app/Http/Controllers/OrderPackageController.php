@@ -37,9 +37,7 @@ class OrderPackageController extends Controller
     }
     public function orderChangeStatus(Request $request, OrderPackage $order)
     {
-        $order->update([
-            'status' => $request->status,
-        ]);
+        $order->update(['payment_status' => $request->payment_status]);
         return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
     }
     public function index(Request $request)

@@ -12,7 +12,7 @@
 
                 <option :value="1" :selected="order.payment_status == 1 ? true : false">Đã thanh toán</option>
             </select>
-            <button v-if="status == 'pending' && order.payment_status == 1" @click="orderChangePacking(order)"
+            <button v-if="status == 'pending' && (order.payment_status == 1 || order?.price_percent >= order?.grand_total)" @click="orderChangePacking(order)"
                 class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Đuyệt gói</button>
             <button v-if="status == 'packing'" @click="orderChangeShipping(order)"
                 class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Bắt đầu giao hàng</button>
@@ -68,7 +68,7 @@ const orderChangePending = () => {
         });
 }
 const orderChangePayment = (event) => {
-  
+
     let query = {
         payment_status: event.target.value,
         id: props.order.id
@@ -85,9 +85,7 @@ const orderChangePayment = (event) => {
         })
         .then((result) => {
             if (result.isConfirmed) {
-
-
-                router.post(route("admin.orders.package.orderChangePayment"), query,
+                router.post(route("admin.orders.package.orderChangeStatus",props.order.id), query,
                     {
                         preserveState: true,
                         preserveScroll: true

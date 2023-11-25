@@ -579,10 +579,13 @@ const date = ref(new Date());
                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.price_percent) }} vnđ</p>
                     </div>
                     <div class="flex justify-between my-2">
-                        <p class="text-sm text-[#686868] font-bold">Còn lại</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((product?.price +
+                        <p class="text-sm text-[#686868] font-bold" v-if="((product?.price +
                             ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
-                            form.price_percent) }}</p>
+                            form.price_percent ) > 0 ">Còn thiếu</p>
+                        <p v-else class="text-sm text-[#686868] font-bold">Còn thừa</p>
+                        <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice((product?.price +
+                            ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
+                            form.price_percent) }} vnđ</p>
                     </div>
                     <div class="my-3">
                         <BaseButton color="info" @click="save()"
