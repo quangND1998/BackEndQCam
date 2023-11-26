@@ -35,14 +35,14 @@ class UserController extends Controller
             }
         )->get();
         if ($user->hasRole('super-admin')) {
-            $users =  User::with('roles', 'tokens')->where(function ($query) use ($request) {
+            $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
                 $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
                 // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
             })->paginate(20)->appends($request->search);
             $roles = Role::get();
         } elseif ($user->hasRole('leader-sale')) {
-            $users =  User::with('roles', 'tokens')->where(function ($query) use ($request) {
+            $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
                 $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
                 // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');

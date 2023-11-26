@@ -3,6 +3,7 @@
 namespace Modules\Customer\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Media as ModelsMedia;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,15 +34,17 @@ class CustomerDetailController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function listDocument($id){
+    public function listDocument(Request $request, $id){
+    
          $customer = User::findOrFail($id);
 
         $listData=['order_related_images','order_package_images','contract_images'];
-        $orderFiles = Media::whereIn('collection_name',$listData)->get();
+        $orderFiles = Media::with('model')->whereIn('collection_name',$listData)->get();
+
         //  dd($orderFiles);
         // // orders
         // // hop dong
-        // return $customer;
+ 
 
         return Inertia::render('Modules/Customer/detail/document', compact('customer','orderFiles'));
     }
