@@ -500,15 +500,7 @@ class OrderController extends Controller
             Cart::condition($conditionShipping);
         }
 
-        if ($request->shipping_fee) {
-            $conditionShipping = new \Darryldecode\Cart\CartCondition(array(
-                'name' => 'SHIPPING',
-                'type' => 'tax',
-                'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
-                'value' => $request->shipping_fee,
-            ));
-            Cart::condition($conditionShipping);
-        }
+       
 
         // if ($request->amount_paid) {
         //     $conditionPaid = new \Darryldecode\Cart\CartCondition(array(
@@ -604,5 +596,41 @@ class OrderController extends Controller
             return Inertia::render('Modules/Order/QrOrder', compact('contact', 'order'));
         }
         return response()->json('Không tìm thấy đơn hàng', 404);
+    }
+
+    public function edit(Request $request, Order $order){
+        if($order->status == 'pending'){
+            $order->load('orderItems.product', 'customer');
+            if( Cart::isEmpty()){
+                foreach($order->orderItems as $item){
+                    Cart::add(array(
+                        'id' => $item->product->id, // inique row ID
+                        'name' => $item->product->name,
+                        'price' => $item->product->price,
+                        'quantity' =>  $item->quantity,
+                        'attributes' => array([
+                            'image' => count($item->product->images) > 0 ? $item->product->images[0]->original_url : null
+                        ]),
+                        // 'conditions' => $saleCondition
+                    ));
+                }
+            }
+           
+         
+            $customers = User::with(['product_service_owners.trees', 'product_service_owners.product', 'product_service_owners' => function ($q) {
+                $q->where('state', 'active');
+            }])->role('customer')->get();
+    
+            $cart = Cart::getContent();
+            $total_price = Cart::getSubTotalWithoutConditions();
+            $sub_total = Cart::getSubTotal();
+            $product_retails = ProductRetail::with('images')->get();
+            return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails', 'cart', 'total_price', 'sub_total'));
+        }
+        else{
+            return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');  
+        }
+   
+      
     }
 }

@@ -72,6 +72,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('lisOrder', [OrderController::class, 'getUserOrders'])->name('lisOrder');
 
             Route::put('{id}/orderCompeleted', [OrderController::class, 'orderCompeleted'])->name('orderCompeleted');
+            Route::put('{id}/orderCancel', [OrderController::class, 'orderCancel'])->name('orderCancel');
+            
         });
 
 
