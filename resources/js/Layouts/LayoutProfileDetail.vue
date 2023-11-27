@@ -62,7 +62,7 @@ const state = reactive({
 </script>
 <template>
     <LayoutAuthenticated>
-        <Breadcrumb :crumbs="crumbs" />
+       
         <Head title="Profile Detail" />
         <SectionMain class="p-3 mt-8">
             <SectionTitleLineWithButton title="Profile Detail" main></SectionTitleLineWithButton>

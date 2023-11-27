@@ -78,7 +78,7 @@ const limit_tree = computed(() => {
 </script>
 
 <template>
-  <LayoutProfileDetail :customer="customer" :crumbs="crumbs">
+  <LayoutProfileDetail :customer="customer" >
 
     <Head title="Product" />
     <SectionMain>

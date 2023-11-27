@@ -3,6 +3,7 @@
 namespace Modules\Customer\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Media as ModelsMedia;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -84,7 +85,7 @@ class CustomerDetailController extends Controller
         // dd($orderFiles);
         // // orders
         // // hop dong
-        // return $customer;
+ 
 
         return Inertia::render('Modules/Customer/detail/document', compact('customer','images'));
     }
