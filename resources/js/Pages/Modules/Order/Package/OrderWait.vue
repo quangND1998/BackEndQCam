@@ -241,7 +241,7 @@ const changeDate = () => {
                                 </div>
                             </div>
                         </div>
-                        
+
                 </div>
                 <div class="w-full mt-6 ">
                     <div class="panel panel-default">
@@ -276,7 +276,7 @@ const changeDate = () => {
 
                                     </div>
                                 </div>
-                                
+
                         </div>
                     </div>
                 </div>

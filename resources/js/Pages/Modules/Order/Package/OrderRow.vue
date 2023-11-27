@@ -8,6 +8,8 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
+import InfiniteLoading from "v3-infinite-loading";
+import "v3-infinite-loading/lib/style.css";
 import {
     mdiPlus,
     mdiFilter, mdiPencilOutline, mdiTrashCan, mdiSquareEditOutline, mdiTrashCanOutline
@@ -50,7 +52,7 @@ const deleteHistory = (id) => {
     swal
         .fire({
             title: "Are you sure?",
-            text: "Delete this History Paymeny!",
+            text: "Delete this History Payment!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -219,7 +221,7 @@ const save = () => {
                         <!-- <p class="text-black text-sm">Hình thức thanh toán</p> -->
                         <div class="text-sm rounded-lg">
                             <p class="text-sm"><strong>Ngày:</strong> {{ formatDate(order?.created_at) }} </p>
-                            <p class="text-sm"><strong>Sale:</strong> NgaNT </p>
+                            <p class="text-sm"><strong>Sale:</strong> {{ order?.saler ? order?.saler?.name : 'Admin' }} </p>
                         </div>
                     </div>
                 </div>
