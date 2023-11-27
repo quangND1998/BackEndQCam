@@ -47,21 +47,22 @@ const menuClick = (event, item) => {
   }">
 
     <div :class="[layoutAsidePadding, { 'ml-60 lg:ml-0': isAsideMobileExpanded }]"
-      class="pt-14 min-h-screen w-screen transition-position lg:w-auto bg-gray-50 dark:bg-slate-800 dark:text-slate-100">
-      <SectionMain >
-        <NotificationBar  v-if="$page.props.flash.warning || Object.keys($page.props.errors).length > 0" color="warning"
+      class="pt-1 min-h-screen w-screen transition-position lg:w-auto bg-gray-50 dark:bg-slate-800 dark:text-slate-100">
+      <SectionMain>
+        <NotificationBar v-if="$page.props.flash.warning || Object.keys($page.props.errors).length > 0" color="warning"
           :icon="mdiAlert">
           <span v-if="Object.keys($page.props.errors).length > 0">There are {{ Object.keys($page.props.errors).length }}
             form
             errors.</span>
+          <span v-if="$page.props.flash.warning">{{ $page.props.flash.warning }}
+         </span>
         </NotificationBar>
         <NotificationBar v-if="$page.props.flash.success" color="success" :icon="mdiCheckCircle">
           {{ $page.props.flash.success }}
         </NotificationBar>
       </SectionMain>
 
-      <NavBar :menu="menuNavBar" :class=" ['ml-0', { 'ml-60 lg:ml-0': isAsideMobileExpanded }]"
-        @menu-click="menuClick">
+      <NavBar :menu="menuNavBar" :class="['ml-0', { 'ml-60 lg:ml-0': isAsideMobileExpanded }]" @menu-click="menuClick">
         <NavBarItemPlain display="flex lg:hidden" @click.prevent="isAsideMobileExpanded = !isAsideMobileExpanded">
           <BaseIcon :path="isAsideMobileExpanded ? mdiBackburger : mdiForwardburger" size="24" />
         </NavBarItemPlain>

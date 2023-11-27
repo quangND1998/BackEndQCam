@@ -166,7 +166,7 @@ const save = () => {
                 </table>
             </div>
         </CardBoxModal>
-        <div @click.prevent="toggleContent" class=" grid grid-cols-6 gap-4 text-sm px-3 mt-3 mb-2 text-gray-400">
+        <div @click.prevent="toggleContent" class=" grid grid-cols-6  text-sm px-3 mt-2 mb-1 text-gray-400">
             <div>
                 <a class="flex items-center text-blue-600">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -190,7 +190,7 @@ const save = () => {
             <div>
                 <p class="btn_label"
                     :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
-                    {{ order?.price_percent < order?.grand_total ? 'Thanh toán từng phần' : order?.price_percent == 0
+                    {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' : order?.price_percent == 0
                         ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
             </div>
             <div></div>

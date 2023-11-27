@@ -34,7 +34,7 @@ import { useCartStore } from "@/stores/cart";
 const swal = inject("$swal");
 
 const props = defineProps({
-    order:Object,
+    order: Object,
     product_retails: Array,
     cart: Object,
     total_price: Number,
@@ -48,20 +48,20 @@ const flash = ref(null);
 const provinces = ref(null)
 const images = ref([])
 const form = useForm({
-    user_id: null,
-    name: null,
-    phone_number: null,
-    sex: null,
-    address: null,
-    city: null,
-    district: null,
-    wards: null,
-    vat: 0,
-    discount_deal: 0,
-    type: 'retail',
-    payment_method: 'cash',
-    shipping_fee: 0,
-    product_service_owner_id: null,
+    user_id: props.order.customer?.id,
+    name: props.order.customer?.name,
+    phone_number: props.order.customer?.phone_number,
+    sex: props.order.customer?.sex,
+    address: props.order.address,
+    city: props.order.city,
+    district: props.order.district,
+    wards: props.order.wards,
+    vat: props.order.vat,
+    discount_deal: props.order.discount_deal,
+    type: props.order.type,
+    payment_method: props.order.payment_method,
+    shipping_fee: props.order.shipping_fee,
+    product_service_owner_id: props.order.product_service_owner_id,
     amount_paid: 0,
     images: []
 
@@ -78,9 +78,13 @@ const districts = computed(() => {
     if (form.city == null) {
         return [];
     } else {
-        return provinces.value.find(pro => {
-            return pro.Name == form.city;
-        });
+        if (provinces.value) {
+            return provinces.value.find(pro => {
+                return pro.Name == form.city;
+            });
+        }
+        return []
+
     }
 })
 const user = computed({
@@ -117,7 +121,6 @@ const wards = computed(() => {
             let array = provinces.value.find(pro => {
                 return pro.Name == form.city;
             });
-            console.log('wards', array)
             if (array.Districts) {
                 return array.Districts.find(district => {
                     return district.Name == form.district;
@@ -145,10 +148,6 @@ const foundUser = (data) => {
     form.name = data.name
     form.phone_number = data.phone_number
     form.sex = data.sex
-    form.address = data.address
-    form.city = data.city
-    form.district = data.district
-    form.wards = data.wards
 }
 const onSearchUser = async () => {
     axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
@@ -269,6 +268,7 @@ const date = ref(new Date());
         <Head title="Quản lý đơn hàng" />
 
         <SectionMain class="p-3 mt-8">
+
             <div class="lg:container m-auto mt-10">
                 <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
                     <div class="col-span-2">
@@ -332,8 +332,8 @@ const date = ref(new Date());
                                                     class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nam</label>
                                             </div>
                                             <div class="flex items-center mx-5">
-                                                <input checked id="default-radio-2" type="radio" value="female"
-                                                    v-model="form.sex" name="default-radio"
+                                                <input id="default-radio-2" type="radio" value="female" v-model="form.sex"
+                                                    name="default-radio"
                                                     class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-radio-2"
                                                     class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nữ</label>
@@ -448,7 +448,8 @@ const date = ref(new Date());
                             <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
                                 <div class="mr-2 inline-block relative" v-for="(img, index) in images " :key="index">
-                                    <BaseIcon :path="mdiTrashCanOutline" class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  "
+                                    <BaseIcon :path="mdiTrashCanOutline"
+                                        class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  "
                                         @click="DeleteImage(index)" size="17">
                                     </BaseIcon>
                                     <img :src="img.image" class="w-20 h-20 object-cover rounded-lg" alt="">

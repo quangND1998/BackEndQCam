@@ -34,14 +34,12 @@ class CustomerDetailController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function listDocument(Request $request, $id){
-    
-         $customer = User::findOrFail($id);
+    public function listDocument($id){
+        $customer = User::findOrFail($id);
 
         $listData=['order_related_images','order_package_images','contract_images'];
-        $orderFiles = Media::with('model')->whereIn('collection_name',$listData)->get();
-
-        //  dd($orderFiles);
+        $orderFiles = Media::whereIn('collection_name',$listData)->get();
+        // dd($orderFiles);
         // // orders
         // // hop dong
  

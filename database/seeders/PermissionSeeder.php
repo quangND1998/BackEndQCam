@@ -63,5 +63,11 @@ class PermissionSeeder extends Seeder
 
 
         Permission::create(['name' => 'shipper']);
+
+        Permission::create(['name' => 'contract-pending']);
+        Permission::create(['name' => 'contract-create']);
+        Permission::create(['name' => 'contract-cancle']);
+        Permission::create(['name' => 'contract-complete']);
+        Permission::create(['name' => 'create-contract-complete']);
     }
 }
