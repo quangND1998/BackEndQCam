@@ -75,8 +75,6 @@ class OrderController extends Controller
         return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
-
-
     public function packing(Request $request)
     {
 

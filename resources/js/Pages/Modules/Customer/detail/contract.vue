@@ -112,7 +112,7 @@ const Delete = (id) => {
     <LayoutProfileDetail :customer="history_extend?.product_service_owner?.customer" :crumbs="crumbs">
 
         <Head title="Hợp đồng" />
-        <SectionMain>
+        <SectionMain class="ml-2">
 
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                 :title="editMode ? 'Chỉnh sửa' : 'Tạo mới'">
@@ -144,8 +144,8 @@ const Delete = (id) => {
                     </div>
                 </div>
             </CardBoxModal>
-            <div class="p-2 flex-auto sm:w-full"> <Link :href="`/customer/${history_extend?.product_service_owner?.customer?.id}/products`" class="text-blue"> Gói dịch vụ </Link> > <Link class="text-blue" :href="`/product_owner/${history_extend?.product_service_owner?.id}/extend`"> Lịch sử gia hạn</Link> > hợp đồng </div>
-            <div class="p-2 flex-auto sm:w-full">
+            <div class="p-4 flex-auto sm:w-full"> <Link :href="`/customer/${history_extend?.product_service_owner?.customer?.id}/products`" class="text-blue"> Gói dịch vụ </Link> > <Link class="text-blue" :href="`/product_owner/${history_extend?.product_service_owner?.id}/extend`"> Lịch sử gia hạn</Link> > hợp đồng </div>
+            <div class="p-4 flex-auto sm:w-full">
                 <div class="flex justify-between">
                     <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
                         small @click="

@@ -77,7 +77,7 @@ const state = reactive({
 
          </div>
 
-         <div class="  my-5 bg-white  dark:bg-gray-500 rounded-lg"
+         <div class="mt-5 bg-white  dark:bg-gray-500 rounded-lg"
             style="box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
             <ul class="flex flex-wrap">
                 <li :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('info') }"
