@@ -395,8 +395,6 @@ class OrderController extends Controller
         return response()->json($response, 200);
     }
 
-
-
     // Save Order
     public function saveOrder(SaveOrderRequest $request, User $user)
     {
@@ -457,7 +455,7 @@ class OrderController extends Controller
         }
 
         foreach ($request->images as $image) {
-            $user->addMedia($image)->toMediaCollection('order_related_images');
+            $order->addMedia($image)->toMediaCollection('order_related_images');
         }
         Cart::clear();
         Cart::clearCartConditions();
@@ -588,7 +586,7 @@ class OrderController extends Controller
         }
 
         foreach ($request->images as $image) {
-            $user->addMedia($image)->toMediaCollection('order_related_images');
+            $order->addMedia($image)->toMediaCollection('order_related_images');
         }
         Cart::clear();
         Cart::clearCartConditions();

@@ -24,6 +24,7 @@ class OrderPackage extends Model implements HasMedia
         'vat',
         'discount_deal',
         'type',
+        'sale_id',
         'wards',  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent","time_reservations"
     ];
     /**
@@ -83,6 +84,25 @@ class OrderPackage extends Model implements HasMedia
     public function totalPayment()
     {
         return $this->historyPayment()->sum('amount_received');
+    }
+    public function scopeRole($query)
+    {
+        $user = Auth::user();
+
+        if (!$user->hasPermissionTo('super-admin')) {
+            if ($user->hasRole('leader-sale')) {
+                $query->whereIn('sale_id', $user->salers->pluck('id'));
+            } else {
+                $query->where('sale_id', $user->id);
+            }
+        } else {
+
+            $query->get();
+        }
+    }
+    public function saler()
+    {
+        return $this->belongsTo(User::class, 'sale_id');
     }
 
 }
