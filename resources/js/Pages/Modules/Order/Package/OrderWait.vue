@@ -189,7 +189,7 @@ const changeDate = () => {
                             </div>
                         </div>
                         <div class="flex">
-                            <div class="flex flex-col mr-4">
+                            <!-- <div class="flex flex-col mr-4">
                                 <div class=" text-gray-500">
                                     <label for>Khách hàng</label>
                                 </div>
@@ -212,7 +212,7 @@ const changeDate = () => {
                                         </div>
                                     </form>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="mr-4 flex-col flex">
                                 <div class=" text-gray-500">
                                     <label for>Phương thức TT</label>
