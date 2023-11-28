@@ -186,11 +186,11 @@ const priceVat = computed(() => {
                         </p>
                         <p v-else class="font-semibold text-base text-[#36a334]">Đã thanh toán</p>
                         <div class="mt-5">
-                            <img src="/assets/images/qr.png" class="w-44 h-44 m-auto" alt="">
+                            <img src="/assets/images/QR_CODE.png" class="w-60 h-70 m-auto" alt="">
                             <p class="text-base my-1 ">Nội dung: 12535</p>
-                            <p class="text-base my-1 ">STK: 9999999</p>
-                            <p class="text-base my-1 ">CTK: CÔNG TY ABC</p>
-                            <p class="text-base my-1 ">NGÂN HÀNG: ABC</p>
+                            <p class="text-base my-1 ">STK: 6161616888</p>
+                            <p class="text-base my-1 ">CTK:CÔNG TY CỔ PHẦN CAM MẶT TRỜI</p>
+                            <p class="text-base my-1 ">NGÂN HÀNG: Ngân Hàng Quân Đội (MB)</p>
                         </div>
                         <BaseButton color="info"
                             class="bg-black text-white p-2 mt-3 w-3/5 text-center justify-center rounded-lg"

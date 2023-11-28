@@ -177,23 +177,23 @@ class OrderController extends Controller
     }
 
 
-    public function updateOrder(UpdateOrderRequest $request)
-    {
-        $order = Order::find($request->order_id);
-        if ($order->payment_status == 1) {
-            return Response::json('Đơn hàng đã thanh toán không được sửa', 404);
-        }
-        if ($order) {
-            $fee = $order->grand_total - ($order->grand_total * $request->discount) / 100 + $request->shipping_fee;
-            $order->shipping_fee = $request->shipping_fee;
-            $order->discount = $request->discount;
-            $order->last_price =  $fee;
-            $order->save();
-            return response()->json($order->load('customer', 'orderItems.product'), 200);
-        } else {
-            return response()->json('Not found', 404);
-        }
-    }
+    // public function updateOrder(UpdateOrderRequest $request)
+    // {
+    //     $order = Order::find($request->order_id);
+    //     if ($order->payment_status == 1) {
+    //         return Response::json('Đơn hàng đã thanh toán không được sửa', 404);
+    //     }
+    //     if ($order) {
+    //         $fee = $order->grand_total - ($order->grand_total * $request->discount) / 100 + $request->shipping_fee;
+    //         $order->shipping_fee = $request->shipping_fee;
+    //         $order->discount = $request->discount;
+    //         $order->last_price =  $fee;
+    //         $order->save();
+    //         return response()->json($order->load('customer', 'orderItems.product'), 200);
+    //     } else {
+    //         return response()->json('Not found', 404);
+    //     }
+    // }
 
     public function orderCancel(Request $request, Order $order)
     {
@@ -635,5 +635,32 @@ class OrderController extends Controller
         } else {
             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
         }
+    }
+
+
+    public function updateOrder(UpdateOrderReuquest $request , Order $order, User $user){
+        if ($order->payment_status == 1) {
+            return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
+        }
+        if ($order->status !== 'pending') {
+             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
+        }
+        
+        if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
+            return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
+        }
+        $this->addConditionToCart($request);
+        $order_update =  $this->orderRepository->storeOrderDetails($request->all(),$order, $user);
+        
+        foreach ($request->images as $image) {
+            $order_update->addMedia($image)->toMediaCollection('order_related_images');
+        }
+        Cart::clear();
+        Cart::clearCartConditions();
+        if ($order_update->payment_method == 'cash' || $order_update->payment_method == 'banking') {
+
+            return  redirect()->route('admin.payment.orderCashBankingPayment', [$order_update]);
+        }
+
     }
 }

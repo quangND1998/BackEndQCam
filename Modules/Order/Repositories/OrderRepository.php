@@ -115,4 +115,57 @@ class OrderRepository implements OrderContract
         }
         return $newCollections;
     }
+
+
+    public function updateOrderDetails($paramas , $order, $user){
+          if ($user) {
+            $order->update([
+               
+                'user_id'           => $user->id,
+                'status'            =>  'pending',
+                'payment_status'    =>  0,
+                'payment_method' =>  $paramas['payment_method'],
+                'address' =>$paramas['address'],
+                'city' => $paramas['city'],
+                'district' =>$paramas['district'] ,
+                'wards' =>$paramas['wards'] ,
+                'phone_number'        => $paramas['phone_number'] ,
+                'notes'         =>$paramas['notes'] ,
+                'grand_total' => Cart::getSubTotalWithoutConditions(),
+                'last_price' => Cart::getSubTotal(),
+                'item_count' => Cart::getTotalQuantity(),
+                'vat' =>$paramas['vat'] ,
+                'discount_deal' =>$paramas['discount_deal'] ,
+                'type' =>$paramas['type'] ,
+                'shipping_fee' => $paramas['shipping_fee'],
+                'amount_paid' =>$paramas['amount_paid'] ,
+                'sale_id' => Auth::user()->id
+
+            ]);
+
+            $order->amount_unpaid = $order->last_price - $request->amount_paid;
+            $order->save();
+
+            if ($order) {
+
+                $items = Cart::getContent();
+                $order->orderItems()->delete();
+                foreach ($items as $item) {
+                
+                    if ($item->quantity > 0) {
+                        $orderItem = new OrderItem([
+                            'product_id' => $item->id,
+                            'quantity'      =>  $item->quantity,
+                            'price'         =>  $item->price,
+                            'total_price' => $item->getPriceSum(),
+                        ]);
+                        $order->orderItems()->save($orderItem);
+                    }
+                }
+            }
+             return $order;
+        }
+       
+    
+    }
 }
