@@ -7,6 +7,8 @@ use Modules\Order\app\Http\Controllers\ProductServiceVoucherController;
 use Modules\Order\app\Http\Controllers\ProductVoucherController;
 use Modules\Order\app\Http\Controllers\VoucherController;
 use Modules\Order\app\Http\Controllers\OrderPackageController;
+use Modules\Order\app\Http\Controllers\ReviewController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -78,7 +80,7 @@ Route::middleware(['auth'])->group(
                     Route::get('decline', [OrderPackageController::class, 'listOrderCancel'])->name('decline');
                     Route::get('complete', [OrderPackageController::class, 'listOrderComplete'])->name('complete');
                     Route::get('partiallyPaid', [OrderPackageController::class, 'partiallyPaid'])->name('partiallyPaid');
-                    
+
                     Route::post('orderChangeStatus/{order}', [OrderPackageController::class, 'orderChangeStatus'])->name('orderChangeStatus');
 
                     Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
@@ -109,6 +111,9 @@ Route::middleware(['auth'])->group(
 
             Route::prefix('payment')->as('payment.')->group(function () {
                 Route::get('/{order}/Cash&Banking', [PaymentController::class, 'orderCashBankingPayment'])->name('orderCashBankingPayment');
+            });
+            Route::prefix('review')->as('review.')->group(function () {
+                Route::get('index',[ReviewController::class,'index'])->name('index');
             });
         });
     }
