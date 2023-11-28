@@ -68,4 +68,5 @@ class ContractController extends Controller
         return back()->with('success', 'Delete successfully');
     }
 
+
 }

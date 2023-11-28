@@ -79,8 +79,6 @@ class OrderController extends Controller
         return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
-
-
     public function packing(Request $request)
     {
 
@@ -398,8 +396,6 @@ class OrderController extends Controller
         ];
         return response()->json($response, 200);
     }
-
-
 
     // Save Order
     public function saveOrder(SaveOrderRequest $request, User $user)

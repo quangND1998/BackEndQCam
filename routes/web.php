@@ -10,7 +10,7 @@ use App\Http\Controllers\Home\ScheduleVisitController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TestController;
 use Modules\Landingpage\app\Http\Controllers\TermsConditionController;
-
+use App\Http\Controllers\PreviewController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,7 +25,7 @@ use Modules\Landingpage\app\Http\Controllers\TermsConditionController;
 Route::get('/', function () {
     return redirect('/login');
 });
-
+Route::get('preview/data/{url?}',[PreviewController::class,'previewData']);
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -86,7 +86,7 @@ Route::middleware(['auth'])->group(
             Route::get('all', [NotificationController::class, 'index'])->name('all');
         });
 
-        
+
     }
 
 );

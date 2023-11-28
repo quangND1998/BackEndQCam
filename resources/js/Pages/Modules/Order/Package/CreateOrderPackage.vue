@@ -60,6 +60,7 @@ const form = useForm({
     price_percent: props.product_services.length > 0 ? props.product_services[0].price : null,
     product_selected: props.product_services.length > 0 ? props.product_services[0].id : null,
     time_approve: new Date(),
+    max_price : props.product_services.length > 0 ? props.product_services[0].price : null,
     images: []
 })
 const getProvinces = async () => {
@@ -448,7 +449,7 @@ const date = ref(new Date());
                             <!-- <input type="number" id="first_name" v-model="form.price_percent" min="0"  :max="product_services?.price"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required> -->
-                                <MazInputPrice  v-model="form.price_percent" currency="VND"  locale="vi-VN" :min="0" :max="product_services?.price"
+                                <MazInputPrice  v-model="form.price_percent" currency="VND"  locale="vi-VN" :min="0" :max="form?.max_price"
                                 @formatted="formattedPrice = $event" />
 
                         </div>

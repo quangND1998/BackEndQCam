@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Customer\app\Http\Controllers\API\ComplaintController;
 use Modules\Customer\app\Http\Controllers\API\CustomerProductOwerController;
+use Modules\Customer\app\Http\Controllers\API\DownloadController;
 use Modules\Customer\app\Http\Controllers\API\ReviewManagerController;
 use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
 use Modules\Customer\app\Http\Controllers\API\OrderHistoryController;
@@ -58,5 +59,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             // saveOrderPackage
             Route::post('saveOrderPackage', [OrderHistoryController::class, 'saveOrderPackageFromApp']);
         });
+
+
     });
 });
+Route::get('v1/download_data/{url?}', [DownloadController::class,'downloadModel']);

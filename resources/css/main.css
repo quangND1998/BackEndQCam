@@ -8,3 +8,52 @@
 @import 'styles/_basic.css';
 @import 'styles/_white.css';
 @import 'styles/input.css';
+
+.partiallyPaid {
+    background-color: rgb(254 252 232/var(--tw-bg-opacity));
+    border-color: rgb(254 240 138/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 1px;
+    color: rgb(202 138 4/var(--tw-text-opacity));
+}
+
+.paid {
+    background-color: rgb(240 253 244/var(--tw-bg-opacity));
+    border-color: rgb(187 247 208/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 1px;
+    color: rgb(22 163 74/var(--tw-text-opacity));
+}
+
+.unpaid {
+    background-color: rgb(254 242 242/var(--tw-bg-opacity));
+    border-color: rgb(254 226 226/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 1px;
+    color: rgb(220 38 38/var(--tw-text-opacity));
+}
+
+.btn_label {
+    align-items: center;
+    border-radius: 0.5rem;
+    display: inline-flex;
+    font-size: .75rem;
+    font-weight: 500;
+    line-height: 1rem;
+    padding: 0.25rem 0.625rem;
+}
+.btn_key {
+    align-items: center;
+    border-radius: 0.5rem;
+    font-size: .75rem;
+    font-weight: 500;
+    line-height: 1rem;
+    padding: 0.25rem ;
+    width: fit-content;
+}
+.keyword {
+    border-color: rgb(187 247 208/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 1px;
+    color: rgb(22 163 74/var(--tw-text-opacity));
+}

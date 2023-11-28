@@ -84,13 +84,13 @@ class OrderPackageController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'partiallyPaid';
-        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment'])->whereHas(
+        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment','saler'])->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
             }
         )->whereColumn('price_percent', '<', 'grand_total')
-        ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(10);
+        ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(15);
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
@@ -129,7 +129,8 @@ class OrderPackageController extends Controller
                 'product_selected' => $request->product_selected,
                 'time_approve' => $request->time_approve,
                 'time_end' => Carbon::parse($request->time_approve)->addDays($time_life),
-                'price_percent' => $request->price_percent
+                'price_percent' => $request->price_percent,
+                'sale_id' => Auth::user()->id,
 
             ]);
 
@@ -161,7 +162,7 @@ class OrderPackageController extends Controller
             $order->payment_status = 1;
             $order->save();
         }else{
-           
+
             $order->payment_status = 0;
             $order->save();
         }
@@ -195,7 +196,7 @@ class OrderPackageController extends Controller
         $order = OrderPackage::create($request->all());
     }
     public function OrderPending(Request $request,$id){
-            $order = OrderPackage::with('customer','product_service')->findOrFail($id);
+            $order = OrderPackage::with('customer','product_service','historyPayment')->findOrFail($id);
             return Inertia::render('Modules/Order/Package/CashPaymentPackage', compact('order'));
     }
     public function checkDay($lif_time, $unit)
@@ -331,7 +332,7 @@ class OrderPackageController extends Controller
     }
     public function getOrder($request, $status)
     {
-        return OrderPackage::with(['customer', 'product_service','historyPayment'])->whereHas(
+        return OrderPackage::with(['customer', 'product_service','historyPayment','saler'])->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');

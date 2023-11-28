@@ -30,7 +30,7 @@ import moment from "moment";
 import { useHelper } from "@/composable/useHelper";
 const props = defineProps({
   customer: Object,
-  orderFiles: Array,
+  images: Array,
 });
 const { multipleSelect } = useHelper();
 const swal = inject("$swal");
@@ -75,6 +75,19 @@ const limit_tree = computed(() => {
   );
   return product_service;
 });
+
+const downloadItem = (file) => {
+  console.log(file);
+    Axios.get(file.original_url, { responseType: 'blob' })
+      .then(response => {
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        const link = document.createElement('a')
+        link.href = URL.createObjectURL(blob)
+        link.download = file.file_name
+        link.click()
+        URL.revokeObjectURL(file.original_url)
+      }).catch(console.error)
+  }
 </script>
 
 <template>
@@ -105,13 +118,14 @@ const limit_tree = computed(() => {
 
       <div class="flex-auto sm:w-full">
         <div class="relative mt-3 flex  flex-wrap shadow-md sm:rounded-lg">
-          <div class="item w-[240px] flex flex-col items-center" v-for="file in orderFiles" :key="file.id"
+                
+          <a :href="file.original_url" target="_blank" class="item w-[240px] flex flex-col items-center" v-for="file in images" :key="file.id"
             :title="file.file_name">
-            <div class="flex justify-between">
+            <div  class="flex justify-between">
               <div class="flex">
                 <BaseIcon :path="file.mime_type == 'application/pdf' ? mdiFilePdfBox : mdiImageOutline" class="flex-none "
                   w="w-16" :size="20" />
-                <!-- {{ file }} -->
+        
                 <p class="text">{{ file.file_name }}</p>
               </div>
               <Dropdown align="right" width="40" @click.prevent>
@@ -122,12 +136,12 @@ const limit_tree = computed(() => {
                 </template>
                 <template #content>
                   <div class="w-40">
-                    <div
+                    <a :href="`/api/v1/download_data/?url=storage/${file.id}/${file.file_name}`" target="_blank"
                       class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold py-2">
-                      <p class="hover:text-blue-700"> Tải xuống</p>
+                      <p  class="hover:text-blue-700" > Tải xuống</p>
                       <!-- <BaseButton :icon="mdiPencil" small class="text-[#2264E5]" type="button"
                                                 data-toggle="modal" data-target="#exampleModal" /> -->
-                    </div>
+                    </a>
                     <div @click="Delete(land.id)"
                       class="flex justify-between items-center px-4 py-2 text-sm text-[#D12953] cursor-pointer  font-semibold">
                       <p class="hover:text-red-700"> Delete</p>
@@ -141,16 +155,16 @@ const limit_tree = computed(() => {
 
 
             <div class="preview p-3">
-              <a href="https://drive.google.com/drive/home" v-if="file.mime_type == 'application/pdf'" target="_blank">
+              <div  v-if="file.mime_type == 'application/pdf'" target="_blank">
                 <iframe href="https://drive.google.com/drive/home" target="_blank"
                   :src="'/storage/' + file.id + '/' + file.file_name" class="w-36 overflow-hidden"
                   frameborder="0"></iframe>
-              </a>
+              </div>
 
               <img v-else :src="'/storage/' + file.id + '/' + file.file_name" frameborder="0" class="img w-full h-full" />
             </div>
 
-          </div>
+          </a>
         </div>
       </div>
     </SectionMain>

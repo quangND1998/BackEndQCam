@@ -30,4 +30,5 @@ class HistoryContract extends Model implements HasMedia
     public function contracts(){
         return $this->belongsTo(contracts::class,'contract_id');
     }
+    
 }

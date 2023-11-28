@@ -21,11 +21,11 @@ const hasSlot = computed(() => useSlots().default)
 </script>
 
 <template>
-  <section :class="{ 'pt-6': !main }" class="mb-6 flex items-center justify-between">
+  <section :class="{ 'pt-3': !main }" class="mb-2 flex items-center justify-between">
     <div class="flex items-center justify-start">
       <IconRounded v-if="icon && main" :icon="icon" color="light" class="mr-3" bg />
       <BaseIcon v-else-if="icon" :path="icon" class="mr-2" size="20" />
-      <h1 :class="main ? 'text-3xl' : 'text-2xl'" class="leading-tight">
+      <h1 :class="main ? 'text-xl' : 'text-md'" class="leading-tight">
         {{ title }}
       </h1>
     </div>
