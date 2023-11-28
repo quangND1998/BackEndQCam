@@ -180,7 +180,7 @@ const saveOrder = () => {
         });
     }
     else {
-        form.post(route('admin.orders.saveOrder', user.value.id), {
+        form.post(route('admin.orders.updateOrderRetail',[props.order.id, user.value.id]), {
             onError: () => {
             },
             onSuccess: () => {
@@ -229,7 +229,7 @@ const saveGift = () => {
         });
     }
     else {
-        form.post(route('admin.orders.saveOrderGift', user.value.id), {
+        form.post(route('admin.orders.updateOrderGift',[props.order.id, user.value.id]), {
             onError: () => {
             },
             onSuccess: () => {

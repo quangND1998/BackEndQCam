@@ -25,6 +25,8 @@ use Modules\Order\app\Models\OrderItem;
 use Illuminate\Support\Facades\Notification;
 use Modules\Landingpage\app\Models\Contact;
 use Modules\Order\Repositories\ShipperRepository;
+use Modules\Order\app\Http\Requests\Order\UpdateOrderReuquest;
+use Modules\Order\app\Http\Requests\OrderGiftUpdateRequest;
 
 class OrderController extends Controller
 {
@@ -638,7 +640,8 @@ class OrderController extends Controller
     }
 
 
-    public function updateOrder(UpdateOrderReuquest $request , Order $order, User $user){
+    public function updateOrderRetail(UpdateOrderReuquest $request , Order $order, User $user){
+     
         if ($order->payment_status == 1) {
             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
         }
@@ -650,7 +653,7 @@ class OrderController extends Controller
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
         $this->addConditionToCart($request);
-        $order_update =  $this->orderRepository->storeOrderDetails($request->all(),$order, $user);
+        $order_update =  $this->orderRepository->updateOrderRetail($request->all(),$order, $user);
         
         foreach ($request->images as $image) {
             $order_update->addMedia($image)->toMediaCollection('order_related_images');
@@ -661,6 +664,28 @@ class OrderController extends Controller
 
             return  redirect()->route('admin.payment.orderCashBankingPayment', [$order_update]);
         }
+
+    }
+
+
+    public function updateOrderGift(OrderGiftUpdateRequest $request , Order $order, User $user){
+       
+        if ($order->status !== 'pending') {
+             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
+        }
+        
+        if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
+            return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
+        }
+        $this->addConditionToCart($request);
+        $order_update =  $this->orderRepository->updateOrderGift($request->all(),$order, $user);
+        
+        foreach ($request->images as $image) {
+            $order_update->addMedia($image)->toMediaCollection('order_related_images');
+        }
+        Cart::clear();
+        Cart::clearCartConditions();
+        return redirect()->route('admin.orders.pending')->with('success', 'Đã cập nhật đơn quà');
 
     }
 }
