@@ -17,7 +17,7 @@ class ReviewController extends Controller
      */
     public function index(Request $request)
     {
-        $reviews = ReviewManagement::with('user','order')->orderBy('created_at','desc')->paginate(2);
+        $reviews = ReviewManagement::with('user','order')->orderBy('created_at','desc')->paginate(20);
         // return $reviews;
         $filters = $request->all('search');
         return Inertia::render('Modules/Order/Review/index', compact('reviews','filters'));
