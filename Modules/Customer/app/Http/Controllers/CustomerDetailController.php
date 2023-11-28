@@ -3,6 +3,7 @@
 namespace Modules\Customer\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Media as ModelsMedia;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,19 +44,22 @@ class CustomerDetailController extends Controller
 
         $images = [];
 
-        $product_owners = ProductServiceOwner::whereHas('history_extend.contract.history_contact.images')
+        $product_owners = ProductServiceOwner::with('history_extend.contract.history_contact.images')
+        ->whereHas('history_extend.contract.history_contact.images')
         ->where('user_id',$customer->id)
-        ->with('history_extend.contract.history_contact.images')->get();
-
+        ->get();
 
         foreach($product_owners as $product_owner){
             foreach($product_owner->history_extend as $extend ){
-                foreach($extend->contract->history_contact as $history_contact){
-                    foreach($history_contact->images as $image){
-                        $images[] = $image;
-                    }
+                if($extend->contract != null){
+                    foreach($extend->contract->history_contact as $history_contact){
+                        foreach($history_contact->images as $image){
+                            $images[] = $image;
+                        }
 
+                    }
                 }
+
             }
         }
 
@@ -72,16 +76,18 @@ class CustomerDetailController extends Controller
                 $images[] = $image3;
             }
         }
-        // return $images;
+        // $images = json_encode($images);
 
-        $listData=['order_related_images','order_package_images','contract_images'];
-        $orderFiles = Media::whereIn('collection_name',$listData)->get();
+        //return $images;
+
+        // $listData=['order_related_images','order_package_images','contract_images'];
+        // $orderFiles = Media::whereIn('collection_name',$listData)->get();
         // dd($orderFiles);
         // // orders
         // // hop dong
-        // return $customer;
 
-        return Inertia::render('Modules/Customer/detail/document', compact('customer','orderFiles'));
+
+        return Inertia::render('Modules/Customer/detail/document', compact('customer','images'));
     }
 
 }

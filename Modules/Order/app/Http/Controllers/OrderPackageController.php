@@ -89,7 +89,7 @@ class OrderPackageController extends Controller
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
             }
-        )
+        )->whereColumn('price_percent', '<', 'grand_total')
         ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(15);
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));

@@ -133,4 +133,17 @@ class OrderController extends Base2Controller
             return response()->json('Not found', 404);
         }
     }
+
+    public function orderCancel($id){
+        $order = Order::find($id);
+        if ($order) {
+            $order->update([
+                'status' => 'decline'
+            ]);
+            return response()->json($order, 200);
+        } else {
+            return response()->json('Not found', 404);
+        }
+
+    }
 }

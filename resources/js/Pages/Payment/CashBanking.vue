@@ -182,7 +182,9 @@ const priceVat = computed(() => {
                     <div class="text-center ">
                         <h1 class="my-2">Đơn hàng hết hạn trong</h1>
                         <h1 class="text-[30px] font-semibold text-[#686868] my-2">3:30</h1>
-                        <p class="font-semibold text-base text-[#FF0000]">Chưa thanh toán</p>
+                        <p v-if="order.payment_status == 0" class="font-semibold text-base text-[#FF0000]">Chưa thanh toán
+                        </p>
+                        <p v-else class="font-semibold text-base text-[#36a334]">Đã thanh toán</p>
                         <div class="mt-5">
                             <img src="/assets/images/qr.png" class="w-44 h-44 m-auto" alt="">
                             <p class="text-base my-1 ">Nội dung: 12535</p>
