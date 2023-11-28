@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive } from "vue";
+import { computed, ref, inject, reactive, toRef } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
@@ -47,6 +47,8 @@ const props = defineProps({
     statusGroup: Array,
     shippers: Array
 });
+
+const list_order = toRef(props.orders.data)
 const filter = reactive({
     customer: null,
     name: null,
@@ -55,7 +57,8 @@ const filter = reactive({
     search: null,
     payment_status: null,
     payment_method: null,
-    type: null
+    type: null,
+    per_page: 10
 
 })
 const customer = ref()
@@ -141,9 +144,46 @@ const changeDate = () => {
     );
 }
 
+const loadOrder = async $state => {
+    console.log("loading...");
+
+
+    router.get(route(`admin.orders.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: page => {
+                if (props.orders.current_page == props.orders.last_page) $state.complete();
+                else {
+
+
+                    $state.loaded();
+                }
+                filter.per_page += 10;
+            },
+            onError: errors => {
+                $state.error();
+            },
+        },
+
+    );
+    // console.log(props.orders)
+
+    // if (props.orders.current_page == props.orders.last_page) $state.complete();
+    // else {
+
+
+    //     // $state.loaded();
+    // }
+    // filter.per_page += 10;
+
+};
+
 </script>
 <template>
     <LayoutAuthenticated>
+
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-8">
@@ -329,10 +369,10 @@ const changeDate = () => {
                     </div>
                 </div>
 
-                <Pagination :links="orders.links" />
+                <!-- <Pagination :links="orders.links" /> -->
 
             </div>
-
+            <infinite-loading @infinite="loadOrder" />
 
         </SectionMain>
     </LayoutAuthenticated>

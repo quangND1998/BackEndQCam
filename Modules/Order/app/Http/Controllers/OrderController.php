@@ -72,6 +72,10 @@ class OrderController extends Controller
         $orders =  $this->orderRepository->getOrder($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
         $shippers = $this->shipperRepository->getShipper();
+
+        // if ($request->wantsJson()) {
+        //     return $products;
+        // }
         return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 

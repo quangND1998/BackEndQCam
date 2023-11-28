@@ -30,7 +30,8 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-
+import InfiniteLoading from "v3-infinite-loading";
+import "v3-infinite-loading/lib/style.css";
 
 
 // import 'vue3-carousel/dist/carousel.css'
@@ -46,6 +47,7 @@ createInertiaApp({
             .use(PrimeVue)
             .component('QuillEditor', QuillEditor)
             .component('VueDatePicker', VueDatePicker)
+            .component("infinite-loading", InfiniteLoading)
             .use(VueSweetalert2)
             .directive('tooltip', Tooltip)
             .mixin(helper, base)
