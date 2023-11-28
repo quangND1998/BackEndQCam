@@ -72,7 +72,7 @@ class CustomerDetailController extends Controller
                 $images[] = $image3;
             }
         }
-        return $images;
+        // return $images;
 
         $listData=['order_related_images','order_package_images','contract_images'];
         $orderFiles = Media::whereIn('collection_name',$listData)->get();
