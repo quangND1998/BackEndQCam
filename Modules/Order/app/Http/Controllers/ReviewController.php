@@ -7,16 +7,20 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Customer\app\Models\ReviewManagement;
+use App\Models\User;
+use Modules\Order\app\Models\Order;
+use Inertia\Inertia;
 class ReviewController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $reviews = ReviewManagement::orderBy('created_at','desc')->paginate(20);
-        return $reviews;
-        return view('order::index');
+        $reviews = ReviewManagement::with('user','order')->orderBy('created_at','desc')->paginate(2);
+        // return $reviews;
+        $filters = $request->all('search');
+        return Inertia::render('Modules/Order/Review/index', compact('reviews','filters'));
     }
 
     /**

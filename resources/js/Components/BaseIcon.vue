@@ -17,6 +17,10 @@ const props = defineProps({
   size: {
     type: [String, Number],
     default: null
+  },
+  color:{
+    type: String,
+    default:'currentColor'
   }
 })
 
@@ -28,7 +32,7 @@ const iconSize = computed(() => props.size ?? 24)
 <template>
   <span :class="spanClass">
     <svg viewBox="0 0 24 24" :width="iconSize" :height="iconSize" class="inline-block">
-      <path fill="currentColor" :d="path" />
+      <path :fill="color" :d="path" />
     </svg>
     <slot />
   </span>
