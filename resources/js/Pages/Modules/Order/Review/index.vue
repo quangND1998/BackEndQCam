@@ -145,7 +145,7 @@ const selectAll = computed({
                                 {{ index + 1 }}
                             </th>
                             <th>
-                                <a :href="route('admin.payment.orderCashBankingPayment', review?.order?.id)"
+                                <a v-if="review.order" :href="route('admin.payment.orderCashBankingPayment', review?.order?.id)"
                                     class="text-blue-500">
                                     {{ review?.order?.order_number }}
                                 </a>
