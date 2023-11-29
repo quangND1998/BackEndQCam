@@ -155,6 +155,7 @@ class UserController extends Controller
     {
         $auth_user = Auth::user();
         $user = User::findOrFail($id);
+        
         $this->validate(
             $request,
             [
@@ -191,9 +192,16 @@ class UserController extends Controller
         ]);
         if ($auth_user->hasRole('super-admin')) {
             if($request->leader_sale_id){
-                $lead_sale = User::findOrFail($request->leader_sale_id);
-                $user->created_byId = $lead_sale->id;
-                $user->save();
+                if(!$user->hasRole('leader-sale')){
+                    $lead_sale = User::findOrFail($request->leader_sale_id);
+                    $user->created_byId = $lead_sale->id;
+                    $user->save();   
+                }
+             
+            }
+            else{
+                $user->created_byId = null;
+                $user->save();   
             }
         }
         $roles = $request->input('roles') ? $request->input('roles') : [];
