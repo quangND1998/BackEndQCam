@@ -7,6 +7,7 @@ import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import BaseButton from "@/Components/BaseButton.vue";
+import Dropdown from 'primevue/dropdown';
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -28,6 +29,7 @@ const provinces = ref(null);
 
 const props = defineProps({
     roles: Array,
+    leader_sales: Array
 
 
 });
@@ -46,7 +48,8 @@ const form = useForm({
     sex: "male",
     cic_number: null,
     date_of_birth: null,
-    roles: null
+    roles: null,
+    leader_sale_id: null
 })
 const getProvinces = async () => {
     const response = await fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
@@ -202,7 +205,7 @@ const save = () => {
                                             Địa chỉ *</label>
                                         <input type="text" id="first_name" v-model="form.address"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" >
+                                            placeholder="">
                                         <InputError class="mt-2" :message="form.errors.address" />
                                     </div>
                                     <div class="my-3">
@@ -251,6 +254,21 @@ const save = () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
+                            <h3 class="text-[17px] font-bold">Chọn Team</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <select id="city" v-model="form.leader_sale_id" 
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option :value="null">Chọn Team</option>
+                                                <option v-for="(leader_sale, index) in leader_sales"
+                                                    :value="leader_sale.id" :key="index">
+                                                    {{
+                                                        leader_sale.name }}
+                                                </option>
+                                            </select>
+                                <InputError class="mt-2" :message="form.errors.leader_sale_id" />
                             </div>
                         </div>
                         <div class="my-3">

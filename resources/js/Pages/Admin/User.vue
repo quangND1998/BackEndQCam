@@ -38,6 +38,7 @@ const props = defineProps({
     filters: Object,
     roles: Array,
     users: Object,
+  
 });
 const swal = inject("$swal");
 const form = useForm({
@@ -80,7 +81,15 @@ watch(
     }, 150),
     { deep: true }
 );
-
+const searchUser=()=>{
+    router.get(route(`users.index`),
+        {search:search.value},
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 const reset = () => {
     search.value = null;
 };
@@ -166,15 +175,19 @@ const Delete = (id) => {
 
         <Head title="User" />
         <SectionMain class="p-3 mt-16">
-            <SectionTitleLineWithButton  title="User" main></SectionTitleLineWithButton>
+            <SectionTitleLineWithButton title="User" main></SectionTitleLineWithButton>
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
                         <BaseButton color="default" :icon="mdiFilter" small class="p-2 mr-2 my-2 bg-white" :iconSize="20" />
 
-                        <search-filter v-model="search" class="mr-4 w-full max-w-md" @reset="reset">
+                        <!-- <search-filter v-model="search" class="mr-4 w-full max-w-md" @reset="reset">
                             <label class="block text-gray-700">Trashed:</label>
-                        </search-filter>
+                        </search-filter> -->
+
+                        <input    v-model="search" @keyup="searchUser"
+                            class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            type="search" name="search" placeholder="Search…"  />
                     </div>
                 </div>
                 <div class="right">
@@ -318,7 +331,8 @@ const Delete = (id) => {
                                 </label>
                             </th>
 
-                            <th v-if="hasAnyPermission(['super-admin'])" scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th v-if="hasAnyPermission(['super-admin'])" scope="row"
+                                class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.team?.name }}
                             </th>
                             <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">

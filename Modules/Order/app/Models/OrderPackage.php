@@ -8,6 +8,7 @@ use Modules\Order\Database\factories\OrderPackageFactory;
 use Modules\Tree\app\Models\ProductService;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
