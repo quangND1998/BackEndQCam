@@ -212,48 +212,7 @@ const onFileChange = (e) => {
     }
     console.log(form.images)
 }
-// const maxPrice = computed({
-//       get() {
-//         if (form.max_price > 0) {
-//             let maxPrice = form.max_price
-//             if (form.discount_deal > 0) {
-//                 maxPrice =maxPrice - ((maxPrice * form.discount_deal) / 100)
-//             }
-//             if (form.vat > 0) {
-//                 maxPrice +=  ((maxPrice * form.vat) / 100)
-//             }
-        
-//             return maxPrice;
-//         }
-//         else {
-//             return 0
-//         }
-//     },
-//     set(newValue){
-//         return newValue;
-//         // console.log(newValue)
-//         // if (newValue > 0) {
-//         //     let maxPrice = newValue
-//         //     if (form.discount_deal > 0) {
-//         //         maxPrice =newValue - ((newValue * form.discount_deal) / 100)
-//         //     }
-//         //     if (form.vat > 0) {
-//         //         maxPrice +=  ((maxPrice * form.vat) / 100)
-//         //     }
-//         //     console.log(maxPrice)
-//         //     return maxPrice;
-//         // }
-//         // else {
-//         //     return 0
-//         // }
-             
-   
-    
-//     }
- 
 
-
-// })
 
 
 const maxPrice = computed({
@@ -261,25 +220,39 @@ const maxPrice = computed({
 
     get() {
          if (form.max_price > 0) {
-            let max_Price = form.max_price
+            let maxPrice = form.max_price
             if (form.discount_deal > 0) {
-                max_Price = form.max_price - (( form.max_price * form.discount_deal) / 100)
+                maxPrice = maxPrice - (( maxPrice * form.discount_deal) / 100)
             }
             if (form.vat > 0) {
-                max_Price +=  ((max_Price * form.vat) / 100)
+                maxPrice+=  ((maxPrice * form.vat) / 100)
             }
-        
-            return max_Price;
+            form.price_percent= maxPrice;
+            return maxPrice;
         }
         else {
+            form.price_percent= 0;
             return 0
         }
     },
     // setter
     set(newValue) {
-        return newValue
-        // Note: we are using destructuring assignment syntax here.
+        
         console.log(newValue)
+        if (newValue > 0) {
+            let maxPrice = newValue
+            if (form.discount_deal > 0) {
+                maxPrice =newValue - ((newValue * form.discount_deal) / 100)
+            }
+            if (form.vat > 0) {
+                maxPrice +=  ((maxPrice * form.vat) / 100)
+            }
+            console.log(maxPrice)
+            form.price_percent= maxPrice;
+        }
+        else {
+            form.price_percent= 0;
+        }
     }
 })
 const date = ref(new Date());
@@ -523,8 +496,8 @@ const date = ref(new Date());
                             <!-- <input type="number" id="first_name" v-model="form.price_percent" min="0"  :max="product_services?.price"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required> -->
-                                {{ maxPrice }}
-                                <MazInputPrice  v-model="maxPrice" currency="VND"  locale="vi-VN" :min="0" 
+                         
+                                <MazInputPrice  v-model="form.price_percent" currency="VND"  locale="vi-VN" :min="0"  :max="maxPrice"
                                 @formatted="formattedPrice = $event" />
 
                         </div>
