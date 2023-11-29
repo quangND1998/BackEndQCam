@@ -159,7 +159,7 @@ class OrderHistoryController extends Base2Controller
         if(!$product_service ){
             return response()->json('Gói dịch vụ không tồn tại', 404);
         }
-        if($product_service->life_time > 0){
+        if($product_service->life_time > 1){
             return response()->json('Goi k can nang cap', 404);
         }
         $order = OrderPackage::create([
