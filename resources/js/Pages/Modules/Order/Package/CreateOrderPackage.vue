@@ -60,7 +60,7 @@ const form = useForm({
     price_percent: props.product_services.length > 0 ? props.product_services[0].price : null,
     product_selected: props.product_services.length > 0 ? props.product_services[0].id : null,
     time_approve: new Date(),
-    max_price : props.product_services.length > 0 ? props.product_services[0].price : null,
+    max_price : props.product_services.length > 0 ? props.product_services[0].price  : null,
     images: []
 })
 const getProvinces = async () => {
@@ -184,7 +184,11 @@ const save = () => {
     }
 }
 const changeProduct = (event) => {
-    form.product_selected = event.target.value
+    form.product_selected = event.target.value;
+    if(product.value){
+    form.max_price =product.value.price
+    }
+  
 }
 const product = computed(() => {
     // props.products.find(e => e.id == form.product_service);
@@ -208,6 +212,76 @@ const onFileChange = (e) => {
     }
     console.log(form.images)
 }
+// const maxPrice = computed({
+//       get() {
+//         if (form.max_price > 0) {
+//             let maxPrice = form.max_price
+//             if (form.discount_deal > 0) {
+//                 maxPrice =maxPrice - ((maxPrice * form.discount_deal) / 100)
+//             }
+//             if (form.vat > 0) {
+//                 maxPrice +=  ((maxPrice * form.vat) / 100)
+//             }
+        
+//             return maxPrice;
+//         }
+//         else {
+//             return 0
+//         }
+//     },
+//     set(newValue){
+//         return newValue;
+//         // console.log(newValue)
+//         // if (newValue > 0) {
+//         //     let maxPrice = newValue
+//         //     if (form.discount_deal > 0) {
+//         //         maxPrice =newValue - ((newValue * form.discount_deal) / 100)
+//         //     }
+//         //     if (form.vat > 0) {
+//         //         maxPrice +=  ((maxPrice * form.vat) / 100)
+//         //     }
+//         //     console.log(maxPrice)
+//         //     return maxPrice;
+//         // }
+//         // else {
+//         //     return 0
+//         // }
+             
+   
+    
+//     }
+ 
+
+
+// })
+
+
+const maxPrice = computed({
+
+
+    get() {
+         if (form.max_price > 0) {
+            let max_Price = form.max_price
+            if (form.discount_deal > 0) {
+                max_Price = form.max_price - (( form.max_price * form.discount_deal) / 100)
+            }
+            if (form.vat > 0) {
+                max_Price +=  ((max_Price * form.vat) / 100)
+            }
+        
+            return max_Price;
+        }
+        else {
+            return 0
+        }
+    },
+    // setter
+    set(newValue) {
+        return newValue
+        // Note: we are using destructuring assignment syntax here.
+        console.log(newValue)
+    }
+})
 const date = ref(new Date());
 </script>
 <template>
@@ -449,7 +523,8 @@ const date = ref(new Date());
                             <!-- <input type="number" id="first_name" v-model="form.price_percent" min="0"  :max="product_services?.price"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required> -->
-                                <MazInputPrice  v-model="form.price_percent" currency="VND"  locale="vi-VN" :min="0" :max="form?.max_price"
+                                {{ maxPrice }}
+                                <MazInputPrice  v-model="maxPrice" currency="VND"  locale="vi-VN" :min="0" 
                                 @formatted="formattedPrice = $event" />
 
                         </div>
@@ -489,7 +564,7 @@ const date = ref(new Date());
                             <tbody>
                                 <tr class="bg-white border-b ">
                                     <td class="px-6 py-4 ">
-                                        <select id="countries" @change="changeProduct($event)"
+                                        <select id="countries" @change="changeProduct"
                                             v-model="form.product_selected"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 ">
                                             <option v-for="(product, index) in product_services" :key="index"
@@ -558,7 +633,7 @@ const date = ref(new Date());
                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice(product?.price) }} vnđ</p>
                     </div>
                     <div class="flex justify-between my-2">
-                        <p class="text-sm text-[#686868] font-bold">VAT({{ vat }}%)</p>
+                        <p class="text-sm text-[#686868] font-bold">VAT({{ form.vat }}%)</p>
                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.vat * product?.price) / 100) }} vnd
                         </p>
                     </div>
