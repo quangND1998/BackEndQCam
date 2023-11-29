@@ -17,7 +17,7 @@ const props = defineProps({
 
 <template>
     <div>
-        <div @click.prevent="toggleContent" class=" grid grid-cols-8 gap-5 text-sm px-3 py-3 text-gray-400">
+        <div @click.prevent="toggleContent" class=" grid grid-cols-7 px-3 py-1 mt-2 mb-2 text-sm  text-gray-400">
             <div>
                 <a class="flex items-center">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -45,42 +45,36 @@ const props = defineProps({
             <div>
                 <p v-if="order.saler">{{ order.saler.name }}</p>
             </div>
-            <div>
+            <!-- <div>
                 <Link v-if="order.payment_method == 'cash' || order.payment_method == 'banking'"
                     :href="route('admin.payment.orderCashBankingPayment', order.id)"
                     class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
                 Chi tiết
                 </Link>
-            </div>
+            </div> -->
         </div>
 
-        <div class="grid grid-cols-1 gap-4 bg-gray-50 p-3 border rounded-lg  " v-if="showContent">
+        <div class="grid grid-cols-1  bg-gray-200 p-3 border rounded-xl" v-if="showContent">
 
-            <div class="my-3 rounded-lg border">
-                <div class="title_information p-2">
+            <div class="mt-1 rounded-lg border">
+                <div class="title_information flex justify-between p-2">
                     <h3>Thông tin khách hàng</h3>
                 </div>
-                <div class="grid grid-cols-4 gap-4  bg-white py-3 px-3">
-
+                <div class="grid-cols-4 gap-4 flex justify-between bg-white py-3 px-3">
                     <div class="block">
                         <p class="text-gray-500">Số nhà/ Địa chỉ cụ thể</p>
                         <div class="item_information p-2 bg-gray-100 rounded-lg">
-                            <p class="text-gray-600"> {{ order.address + ',' + order.wards + ',' + order.district + ',' +
+                            <p class="text-gray-600 font-semibold text-sm"> {{ order.address + ',' + order.wards + ',' + order.district + ',' +
                                 order.city }}</p>
                         </div>
                     </div>
                     <div class="block">
-                        <p class="text-gray-500">Ghi chú</p>
-                        <div class="item_information p-2 bg-gray-100 rounded-lg">
-                            <p class="text-gray-600"> {{ order.note }}</p>
+                        <!-- <p class="text-black text-sm">Hình thức thanh toán</p> -->
+                        <div class="text-sm rounded-lg">
+                            <p class="text-sm"><strong>Ngày:</strong> {{ formatDate(order?.created_at) }} </p>
+                            <p class="text-sm"><strong>Sale:</strong> {{ order?.saler ? order?.saler?.name : 'Admin' }} </p>
                         </div>
                     </div>
-                    <!-- <div class="block">
-                        <p class="text-gray-500">Hình thức thanh toán</p>
-                        <div class="item_information p-2 bg-gray-100 rounded-lg">
-                            <p class="text-gray-600">COD</p>
-                        </div>
-                    </div> -->
                 </div>
             </div>
             <table class="table table-striped w-full text-sm text-left text-gray-500 text-gray-400 rounded-lg">
@@ -90,12 +84,13 @@ const props = defineProps({
                         <th>SL</th>
                         <th>Giá </th>
                         <th>Thành tiền </th>
+                        <th></th>
                         <!-- <th>Chiết khấu</th>
                         <th>Giá sau chiết khấu</th> -->
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600"
+                    <tr class="mt-1 bg-white border-gray-700  hover:bg-gray-600"
                         v-for="(item, index) in order.order_items" :key="index">
                         <td class="px-3 flex py-2 font-medium text-gray-900 whitespace-nowrap ">
                             <!-- <img src="/img/xop.png" alt="" /> -->
@@ -106,51 +101,58 @@ const props = defineProps({
 
                             </div>
                         </td>
-                        <td class="px-3 py-2"> {{ item.quantity }}</td>
-                        <td class="px-3 py-2">{{ formatPrice(item.price) }}đ</td>
-                        <td class="px-3 py-2">{{ formatPrice(item.total_price) }}đ</td>
+                        <td class="px-3 py-2 border-0"> {{ item.quantity }}</td>
+                        <td class="px-3 py-2 border-0">{{ formatPrice(item.price) }}đ</td>
+                        <td class="px-3 py-2 border-0">{{ formatPrice(item.total_price) }}đ</td>
+                        <td class="border-0 text-center">
+                            <Link v-if="order.payment_method == 'cash' || order.payment_method == 'banking'"
+                                :href="route('admin.payment.orderCashBankingPayment', order.id)"
+                                class=" text-sm text-blue hover:opacity-0.8 mx-1">
+                            Chi tiết
+                            </Link>
+                        </td>
                         <!-- <td class="px-6 py-4">-10%</td>
                         <td class="px-6 py-4">225.000 đ7</td> -->
                     </tr>
 
                 </tbody>
             </table>
-            <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
+            <div class="flex justify-between mx-2  border-gray-300 text-sm">
                 <p>Cộng tiền hàng</p>
                 <p>{{ formatPrice(order.grand_total) }}₫</p>
 
             </div>
-            <div v-if="order.discount" class="flex justify-between mx-2 border-b border-gray-300 pb-3">
+            <div v-if="order.discount" class="flex justify-between mx-2  border-gray-300 text-sm">
                 <p>Voucher</p>
                 <input v-if="order.discount" :value="formatPrice(order.discount.discount_mount)"
                     class="px-3 py-2 border border-gray-400 rounded-lg w-24" readonly />
             </div>
-            <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
+            <div class="flex justify-between mx-2  border-gray-300 text-sm">
                 <p>Ưu đãi</p>
                 <p v-if="order.discount_deal > 0">{{ order.discount_deal }} %</p>
                 <p v-else>0%</p>
             </div>
-            <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
+            <div class="flex justify-between mx-2  border-gray-300 text-sm">
                 <p>VAT</p>
                 <p v-if="order.vat > 0">{{ order.vat }} %</p>
                 <p v-else>0%</p>
             </div>
-            <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
+            <div class="flex justify-between mx-2  border-gray-300 text-sm">
                 <p>Phí ship</p>
                 <p class="text-red-600 text-lg">{{ formatPrice(order.shipping_fee) }} ₫</p>
             </div>
-            <div class="flex justify-between mx-2 border-b border-gray-300 pb-3">
+            <div class="flex justify-between mx-2  border-gray-300 text-sm">
                 <p>Tổng giá trị</p>
                 <p class="text-red-600 text-lg">{{ formatPrice(order.last_price) }} ₫</p>
             </div>
 
-            <!-- <div class="flex justify-between mx-2 border-b border-gray-400 pb-3">
+            <!-- <div class="flex justify-between mx-2 border-b border-gray-400 ">
                 <p>Khách đã trả</p>
                 <p class="text-red-600 text-xl">{{ formatPrice(order.amount_paid) }} ₫</p>
 
             </div> -->
 
-            <div v-if="order.amount_unpaid" class="flex justify-between mx-2 border-b border-gray-300 pb-3">
+            <div v-if="order.amount_unpaid" class="flex justify-between mx-2 border-gray-300 text-sm">
                 <p>Khách phải trả</p>
                 <p class="text-red-600 text-lg">{{ formatPrice(order.amount_unpaid) }} ₫</p>
 

@@ -208,7 +208,108 @@ const loadOrder = async $state => {
                 <ModalShipping :shippers="shippers" />
                 <ModalDecline></ModalDecline>
                 <ModelRefund></ModelRefund>
-                <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4 ">
+                <div class="w-full flex justify-between">
+                        <div class="flex mr-2">
+                            <div class="mr-4">
+                                <div class="w-full  mr-3 text-gray-500">
+                                    <label for>Mã đơn hàng</label>
+                                </div>
+                                <div class="min-[320px]:w-full form_search">
+                                    <form v-on:submit.prevent>
+                                        <div class="relative">
+                                            <div class="absolute inset-y-1 left-0 flex items-center pl-3 pointer-events-none">
+                                                <svg aria-hidden="true" class="w-5 h-5 text-sm text-gray-500 text-gray-400"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                </svg>
+                                            </div>
+                                            <input type="search" id="default-search" name="search" data-toggle="hideseek"
+                                                laceholder="Search Menus" data-list=".menu-category" v-model="filter.search"
+                                                @keyup="search"
+                                                class="block w-full p-2.5 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Nhập mã đơn hàng" required />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="mr-4 w-[320px]">
+                                <div class=" text-gray-500">
+                                    <label for>Ngày tạo đơn</label>
+                                </div>
+                                <div class="w-full flex flex-wrap">
+                                    <div class="flex ">
+                                        <div class="relative">
+                                            <VueDatePicker v-model="filter.fromDate" time-picker-inline />
+                                        </div>
+                                        <span class="mx-1 text-gray-500">đến</span>
+                                        <div class="relative">
+                                            <VueDatePicker v-model="filter.toDate" time-picker-inline />
+                                        </div>
+                                        <button @click.prevent="changeDate" name="search"
+                                        class="block p-2 ml-3 text-xs text-gray-900 border border-gray-300 rounded-lg  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-blue-500 text-white">Search</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <div class="flex flex-col mr-4">
+                                <div class=" text-gray-500">
+                                    <label for>Khách hàng</label>
+                                </div>
+                                <div class="form_search">
+                                    <form v-on:submit.prevent>
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                <svg aria-hidden="true" class="w-5 h-5 text-sm text-gray-500 text-gray-400"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                </svg>
+                                            </div>
+                                            <input type="search" id="default-search" name="search" data-toggle="hideseek"
+                                                v-model="filter.customer" @keyup="searchCustomer" laceholder="Search Menus"
+                                                data-list=".menu-category"
+                                                class="block w-full p-2.5 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Tìm khách hàng bằng tên hoặc sđt" required />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="mr-4 flex-col flex">
+                                <div class=" text-gray-500">
+                                    <label for>Phương thức TT</label>
+                                </div>
+                                <div class="">
+                                    <select id="countries"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                        <option selected>Tất cả</option>
+                                        <option value="US">Tiền mặt</option>
+                                        <option value="CA">Chuyển khoản</option>
+                                        <option value="CA">Payoo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mr-4 flex-col flex">
+                                <div class=" text-gray-500">
+                                    <label for>Trạng thái TT</label>
+                                </div>
+                                <div class="">
+                                    <select id="countries"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                        <option :value="null">Tình trạng</option>
+                                        <option :value="1">Đã thanh toán</option>
+                                        <option :value="0">Chưa thanh toán</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+                <!-- <div class="min-[320px]:block sm:block md:block lg:grid lg:gap-4 lg:grid-cols-2 my-4 ">
                     <div class="pr-3">
                         <div class="min-[320px]:block sm:flex">
                             <div class="min-[320px]:w-full sm:w-3/12 mr-3 text-gray-500">
@@ -324,12 +425,12 @@ const loadOrder = async $state => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="py-2 rounded-lg px-0 col-md-12">
                     <div class="panel panel-default">
-                        <div class="panel-body relative overflow-x-auto  sm:rounded-lg">
+                        <div class="tableFixHead panel-body relative overflow-x-auto">
                             <div>
-                                <div class="grid grid-cols-8 gap-5 text-xs bg-gray-200  uppercase px-3 py-4 text-gray-400">
+                                <div class="mr-2 px-2 mb-2 text-xs  uppercase bg-gray-200 grid grid-cols-7 grid-flow-col auto-cols-max py-2  text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
@@ -351,9 +452,7 @@ const loadOrder = async $state => {
                                     <div>
                                         <p>Người tạo đơn </p>
                                     </div>
-                                    <div>
-                                        <p>Chi tiết</p>
-                                    </div>
+
 
                                 </div>
 

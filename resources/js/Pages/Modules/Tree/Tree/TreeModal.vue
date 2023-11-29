@@ -161,7 +161,7 @@ const state = reactive({
         <!-- {{ apartment }} -->
         <CardBoxModal v-model="isModalTree" buttonLabel="Save" has-cancel @confirm="saveTree" button="warning"
             classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-6/12 z-50 overflow-auto"
-            :title="editMode ? 'Update Tree' : 'Create Tree'">
+            :title="editMode ? 'Chỉnh sửa' : 'Tạo mới'">
             <div v-if="form.progress" class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
                 <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
                     :style="`width: ${form.progress.percentage}%`"> {{ form.progress.percentage }}%</div>
@@ -194,15 +194,7 @@ const state = reactive({
                             <InputError class="mt-2" :message="form.errors.state" />
                         </div>
 
-                        <div class="py-4">
-                            <label class="input w-full" for="recipient-name">
-                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giá gốc
-                                </span>
-                                <MazInputPrice v-model="form.price_origin"  currency="VND" locale="vi-VN"
-                                    :min="0" @formatted="price_origin = $event" />
-                            </label>
-                            <InputError class="mt-2" :message="form.errors.price_origin" />
-                        </div>
+
                         <div class="py-4">
                             <label class="input w-full" for="recipient-name">
 
@@ -256,6 +248,15 @@ const state = reactive({
                         </div>
                         <div class="py-4">
                             <label class="input w-full" for="recipient-name">
+                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giá gốc
+                                </span>
+                                <MazInputPrice v-model="form.price_origin"  currency="VND" locale="vi-VN"
+                                    :min="0" @formatted="price_origin = $event" />
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.price_origin" />
+                        </div>
+                        <!-- <div class="py-4">
+                            <label class="input w-full" for="recipient-name">
 
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giá chuyển nhượng
                                 </span>
@@ -264,7 +265,17 @@ const state = reactive({
                             </label>
                             <InputError class="mt-2" :message="form.errors.transfer_value" />
                         </div>
-                        <div class="mt-[80px]">
+                        <div class="py-4">
+                            <label class="input w-full" for="recipient-name">
+
+                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giá chuyển nhượng
+                                </span>
+                                <MazInputPrice v-model="form.transfer_value"  currency="VND" locale="vi-VN"
+                                    :min="0" @formatted="transfer_value = $event" />
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.transfer_value" />
+                        </div> -->
+                        <div class="">
                             <InputLabel for="name_amenities" value="Bộ sưu tập ảnh" />
                             <label for="dropzone-images"
                                 class="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">

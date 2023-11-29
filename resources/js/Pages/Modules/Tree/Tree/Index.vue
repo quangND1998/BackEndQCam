@@ -110,10 +110,9 @@ const searchTree = () => {
 <template>
     <LayoutAuthenticated>
 
-        <Head title="Tree" />
         <Breadcrumb :crumbs="crumbs" />
         <SectionMain class="p-3">
-            <SectionTitleLineWithButton title="Tree" main></SectionTitleLineWithButton>
+            <SectionTitleLineWithButton title="Cây cam " main></SectionTitleLineWithButton>
 
 
             <CardBoxModal v-model="isModalDangerActive" title="Please confirm" button="danger" has-cancel>
@@ -134,9 +133,9 @@ const searchTree = () => {
                 </div>
             </div>
             <TreeModal :land="land" />
-            <div class="overflow-x-auto relative  sm:rounded-lg mt-5">
+            <div class="overflow-x-auto relative  sm:rounded-lg mt-2">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700  bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="py-3 px-6 text-xs">STT</th>
                             <th scope="col" class="py-3 px-6 text-xs">Tên</th>
@@ -156,47 +155,47 @@ const searchTree = () => {
                     <tbody>
                         <tr v-for="(tree, index) in trees.data" :key="index"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                 index + 1 }}</th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                 tree.name }}</th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                 tree.address }}</th>
                             <th scope="row"
-                                class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-wrap">
-                                <img :src="tree.thumb_image?.[0]?.original_url" class="w-20 h-20 " />
+                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-wrap">
+                                <img :src="tree.thumb_image?.[0]?.original_url" class="w-12 h-12 " />
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <strong>{{
                                     formatPrice(tree.price_origin) }}</strong>
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <strong>{{
                                     formatPrice(tree.price) }}</strong>
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <strong>{{
                                     formatPrice(tree.transfer_value) }}</strong>
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <div class=" flex justify-center">
                                     <span v-if="tree.state == 'public'"
-                                        class="inline-block whitespace-nowrap rounded-full bg-lime-300 px-[0.65em] py-1 text-center align-baseline text-[1em] font-bold leading-none text-success-700">
+                                        class="text-xs font-mono paid btn_key text-center">
                                         Mở bán
                                     </span>
                                     <span v-if="tree.state == 'private'"
-                                        class="inline-block whitespace-nowrap rounded-full bg-red-300 px-[0.65em] py-1 text-center align-baseline text-[1em] font-bold leading-none text-danger-700">
+                                        class="inline-block whitespace-nowrap rounded-full border bg-red-200 border-rose-600 text-red px-[0.65em] py-1 text-center align-baseline text-[1em] font-bold leading-none text-danger-700">
                                         Chưa Mở bán
                                     </span>
                                 </div>
                             </th>
 
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <strong>{{ tree.status }}</strong>
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 link</th>
-                            <td class="py-4 px-6 text-right">
+                            <td class="py-1 px-6 text-right">
                                 <BaseButtons type="justify-start lg:justify-end" no-wrap>
                                     <BaseButton color="contrast" :icon="mdiPencilOutline" small @click="edit(tree)"
                                         type="button" data-toggle="modal" data-target="#exampleModal" />

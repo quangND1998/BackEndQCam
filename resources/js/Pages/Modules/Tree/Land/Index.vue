@@ -119,11 +119,8 @@ const Delete = (id) => {
 <template>
     <LayoutAuthenticated>
 
-        <Head title="Lands" />
-        <!-- <Multiselect v-model="value" :options="options" mode="tags" :close-on-select="false" :searchable="true"
-            :create-option="true" /> -->
         <SectionMain class="pl-0 mt-5 p-3" >
-            <SectionTitleLineWithButton title="Lands" main></SectionTitleLineWithButton>
+            <SectionTitleLineWithButton title="Lô đất" main></SectionTitleLineWithButton>
 
             <!-- Modal -->
             <CardBoxModal v-model="isModalDangerActive" title="Please confirm" button="danger" has-cancel>
@@ -163,19 +160,19 @@ const Delete = (id) => {
                 <InputError class="mt-2" :message="form.errors.state" />
             </CardBoxModal>
             <!-- End Modal -->
-            <div class="mt-5">
+            <div class="mt-2">
                 <div class="grid sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 gap-4 ">
-                    <div v-for="(land, index) in lands.data" :key="index" class="border border-gray-500">
+                    <div v-for="(land, index) in lands.data" :key="index" class="py-2">
                         <!-- <Link :href="route('admin.project.blocks.getFloors', [project.id, block.id])"> -->
 
                         <!-- <BaseIcon :path="mdiLandFields" size="160" class="w-full h-40 object-cover" /> -->
                         <!-- </Link> -->
                         <Link :href="route('admin.land.tree.index',  land.id)">
-                        <div class="bg-[#D9D9D9]  px-2 py-1 items-center cursor-pointer">
+                        <div class="bg-[#ffffff] border px-2 py-1 items-center  rounded-xl">
                             <div class="flex justify-between">
-                               
+
                                     <h3 class="text-black text-sm font-medium ">{{ land.name }}</h3>
-                               
+
                                 <Dropdown align="right" width="40" @click.prevent>
                                 <template #trigger>
                                     <span class="inline-flex rounded-md">
@@ -203,16 +200,16 @@ const Delete = (id) => {
                             </div>
                             <div class=" flex justify-center">
                                 <span v-if="land.state == 'public'"
-                                class="inline-block whitespace-nowrap rounded-full bg-lime-300 px-[0.65em] py-1 text-center align-baseline text-[0.75em] font-bold leading-none text-success-700">
+                                class="text-xs font-mono paid btn_key text-center">
                                 Mở bán
                             </span>
                             <span v-if="land.state == 'private'"
-                                class="inline-block whitespace-nowrap rounded-full bg-red-300 px-[0.65em] py-1 text-center align-baseline text-[0.75em] font-bold leading-none text-danger-700">
+                                class="inline-block whitespace-nowrap rounded-full bg-red-200 border-rose-600 text-red px-[0.65em] py-1 text-center align-baseline text-[0.75em] font-bold leading-none text-danger-700">
                                 Chưa Mở bán
                             </span>
                             </div>
-                            
-                           
+
+
 
                         </div>
                     </Link>

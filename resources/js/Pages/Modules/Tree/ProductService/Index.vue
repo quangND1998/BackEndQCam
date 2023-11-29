@@ -190,9 +190,8 @@ const Delete = (id) => {
 <template>
     <LayoutAuthenticated>
 
-        <Head title="Product Service" />
         <SectionMain class="p-3 mt-8">
-            <SectionTitleLineWithButton title="Product Service" main></SectionTitleLineWithButton>
+            <SectionTitleLineWithButton title="Gói dịch vụ" main></SectionTitleLineWithButton>
 
             <!-- Modal -->
             <div class="flex justify-between">
@@ -354,10 +353,10 @@ const Delete = (id) => {
 
             </CardBoxModal>
             <!-- End Modal -->
-            <div class="mt-5">
-                <div class="relative mt-5 ">
+            <div class="mt-1">
+                <div class="relative mt-1">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3 flex items-center">
                                     <input type="checkbox" v-model="selectAll"
@@ -368,7 +367,7 @@ const Delete = (id) => {
                                     Tên
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Ảnh thumb
+                                    Ảnh
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Số lượng cây
@@ -417,42 +416,42 @@ const Delete = (id) => {
                                         {{ index + 1 }}
                                     </div>
                                 </th>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{ product_service.name }}
                                 </td>
-                                <td class="px-6 py-4">
-                                    <img :src="product_service?.images.length >0?product_service?.images[0].original_url :null" >
+                                <td class="px-6 py-1">
+                                    <img :src="product_service?.images.length >0?product_service?.images[0].original_url :null" class="w-14" >
                                 </td>
 
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{ product_service.number_tree }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{ product_service.acreage }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{ product_service.free_visit }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{  product_service.amount_products_received  }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{ formatPrice(product_service.price) }}
 
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{ product_service.life_time }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{ product_service.number_deliveries }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{ product_service.life_time }}
                                 </td>
-                                <td class="px-6 py-4" >
+                                <td class="px-6 py-1" >
                                     <p class="string_long" v-html="product_service.description"></p>
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" class="sr-only peer" :checked="product_service.status"
                                             @change="changeStatus(product_service, $event)">
@@ -461,7 +460,7 @@ const Delete = (id) => {
                                         </div>
                                     </label>
                                 </td>
-                                <td class="px-6 py-4 ">
+                                <td class="px-6 py-1 ">
                                     <div class="flex ">
 
                                         <Dropdown align="right" width="40" class="ml-5">

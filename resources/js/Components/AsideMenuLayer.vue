@@ -32,10 +32,10 @@ const asideLgCloseClick = (event) => {
 
 <template>
   <aside id="aside" class=" w-[260px] fixed flex z-40 top-0 h-screen transition-position overflow-hidden" style="box-shadow: var(0 0 #0000,0 0 #0000),var(0 0 #0000,0 0 #0000),var(-0 0 #0000);">
-    <div class="aside flex-1 flex flex-col overflow-hidden  bg-bg_green_default">
-      <div class="aside-brand flex flex-row h-[80px] items-center justify-between bg-white">
-        <div class="flex items-center text-center flex-1 p-3">
-            <img class="h-10 mr-4" src="/assets/Images/avatar.png" alt="">
+    <div class="aside flex-1 flex  items-center flex-col overflow-hidden  bg-bg_green_default">
+      <div class="aside-brand flex flex-row  items-center justify-between bg-white">
+        <div class="items-center text-center flex-1 p-2">
+            <img class="" src="/assets/images/cammattroi.png" alt="">
           <b class="font-[700]">{{ $page.props.auth.user.name }}</b>
         </div>
         <button class="hidden lg:inline-block xl:hidden p-3" @click.prevent="asideLgCloseClick">
@@ -73,12 +73,10 @@ const asideLgCloseClick = (event) => {
     padding: 10px 2px;
 }
 .aside-menu-dropdown li .aside-menu-item-active{
-    /* background-color: #C5E4CA;
-    color: black !important;
-    border-radius: 8px; */
-    /* margin-left: 10px;
-    padding: 10px 2px; */
     color: blue !important;
-    background-color: none;
+    background-color: #ffffff00 !important;
+}
+.aside-menu-dropdown li  .aside-menu-item-active:hover{
+    background-color: rgb(246 247 250 / var(--tw-bg-opacity)) !important;
 }
 </style>

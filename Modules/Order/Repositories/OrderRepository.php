@@ -68,18 +68,27 @@ class OrderRepository implements OrderContract
 
     public function getOrder($request, $status)
     {
-       
+
+        // return  Order::with(['customer', 'orderItems.product', 'discount', 'shipper', 'saler'])->role()->whereHas(
+        //     'customer',
+        //     function ($q) use ($request) {
+        //         $q->where('name', 'LIKE', '%' . $request->customer . '%');
+        //         $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
+        //     }
+        // )->whereHas(
+        //     'orderItems.product',
+        //     function ($q) use ($request) {
+        //         $q->where('name', 'LIKE', '%' . $request->name . '%');
+        //     }
+        // )->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+
         return  Order::with(['customer', 'orderItems.product', 'discount', 'shipper', 'saler'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
                 $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
             }
-        )->whereHas(
-            'orderItems.product',
-            function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%' . $request->name . '%');
-            }
+        
         )->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
 
@@ -139,7 +148,7 @@ class OrderRepository implements OrderContract
                 'type' => $paramas['type'],
                 'shipping_fee' => $paramas['shipping_fee'],
                 'amount_paid' => $paramas['amount_paid'],
-              
+
 
             ]);
 

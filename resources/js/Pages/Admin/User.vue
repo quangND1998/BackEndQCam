@@ -165,34 +165,19 @@ const Delete = (id) => {
     <LayoutAuthenticated>
 
         <Head title="User" />
-
-        <!-- <Multiselect v-model="value" :options="options" mode="tags" :close-on-select="false" :searchable="true"
-            :create-option="true" /> -->
         <SectionMain class="p-3 mt-8">
-            <!-- <search-filter v-model="search" class="mr-4 w-full max-w-md" @reset="reset">
-                <label class="block text-gray-700">Trashed:</label>
-            </search-filter> -->
-            <SectionTitleLineWithButton :icon="mdiAccountLockOpen" title="User" main></SectionTitleLineWithButton>
-            <!-- <BaseButton color="info" :icon="mdiPlus" small @click="isModalActive = true; form.reset(); editMode = false"
-                label='Create User' /> -->
-
+            <SectionTitleLineWithButton  title="User" main></SectionTitleLineWithButton>
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
-                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 m-2 bg-white" :iconSize="20" />
-                        <!-- <SearchInput v-model="search" placeholder="Search" aria-label="Search" size="24" @reset="reset"/> -->
+                        <BaseButton color="default" :icon="mdiFilter" small class="p-2 mr-2 my-2 bg-white" :iconSize="20" />
+
                         <search-filter v-model="search" class="mr-4 w-full max-w-md" @reset="reset">
                             <label class="block text-gray-700">Trashed:</label>
                         </search-filter>
                     </div>
                 </div>
                 <div class="right">
-                    <!-- <BaseButton color="info" class="bg-btn_green text-white p-2 hover:bg-color_green" :icon="mdiPlus" small
-                        @click="
-                            isModalActive = true;
-                        form.reset();
-                        " label="Create User" /> -->
-
                     <BaseButton :routeName="'users.create'" color="info"
                         class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
                         label="Create User" />
@@ -217,7 +202,7 @@ const Delete = (id) => {
                         <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="email" value="Email" />
                             <!-- <input
-                                    class="appearance-none block w-full bg-gray-200 text-gray-700 border text-xl border-gray-300 rounded py-4 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    class="appearance-none block w-full bg-gray-200 text-gray-700 border text-xl border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     id="grid-last-name" type="text" placeholder="examp@example" v-model="form.email"
                                     :class="form.errors.email ? 'border-red-500' : ''" /> -->
                             <TextInput id="email" v-model="form.email" type="email" class="mt-1 block w-full"
@@ -264,7 +249,7 @@ const Delete = (id) => {
                             <InputError class="mt-2" :message="form.errors.roles" />
                         </div>
 
-                     
+
                     </div>
                 </div>
                 <!-- <InputLabel for="name" value="Name" />
@@ -282,19 +267,19 @@ const Delete = (id) => {
                         }" />
                     <InputError class="mt-2" :message="form.errors.permission" /> -->
             </CardBoxModal>
-            <div class="overflow-x-auto relative sm:rounded-lg mt-5">
+            <div class="overflow-x-auto relative mt-0">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700  bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="py-3 px-6 text-xs">STT</th>
-                            <th scope="col" class="py-3 px-6 text-xs">name</th>
-                            <th scope="col" class="py-3 px-6 text-xs">email</th>
-                            <th scope="col" class="py-3 px-6 text-xs">phone</th>
-                            <th scope="col" class="py-3 px-6 text-xs">role</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Active</th>
-                            <th v-if="hasAnyPermission(['super-admin'])" scope="col" class="py-3 px-6 text-xs">Team</th>
-                            <th scope="col" class="py-3 px-6 text-xs">created at</th>
-                            <th scope="col" class="py-3 px-6 text-xs">
+                            <th scope="col" class="py-2 px-6 text-xs">STT</th>
+                            <th scope="col" class="py-2 px-6 text-xs">Name</th>
+                            <th scope="col" class="py-2 px-6 text-xs">Email</th>
+                            <th scope="col" class="py-2 px-6 text-xs">Phone</th>
+                            <th scope="col" class="py-2 px-6 text-xs">Role</th>
+                            <th scope="col" class="py-2 px-6 text-xs">Active</th>
+                            <th v-if="hasAnyPermission(['super-admin'])" scope="col" class="py-2 px-6 text-xs">Team</th>
+                            <th scope="col" class="py-2 px-6 text-xs">Created at</th>
+                            <th scope="col" class="py-2 px-6 text-xs">
                                 <span class="sr-only">Edit</span>
                             </th>
                         </tr>
@@ -302,28 +287,28 @@ const Delete = (id) => {
                     <tbody>
                         <tr v-for="(user, index) in users.data" :key="index"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ index + 1 }}
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ user.name }}
+                            <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ user.name }} ({{ user.team?.name }})
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.email }}
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.phone_number }}
                             </th>
 
 
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <BaseButtons>
                                     <PillTag v-for="(role, index) in user.roles" :key="index" color="info"
                                         :label="role.name" small outline=""></PillTag>
                                 </BaseButtons>
                             </th>
-                          
-                            <th class="py-3 px-6 text-xs">
+
+                            <th class="py-2 px-6 text-xs">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" value="" class="sr-only peer"
                                         :checked="user.isActive == 1 ? true : false" @change="setActive(user, $event)" />
@@ -333,20 +318,20 @@ const Delete = (id) => {
                                 </label>
                             </th>
 
-                            <th v-if="hasAnyPermission(['super-admin'])" scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th v-if="hasAnyPermission(['super-admin'])" scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.team?.name }}
                             </th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ formatDate(user.created_at) }}
                             </th>
-                            <td class="py-4 px-6 text-right">
+                            <td class="py-2 px-6 text-right">
                                 <Link :href="route('users.edit', user.id)" type="button" data-toggle="modal"
                                     data-target="#exampleModal"
-                                    class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    class="inline-block px-6 py-2 bg-gray-200 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                 Edit
                                 </Link>
                                 <button type=" button" @click="Delete(user.id)"
-                                    class="inline-block px-6 py-2.5 bg-red-500 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-red-600 hover:text-white hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">
+                                    class="inline-block px-6 py-2 bg-red-500 text-white font-black text-xs leading-tight  rounded shadow-md hover:bg-red-600 hover:text-white hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">
                                     Delete
                                 </button>
                             </td>

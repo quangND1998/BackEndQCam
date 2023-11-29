@@ -47,7 +47,7 @@ const menuClick = (event, item) => {
   }">
 
     <div :class="[layoutAsidePadding, { 'ml-60 lg:ml-0': isAsideMobileExpanded }]"
-      class="pt-1 min-h-screen w-screen transition-position lg:w-auto bg-gray-50 dark:bg-slate-800 dark:text-slate-100">
+      class="pt-1 min-h-screen w-screen transition-position lg:w-auto bg-gray-50">
       <SectionMain>
         <NotificationBar v-if="$page.props.flash.warning || Object.keys($page.props.errors).length > 0" color="warning"
           :icon="mdiAlert">

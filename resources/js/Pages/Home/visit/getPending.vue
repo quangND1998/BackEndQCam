@@ -88,9 +88,8 @@ const cancelState = (visit) => {
             <SectionTitleLineWithButton title="Quản lý đặt lịch tham quan" main></SectionTitleLineWithButton>
             <div>
                 <LayoutBar></LayoutBar>
-                <div class="p-2 lg:w-1/2 sm:w-full">
-                    <div>
-                        <div class="min-[320px]:block sm:flex sm:my-2">
+                <div class="px-2 flex">
+                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <div class="min-[320px]:w-full sm:w-3/12  md:w-3/12 mr-3 text-gray-500">
                                 <label for>Khách hàng</label>
                             </div>
@@ -113,7 +112,7 @@ const cancelState = (visit) => {
                                 </form>
                             </div>
                         </div>
-                        <div class="min-[320px]:block sm:flex lg:flex my-3">
+                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <div class="min-[320px]:w-full sm:w-3/12 md:w-3/12 mr-3 text-gray-500">
                                 <label for>Đặt lịch ngày</label>
                             </div>
@@ -149,11 +148,10 @@ const cancelState = (visit) => {
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </div>
                 <div class="p-2 rounded-lg col-md-12">
                     <div class="panel panel-default">
-                        <div class="overflow-x-auto relative  sm:rounded-lg mt-5">
+                        <div class="overflow-x-auto relative  sm:rounded-lg ">
                             <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                                 <thead
                                     class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

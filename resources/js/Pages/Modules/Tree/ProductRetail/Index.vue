@@ -140,10 +140,8 @@ const searchFilter = () => {
 </script>
 <template>
     <LayoutAuthenticated>
-
-        <Head title="Product Retail" />
         <SectionMain class="p-3 mt-8">
-            <SectionTitleLineWithButton title="Product Retail" main></SectionTitleLineWithButton>
+            <SectionTitleLineWithButton title="Sản phẩm lẻ" main></SectionTitleLineWithButton>
 
             <!-- Modal -->
             <CardBoxModal v-model="isModalDangerActive" title="Please confirm" button="danger" has-cancel>
@@ -215,10 +213,10 @@ const searchFilter = () => {
 
             </CardBoxModal>
             <!-- End Modal -->
-            <div class="mt-5">
-                <div class="relative mt-5 ">
+            <div class="mt-2">
+                <div class="relative mt-2 ">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3 flex items-center">
                                     <input type="checkbox" v-model="selectAll"
@@ -238,7 +236,7 @@ const searchFilter = () => {
                                     Mô Tả
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Trang thái
+                                    Trạng thái
                                 </th>
                                 <th scope="col" class="px-6 py-3">
 
@@ -256,21 +254,21 @@ const searchFilter = () => {
                                         {{ index++ }}
                                     </div>
                                 </th>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{ product.name }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     <div class="flex flex-wrap mx-1">
                                         <img v-for="(image, index) in product.images" :key="index" :src="image.original_url"
-                                            class="w-16 h-16 object-cover mx-1 inline-block" alt="">
+                                            class="w-12 h-12 object-cover mx-1 inline-block" alt="">
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     {{ formatPrice(product.price) }}
                                 </td>
-                                <td class="px-6 py-4" v-html="product.description">
+                                <td class="px-6 py-1" v-html="product.description">
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-1">
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" class="sr-only peer" :checked="product.status"
                                             @change="changeStatus(product, $event)">
@@ -279,7 +277,7 @@ const searchFilter = () => {
                                         </div>
                                     </label>
                                 </td>
-                                <td class="px-6 py-4 ">
+                                <td class="px-6 py-1 ">
                                     <div class="flex ">
 
                                         <Dropdown align="right" width="40" class="ml-5">

@@ -88,7 +88,6 @@ class TreeController extends Controller
      */
     public function update(Request $request, Tree $tree): RedirectResponse
     {
-        dd($request);
         $tree->update($request->all());
         if ($request->hasFile('images')) {
             $tree->clearMediaCollection('tree_images');
@@ -124,5 +123,5 @@ class TreeController extends Controller
         }
         return response()->json('Không tìm thấy cây nào', 404);
     }
-    
+
 }

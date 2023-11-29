@@ -122,7 +122,7 @@ const changeDate = () => {
     <LayoutAuthenticated>
 
         <Head title="Quản lý đơn hàng" />
-        <SectionMain class="p-3 mt-3 rounded-lg">
+        <SectionMain class="p-3 mt-8 rounded-xl">
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
                 <div>
                     <h2 class="font-semibold  flex mr-2">
@@ -246,7 +246,7 @@ const changeDate = () => {
                 <div class="w-full mt-6 ">
                     <div class="panel panel-default">
                         <div class="tableFixHead panel-body relative overflow-x-auto ">
-                                <div class="mr-2 px-2 mb-2 text-xs  uppercase bg-gray-200 grid grid-cols-6  py-2  text-gray-400">
+                                <div class="mr-2 px-2 mb-2 text-xs  uppercase bg-gray-200 grid grid-cols-7  py-2  text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
@@ -255,6 +255,9 @@ const changeDate = () => {
                                     </div>
                                     <div>
                                         <p>Gói dịch vụ</p>
+                                    </div>
+                                    <div>
+                                        <p>loại</p>
                                     </div>
                                     <div>
                                         <p>Ngày</p>
@@ -270,7 +273,7 @@ const changeDate = () => {
                                     </div>
                                 </div>
 
-                                <div class=" h-[60vh] overflow-auto">
+                                <div class=" overflow-auto">
                                     <div  v-for="(order, index) in orders?.data" :key="index">
                                     <OrderRow :order="order" :status="status" />
 

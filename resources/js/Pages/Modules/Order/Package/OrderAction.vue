@@ -12,8 +12,8 @@
 
                 <option :value="1" :selected="order.payment_status == 1 ? true : false">Đã thanh toán</option>
             </select>
-            <button v-if="status == 'pending' && (order.payment_status == 1 || order?.price_percent >= order?.grand_total)" @click="orderChangePacking(order)"
-                class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Đuyệt gói</button>
+            <button v-if="hasAnyPermission(['create-contract-complete']) && status == 'pending' && (order.payment_status == 1 || order?.price_percent >= order?.grand_total)" @click="orderChangePacking(order)"
+                class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Duyệt gói</button>
             <button v-if="status == 'packing'" @click="orderChangeShipping(order)"
                 class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Bắt đầu giao hàng</button>
             <button v-if="status == 'shipping'" @click="orderChangeCompleted(order)"

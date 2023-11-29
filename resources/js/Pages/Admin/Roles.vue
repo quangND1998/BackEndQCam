@@ -109,8 +109,8 @@ const Delete = (id) => {
         <Head title="Roles" />
         <!-- <Multiselect v-model="value" :options="options" mode="tags" :close-on-select="false" :searchable="true"
             :create-option="true" /> -->
-        <SectionMain>
-            <SectionTitleLineWithButton :icon="mdiAccountLockOpen" title="Roles" main></SectionTitleLineWithButton>
+        <SectionMain class="p-3 mt-8 ">
+            <SectionTitleLineWithButton  title="Roles" main></SectionTitleLineWithButton>
             <!-- <BaseButton color="info" :icon="mdiPlus" small @click="isModalActive = true; form.reset()"
                 label='Create Role' /> -->
                 <div class="flex justify-between">
@@ -149,37 +149,37 @@ const Delete = (id) => {
                     <InputError class="mt-2" :message="form.errors.permission" />
             </CardBoxModal>
             <!-- End Modal -->
-            <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+            <div class="overflow-x-auto relative p-2 mb-2">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700  bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="py-3 px-6 text-xs">STT</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Name</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Permissions</th>
-                            <th scope="col" class="py-3 px-6 text-xs">
-                                <span class="sr-only">Edit</span>
+                            <th scope="col" class="py-2 px-6 text-xs">STT</th>
+                            <th scope="col" class="py-2 px-6 text-xs">Name</th>
+                            <th scope="col" class="py-2 px-6 text-xs">Permissions</th>
+                            <th scope="col" class="py-2 px-6 text-xs">
+
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(role, index) in roles.data" :key="index"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                 index + 1 }}</th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                 role.name }}</th>
-                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <BaseButtons>
                                     <PillTag v-for="(permission, index) in role.permissions" :key="index" color="info"
                                         :label="permission.name" small outline=""></PillTag>
                                 </BaseButtons>
 
                             </th>
-                            <td class="py-4 px-6 text-right">
+                            <td scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <button @click="edit(role)" type="button" data-toggle="modal" data-target="#exampleModal"
-                                    class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">Edit</button>
+                                    class="inline-block px-6 py-2 bg-gray-200 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">Edit</button>
                                 <button type="button" @click="Delete(role.id)"
-                                    class="inline-block px-6 py-2.5 bg-red-500 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-red-600 hover:text-white hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Delete</button>
+                                    class="inline-block px-6 py-2 bg-red-500 text-white font-black text-xs leading-tight  rounded shadow-md hover:bg-red-600 hover:text-white hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Delete</button>
                             </td>
                         </tr>
                     </tbody>

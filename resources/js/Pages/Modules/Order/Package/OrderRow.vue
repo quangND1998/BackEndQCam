@@ -21,6 +21,7 @@ const toggleContent = () => {
     console.log(showContent.value)
 };
 const props = defineProps({
+    index: Object,
     order: Object,
     status: String,
 })
@@ -168,7 +169,7 @@ const save = () => {
                 </table>
             </div>
         </CardBoxModal>
-        <div @click.prevent="toggleContent" class=" grid grid-cols-6  text-sm px-3 mt-2 mb-1 text-gray-400">
+        <div @click.prevent="toggleContent" class=" grid grid-cols-7  text-sm px-3 mt-2 mb-1 text-gray-400">
             <div>
                 <a class="flex items-center text-blue-600">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -179,6 +180,9 @@ const save = () => {
             </div>
             <div>
                 <p>{{ formatPrice(order?.grand_total) }}</p>
+            </div>
+            <div>
+                <p>{{ order?.type }}</p>
             </div>
             <div>
                 <p>{{ order?.product_service?.name }}</p>

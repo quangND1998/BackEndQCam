@@ -53,21 +53,18 @@ export default [{
     menu: [{
         route: 'permissions.index',
         label: 'Permissions',
-        icon: mdiMinus,
         permissions: ['super-admin'],
         route_list: null
     },
     {
         route: 'roles.index',
         label: 'Roles',
-        icon: mdiMinus,
         permissions: ['super-admin'],
         route_list: null
     },
     {
         route: 'users.index',
         label: 'Users',
-        icon: mdiMinus,
         permissions: ['view-user'],
         route_list: null
     }
@@ -77,7 +74,11 @@ export default [{
     label: 'Hoạt động',
     icon: mdiFileTreeOutline,
     permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline','contract-pending','contract-create','contract-cancle','contract-complete'],
-    route_list: ['admin.orders.package.index','admin.orders.package.decline','admin.orders.package.complete','admin.orders.package.partiallyPaid', 'admin.orders.index', 'admin.orders.create', 'admin.orders.package.create', 'admin.orders.pending', 'visit.pending', 'visit.confirm', 'visit.completed','admin.review.index'],
+    route_list: ['admin.orders.package.index','admin.orders.package.decline','admin.orders.package.complete',
+    'admin.orders.package.partiallyPaid', 'admin.orders.index', 'admin.orders.create', 'admin.orders.package.create',
+     'admin.orders.pending', 'admin.orders.packing', 'admin.orders.completed', 'admin.orders.addToCart','admin.orders.decline','admin.orders.shipping',
+     'visit.pending', 'visit.confirm', 'visit.completed','admin.review.index'
+    ],
     menu: [{
         route: 'admin.orders.index',
         label: 'Đơn hàng',
