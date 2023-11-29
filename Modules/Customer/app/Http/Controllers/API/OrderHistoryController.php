@@ -173,7 +173,7 @@ class OrderHistoryController extends Base2Controller
             'wards' => $user->wards,
             'phone_number'        =>  $user->phone_number,
             'grand_total' => $product_service->price,
-            'type' => 'upgrade',
+            'type' => $request->type ? $request->type : 'upgrade',
             'product_selected' => $request->package_id,
         ]);
         $response = [
