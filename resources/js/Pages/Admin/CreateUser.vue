@@ -257,7 +257,7 @@ const save = () => {
                             </div>
                         </div>
                         <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
-                            <h3 class="text-[17px] font-bold">Chọn Team</h3>
+                            <h3 class="text-[17px] font-bold">Team *</h3>
                             <div class="grid grid-cols-2 gap-4">
                                 <select id="city" v-model="form.leader_sale_id" 
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
