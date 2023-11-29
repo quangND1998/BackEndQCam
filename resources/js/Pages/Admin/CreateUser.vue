@@ -259,15 +259,9 @@ const save = () => {
                         <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
                             <h3 class="text-[17px] font-bold">Chọn Team</h3>
                             <div class="grid grid-cols-2 gap-4">
-                                <select id="city" v-model="form.leader_sale_id" 
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <option :value="null">Chọn Team</option>
-                                                <option v-for="(leader_sale, index) in leader_sales"
-                                                    :value="leader_sale.id" :key="index">
-                                                    {{
-                                                        leader_sale.name }}
-                                                </option>
-                                            </select>
+                                <Multiselect v-model="form.leader_sale_id"  :appendNewTag="false" :createTag="false"
+                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"  placeholder="Chọn Team"
+                            class="form-control"  />
                                 <InputError class="mt-2" :message="form.errors.leader_sale_id" />
                             </div>
                         </div>
