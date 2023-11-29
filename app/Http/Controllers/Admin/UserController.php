@@ -135,7 +135,7 @@ class UserController extends Controller
             $user->created_byId = $auth_user->id;
             $user->save();
         }
-        if ($auth_user->hasRole('super-admin')) {
+        if ($auth_user->hasPermissionTo('super-admin')) {
             if($request->leader_sale_id){
                 $lead_sale = User::findOrFail($request->leader_sale_id);
                 $user->created_byId = $lead_sale->id;
@@ -190,7 +190,7 @@ class UserController extends Controller
             'cic_date_expried' => $request->cic_date_expried,
      
         ]);
-        if ($auth_user->hasRole('super-admin')) {
+        if ($auth_user->hasPermissionTo('super-admin')) {
             if($request->leader_sale_id){
                 if(!$user->hasRole('leader-sale')){
                     $lead_sale = User::findOrFail($request->leader_sale_id);
