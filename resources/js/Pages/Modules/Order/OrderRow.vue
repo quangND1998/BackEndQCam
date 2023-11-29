@@ -27,10 +27,10 @@ const props = defineProps({
                     </svg>{{ order.order_number }}</a>
             </div>
             <div>
-                <p>{{ order.customer.name }}</p>
+                <p>{{ order.customer?.name }}</p>
             </div>
             <div>
-                <p>{{ order.customer.phone_number }}</p>
+                <p>{{ order.customer?.phone_number }}</p>
             </div>
             <div>
                 <p>{{ formatTimeDayMonthyear(order.created_at) }}</p>

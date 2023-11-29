@@ -117,7 +117,8 @@ class LoginController extends Base2Controller
         $token = PersonalAccessToken::findToken(request()->bearerToken());
         if ($token) {
             $user = Auth::user();
-            $user->tokens()->delete();
+            $token->delete();
+            // $user->tokens()->delete();
             // $user = $token->tokenable;
             // $user->tokens()->delete();
             return response()->json('You have successfully logged out.', Response::HTTP_OK);

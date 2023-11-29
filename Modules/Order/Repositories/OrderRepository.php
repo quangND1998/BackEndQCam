@@ -68,7 +68,7 @@ class OrderRepository implements OrderContract
 
     public function getOrder($request, $status)
     {
-
+       
         return  Order::with(['customer', 'orderItems.product', 'discount', 'shipper', 'saler'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
@@ -80,7 +80,7 @@ class OrderRepository implements OrderContract
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->name . '%');
             }
-        )->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(10);
+        )->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
 
 
@@ -114,5 +114,108 @@ class OrderRepository implements OrderContract
             }
         }
         return $newCollections;
+    }
+
+
+    public function updateOrderRetail($paramas, $order, $user)
+    {
+        if ($user) {
+            $order->update([
+
+                'user_id'           => $user->id,
+                'status'            =>  'pending',
+                'payment_status'    =>  0,
+                'payment_method' =>  $paramas['payment_method'],
+                'address' => $paramas['address'],
+                'city' => $paramas['city'],
+                'district' => $paramas['district'],
+                'wards' => $paramas['wards'],
+                'phone_number'        => $paramas['phone_number'],
+                'grand_total' => Cart::getSubTotalWithoutConditions(),
+                'last_price' => Cart::getSubTotal(),
+                'item_count' => Cart::getTotalQuantity(),
+                'vat' => $paramas['vat'],
+                'discount_deal' => $paramas['discount_deal'],
+                'type' => $paramas['type'],
+                'shipping_fee' => $paramas['shipping_fee'],
+                'amount_paid' => $paramas['amount_paid'],
+              
+
+            ]);
+
+            $order->amount_unpaid = $order->last_price - $paramas['amount_paid'];
+            $order->save();
+
+            if ($order) {
+
+                $items = Cart::getContent();
+                $order->orderItems()->delete();
+                foreach ($items as $item) {
+
+                    if ($item->quantity > 0) {
+                        $orderItem = new OrderItem([
+                            'product_id' => $item->id,
+                            'quantity'      =>  $item->quantity,
+                            'price'         =>  $item->price,
+                            'total_price' => $item->getPriceSum(),
+                        ]);
+                        $order->orderItems()->save($orderItem);
+                    }
+                }
+            }
+            return $order;
+        }
+    }
+
+
+
+    public function updateOrderGift($paramas, $order, $user)
+    {
+        if ($user) {
+            $order->update([
+
+                'user_id'           => $user->id,
+                'status'            =>  'pending',
+                'payment_status'    =>  0,
+                'payment_method' =>  $paramas['payment_method'],
+                'address' => $paramas['address'],
+                'city' => $paramas['city'],
+                'district' => $paramas['district'],
+                'wards' => $paramas['wards'],
+                'phone_number'        => $paramas['phone_number'],
+                'grand_total' => 0,
+                'last_price' => 0,
+                'item_count' => Cart::getTotalQuantity(),
+                'vat' => $paramas['vat'],
+                'discount_deal' => $paramas['discount_deal'],
+                'type' => $paramas['type'],
+                'shipping_fee' => $paramas['shipping_fee'],
+                'amount_paid' => $paramas['amount_paid'],
+                'sale_id' => Auth::user()->id
+
+            ]);
+
+            $order->amount_unpaid = $order->last_price - $request->amount_paid;
+            $order->save();
+
+            if ($order) {
+
+                $items = Cart::getContent();
+                $order->orderItems()->delete();
+                foreach ($items as $item) {
+
+                    if ($item->quantity > 0) {
+                        $orderItem = new OrderItem([
+                            'product_id' => $item->id,
+                            'quantity'      =>  $item->quantity,
+                            'price'         =>  $item->price,
+                            'total_price' => $item->getPriceSum(),
+                        ]);
+                        $order->orderItems()->save($orderItem);
+                    }
+                }
+            }
+            return $order;
+        }
     }
 }

@@ -73,7 +73,8 @@ Route::middleware(['auth'])->group(
                 Route::post('saveOrder/{user}', [OrderController::class, 'saveOrder'])->name('saveOrder');
                 Route::post('saveOrderGift/{user}', [OrderController::class, 'saveOrderGift'])->name('saveOrderGift');
                 Route::post('/{order}/orderChangeShipping', [OrderController::class, 'orderChangeShipping'])->name('orderChangeShipping');
-
+                Route::post('{order}/updateOrderRetail/{user}', [OrderController::class, 'updateOrderRetail'])->name('updateOrderRetail');
+                Route::post('{order}updateOrderGift/{user}', [OrderController::class, 'updateOrderGift'])->name('updateOrderGift');
                 Route::prefix('package')->as('package.')->group(function () {
                     Route::get('all', [OrderPackageController::class, 'index'])->name('index');
                     Route::get('pending', [OrderPackageController::class, 'index'])->name('pending');

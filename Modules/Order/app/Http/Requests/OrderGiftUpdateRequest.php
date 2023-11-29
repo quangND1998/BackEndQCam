@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Order\app\Http\Requests\Order;
+namespace Modules\Order\app\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateOrderReuquest extends FormRequest
+class OrderGiftUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,17 +12,13 @@ class UpdateOrderReuquest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_method' => 'required',
+            'product_service_owner_id' => 'required',
             'address' => 'required',
             'city' => 'required',
             'district' => 'required',
             'wards' => 'required',
             'phone_number' => 'required',
-            'vat' => 'nullable|numeric|gt:-1',
-            'discount_deal' => 'nullable|nullable|gt:-1',
             'type' => 'required',
-            'shipping_fee' => 'nullable|nullable|gt:-1',
-            'amount_paid' => 'nullable|nullable|gt:-1',
             'images' => 'nullable',
             'images.*' => 'mimes:jpeg,png,jpg|max:2048',
         ];
