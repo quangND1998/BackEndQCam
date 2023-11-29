@@ -34,6 +34,7 @@ class UserController extends Controller
                 $query->where('name', 'subadmin');
             }
         )->get();
+   
         if ($user->hasRole('super-admin')) {
             $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
@@ -58,13 +59,16 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $user = Auth::user();
+
         if ($user->hasRole('super-admin')) {
             $roles = Role::where('name', '!=', 'super-admin')->get();
+            $leader_sales = User::role('leader-sale')->get();
         } else {
             $roles = Role::where('name', 'saler')->get();
+            $leader_sales=null;
         }
 
-        return Inertia::render('Admin/CreateUser', compact('roles'));
+        return Inertia::render('Admin/CreateUser', compact('roles', 'leader_sales'));
     }
 
 
@@ -74,12 +78,13 @@ class UserController extends Controller
         $user->load('roles');
         $user_auth = Auth::user();
         if ($user_auth->hasRole('super-admin')) {
-
+            $leader_sales = User::role('leader-sale')->get();
             $roles = Role::where('name', '!=', 'super-admin')->get();
         } else {
             $roles = Role::where('name', 'saler')->get();
+            $leader_sales=null;
         }
-        return Inertia::render('Admin/EditUser', compact('roles', 'user'));
+        return Inertia::render('Admin/EditUser', compact('roles', 'user', 'leader_sales'));
     }
 
 
