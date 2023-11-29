@@ -247,25 +247,25 @@ const changeDate = () => {
                     <div class="panel panel-default">
                         <div class="tableFixHead panel-body relative overflow-x-auto ">
                                 <div class="mr-2 px-2 mb-2 text-xs  uppercase bg-gray-200 grid grid-cols-7  py-2  text-gray-400">
-                                    <div>
+                                    <div class="text-center">
                                         <p>Mã đơn hàng</p>
                                     </div>
-                                    <div>
+                                    <div class="text-center">
                                         <p>Số tiền</p>
                                     </div>
-                                    <div>
+                                    <div class="text-center">
                                         <p>Gói dịch vụ</p>
                                     </div>
-                                    <div>
-                                        <p>loại</p>
+                                    <div class="text-center">
+                                        <p>Loại</p>
                                     </div>
-                                    <div>
+                                    <div class="text-center">
                                         <p>Ngày</p>
                                     </div>
-                                    <div>
+                                    <div class="text-center">
                                         <p>Khách hàng</p>
                                     </div>
-                                    <div>
+                                    <div class="text-center">
                                         <p>Trạng thái</p>
                                     </div>
                                      <div>

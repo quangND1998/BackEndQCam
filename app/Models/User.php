@@ -159,7 +159,9 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(User::class, 'created_byId')->role('leader-sale');
     }
-
+    public function ownerTeam(){
+        return $this->belongsTo(User::class, 'created_byId');
+    }
     public function team()
     {
         return $this->belongsTo(User::class, 'created_byId')->role('leader-sale');

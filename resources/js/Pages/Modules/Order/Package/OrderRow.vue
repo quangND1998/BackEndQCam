@@ -178,22 +178,22 @@ const save = () => {
                             d="M9 5 5 1 1 5" />
                     </svg>{{ order?.order_number }}</a>
             </div>
-            <div>
+            <div class="text-center">
                 <p>{{ formatPrice(order?.grand_total) }}</p>
+            </div >
+            <div class="text-center">
+                <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
             </div>
-            <div>
-                <p>{{ order?.type }}</p>
-            </div>
-            <div>
+            <div class="text-center">
                 <p>{{ order?.product_service?.name }}</p>
             </div>
-            <div>
+            <div class="text-center">
                 <p>{{ formatTimeDayMonthyear(order?.created_at) }}</p>
             </div>
-            <div>
+            <div class="text-center">
                 <p>{{ order?.customer?.name }}</p>
             </div>
-            <div>
+            <div class="text-center">
                 <p class="btn_label"
                     :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
                     {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' : order?.price_percent == 0
