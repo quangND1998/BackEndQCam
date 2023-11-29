@@ -172,15 +172,15 @@ const cancelState = (visit) => {
                                     <tr v-for="(visit, index) in scheduleVisits.data" :key="index"
                                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row"
-                                            class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ index + 1 }}
                                         </th>
                                         <th scope="row"
-                                            class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ visit?.product_owner_service?.customer?.name }}
                                         </th>
                                         <th scope="row"
-                                            class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ visit?.product_owner_service?.customer?.phone_number }}
                                         </th>
                                         <th class="py-3 px-6 text-xs">
@@ -189,18 +189,18 @@ const cancelState = (visit) => {
                                             </PillTag>
                                         </th>
                                         <th scope="row"
-                                            class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ visit?.created_at }}
                                         </th>
                                         <th scope="row"
-                                            class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ visit?.date_time }}
                                         </th>
                                         <th scope="row"
-                                            class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
 
                                         </th>
-                                        <th class="py-4 px-6 text-right flex justify-end my-3">
+                                        <th class="py-1 px-6 text-right flex justify-end my-3">
                                             <button @click="changeState(visit)"
                                                 class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                                 Xác nhận
