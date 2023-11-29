@@ -181,11 +181,12 @@ const save = () => {
             <div class="text-center">
                 <p>{{ formatPrice(order?.grand_total) }}</p>
             </div >
-            <div class="text-center">
-                <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
-            </div>
+
             <div class="text-center">
                 <p>{{ order?.product_service?.name }}</p>
+            </div>
+            <div class="text-center">
+                <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
             </div>
             <div class="text-center">
                 <p>{{ formatTimeDayMonthyear(order?.created_at) }}</p>
