@@ -77,7 +77,7 @@ export default [{
     route_list: ['admin.orders.package.index','admin.orders.package.decline','admin.orders.package.complete',
     'admin.orders.package.partiallyPaid', 'admin.orders.index', 'admin.orders.create', 'admin.orders.package.create',
      'admin.orders.pending', 'admin.orders.packing', 'admin.orders.completed', 'admin.orders.addToCart','admin.orders.decline','admin.orders.shipping',
-     'visit.pending', 'visit.confirm', 'visit.completed','admin.review.index'
+     'visit.pending', 'visit.confirm', 'visit.completed','admin.review.index','admin.orders.refund'
     ],
     menu: [{
         route: 'admin.orders.index',
