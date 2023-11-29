@@ -113,7 +113,7 @@ const selectAll = computed({
 <template>
     <LayoutAuthenticated>
 
-        <SectionMain class="p-3 mt-8">
+        <SectionMain class="p-3 mt-16">
             <SectionTitleLineWithButton :icon="mdiStarPlus" title="Đánh giá" main></SectionTitleLineWithButton>
 
 

@@ -186,10 +186,10 @@ const loadOrder = async $state => {
 
 
         <Head title="Quản lý đơn hàng" />
-        <SectionMain class="p-3 mt-8">
+        <SectionMain class="p-3 mt-16">
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
                 <div>
-                    <h2 class="min-[320px]:text-xl sm:text-2xl font-semibold lg:text-3xl flex mr-2">
+                    <h2 class="font-semibold  flex mr-2">
                         Quản lý đơn hàng
                         <!-- <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p> -->
                     </h2>

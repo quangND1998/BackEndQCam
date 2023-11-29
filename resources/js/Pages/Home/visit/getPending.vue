@@ -84,8 +84,8 @@ const cancelState = (visit) => {
     <LayoutAuthenticated>
 
         <Head title="Quản lý đặt lịch tham quan" />
-        <SectionMain class="p-3 mt-8">
-            <SectionTitleLineWithButton title="Quản lý đặt lịch tham quan" main></SectionTitleLineWithButton>
+        <SectionMain class="p-3 mt-16">
+            <SectionTitleLineWithButton class="font-semibold flex mr-2" title="Quản lý đặt lịch tham quan" main></SectionTitleLineWithButton>
             <div>
                 <LayoutBar></LayoutBar>
                 <div class="px-2 flex">

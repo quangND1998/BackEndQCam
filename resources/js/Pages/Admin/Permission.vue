@@ -115,7 +115,7 @@ const Delete = (id) => {
         <Head title="Permissions" />
         <!-- <Multiselect v-model="value" :options="options" mode="tags" :close-on-select="false" :searchable="true"
             :create-option="true" /> -->
-        <SectionMain class="p-3 mt-8 ">
+        <SectionMain class="p-3 mt-16 ">
             <SectionTitleLineWithButton title="Permissions" main></SectionTitleLineWithButton>
 
             <!-- Modal -->

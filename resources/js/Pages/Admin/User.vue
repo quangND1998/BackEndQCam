@@ -165,7 +165,7 @@ const Delete = (id) => {
     <LayoutAuthenticated>
 
         <Head title="User" />
-        <SectionMain class="p-3 mt-8">
+        <SectionMain class="p-3 mt-16">
             <SectionTitleLineWithButton  title="User" main></SectionTitleLineWithButton>
             <div class="flex justify-between">
                 <div class="left">
@@ -291,7 +291,7 @@ const Delete = (id) => {
                                 {{ index + 1 }}
                             </th>
                             <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ user.name }} 
+                                {{ user.name }}
                             </th>
                             <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.email }}

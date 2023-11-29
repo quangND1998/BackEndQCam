@@ -121,11 +121,11 @@ const changeDate = () => {
 <template>
     <LayoutAuthenticated>
 
-        <Head title="Quản lý đơn hàng" />
-        <SectionMain class="p-3 mt-8 rounded-xl">
+
+        <SectionMain class="p-3 mt-16 rounded-xl">
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
                 <div>
-                    <h2 class="font-semibold  flex mr-2">
+                    <h2 class="font-semibold flex mr-2">
                         Quản lý đơn hợp đồng
                     </h2>
                 </div>

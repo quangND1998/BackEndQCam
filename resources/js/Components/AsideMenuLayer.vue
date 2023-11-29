@@ -36,7 +36,7 @@ const asideLgCloseClick = (event) => {
       <div class="aside-brand flex flex-row  items-center justify-between bg-white">
         <div class="items-center text-center flex-1 p-2">
             <img class="" src="/assets/images/cammattroi.png" alt="">
-          <b class="font-[700]">{{ $page.props.auth.user.name }}</b>
+          <!-- <b class="font-[700]">{{ $page.props.auth.user.name }}</b> -->
         </div>
         <button class="hidden lg:inline-block xl:hidden p-3" @click.prevent="asideLgCloseClick">
           <BaseIcon :path="mdiClose" />

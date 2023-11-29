@@ -84,8 +84,10 @@ const checkOpenMenu = () => {
 
     </component>
     <AsideMenuList v-if="hasDropdown" :menu="item.menu"
-      :class="['aside-menu-dropdown', isDropdownActive ? 'block ' : 'hidden']" is-dropdown-list />
+      :class="['aside-menu-dropdown',  'block ' ]" is-dropdown-list />
   </li>
+
+  <!-- :class="['aside-menu-dropdown', isDropdownActive ? 'block ' : 'hidden']" is-dropdown-list /> -->
 </template>
 <style >
 /* scroll */
