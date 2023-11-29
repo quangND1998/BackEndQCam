@@ -259,9 +259,9 @@ const save = () => {
                         <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
                             <h3 class="text-[17px] font-bold">Chọn Team</h3>
                             <div class="grid grid-cols-2 gap-4">
-                                <Multiselect v-model="form.leader_sale_id"  :appendNewTag="false" :createTag="false"
-                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"  placeholder="Chọn Team"
-                            class="form-control"  />
+                                <Multiselect v-model="form.leader_sale_id" :appendNewTag="false" :createTag="false"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"
+                                    placeholder="Chọn Team" class="form-control"  />
                                 <InputError class="mt-2" :message="form.errors.leader_sale_id" />
                             </div>
                         </div>
