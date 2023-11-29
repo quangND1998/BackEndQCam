@@ -131,7 +131,7 @@ const changeDate = () => {
                 </div>
                 <div class="flex">
                     <div>
-                        <Link v-if="hasAnyPermission(['create-contract-complete'])" :href="route('admin.orders.package.create')"
+                        <Link v-if="hasAnyPermission(['add-new-package'])" :href="route('admin.orders.package.create')"
                             class="px-2 py-2 rounded-2xl text-sm text-white  rounded-lg border mx-1 bg-btn_green hover:bg-[#318f02] hover:bg-[#008000]">
                             <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn hàng hợp đồng
                         </Link>
