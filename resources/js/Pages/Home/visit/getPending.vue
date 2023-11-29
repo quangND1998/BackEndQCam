@@ -154,7 +154,7 @@ const cancelState = (visit) => {
                         <div class="overflow-x-auto relative  sm:rounded-lg ">
                             <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                                 <thead
-                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="py-3 px-6 text-xs">STT</th>
                                         <th scope="col" class="py-3 px-6 text-xs">Khách hàng</th>
@@ -190,24 +190,24 @@ const cancelState = (visit) => {
                                         </th>
                                         <th scope="row"
                                             class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{ visit?.created_at }}
+                                            {{ formatTimeDayMonthyear(visit?.created_at) }}
                                         </th>
                                         <th scope="row"
                                             class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{ visit?.date_time }}
+                                            {{ formatTimeDayMonthyear(visit?.date_time) }}
                                         </th>
                                         <th scope="row"
                                             class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
 
                                         </th>
-                                        <th class="py-1 px-6 text-right flex justify-end my-3">
+                                        <th class="py-1 px-6 text-right flex justify-end my-1">
                                             <button @click="changeState(visit)"
-                                                class="inline-block px-6 py-2.5 bg-gray-200 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
+                                                class="inline-block px-6 py-2 bg-gray-200 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                                 Xác nhận
                                             </button>
                                             <button @click="cancelState(visit)"
-                                                class="inline-block flex justify-center item-center text-center px-6 py-2.5 text-white bg-red-600 text-gray-700 font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
-                                                <BaseIcon :path="mdiCancel" class="text-white"></BaseIcon>
+                                                class="inline-block flex justify-center items-center p-1 px-2 item-center text-center px-6 py-2.5 text-white bg-red-600 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
+                                                <BaseIcon :path="mdiCancel" class="text-white" size="16"></BaseIcon>
                                                 Hủy
                                             </button>
 
