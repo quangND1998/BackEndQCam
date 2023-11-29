@@ -216,7 +216,7 @@ const date = ref(new Date());
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-8">
             <div class="lg:container m-auto mt-10">
-                <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
+                <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10 p-2">
                     <div class="col-span-2">
                         <div class="min-[320px]:block md:flex border-b border-gray-200 pb-4">
                             <div class="min-[320px]:w-full md:w-1/2 px-0">
@@ -473,7 +473,7 @@ const date = ref(new Date());
                 :payment_method="form.payment_method" :type="form.type" :sub_total="sub_total" @confirm="save" /> -->
             <div class="min-[320x]:block sm:block md:grid grid-cols-3 gap-4">
 
-                <div class=" col-span-2 mt-2 w-full">
+                <div class="overflow-x-auto col-span-2 mt-2 w-full">
                     <div class="relative shadow-md sm:rounded-lg mb-5 mt-4">
                         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

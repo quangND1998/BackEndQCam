@@ -105,7 +105,7 @@ const props = defineProps({
                                     </tbody>
                                 </table>
                             </div>
-                            <p class="text-sm text-[#686868] mt-3 mb-3 font-bold">Lịch sử thanht toán</p>
+                            <p class="text-sm text-[#686868] mt-3 mb-3 font-bold">Lịch sử thanh toán</p>
                             <div class="relative overflow-x-auto">
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                     <thead
