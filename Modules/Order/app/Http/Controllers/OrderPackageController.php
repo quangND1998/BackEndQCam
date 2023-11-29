@@ -125,7 +125,7 @@ class OrderPackageController extends Controller
                 'vat' =>$request->vat,
                 'discount_deal' =>$request->discount_deal,
                 'grand_total' => $total_price,
-                'type' =>$request->type,
+                'type' => 'new',
                 'product_selected' => $request->product_selected,
                 'time_approve' => $request->time_approve,
                 'time_end' => Carbon::parse($request->time_approve)->addDays($time_life),

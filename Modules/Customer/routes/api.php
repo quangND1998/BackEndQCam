@@ -58,6 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             });
             // saveOrderPackage
             Route::post('saveOrderPackage', [OrderHistoryController::class, 'saveOrderPackageFromApp']);
+            Route::post('saveUpgradePackage', [OrderHistoryController::class, 'saveUpgradePackage']);
         });
 
 

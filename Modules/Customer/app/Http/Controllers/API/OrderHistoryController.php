@@ -122,7 +122,7 @@ class OrderHistoryController extends Base2Controller
             'wards' => $user->wards,
             'phone_number'        =>  $user->phone_number,
             'grand_total' => $product_service->price,
-            'type' => 'gift_delivery',
+            'type' => 'new',
             'product_selected' => $request->package_id,
             'time_end' => Carbon::now()->addDays($time_life),
         ]);
@@ -147,5 +147,40 @@ class OrderHistoryController extends Base2Controller
                 break;
         }
     }
-
+    public function saveUpgradePackage(Request $request){
+        $validator = Validator::make($request->only('package_id'), [
+            'package_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors(), 422);
+        }
+        $user = Auth::user();
+        $product_service = ProductService::find($request->package_id);
+        if(!$product_service ){
+            return response()->json('Gói dịch vụ không tồn tại', 404);
+        }
+        if($product_service->life_time > 0){
+            return response()->json('Goi k can nang cap', 404);
+        }
+        $order = OrderPackage::create([
+            'order_number'      =>  'ORD-' . strtoupper(uniqid()),
+            'user_id'           => $user->id,
+            'status'            =>  'pending',
+            'payment_status'    =>  0,
+            'address' => $user->address,
+            'city' => $user->city,
+            'district' => $user->district,
+            'wards' => $user->wards,
+            'phone_number'        =>  $user->phone_number,
+            'grand_total' => $product_service->price,
+            'type' => 'upgrade',
+            'product_selected' => $request->package_id,
+        ]);
+        $response = [
+            'success' => true,
+            'msg' => "save order package success",
+            'data' =>$order,
+        ];
+        return response()->json($response, 200);
+    }
 }
