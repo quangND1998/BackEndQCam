@@ -21,7 +21,8 @@ class CustomerDetailController extends Controller
 {
     function __construct()
     {
-        $this->middleware('role:super-admin');
+        // $this->middleware('role:super-admin');
+        $this->middleware('permission:view-user|create-user|delete-user|update-user|info-customer', ['only' => ['index']]);
     }
     /**
      * Display a listing of the resource.

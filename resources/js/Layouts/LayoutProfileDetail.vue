@@ -80,38 +80,37 @@ const state = reactive({
          <div class="mt-5 bg-white  dark:bg-gray-500 rounded-lg"
             style="box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
             <ul class="flex flex-wrap">
-                <li :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('info') }"
+                <li v-if="hasAnyPermission(['super-admin','info-customer'])"  :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('info') }"
                     class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] dark:text-white inline-block my-2">
 
-                    <Link :href="route('customer.detail.info', customer.id)" class="flex">
+                    <Link  :href="route('customer.detail.info', customer.id)" class="flex">
                         <Icon icon="info" class=" mr-2" />Thông tin
                     </Link>
                 </li>
 
-                <li
+                <li v-if="hasAnyPermission(['super-admin','package-custommer'])"
                 :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('product','extend') }"
                 class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"
 
                   >
-
                     <Link  :href="route('customer.detail.products.index', customer.id)" class="flex">
                     <Icon icon="buildings" class=" mr-2" /> Gói dịch vụ </Link>
                 </li>
-                <li
+                <li v-if="hasAnyPermission(['super-admin','info-customer'])"
                     :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('gift') }"
                     class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"
                    >
                     <Link :href="route('customer.detail.gift', customer?.id)" class="flex">
                     <Icon icon="amentities" class=" mr-2" />Giao quà</Link>
                 </li>
-                <li
+                <li v-if="hasAnyPermission(['super-admin','info-customer'])"
                 :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('activity') }"
                 class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2">
 
                     <Link :href="route('customer.detail.service.index', customer?.id)" class="flex">
                     <Icon icon="gallery" class=" mr-2" />Hoạt động</Link>
                 </li>
-                <li
+                <li v-if="hasAnyPermission(['super-admin','document-custommer'])"
                 :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('document') }"
                 class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2">
 
