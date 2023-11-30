@@ -261,7 +261,7 @@ const save = () => {
                                
                                 <Multiselect v-model="form.leader_sale_id"  :appendNewTag="false" :createTag="false"
                             :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"  placeholder="Chọn Team"
-                            class="form-control"  />
+                           />
                             </div>
                         </div>
                         <div class="my-3">
@@ -347,8 +347,6 @@ const save = () => {
     </LayoutAuthenticated>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>
-
 
 
 
