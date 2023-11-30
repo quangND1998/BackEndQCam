@@ -106,7 +106,14 @@ class OrderPackageController extends Controller
         $product_service = ProductService::findOrFail($request->product_selected);
         if($product_service){
             $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
-            $total_price = $product_service->price + (($request->vat * $product_service->price) / 100) - (($request->discount_deal *$product_service->price) / 100);
+            $total_price = $product_service->price;
+            if ($request->discount_deal > 0) {
+                $total_price  = $total_price - (( $total_price  * $request->discount_deal) / 100);
+            }
+            if ($request->vat > 0) {
+                $total_price +=  (( $total_price * $request->vat) / 100);
+            }
+            // $total_price = ($product_service->price - (($request->discount_deal *$product_service->price) / 100)) - ($request->vat * $product_service->price) / 100) ;
             $customer = User::where('phone_number',$request->phone_number)->first();
             if(!$customer){
                 $customer = $this->createCustomerDefault($request);
