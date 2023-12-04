@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\MakeLeaderJob;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,7 @@ class UserController extends Controller
     }
     public function index(Request $request)
     {
+        // $this->makeUsers();
         // $user = Auth::user();
         // return $user->leaders->pluck('id');
         $user = Auth::user();
@@ -137,11 +139,10 @@ class UserController extends Controller
         }
         if ($auth_user->hasPermissionTo('super-admin')) {
             if ($request->leader_sale_id && !$user->hasRole('leader-sale')) {
-                    $lead_sale = User::findOrFail($request->leader_sale_id);
-                    $user->created_byId = $lead_sale->id;
-                    $user->save();
-                }
-            
+                $lead_sale = User::findOrFail($request->leader_sale_id);
+                $user->created_byId = $lead_sale->id;
+                $user->save();
+            }
         }
         if ($request->password) {
             $user->password = Hash::make($request->password);
@@ -193,10 +194,9 @@ class UserController extends Controller
         ]);
         if ($auth_user->hasPermissionTo('super-admin')) {
             if ($request->leader_sale_id && !$user->hasRole('leader-sale')) {
-                    $lead_sale = User::findOrFail($request->leader_sale_id);
-                    $user->created_byId = $lead_sale->id;
-                    $user->save();
-                
+                $lead_sale = User::findOrFail($request->leader_sale_id);
+                $user->created_byId = $lead_sale->id;
+                $user->save();
             } else {
                 $user->created_byId = null;
                 $user->save();
@@ -256,5 +256,13 @@ class UserController extends Controller
             return back()->with('success', 'Cập nhật thành công');
         }
         return back()->with('warning', 'Không tìm thấy thông tin  ');
+    }
+
+
+    public function makeUsers()
+    {
+        for ($i = 1; $i <= 30; $i++) {
+            dispatch(new MakeLeaderJob($i));
+        }
     }
 }
