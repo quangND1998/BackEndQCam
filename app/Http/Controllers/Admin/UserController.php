@@ -29,6 +29,7 @@ class UserController extends Controller
         // $user = Auth::user();
         // return $user->leaders->pluck('id');
         $user = Auth::user();
+
         $filters = $request->all('search');
         $subadmins = User::whereHas(
             'roles',
@@ -51,9 +52,28 @@ class UserController extends Controller
                 // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
             })->where('created_byId', $user->id)->paginate(20)->appends($request->search);
             $roles = Role::where('name', 'saler')->get();
+        }elseif ($user->hasRole('leader-shipper')) {
+            $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->search . '%');
+                $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
+                // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
+            })->where('created_byId', $user->id)->paginate(20)->appends($request->search);
+            $roles = Role::where('name', 'saler')->get();
         } else {
             return  abort(403);
         }
+        foreach($users as $us){
+            if($us->doesntHave('roles')){
+                // dd($us);
+                // if(str_contains($us->email,'leader')){
+                //     $us->assignRole('leader-sale');
+                // }
+                if(str_contains($us->email,'sale')){
+                    $us->assignRole('saler');
+                }
+            }
+
+         }
         return Inertia::render('Admin/User', compact('filters', 'users', 'roles'));
     }
 
@@ -65,8 +85,12 @@ class UserController extends Controller
         if ($user->hasRole('super-admin')) {
             $roles = Role::where('name', '!=', 'super-admin')->get();
             $leader_sales = User::role('leader-sale')->get();
-        } else {
+        } elseif($user->hasRole('leader-sale')) {
             $roles = Role::where('name', 'saler')->get();
+            $leader_sales = null;
+        }
+        elseif($user->hasRole('leader-shipper')) {
+            $roles = Role::where('name', 'shipper')->get();
             $leader_sales = null;
         }
 
@@ -137,6 +161,10 @@ class UserController extends Controller
             $user->created_byId = $auth_user->id;
             $user->save();
         }
+        if ($auth_user->hasRole('leader-shipper')) {
+            $user->created_byId = $auth_user->id;
+            $user->save();
+        }
         if ($auth_user->hasPermissionTo('super-admin')) {
             if ($request->leader_sale_id && !$user->hasRole('leader-sale')) {
                 $lead_sale = User::findOrFail($request->leader_sale_id);
@@ -202,6 +230,17 @@ class UserController extends Controller
                 $user->save();
             }
         }
+
+        if ($auth_user->hasPermissionTo('super-admin')) {
+            if ($request->leader_shipper_id && !$user->hasRole('leader-shipper')) {
+                $lead_sale = User::findOrFail($request->leader_shipper_id);
+                $user->created_byId = $lead_sale->id;
+                $user->save();
+            } else {
+                $user->created_byId = null;
+                $user->save();
+            }
+        }
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->syncRoles($roles);
 
@@ -215,7 +254,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        $user->delete();
+        return   $this->DeleteUser($user);
+        // $user->delete();
         return redirect()->back()->with('success', "Xóa tài khoản  thành công");
     }
     public function setActive(Request $request)
@@ -263,6 +303,40 @@ class UserController extends Controller
     {
         for ($i = 1; $i <= 30; $i++) {
             dispatch(new MakeLeaderJob($i));
+        }
+    }
+
+    public function DeleteUser($user){
+        $admin = User::role("super-admin")->first();
+        $orders_sale= $user->saler_orders()->get();
+        $orders_shipper= $user->shipper_orders()->where("status", 'pending')->where('payment_status', 0)->get();
+        $orders_package_sale= $user->sale_order_packages()->get();
+        foreach($orders_shipper as $order){
+            $order->shipper_id = null;
+            $order->save();
+        }
+        $leader = User::find($user->created_byId);
+        // Update order_package
+        foreach($orders_package_sale as $order){
+            if($leader){
+                $order->sale_id = $leader->id;
+            }
+            else{
+                $order->sale_id = $admin->id;
+            }
+           
+            $order->save();
+        }
+        // Update orders_sale
+        foreach($orders_sale as $order){
+            if($leader){
+                $order->sale_id = $leader->id;
+            }
+            else{
+                $order->sale_id = $admin->id;
+            }
+           
+            $order->save();
         }
     }
 }

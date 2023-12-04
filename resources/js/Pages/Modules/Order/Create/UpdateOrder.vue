@@ -6,6 +6,7 @@ import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Dropdown from 'primevue/dropdown';
 import BaseIcon from '@/Components/BaseIcon.vue'
+import Multiselect from '@vueform/multiselect'
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -39,7 +40,8 @@ const props = defineProps({
     cart: Object,
     total_price: Number,
     sub_total: Number,
-    customers: Array
+    customers: Array,
+    shippers:Array
 });
 const store = useCartStore();
 const search = ref(null)
@@ -63,8 +65,9 @@ const form = useForm({
     shipping_fee: props.order.shipping_fee,
     product_service_owner_id: props.order.product_service_owner_id,
     amount_paid: 0,
-    images: []
-
+    images: [],
+    shipper_id: props.order.shipper_id,
+    receive_at:  props.order.receive_at
 
 })
 const getProvinces = async () => {
@@ -136,8 +139,8 @@ const onChangeCity = (event) => {
     form.district = null;
     form.wards = null;
 }
-const onChangeUser = (event) => {
-    form.user_id = event.target.value
+const onChangeUser = (value) => {
+    form.user_id = value
 }
 const onChangeDistrict = (event) => {
     form.wards = null;
@@ -180,7 +183,7 @@ const saveOrder = () => {
         });
     }
     else {
-        form.post(route('admin.orders.updateOrderRetail',[props.order.id, user.value.id]), {
+        form.post(route('admin.orders.updateOrderRetail', [props.order.id, user.value.id]), {
             onError: () => {
             },
             onSuccess: () => {
@@ -229,7 +232,7 @@ const saveGift = () => {
         });
     }
     else {
-        form.post(route('admin.orders.updateOrderGift',[props.order.id, user.value.id]), {
+        form.post(route('admin.orders.updateOrderGift', [props.order.id, user.value.id]), {
             onError: () => {
             },
             onSuccess: () => {
@@ -316,9 +319,20 @@ const date = ref(new Date());
                                             Khách
                                             Hàng
                                             *</label>
-                                        <MazSelect v-model="form.user_id" @change="onChangeUser($event)"
-                                            label="Chọn Khách hàng" search option-value-key="id" option-label-key="name"
-                                            option-input-value-key="name" :options="customers" />
+                                        
+                                        <Multiselect v-model="form.user_id" @change="onChangeUser"
+                                            :createOption="false" :canClear="false" :searchable="false" label="name"
+                                            valueProp="id" trackBy="name" :options="customers" placeholder="Chọn khác hàng"
+                                            :appendNewOption="false">
+
+                                            <template v-slot:singlelabel="{ value }">
+
+                                                <div class="multiselect-single-label">
+                                                    {{ value.name ? value.name : value }} ({{ value.phone_number ?
+                                                        value.phone_number.split('').slice(-4).join('') : null }})
+                                                </div>
+                                            </template>
+                                        </MultiSelect>
                                     </div>
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -511,7 +525,7 @@ const date = ref(new Date());
                         <div class="my-2" v-if="form.type == 'retail'">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Ưu đãi (%)</label>
-                            <input type="number" id="first_name" v-model="form.discount_deal"
+                            <input type="number" id="first_name" v-model="form.discount_deal" min="0" max="100"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
                         </div>
@@ -537,6 +551,53 @@ const date = ref(new Date());
                                 <option value="banking">Chuyển khoản</option>
                                 <option value="payoo">Payoo</option>
                             </select>
+                        </div>
+
+                        <div class="my-2">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Nhận hàng</label>
+                            <div class="flex">
+                                <div class="flex items-center ">
+                                    <input id="default-radio-1" type="radio" value="Tại nhà" 
+                                        v-model="form.receive_at"
+                                        class="w-4 h-4  text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="default-receive_at-1" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Tại
+                                        nhà</label>
+                                </div>
+                                <div class="flex items-center mx-5">
+                                    <input id="default-receive_at-2" type="radio" value="Tại sự kiện" v-model="form.receive_at"
+                                      
+                                        class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="default-receive_at-2" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Tại
+                                        sự kiện</label>
+                                </div>
+
+                                <div class="flex items-center mx-5">
+                                    <input id="default-receive_at-3" type="radio" value="Khác" v-model="form.receive_at"
+                                       
+                                        class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="default-receive_at-2"
+                                        class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Khác</label>
+                                </div>
+                                <InputError class="mt-2" :message="form.errors.receive_at" />
+                
+                            </div>
+                        </div>
+                        <div class="my-2">
+
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                Shipper</label>
+                            <Multiselect v-model="form.shipper_id" :appendNewTag="false" :createTag="false" :canClear="true"
+                                :searchable="true" label="name" valueProp="id" trackBy="name" :options="shippers"
+                                placeholder="Chọn Shipper">
+
+                                <template v-slot:singlelabel="{ value }">
+                                    <div class="multiselect-single-label">
+                                        {{ value.name }}({{ value.phone_number }})
+                                    </div>
+                                </template>
+                            </MultiSelect>
+                            <InputError class="mt-2" :message="form.errors.shipper_id" />
                         </div>
 
                     </div>

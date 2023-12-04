@@ -29,7 +29,7 @@ Route::middleware(['auth'])->group(
                 Route::get('all', [LandController::class, 'index'])->name('index');
                 Route::post('', [LandController::class, 'store'])->name('store');
                 Route::put('/update/{land}', [LandController::class, 'update'])->name('update');
-                Route::delete('/delete/{land}', [LandController::class, 'delete'])->name('delete');
+                Route::delete('/delete/{land}', [LandController::class, 'destroy'])->name('delete');
                 Route::prefix('{land}/trees')->as('tree.')->group(function () {
                     Route::get('all', [TreeController::class, 'index'])->name('index');
                     Route::post('store', [TreeController::class, 'store'])->name('store');

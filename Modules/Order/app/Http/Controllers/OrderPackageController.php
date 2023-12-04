@@ -241,8 +241,9 @@ class OrderPackageController extends Controller
                 $tree->product_service_owner_id = null;
                 $tree->save();
             }
+            $product_service_owner->delete();
         }
-       // $product_service_owner->delete();
+
         return back()->with('success', 'Hủy đơn thành công');
     }
     public function orderComplete(Request $request, OrderPackage $order)

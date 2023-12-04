@@ -49,7 +49,9 @@ const form = useForm({
     cic_number: null,
     date_of_birth: null,
     roles: null,
-    leader_sale_id: null
+    leader_sale_id: null,
+  
+    leader_shipper_id: null
 })
 const getProvinces = async () => {
     const response = await fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
@@ -257,12 +259,21 @@ const save = () => {
                             </div>
                         </div>
                         <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
-                            <h3 class="text-[17px] font-bold">Team *</h3>
+                            <h3 class="text-[17px] font-bold">Team Sale *</h3>
                             <div class="grid grid-cols-2 gap-4">
                                 <Multiselect v-model="form.leader_sale_id" :appendNewTag="false" :createTag="false"
                                     :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"
-                                    placeholder="Chọn Team"  />
+                                    placeholder="Chọn Team"   />
                                 <InputError class="mt-2" :message="form.errors.leader_sale_id" />
+                            </div>
+                        </div>
+                        <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
+                            <h3 class="text-[17px] font-bold">Team Shipper *</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <Multiselect v-model="form.leader_shipper_id" :appendNewTag="false" :createTag="false"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"
+                                    placeholder="Chọn Team"   />
+                                <InputError class="mt-2" :message="form.errors.leader_shipper_id" />
                             </div>
                         </div>
                         <div class="my-3">

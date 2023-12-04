@@ -276,7 +276,7 @@ export default {
     },
     props: {
         products: Array,
-        user: Object,
+
         cart: Object,
         total_price: Number,
         vat: Number,
@@ -378,7 +378,7 @@ export default {
             this.product_selected = event.target.value
         },
         addToCart() {
-            if (this.product == null || this.user == null) {
+            if (this.product == null) {
                 Swal.fire({
                     title: "Lỗi?",
                     text: "Chưa có thông tin khách hàng!",

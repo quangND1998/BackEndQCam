@@ -30,7 +30,6 @@ const form = useForm({
 const emit = defineEmits(['saveGift',])
 const props = defineProps({
     products: Array,
-    user: Object,
     type: String,
     cart: Object
 
@@ -75,7 +74,7 @@ const changeProduct = (event) => {
     product_selectd.value = event.target.value
 }
 const addToCart = () => {
-    if (product.value == null || props.user == null) {
+    if (product.value == null) {
         swal.fire({
             title: "Lỗi?",
             text: "Chưa có thông tin khách hàng!",

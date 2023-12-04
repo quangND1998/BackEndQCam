@@ -31,6 +31,7 @@ class Order extends Model implements HasMedia
         'product_service_owner_id',
         'shipper_id',
         'sale_id',
+        'receive_at',
         'wards',  "created_at", "updated_at"
     ];
 
@@ -137,15 +138,24 @@ class Order extends Model implements HasMedia
     {
         $user = Auth::user();
 
-        if (!$user->hasPermissionTo('super-admin')) {
+        // if (!$user->hasPermissionTo('super-admin')) {
+        //     if ($user->hasRole('leader-sale')) {
+        //         $query->whereIn('sale_id', $user->salers->pluck('id'));
+        //     } else {
+        //         $query->where('sale_id', $user->id);
+        //     }
+        // } else {
+
+        //     $query->get();
+        // }
+        if ( $user->hasPermissionTo('super-admin') || $user->hasRole('Kế toán') ) {
+            $query->get();
+        } else {
             if ($user->hasRole('leader-sale')) {
                 $query->whereIn('sale_id', $user->salers->pluck('id'));
             } else {
                 $query->where('sale_id', $user->id);
             }
-        } else {
-
-            $query->get();
         }
     }
 }

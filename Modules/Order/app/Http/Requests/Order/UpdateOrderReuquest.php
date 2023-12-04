@@ -25,6 +25,8 @@ class UpdateOrderReuquest extends FormRequest
             'amount_paid' => 'nullable|nullable|gt:-1',
             'images' => 'nullable',
             'images.*' => 'mimes:jpeg,png,jpg|max:2048',
+            'receive_at' =>'required',
+            'shipper_id' =>'required',
         ];
     }
 

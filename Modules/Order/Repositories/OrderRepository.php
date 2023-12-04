@@ -4,8 +4,9 @@ namespace Modules\Order\Repositories;
 
 use App\BaseRepository;
 use App\Contracts\OrderContract;
-
+use App\Models\User;
 use Cart;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Order\app\Models\Order;
 use Modules\Order\app\Models\OrderItem;
@@ -148,7 +149,8 @@ class OrderRepository implements OrderContract
                 'type' => $paramas['type'],
                 'shipping_fee' => $paramas['shipping_fee'],
                 'amount_paid' => $paramas['amount_paid'],
-
+                'receive_at' => $paramas['receive_at'],
+                'shipper_id' => $paramas['shipper_id']
 
             ]);
 
@@ -200,11 +202,12 @@ class OrderRepository implements OrderContract
                 'type' => $paramas['type'],
                 'shipping_fee' => $paramas['shipping_fee'],
                 'amount_paid' => $paramas['amount_paid'],
-                'sale_id' => Auth::user()->id
-
+              
+                'receive_at' => $paramas['receive_at'],
+                'shipper_id' => $paramas['shipper_id']
             ]);
 
-            $order->amount_unpaid = $order->last_price - $request->amount_paid;
+            $order->amount_unpaid = $order->last_price - $paramas['amount_paid'];
             $order->save();
 
             if ($order) {
@@ -226,5 +229,24 @@ class OrderRepository implements OrderContract
             }
             return $order;
         }
+    }
+
+
+    public function createUser($data){
+        
+        $user = User::create([
+            'name' => $data['name'],
+            'phone_number' =>  $data['phone_number'],
+            'sex' => $data['sex'],
+            'address' => $data['address'],
+            'city' =>  $data['city'],
+            'wards' => $data['wards'],
+            'district' =>  $data['district'],
+
+        ]);
+
+        $user->assignRole('customer');
+        return $user;
+
     }
 }

@@ -3,6 +3,16 @@ import { ref } from "vue";
 import OrderAction from "@/Pages/Modules/Order/OrderAction.vue"
 import { Head, Link } from "@inertiajs/vue3";
 import BaseButton from "@/Components/BaseButton.vue";
+import BaseIcon from "@//Components/BaseIcon.vue"
+import {
+    mdiEye,
+    mdiPencil ,
+    mdiAccountLockOpen,
+    mdiPlus,
+    mdiFilter,
+    mdiMagnify,
+    mdiFileDocumentOutline,
+} from "@mdi/js";
 const showContent = ref(false);
 // Hàm để toggle trạng thái của nội dung
 const toggleContent = () => {
@@ -17,7 +27,7 @@ const props = defineProps({
 
 <template>
     <div>
-        <div @click.prevent="toggleContent" class=" grid grid-cols-7 px-3 py-1 mt-2 mb-2 text-sm  text-gray-400">
+        <div @click.prevent="toggleContent" class=" grid grid-cols-8 px-3 py-1 mt-2 mb-2 text-sm  text-gray-400">
             <div>
                 <a class="flex items-center">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -45,13 +55,21 @@ const props = defineProps({
             <div>
                 <p v-if="order.saler">{{ order.saler.name }}</p>
             </div>
-            <!-- <div>
-                <Link v-if="order.payment_method == 'cash' || order.payment_method == 'banking'"
+            <div>
+                <Link
                     :href="route('admin.payment.orderCashBankingPayment', order.id)"
-                    class="px-2 py-2 text-sm text-white bg-primary rounded-lg border mx-1">
-                Chi tiết
+                   >
+                <BaseIcon  :path="mdiEye" :size="16" />
                 </Link>
-            </div> -->
+
+                <Link 
+                    :href="route('admin.orders.update', [order.id])"
+                   >
+                <BaseIcon  :path="mdiPencil" :size="16" />
+                </Link>
+           
+              
+            </div>
         </div>
 
         <div class="grid grid-cols-1  bg-gray-200 p-3 border rounded-xl" v-if="showContent">

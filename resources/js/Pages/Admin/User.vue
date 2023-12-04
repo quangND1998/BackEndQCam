@@ -38,12 +38,12 @@ const props = defineProps({
     filters: Object,
     roles: Array,
     users: Object,
-  
+
 });
 const swal = inject("$swal");
 const form = useForm({
     id: null,
-    search: props.filters != null ? props.filters.search : null,
+    search: null,
     name: null,
     email: null,
     roles: null,
@@ -55,7 +55,7 @@ const isModalActive = ref(false);
 const isActive = ref(false);
 const editMode = ref(false);
 const isModalDangerActive = ref(false);
-const search = toRef(props.filters.search);
+const search = ref(null);
 const { multipleSelect } = useHelper();
 // console.log(multipleSelect)
 const edit = (user) => {
@@ -69,18 +69,18 @@ const edit = (user) => {
     form.roles = multipleSelect(user.roles);
 };
 
-watch(
-    search,
-    throttle(() => {
-        let query = { search: search.value };
-        router.replace(
-            route("users.index", Object.keys(query).length ? query : null, {
-                replace: true,
-            })
-        );
-    }, 150),
-    { deep: true }
-);
+// watch(
+//     search,
+//     throttle(() => {
+//         let query = { search: search.value };
+//         router.replace(
+//             route("users.index", Object.keys(query).length ? query : null, {
+//                 replace: true,
+//             })
+//         );
+//     }, 150),
+//     { deep: true }
+// );
 const searchUser=()=>{
     router.get(route(`users.index`),
         {search:search.value},
@@ -289,7 +289,7 @@ const Delete = (id) => {
                             <th scope="col" class="py-2 px-6 text-xs">Email</th>
                             <th scope="col" class="py-2 px-6 text-xs">Phone</th>
                             <th scope="col" class="py-2 px-6 text-xs">Role</th>
-                            <th scope="col" class="py-2 px-6 text-xs">Active</th>
+                            <!-- <th scope="col" class="py-2 px-6 text-xs">Active</th> -->
                             <th v-if="hasAnyPermission(['super-admin'])" scope="col" class="py-2 px-6 text-xs">Team</th>
                             <th scope="col" class="py-2 px-6 text-xs">Created at</th>
                             <th scope="col" class="py-2 px-6 text-xs">
@@ -321,7 +321,7 @@ const Delete = (id) => {
                                 </BaseButtons>
                             </th>
 
-                            <th class="py-2 px-6 text-xs">
+                            <!-- <th class="py-2 px-6 text-xs">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" value="" class="sr-only peer"
                                         :checked="user.isActive == 1 ? true : false" @change="setActive(user, $event)" />
@@ -329,7 +329,7 @@ const Delete = (id) => {
                                         class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                     </div>
                                 </label>
-                            </th>
+                            </th> -->
 
                             <th v-if="hasAnyPermission(['super-admin'])" scope="row"
                                 class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
