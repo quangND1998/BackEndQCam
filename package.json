@@ -37,6 +37,7 @@
         "bootstrap": "^5.3.2",
         "ckeditor-tailwind-reset": "^1.0.5",
         "dayjs": "^1.11.10",
+        "dropzone": "^5.9.3",
         "emittery": "^1.0.1",
         "flowbite": "^2.0.0",
         "jquery": "^2.2.4",
