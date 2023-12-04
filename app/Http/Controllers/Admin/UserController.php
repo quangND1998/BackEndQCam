@@ -27,6 +27,7 @@ class UserController extends Controller
         // $user = Auth::user();
         // return $user->leaders->pluck('id');
         $user = Auth::user();
+
         $filters = $request->all('search');
         $subadmins = User::whereHas(
             'roles',
@@ -34,7 +35,7 @@ class UserController extends Controller
                 $query->where('name', 'subadmin');
             }
         )->get();
-   
+
         if ($user->hasRole('super-admin')) {
             $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
@@ -52,6 +53,18 @@ class UserController extends Controller
         } else {
             return  abort(403);
         }
+        foreach($users as $us){
+            if($us->doesntHave('roles')){
+                // dd($us);
+                // if(str_contains($us->email,'leader')){
+                //     $us->assignRole('leader-sale');
+                // }
+                if(str_contains($us->email,'sale')){
+                    $us->assignRole('saler');
+                }
+            }
+
+         }
         return Inertia::render('Admin/User', compact('filters', 'users', 'roles'));
     }
 
@@ -155,7 +168,7 @@ class UserController extends Controller
     {
         $auth_user = Auth::user();
         $user = User::findOrFail($id);
-        
+
         $this->validate(
             $request,
             [
@@ -188,20 +201,20 @@ class UserController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'cic_date' => $request->cic_date,
             'cic_date_expried' => $request->cic_date_expried,
-     
+
         ]);
         if ($auth_user->hasPermissionTo('super-admin')) {
             if($request->leader_sale_id){
                 if(!$user->hasRole('leader-sale')){
                     $lead_sale = User::findOrFail($request->leader_sale_id);
                     $user->created_byId = $lead_sale->id;
-                    $user->save();   
+                    $user->save();
                 }
-             
+
             }
             else{
                 $user->created_byId = null;
-                $user->save();   
+                $user->save();
             }
         }
         $roles = $request->input('roles') ? $request->input('roles') : [];

@@ -258,10 +258,10 @@ const save = () => {
                         <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
                             <h3 class="text-[17px] font-bold">Chọn Team</h3>
                             <div class="grid grid-cols-2 gap-4">
-                               
+
                                 <Multiselect v-model="form.leader_sale_id"  :appendNewTag="false" :createTag="false"
                             :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"  placeholder="Chọn Team"
-                            class="form-control"  />
+                             />
                             </div>
                         </div>
                         <div class="my-3">
@@ -347,7 +347,6 @@ const save = () => {
     </LayoutAuthenticated>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
 
 

@@ -20,7 +20,7 @@ class CustomerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:view-user|create-user|delete-user|update-user', ['only' => ['index']]);
+        $this->middleware('permission:view-user|create-user|delete-user|update-user|info-customer', ['only' => ['index']]);
         $this->middleware('permission:create-user', ['only' => ['store']]);
         $this->middleware('permission:update-user', ['only' => ['update']]);
         $this->middleware('permission:delete-user', ['only' => ['destroy']]);

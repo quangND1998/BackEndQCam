@@ -70,6 +70,10 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'contract-complete']);
         Permission::create(['name' => 'create-contract-complete']);
         Permission::create(['name' => 'add-new-package']);
-        Permission::create(['name' => 'custommer-manager']);
+
+        Permission::create(['name' => 'viewer-custommer']);
+        Permission::create(['name' => 'info-customer']);
+        Permission::create(['name' => 'pakage-custommer']);
+        Permission::create(['name' => 'document-custommer']);
     }
 }

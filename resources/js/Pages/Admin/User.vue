@@ -38,12 +38,12 @@ const props = defineProps({
     filters: Object,
     roles: Array,
     users: Object,
-  
+
 });
 const swal = inject("$swal");
 const form = useForm({
     id: null,
-    search: props.filters != null ? props.filters.search : null,
+    search: null,
     name: null,
     email: null,
     roles: null,
@@ -55,7 +55,7 @@ const isModalActive = ref(false);
 const isActive = ref(false);
 const editMode = ref(false);
 const isModalDangerActive = ref(false);
-const search = toRef(props.filters.search);
+const search = ref(null);
 const { multipleSelect } = useHelper();
 // console.log(multipleSelect)
 const edit = (user) => {
@@ -69,18 +69,18 @@ const edit = (user) => {
     form.roles = multipleSelect(user.roles);
 };
 
-watch(
-    search,
-    throttle(() => {
-        let query = { search: search.value };
-        router.replace(
-            route("users.index", Object.keys(query).length ? query : null, {
-                replace: true,
-            })
-        );
-    }, 150),
-    { deep: true }
-);
+// watch(
+//     search,
+//     throttle(() => {
+//         let query = { search: search.value };
+//         router.replace(
+//             route("users.index", Object.keys(query).length ? query : null, {
+//                 replace: true,
+//             })
+//         );
+//     }, 150),
+//     { deep: true }
+// );
 const searchUser=()=>{
     router.get(route(`users.index`),
         {search:search.value},

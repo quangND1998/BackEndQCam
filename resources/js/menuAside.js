@@ -152,12 +152,12 @@ export default [{
 {
     label: 'Quản lý người dùng',
     icon: mdiFileTreeOutline,
-    permissions: ['view-user'],
+    permissions: ['view-user','viewer-custommer'],
     route_list: ['customer.index', 'shippers.index'],
     menu: [{
         route: 'customer.index',
         label: 'Customer',
-        permissions: ['super-admin'],
+        permissions: ['super-admin','viewer-custommer'],
         route_list: null
     },
     {
