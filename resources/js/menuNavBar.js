@@ -12,8 +12,7 @@ import {
     mdiReact
 } from '@mdi/js'
 
-export default [
-    {
+export default [{
         isCurrentUser: true,
         menu: [{
                 icon: mdiAccount,
@@ -38,12 +37,7 @@ export default [
             }
         ]
     },
-    {
-        icon: mdiThemeLightDark,
-        label: 'Light/Dark',
-        isDesktopNoLabel: true,
-        isToggleLightDark: true
-    },
+
     {
         icon: mdiLogout,
         label: 'Log out',

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\MakeLeaderJob;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,7 @@ class UserController extends Controller
     }
     public function index(Request $request)
     {
+        // $this->makeUsers();
         // $user = Auth::user();
         // return $user->leaders->pluck('id');
         $user = Auth::user();
@@ -44,6 +46,13 @@ class UserController extends Controller
             })->paginate(20)->appends($request->search);
             $roles = Role::get();
         } elseif ($user->hasRole('leader-sale')) {
+            $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->search . '%');
+                $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
+                // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
+            })->where('created_byId', $user->id)->paginate(20)->appends($request->search);
+            $roles = Role::where('name', 'saler')->get();
+        }elseif ($user->hasRole('leader-shipper')) {
             $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
                 $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
@@ -76,8 +85,12 @@ class UserController extends Controller
         if ($user->hasRole('super-admin')) {
             $roles = Role::where('name', '!=', 'super-admin')->get();
             $leader_sales = User::role('leader-sale')->get();
-        } else {
+        } elseif($user->hasRole('leader-sale')) {
             $roles = Role::where('name', 'saler')->get();
+            $leader_sales = null;
+        }
+        elseif($user->hasRole('leader-shipper')) {
+            $roles = Role::where('name', 'shipper')->get();
             $leader_sales = null;
         }
 
@@ -148,13 +161,16 @@ class UserController extends Controller
             $user->created_byId = $auth_user->id;
             $user->save();
         }
+        if ($auth_user->hasRole('leader-shipper')) {
+            $user->created_byId = $auth_user->id;
+            $user->save();
+        }
         if ($auth_user->hasPermissionTo('super-admin')) {
             if ($request->leader_sale_id && !$user->hasRole('leader-sale')) {
-                    $lead_sale = User::findOrFail($request->leader_sale_id);
-                    $user->created_byId = $lead_sale->id;
-                    $user->save();
-                }
-            
+                $lead_sale = User::findOrFail($request->leader_sale_id);
+                $user->created_byId = $lead_sale->id;
+                $user->save();
+            }
         }
         if ($request->password) {
             $user->password = Hash::make($request->password);
@@ -206,13 +222,21 @@ class UserController extends Controller
         ]);
         if ($auth_user->hasPermissionTo('super-admin')) {
             if ($request->leader_sale_id && !$user->hasRole('leader-sale')) {
-                    $lead_sale = User::findOrFail($request->leader_sale_id);
-                    $user->created_byId = $lead_sale->id;
-                    $user->save();
-                }
-
+                $lead_sale = User::findOrFail($request->leader_sale_id);
+                $user->created_byId = $lead_sale->id;
+                $user->save();
+            } else {
+                $user->created_byId = null;
+                $user->save();
             }
-            else{
+        }
+
+        if ($auth_user->hasPermissionTo('super-admin')) {
+            if ($request->leader_shipper_id && !$user->hasRole('leader-shipper')) {
+                $lead_sale = User::findOrFail($request->leader_shipper_id);
+                $user->created_byId = $lead_sale->id;
+                $user->save();
+            } else {
                 $user->created_byId = null;
                 $user->save();
             }
@@ -230,7 +254,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        $user->delete();
+        return   $this->DeleteUser($user);
+        // $user->delete();
         return redirect()->back()->with('success', "Xóa tài khoản  thành công");
     }
     public function setActive(Request $request)
@@ -271,5 +296,47 @@ class UserController extends Controller
             return back()->with('success', 'Cập nhật thành công');
         }
         return back()->with('warning', 'Không tìm thấy thông tin  ');
+    }
+
+
+    public function makeUsers()
+    {
+        for ($i = 1; $i <= 30; $i++) {
+            dispatch(new MakeLeaderJob($i));
+        }
+    }
+
+    public function DeleteUser($user){
+        $admin = User::role("super-admin")->first();
+        $orders_sale= $user->saler_orders()->get();
+        $orders_shipper= $user->shipper_orders()->where("status", 'pending')->where('payment_status', 0)->get();
+        $orders_package_sale= $user->sale_order_packages()->get();
+        foreach($orders_shipper as $order){
+            $order->shipper_id = null;
+            $order->save();
+        }
+        $leader = User::find($user->created_byId);
+        // Update order_package
+        foreach($orders_package_sale as $order){
+            if($leader){
+                $order->sale_id = $leader->id;
+            }
+            else{
+                $order->sale_id = $admin->id;
+            }
+           
+            $order->save();
+        }
+        // Update orders_sale
+        foreach($orders_sale as $order){
+            if($leader){
+                $order->sale_id = $leader->id;
+            }
+            else{
+                $order->sale_id = $admin->id;
+            }
+           
+            $order->save();
+        }
     }
 }

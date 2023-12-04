@@ -46,6 +46,8 @@ Route::middleware(['auth'])->group(
         Route::prefix('admin/shippers')->as('shippers.')->group(function () {
             Route::get('', [ShipperController::class, 'index'])->name('index');
             Route::get('{shipper}/detail', [ShipperController::class,  'shipperDetail'])->name('detail');
+            Route::post("saveOrderShipper/{user}",[ShipperController::class,  'saveOrderShipper'])->name('saveOrderShipper');
+            Route::delete('cancelOrderShipper/{order}', [ShipperController::class,'cancelOrderShipper'])->name('cancelOrderShipper');
         });
     }
 );

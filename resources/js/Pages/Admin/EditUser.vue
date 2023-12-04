@@ -50,7 +50,8 @@ const form = useForm({
     cic_number: props.user.cic_number,
     date_of_birth: props.user.date_of_birth,
     roles: multipleSelect(props.user.roles),
-    leader_sale_id: props.user.created_byId
+    leader_sale_id: props.user.created_byId,
+    leader_shipper_id: props.user.created_byId,
 })
 const getProvinces = async () => {
     const response = await fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
@@ -150,16 +151,17 @@ const save = () => {
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Giới tính</label>
                                         <div class="flex">
+                                        
                                             <div class="flex items-center ">
-                                                <input id="default-radio-1" type="radio" value="male" name="default-radio"
+                                                <input id="default-radio-1" type="radio" value="male" 
                                                     v-model="form.sex"
                                                     class="w-4 h-4  text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-radio-1"
                                                     class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nam</label>
                                             </div>
                                             <div class="flex items-center mx-5">
-                                                <input checked id="default-radio-2" type="radio" value="female"
-                                                    v-model="form.sex" name="default-radio"
+                                                <input  id="default-radio-2" type="radio" value="female"
+                                                    v-model="form.sex"
                                                     class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-radio-2"
                                                     class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nữ</label>
@@ -264,6 +266,16 @@ const save = () => {
                              />
                             </div>
                         </div>
+
+                        <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
+                            <h3 class="text-[17px] font-bold">Chọn Team</h3>
+                            <div class="grid grid-cols-2 gap-4">
+
+                                <Multiselect v-model="form.leader_shipper_id"  :appendNewTag="false" :createTag="false"
+                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"  placeholder="Chọn Team"
+                             />
+                            </div>
+                        </div>
                         <div class="my-3">
                             <h3 class="text-[17px] font-bold">Thông tin giấy tờ</h3>
                             <div class="grid grid-cols-2 gap-4">
@@ -347,10 +359,6 @@ const save = () => {
     </LayoutAuthenticated>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/NgaNT
 
 
 

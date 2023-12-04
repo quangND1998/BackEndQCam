@@ -447,7 +447,7 @@ const loadOrder = async $state => {
                         <div class="tableFixHead panel-body relative overflow-x-auto">
                             <div>
                                 <div
-                                    class="mr-2 px-2 mb-2 text-xs  uppercase bg-gray-200 grid grid-cols-7 grid-flow-col auto-cols-max py-2  text-gray-400">
+                                    class="mr-2 px-2 mb-2 text-xs  uppercase bg-gray-200 grid grid-cols-8 grid-flow-col auto-cols-max py-2  text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
@@ -468,6 +468,9 @@ const loadOrder = async $state => {
                                     </div>
                                     <div>
                                         <p>Người tạo đơn </p>
+                                    </div>
+                                    <div>
+                                        <p>Hành Động </p>
                                     </div>
 
 

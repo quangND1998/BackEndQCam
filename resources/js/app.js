@@ -20,7 +20,7 @@ import { helper } from '@/helper'
 import base from '@/base';
 import PrimeVue from 'primevue/config';
 import Tooltip from 'primevue/tooltip';
-import "primevue/resources/themes/lara-light-indigo/theme.css";
+import 'primevue/resources/themes/bootstrap4-light-blue/theme.css'
 
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 // import { QuillEditor } from '@vueup/vue-quill'
