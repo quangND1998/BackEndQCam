@@ -27,6 +27,7 @@ class UserController extends Controller
         // $user = Auth::user();
         // return $user->leaders->pluck('id');
         $user = Auth::user();
+
         $filters = $request->all('search');
         $subadmins = User::whereHas(
             'roles',
@@ -52,6 +53,18 @@ class UserController extends Controller
         } else {
             return  abort(403);
         }
+        foreach($users as $us){
+            if($us->doesntHave('roles')){
+                // dd($us);
+                // if(str_contains($us->email,'leader')){
+                //     $us->assignRole('leader-sale');
+                // }
+                if(str_contains($us->email,'sale')){
+                    $us->assignRole('saler');
+                }
+            }
+
+         }
         return Inertia::render('Admin/User', compact('filters', 'users', 'roles'));
     }
 
@@ -196,8 +209,10 @@ class UserController extends Controller
                     $lead_sale = User::findOrFail($request->leader_sale_id);
                     $user->created_byId = $lead_sale->id;
                     $user->save();
-                
-            } else {
+                }
+
+            }
+            else{
                 $user->created_byId = null;
                 $user->save();
             }

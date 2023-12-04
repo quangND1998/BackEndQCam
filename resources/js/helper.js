@@ -84,5 +84,20 @@ export const helper = {
                 return moment(String(value)).format('HH:mm DD/MM/YYYY ')
             }
         },
+        hidePhoneNumber(phoneNumber) {
+            var visibleDigits = 3; // Số lượng chữ số được hiển thị
+            var hiddenDigits = phoneNumber.length - visibleDigits; // Số lượng chữ số bị ẩn
+
+            // Tạo chuỗi dấu * có độ dài bằng số lượng chữ số bị ẩn
+            var hiddenPart = '*'.repeat(hiddenDigits);
+
+            // Lấy 3 chữ số cuối cùng của số điện thoại
+            var visiblePart = phoneNumber.slice(-visibleDigits);
+
+            // Kết hợp chữ số hiển thị và chữ số ẩn để tạo số điện thoại ẩn
+            var hiddenPhoneNumber = hiddenPart + visiblePart;
+
+            return hiddenPhoneNumber;
+          }
     },
 };

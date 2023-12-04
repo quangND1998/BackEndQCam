@@ -617,14 +617,12 @@ const date = ref(new Date());
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.discount_deal * product?.price) /
-                            100) }}đ
+                            100) }} vnđ
                         </p>
                     </div>
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
-                        <p class="text-sm text-[#686868]">{{ formatPrice((product?.price + ((form.vat * product?.price) /
-                            100) -
-                            ((form.discount_deal * product?.price) / 100))) }} vnd</p>
+                        <p class="text-sm text-[#686868]">{{ formatPrice(maxPrice) }} vnd</p>
                     </div>
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868]">Đã thanh toán</p>
@@ -635,8 +633,7 @@ const date = ref(new Date());
                             ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
                             form.price_percent ) > 0 ">Còn thiếu</p>
                         <p v-else class="text-sm text-[#686868] font-bold">Còn thừa</p>
-                        <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice((product?.price +
-                            ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
+                        <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice(maxPrice -
                             form.price_percent) }} vnđ</p>
                     </div>
                     <div class="my-3">

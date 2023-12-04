@@ -367,7 +367,7 @@ const limit_tree = computed(() =>{
                                 {{ user.email }}
                             </th>
                             <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ user.phone_number }}
+                                {{ hasAnyPermission(['super-admin']) ? user.phone_number :  hidePhoneNumber(user.phone_number) }}
                             </th>
 
 
@@ -387,11 +387,11 @@ const limit_tree = computed(() =>{
                                 {{ formatDate(user.created_at) }}
                             </th>
                             <td class="py-3 px-3 flex text-right">
-                                <Link :href="route('customer.detail.info', user.id)" type="button"
+                                <Link v-if="hasAnyPermission(['super-admin','info-customer'])" :href="route('customer.detail.info', user.id)" type="button"
                                     class="inline-block px-6 py-2.5 bg-blue-600 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                 Detail
-                                </Link>
-                                    <div class="flex ">
+                                </Link >
+                                <div class="flex " v-if="hasAnyPermission(['super-admin','update-user','delete-user'])">
                                         <Dropdown align="right" width="40" class="ml-5">
                                             <template #trigger>
                                                 <span class="inline-flex rounded-md">
@@ -422,7 +422,7 @@ const limit_tree = computed(() =>{
                                                 </div>
                                             </template>
                                         </Dropdown>
-                                    </div>
+                                </div>
 
                                 </td>
                         </tr>

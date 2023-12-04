@@ -15,6 +15,10 @@ class CustomerActivityController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:package-custommer', ['only' => ['index', 'gift']]);
+    }
     public function index($id)
     {
         $customer = User::findOrFail($id);

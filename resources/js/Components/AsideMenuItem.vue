@@ -68,9 +68,9 @@ const checkOpenMenu = () => {
 </script>
 
 <template>
-  <li class="text-black py-2.5">
+  <li v-if="hasAnyPermission(item.permissions)" class="text-black py-2.5">
 
-    <component v-if="hasAnyPermission(item.permissions)" :is="item.route ? Link : 'div'" :href="itemHref"
+    <component  :is="item.route ? Link : 'div'" :href="itemHref"
       v-tooltip="item.label" :target="item.target ?? null" class="flex cursor-pointer"
       :class="[activeInactiveStyle]" @click="menuClick">
       <BaseIcon v-if="item.icon" :path="item.icon" class="flex-none " :class="activeInactiveStyle" w="w-16" :size="20" />
