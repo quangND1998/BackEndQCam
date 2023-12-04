@@ -624,7 +624,6 @@ class OrderController extends Controller
                 }
             }
 
-
             $customers = User::with(['product_service_owners.trees', 'product_service_owners.product', 'product_service_owners' => function ($q) {
                 $q->where('state', 'active');
             }])->role('customer')->get();

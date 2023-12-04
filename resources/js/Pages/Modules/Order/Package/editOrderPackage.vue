@@ -22,10 +22,8 @@ import {
 } from "@mdi/js";
 import Multiselect from '@vueform/multiselect'
 import InputError from "@/Components/InputError.vue";
-import InputNumber from 'primevue/inputnumber';
 import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
-import MazInputNumber from 'maz-ui/components/MazInputNumber'
 import { initFlowbite } from 'flowbite'
 import Dropdown from 'primevue/dropdown';
 import BaseIcon from '@/Components/BaseIcon.vue'
@@ -34,6 +32,7 @@ import axios from "axios";
 const swal = inject("$swal");
 
 const props = defineProps({
+    order: Object,
     product_services: Array,
     trees: Array,
     sales: Array,
@@ -50,28 +49,28 @@ const flash = ref(null);
 const provinces = ref(null)
 const images = ref([])
 const form = useForm({
-    name: null,
-    phone_number: null,
-    sex: null,
-    address: null,
-    city: null,
-    district: null,
-    wards: null,
-    vat: 0,
-    discount_deal: 0,
+    name: props.order?.customer?.name,
+    phone_number: props.order?.customer?.phone_number,
+    sex: props.order?.customer?.sex,
+    address: props.order?.address,
+    city: props.order?.city,
+    district: props.order?.district,
+    wards: props.order?.wards,
+    vat: props.order?.vat,
+    discount_deal: props.order?.discount_deal,
     type: 'retail',
-    payment_method: 'cash',
+    payment_method: props.order?.payment_method,
     shipping_fee: 0,
-    time_reservations: 1,
-    price_percent: props.product_services.length > 0 ? props.product_services[0].price : null,
-    product_selected: props.product_services.length > 0 ? props.product_services[0].id : null,
+    time_reservations: props.order.time_reservations,
+    price_percent: props.order?.grand_total ,
+    product_selected: props.order?.product_service?.id,
     time_approve: new Date(),
-    max_price : props.product_services.length > 0 ? props.product_services[0].price  : null,
-    images: [],
-    sale_id:null,
-    leader_sale_id:null,
-    type_customer_resource:null,
-    customer_resource_id: null,
+    max_price : props.order.grand_total,
+    images: props.order.order_package_images,
+    sale_id:props.order.sale_id,
+    leader_sale_id:props.order.to_id,
+    type_customer_resource:props.order.customer_resources,
+    customer_resource_id: props.order.customer_resources_id,
 
 })
 
@@ -86,9 +85,13 @@ const districts = computed(() => {
     if (form.city == null) {
         return [];
     } else {
-        return provinces.value.find(pro => {
-            return pro.Name == form.city;
-        });
+        if (provinces.value) {
+            return provinces.value.find(pro => {
+                return pro.Name == form.city;
+            });
+        }
+        return []
+
     }
 })
 const user = computed({
@@ -295,7 +298,7 @@ const date = ref(new Date());
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Số phiếu #</p>
                                         <input type="text" id="first_name"
                                             class="  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="12345" required>
+                                            :placeholder="order.order_number" required>
                                     </div>
                                     <div class="flex items-center w-full my-4">
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Ngày</p>
@@ -366,7 +369,7 @@ const date = ref(new Date());
                                     <div class="my-3">
                                         <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                                Thành phố *</label>
+                                                Thành phố*</label>
                                         <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name"
                                             @change="onChangeCity($event)" optionValue="Name" placeholder="Chọn tỉnh thành"
                                             class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm ">
@@ -474,6 +477,7 @@ const date = ref(new Date());
                                 <input id="uploadFile" @change="onFileChange" multiple type="file" class="hidden"
                                     accept="image/*">
                             </div>
+                            {{ images }}
                             <InputError class="mt-2" :message="form.errors.images" />
                             <div v-for="(error, index) in images" :key="index">
 
@@ -491,8 +495,6 @@ const date = ref(new Date());
                             <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
-                                <!-- <InputNumber  v-model="form.vat"  min="0"  max="100"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" /> -->
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -548,26 +550,26 @@ const date = ref(new Date());
                                 Nguồn khách hàng</label>
                             <div class="flex items-center justify-center mb-2">
                                
-                                <input class=" mr-2" type="radio" id="one" value="telesale" v-model="form.type_customer_resource" />
-                                <label for="one" class="w-[80px] mr-2">Telesale</label>
+                                <input class=" mr-2" type="radio" id="telesale" value="telesale" v-model="form.type_customer_resource" />
+                                <label for="telesale" class="w-[80px] mr-2">Telesale </label>
                                 <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false" :disabled="form.type_customer_resource == 'telesale' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="Chọn Telesale"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="form.type_customer_resource == 'ctv' ? sales : null"  placeholder="Chọn Telesale"
                                 />
                             </div>
                             
 
                             <div class="flex items-center justify-center mb-2">
                                
-                                <input class=" mr-2" type="radio" id="one" value="ctv" v-model="form.type_customer_resource" />
-                                <label for="one" class="w-[80px] mr-2">CTV</label>
-                                <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false" :disabled="form.type_customer_resource == 'ctv' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="Chọn ctv"
+                                <input class=" mr-2" type="radio" id="ctv" value="ctv" v-model="form.type_customer_resource" />
+                                <label for="ctv" class="w-[80px] mr-2">CTV</label>
+                                <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false"  :disabled="form.type_customer_resource == 'ctv' ? false : true"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="form.type_customer_resource == 'ctv' ? sales : null"  placeholder="Chọn ctv"
                                 />
                             </div>
                             <div class=" mb-2">
                                
-                                <input class=" mr-2" type="radio" id="one" value="private" v-model="form.type_customer_resource" />
-                                <label for="one" class="w-[80px] mr-2">Private</label>
+                                <input class=" mr-2" type="radio" id="private" value="private" v-model="form.type_customer_resource" />
+                                <label for="private" class="w-[80px] mr-2">Private</label>
                             </div>
                         </div>
 

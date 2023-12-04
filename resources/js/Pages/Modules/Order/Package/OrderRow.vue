@@ -194,13 +194,14 @@ const save = () => {
             <div class="text-center">
                 <p>{{ order?.customer?.name }}</p>
             </div>
-            <div class="text-center">
-                <p class="btn_label"
+            <div class="text-center flex">
+                <p class="btn_label mr-2"
                     :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
                     {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' : order?.price_percent == 0
                         ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
+                <Link :href="`/admin/orders/package/edit/${order.id}`">Edit</Link>
             </div>
-            <div></div>
+            
             <div class="flex">
             </div>
         </div>

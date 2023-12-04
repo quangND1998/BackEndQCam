@@ -96,12 +96,38 @@ class OrderPackageController extends Controller
     }
     public function orderPackage(Request $request){
         $user = Auth::user();
+        $sales = User::role('saler')->get();
+        $leaders = User::role('leader-sale')->get();
+        $telesale = User::role('telesale')->get();
+        $ctv = User::role('ctv')->get();
+
         $product_services = ProductService::where("status", 1)->get();
         $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();
 
-        return Inertia::render('Modules/Order/Package/CreateOrderPackage', compact('product_services','trees'));
+        return Inertia::render('Modules/Order/Package/CreateOrderPackage', compact('product_services','trees','sales','leaders','telesale','ctv'));
     }
+    public function editOrderPackage(Request $request,$id){
+        $order = OrderPackage::with('customer','product_service','saler','leader','resources','order_package_images')->findOrFail($id);
+        if($order->status == "pending"){
+        // return ($order);
+    //    return $order->order_package_images;
+       // return $images
+
+        $user = Auth::user();
+        $sales = User::role('saler')->get();
+        $leaders = User::role('leader-sale')->get();
+        $product_services = ProductService::where("status", 1)->get();
+        $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();
+
+        return Inertia::render('Modules/Order/Package/editOrderPackage', compact('order','product_services','trees','sales','leaders'));
+        
+        }else{
+            return redirect()->route('admin.orders.package.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
+        }
+    }
+
     public function addToCart(Request $request){
+      // dd($request);
         $product_service = ProductService::findOrFail($request->product_selected);
         if($product_service){
             $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
@@ -133,11 +159,15 @@ class OrderPackageController extends Controller
                 'discount_deal' =>$request->discount_deal,
                 'grand_total' => $total_price,
                 'type' => 'new',
+                'time_reservations' => $request->time_reservations,
                 'product_selected' => $request->product_selected,
                 'time_approve' => $request->time_approve,
                 'time_end' => Carbon::parse($request->time_approve)->addDays($time_life),
                 'price_percent' => $request->price_percent,
-                'sale_id' => Auth::user()->id,
+                'sale_id' => $request->sale_id,
+                'to_id' => $request->leader_sale_id,
+                'customer_resources' => $request->type_customer_resource,
+                'customer_resources_id' => $request->customer_resource_id,
 
             ]);
 

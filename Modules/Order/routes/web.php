@@ -85,6 +85,7 @@ Route::middleware(['auth'])->group(
                     Route::post('orderChangeStatus/{order}', [OrderPackageController::class, 'orderChangeStatus'])->name('orderChangeStatus');
 
                     Route::get('create', [OrderPackageController::class, 'orderPackage'])->name('create');
+                    Route::get('edit/{id}', [OrderPackageController::class, 'editOrderPackage'])->name('edit');
                     Route::get('detail/{id}', [OrderPackageController::class, 'OrderPending'])->name('detail');
                     Route::post('/addToCartPackage', [OrderPackageController::class, 'addToCart'])->name('addToCartPackage');
                     Route::post('orderCancel/{order}', [OrderPackageController::class, 'orderCancel'])->name('orderCancel');

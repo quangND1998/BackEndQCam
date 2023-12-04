@@ -78,7 +78,7 @@ class UserController extends Controller
             $leader_sales = User::role('leader-sale')->get();
         } else {
             $roles = Role::where('name', 'saler')->get();
-            $leader_sales=null;
+            $leader_sales = null;
         }
 
         return Inertia::render('Admin/CreateUser', compact('roles', 'leader_sales'));
@@ -95,7 +95,7 @@ class UserController extends Controller
             $roles = Role::where('name', '!=', 'super-admin')->get();
         } else {
             $roles = Role::where('name', 'saler')->get();
-            $leader_sales=null;
+            $leader_sales = null;
         }
         return Inertia::render('Admin/EditUser', compact('roles', 'user', 'leader_sales'));
     }
@@ -149,11 +149,12 @@ class UserController extends Controller
             $user->save();
         }
         if ($auth_user->hasPermissionTo('super-admin')) {
-            if($request->leader_sale_id){
-                $lead_sale = User::findOrFail($request->leader_sale_id);
-                $user->created_byId = $lead_sale->id;
-                $user->save();
-            }
+            if ($request->leader_sale_id && !$user->hasRole('leader-sale')) {
+                    $lead_sale = User::findOrFail($request->leader_sale_id);
+                    $user->created_byId = $lead_sale->id;
+                    $user->save();
+                }
+            
         }
         if ($request->password) {
             $user->password = Hash::make($request->password);
@@ -204,15 +205,12 @@ class UserController extends Controller
 
         ]);
         if ($auth_user->hasPermissionTo('super-admin')) {
-            if($request->leader_sale_id){
-                if(!$user->hasRole('leader-sale')){
+            if ($request->leader_sale_id && !$user->hasRole('leader-sale')) {
                     $lead_sale = User::findOrFail($request->leader_sale_id);
                     $user->created_byId = $lead_sale->id;
                     $user->save();
-                }
-
-            }
-            else{
+                
+            } else {
                 $user->created_byId = null;
                 $user->save();
             }
