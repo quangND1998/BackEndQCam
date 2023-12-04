@@ -79,11 +79,11 @@ class ScheduleVisitController extends Controller
 
 
     public function saveShedule(Request $request)
-    {
+    { 
         $this->validate(
             $request,
             [
-                'date_time' => 'required',
+                'date_time' => 'required|date|after:tomorrow',
                 'number_adult' => 'required|gt:0',
                 'number_children' => 'nullable|gt:-1',
                 'product_service_owner_id' => 'required',
@@ -99,9 +99,38 @@ class ScheduleVisitController extends Controller
             $visit->date_time = $date_time;
             $visit->save();
 
-            return back()->with('success', 'Đã đặt lịch thành công');
+            return redirect()->route('visit.pending')->with('success', 'Đã đặt lịch thành công');
         } else {
             return back()->with('warning','Không còn lượt đặt lịch');
         }
+    }
+
+    public function edit(ScheduleVisit $schedule){
+        if($schedule->state =='pending')
+        {
+            return Inertia::render('Home/visit/Update', compact('schedule'));
+        }      
+        return back()->with('warning', 'Lịch đặt này không thể cập nhật');
+    }
+    public function updateShedule(Request $request, ScheduleVisit $schedule)
+    {
+        
+        $this->validate(
+            $request,
+            [
+                'date_time' => 'required|date|after:tomorrow',
+                'number_adult' => 'required|gt:0',
+                'number_children' => 'nullable|gt:-1',
+              
+            ]
+        );
+        $schedule->update([
+            'date_time' => $request->date_time,
+            'number_adult' => $request->number_adult,
+            'number_children' => $request->number_children,
+        ]);
+
+        return redirect()->route('visit.pending')->with('success', 'Cập nhật đặt lịch thành công');
+      
     }
 }

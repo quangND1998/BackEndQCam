@@ -217,6 +217,10 @@ const cancelState = (visit) => {
 
                                         </th>
                                         <th class="py-1 px-6 text-right flex justify-end my-1">
+                                            <Link v-if="visit.state=='pending'" :href="route('visit.edit', visit.id)"
+                                                class="inline-block px-6 py-2 bg-gray-200 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
+                                                Chỉnh sửa
+                                            </Link>
                                             <button @click="changeState(visit)"
                                                 class="inline-block px-6 py-2 bg-gray-200 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                                 Xác nhận

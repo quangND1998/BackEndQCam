@@ -346,9 +346,10 @@ const state = reactive({
 
                                 </div>
                                 <div class="w-16 h-16 border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg">
-                                <BaseIcon :icon="mdiPlus" class=" p-4" :size="16" />
+                                    <BaseIcon :path="mdiPlus" :size="16" />
                                 </div>
                             </div>
+                           
                         </div>
                     </div>
                     <div>

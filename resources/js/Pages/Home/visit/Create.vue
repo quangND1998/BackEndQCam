@@ -36,12 +36,8 @@ import Multiselect from '@vueform/multiselect'
 const swal = inject("$swal");
 
 const props = defineProps({
-    product_retails: Array,
-    cart: Object,
-    total_price: Number,
-    sub_total: Number,
-    customers: Array,
-    shippers: Array
+    customers: Array
+
 });
 const store = useCartStore();
 const search = ref(null)
@@ -141,7 +137,17 @@ const onSearchUser = async () => {
 
 
 const save = () => {
-   
+    form.post(route('visit.saveShedule'), {
+            onError: () => {
+
+               
+            },
+            onSuccess: () => {
+                form.reset()
+       
+            }
+        });
+    
 }
 
 
@@ -160,7 +166,7 @@ const save = () => {
                     <div class="col-span-2">
 
                         <div class="my-3">
-                            <h3 class="text-[17px] font-bold">Tạo tải khoản</h3>
+                          
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <div class="my-3">
@@ -210,7 +216,7 @@ const save = () => {
                                             class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Thời gian </label>
                                         <div class="relative w-full">
-                                            <VueDatePicker v-model="form.date_time" :format="format" />
+                                            <VueDatePicker v-model="form.date_time"  />
                                         </div>
                                         <InputError class="mt-2" :message="form.errors.date_time" />
                                     </div>
@@ -241,8 +247,9 @@ const save = () => {
                                         service.product.name }} ({{ service.trees.length > 0 ? service.trees[0].name : null }})
                                 </option>
 
-
+                              
                             </select>
+                            <InputError class="mt-2" :message="form.errors.product_service_owner_id" />
                         </div>
 
 

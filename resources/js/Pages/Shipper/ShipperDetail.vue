@@ -14,7 +14,7 @@ import SearchInput from "vue-search-input";
 import Multiselect from "@vueform/multiselect";
 const props = defineProps({
     shipper: Object,
-    orders: Array,
+    orders: Object,
     order_shippers: Object
 });
 const searchVal = ref("")
