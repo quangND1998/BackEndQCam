@@ -1,7 +1,7 @@
 
 <script setup>
 import { computed, ref, inject, watch, toRef, onMounted, onUnmounted, reactive } from 'vue'
-import { mdiMinus, mdiPlus, mdiChevronDown, mdiChevronUp } from '@mdi/js'
+import { mdiMinus, mdiPlus, mdiChevronDown, mdiChevronUp,mdiDelete } from '@mdi/js'
 
 import { useForm } from '@inertiajs/vue3';
 import CardBoxModal from '@/Components/CardBoxModal.vue'
@@ -13,58 +13,15 @@ import { emitter } from '@/composable/useEmitter';
 import MazInputPrice from 'maz-ui/components/MazInputPrice';
 import BaseIcon from '@/Components/BaseIcon.vue'
 
-// import MazDropzone, { MazDropzoneInstance, MazDropzoneOptions } from 'maz-ui/components/MazDropzone'
-// import MazBtn from 'maz-ui/components/MazBtn'
 
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
-// const loading = ref(false)
-//   const mazDropzoneInstance = ref()
-//   const errorMessage = ref()
-
-//   const error = ({ file, message }) => {
-//     console.log('dropzone-error', { file, message })
-//     errorMessage.value = message
-//   }
-//   const success = ({ file, response }) => {
-//     console.log('dropzone-success', { file, response })
-//   }
-//   const sendFiles = () => mazDropzoneInstance.value?.processQueue()
-
-//   const dropzoneOptionsBase = {
-//     url: 'https://httpbin.org/post',
-//     headers: { 'My-Awesome-Header': 'header value' },
-//     acceptedFiles: 'image/jpeg,image/jpg,image/png',
-//     maxFilesize: 5,
-//     maxFiles: 5,
-//     maxThumbnailFilesize: 3,
-//     autoProcessQueue: false,
-//     autoRemoveOnError: true,
-//   }
-
-//   const translations = {
-//     dictDefaultMessage: 'Choose or drop a file',
-//     dictFilesDescriptions: `(PNG or JPG under ${dropzoneOptionsBase.maxFilesize} MB)`,
-//     dictFallbackMessage: 'Your browser is not supported',
-//     dictFileTooBig: `File(s) too big (max: ${dropzoneOptionsBase.maxFilesize} MB)`,
-//     dictInvalidFileType: `File(s) too big (max: ${dropzoneOptionsBase.maxFilesize} MB)`,
-//     dictRemoveFile: 'Remove',
-//     dictCancelUpload: 'Cancel upload',
-//     dictMaxFilesExceeded: `You can not upload any more files. (max: ${dropzoneOptionsBase.maxFiles})`,
-//     dictUploadCanceled: 'Upload canceled',
-//   }
-
-//   const dropzoneOptions = {
-//     ...dropzoneOptionsBase,
-//     ...translations
-//   }
 
 const swal = inject('$swal')
-const store = useTreeStore()
+const store = useTreeStore();
+const images = ref([]);
 const form = useForm({
     id: null,
     name: null,
-    images: null,
+    images: [],
     images_thumb: null,
     description: null,
     address: null,
@@ -78,6 +35,7 @@ const form = useForm({
     price_origin: null
 
 });
+
 onMounted(() => {
     console.log('mounted!')
 
@@ -198,6 +156,20 @@ const state = reactive({
     disabled: false
 })
 
+const onFileChange = (e) => {
+    const files = e.target.files;
+
+    if (files.length > 0) {
+        for (var i = 0; i < files.length; i++) {
+            form.images.push(files[i])
+            images.value.push({
+                name: files[i].name,
+                image: URL.createObjectURL(files[i])
+            });
+        }
+    }
+    console.log(form.images)
+}
 </script>
 
 <template>
@@ -341,13 +313,22 @@ const state = reactive({
                                     @input="form.images = $event.target.files" multiple accept="image/*" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.images" /> -->
+                            <InputLabel for="name_amenities" value="Bộ sưu tập ảnh" />
                             <div class="flex">
-                                <div>
-
+                                <div class="flex flex-wrap">
+                                    <div class="w-16 h-14 relative m-1 border border-gray-400 rounded-lg" v-for="(img, index) in images " :key="index">
+                                        <BaseIcon :path="mdiDelete"
+                                        class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  "
+                                        size="17">
+                                        </BaseIcon>
+                                        <img :src="img.image" class="w-16 h-14 object-cover rounded-lg" alt="">
+                                    </div>
+                                    <label for="file_input" class="cursor-pointer w-16 h-16 border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg">
+                                    <BaseIcon :path="mdiPlus" class="" :size="16" />
+                                </label>
+                                <input   @change="onFileChange"  class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 hidden" id="file_input" type="file" multiple accept="image/*" >
                                 </div>
-                                <div class="w-16 h-16 border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg">
-                                <BaseIcon :icon="mdiPlus" class=" p-4" :size="16" />
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
