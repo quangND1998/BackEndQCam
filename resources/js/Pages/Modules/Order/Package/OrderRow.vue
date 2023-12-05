@@ -173,7 +173,7 @@ const save = () => {
                                 </div>
                             </td>
                             <td class="border-0">
-                                {{ payment.user?.name }}
+                                {{ payment.status == 'complete' ? payment.user?.name : null}}
                             </td>
                             <td class="border-0">
                                 <BaseButton v-if="payment.status != 'complete'" color="gray" class="border-0 text=gray=300 hover:text-black"
