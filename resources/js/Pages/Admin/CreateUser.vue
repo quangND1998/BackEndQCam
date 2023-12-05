@@ -29,7 +29,8 @@ const provinces = ref(null);
 
 const props = defineProps({
     roles: Array,
-    leader_sales: Array
+    leader_sales: Array,
+    leader_shipper:Array
 
 
 });
@@ -271,7 +272,7 @@ const save = () => {
                             <h3 class="text-[17px] font-bold">Team Shipper *</h3>
                             <div class="grid grid-cols-2 gap-4">
                                 <Multiselect v-model="form.leader_shipper_id" :appendNewTag="false" :createTag="false"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_shipper"
                                     placeholder="Chọn Team"   />
                                 <InputError class="mt-2" :message="form.errors.leader_shipper_id" />
                             </div>

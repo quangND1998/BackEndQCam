@@ -123,7 +123,7 @@ class OrderPackageController extends Controller
         }
     }
     public function addToCart(Request $request){
-      // dd($request);
+     
         $product_service = ProductService::findOrFail($request->product_selected);
         if($product_service){
             $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
