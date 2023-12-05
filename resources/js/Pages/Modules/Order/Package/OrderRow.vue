@@ -10,6 +10,7 @@ import TextInput from "@/Components/TextInput.vue";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
+import UploadImage from '@/Components/UploadImage.vue'
 import {
     mdiPlus,
     mdiFilter, mdiPencilOutline, mdiTrashCan, mdiSquareEditOutline, mdiTrashCanOutline
@@ -27,6 +28,7 @@ const props = defineProps({
 })
 const isModalActive = ref(false);
 const isModalHistoryActive = ref(false);
+const images = ref([]);
 const swal = inject("$swal");
 const form = useForm({
     id: null,
@@ -37,6 +39,7 @@ const form = useForm({
     status: null,
     note: null,
     order: null,
+    images: [],
 });
 const detail = (order) => {
     isModalActive.value = true;
@@ -130,6 +133,10 @@ const save = () => {
                             :class="form.errors.note ? 'border-red-500' : ''" autocomplete="name" />
                         <InputError class="mt-2" :message="form.errors.note" />
                     </div>
+                    <div class="w-full px-3">
+                        <UploadImage :max_files="4" v-model="form.images" :multiple="true"
+                                :label="`Chứng từ liên quan`" />
+                    </div>
                 </div>
 
                 <p class="my-2 mt-5 font-semibold">Lịch sử thanh toán</p>
@@ -140,8 +147,9 @@ const save = () => {
                             <th>Loại</th>
                             <th>Ngày</th>
                             <th>Số tiền</th>
-                            <th>Trạng thái</th>
-                            <th></th>
+                            <th>Trạng thái duyệt</th>
+                            <th>Proof</th>
+                            <th>Người duyệt</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -155,12 +163,20 @@ const save = () => {
                             <td class="border-0">{{ formatPrice(payment?.amount_received) }}₫</td>
                             <td class="border-0">
                                 <p class="btn_label"
-                                    :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
-                                    {{ order?.price_percent < order?.grand_total ? 'Thanh toán từng phần' :
-                                        order?.price_percent == 0 ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
+                                    :class="payment?.status != 'complete' ? 'partiallyPaid' : 'paid'">
+                                    {{ payment?.status != 'complete' ? 'Chờ duyệt' : 'Đã duyệt' }}</p>
+                            </td>
+                            <td class="border-0 flex">
+
+                                <div class="list_image flex" v-for="image in payment.order_package_payment" :key="image.id">
+                                    <img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
+                                </div>
                             </td>
                             <td class="border-0">
-                                <BaseButton color="gray" class="border-0 text=gray=300 hover:text-black"
+                                {{ payment.status == 'complete' ? payment.user?.name : null}}
+                            </td>
+                            <td class="border-0">
+                                <BaseButton v-if="payment.status != 'complete'" color="gray" class="border-0 text=gray=300 hover:text-black"
                                     :icon="mdiTrashCanOutline" small @click="deleteHistory(payment.id)" />
                             </td>
                         </tr>
@@ -199,9 +215,13 @@ const save = () => {
                     :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
                     {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' : order?.price_percent == 0
                         ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
-                <Link :href="`/admin/orders/package/edit/${order.id}`">Edit</Link>
+                <!-- <div class="right">
+                    <Link :href="`/admin/orders/package/edit/${order.id}`">Edit</Link>
+
+                </div> -->
+
             </div>
-            
+
             <div class="flex">
             </div>
         </div>
@@ -212,7 +232,7 @@ const save = () => {
                 <div class="title_information flex justify-between p-2">
                     <h3>Thông tin khách hàng</h3>
                     <button class="border  rounded-lg bg-[#5cb85c] text-white px-3 py-2" type="button" data-toggle="modal"
-                                    data-target="#exampleModal" @click="detail(order)">Payment</button>
+                                    data-target="#exampleModal" @click="detail(order)">Thanh toán</button>
                 </div>
                 <div class=" grid-cols-4 gap-4 flex justify-between bg-white py-3 px-3">
                     <div class="block">

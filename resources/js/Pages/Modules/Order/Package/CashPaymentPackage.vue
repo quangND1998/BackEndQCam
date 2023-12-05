@@ -99,10 +99,11 @@ const getNow= ()=> {
                                     </thead>
                                     <tbody>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                            <th scope="row"
-                                                class="px-6 py-4 border-0 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Gói nhận nuôi {{ order?.product_service?.name }}
-                                            </th>
+                                            <td scope="row"
+                                                class="px-6 py-4 border-0  whitespace-nowrap ">
+                                                <p>Gói nhận nuôi {{ order?.product_service?.name }}</p>
+                                                <p>Cây của bạn có mã là {{ order?.product_service_owner?.trees.length > 0 ? order?.product_service_owner.trees[0].address : null }}</p>
+                                            </td>
                                             <td class="px-6 py-4 border-0">
                                                 {{ order?.time_approve }} - {{ order?.time_end }}
                                             </td>
@@ -164,8 +165,7 @@ const getNow= ()=> {
                                     </div>
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">VAT({{ order?.vat }}%)</p>
-                                        <p class="text-sm text-[#686868] font-bold">{{
-                                            formatPrice(((order?.product_service?.price) * (order?.vat)) / 100) }} vnđ</p>
+                                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(order?.vat * (order?.product_service?.price + ((order?.discount_deal * order?.product_service?.price) / 100))/100 ) }} vnđ</p>
                                     </div>
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
@@ -174,7 +174,7 @@ const getNow= ()=> {
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
                                         <p class="text-sm text-[#686868] font-bold">{{
-                                            formatPrice(((order?.product_service?.price) * (order?.discount)) / 100) }} vnđ</p>
+                                            formatPrice(((order?.product_service?.price) * (order?.discount_deal)) / 100) }} vnđ</p>
                                     </div>
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>

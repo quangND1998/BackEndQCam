@@ -181,7 +181,7 @@ export default [{
     {
         label: 'Cài đặt',
         icon: mdiCogOutline,
-        permissions: ['view-user'],
+        permissions: ['view-user','view-news','create-news','update-news','delete-news'],
         route_list: ['news.index', 'admin.terms.index', 'admin.contact.index', 'admin.FAQs.index'],
         menu: [{
                 route: '',

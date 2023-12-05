@@ -189,7 +189,7 @@ const save = () => {
         });
     }
     else {
-        form.post(route('admin.orders.package.editOrderPackage'), {
+        form.post(route('admin.orders.package.editToCartPackage',props.order.id), {
             onError: () => {
             },
             onSuccess: () => {
@@ -522,15 +522,38 @@ const date = ref(new Date());
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 NV tư vấn bán hàng(Ref)</label>
-                            <Multiselect v-model="form.sale_id" :appendNewTag="false" :createTag="false" :searchable="true"
-                                label="name" valueProp="id" trackBy="name" :options="sales" placeholder="Chọn sale" />
+                                <Multiselect v-model="form.sale_id" :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="sales" :classes="{
+                            tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                            container: 'relative mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                            }" >
+                                <template v-slot:singlelabel="{ value }">
+                                    <div class="multiselect-single-label">
+                                        {{ value.name }} ({{ value.email }})
+                                    </div>
+                                </template>
+
+                                <template v-slot:option="{ option }">
+                                    {{ option.name }} ({{ option.email }})
+                                </template>
+                            </Multiselect>
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Chọn TO(Người chốt đơn)</label>
-                            <Multiselect v-model="form.leader_sale_id" :appendNewTag="false" :createTag="false"
-                                :searchable="true" label="name" valueProp="id" trackBy="name" :options="leaders"
-                                placeholder="Chọn To" />
+                                <Multiselect v-model="form.leader_sale_id" :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="leaders" :classes="{
+                                tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                                container: 'relative mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                                }" >
+                                <template v-slot:singlelabel="{ value }">
+                                    <div class="multiselect-single-label">
+                                        {{ value.name }} ({{ value.email }})
+                                    </div>
+                                </template>
+
+                                <template v-slot:option="{ option }">
+                                    {{ option.name }} ({{ option.email }})
+                                </template>
+                            </Multiselect>
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -541,19 +564,30 @@ const date = ref(new Date());
                                 <label for="telesale" class="w-[80px] mr-2">Telesale </label>
                                 <Multiselect v-model="form.customer_resource_id" :appendNewTag="false" :createTag="false"
                                     :disabled="form.type_customer_resource == 'telesale' ? false : true" :searchable="true"
-                                    label="name" valueProp="id" trackBy="name"
-                                    :options="form.type_customer_resource == 'ctv' ? telesale : null"
-                                    placeholder="Chọn Telesale" />
+                                    label="name" valueProp="id" trackBy="name" :options="telesale" placeholder="None" :classes="{
+                                container: 'relative mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                                }"/>
                             </div>
                             <div class="flex items-center justify-center mb-2">
 
                                 <input class=" mr-2" type="radio" id="ctv" value="ctv"
                                     v-model="form.type_customer_resource" />
                                 <label for="ctv" class="w-[80px] mr-2">CTV</label>
-                                <Multiselect v-model="form.customer_resource_id" :appendNewTag="false" :createTag="false"
-                                    :disabled="form.type_customer_resource == 'ctv' ? false : true" :searchable="true"
-                                    label="name" valueProp="id" trackBy="name"
-                                    :options="form.type_customer_resource == 'ctv' ? ctv : null" placeholder="Chọn ctv" />
+                                <Multiselect v-model="form.customer_resource_id"  :disabled="form.type_customer_resource == 'ctv' ? false : true"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="ctv" :classes="{
+                                container: 'relative mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                                }"
+                                     >
+                                        <template v-slot:singlelabel="{ value }">
+                                            <div class="multiselect-single-label">
+                                                {{ value.name }} ({{ value.email }})
+                                            </div>
+                                        </template>
+
+                                        <template v-slot:option="{ option }">
+                                            {{ option.name }} ({{ option.email }})
+                                        </template>
+                                    </Multiselect>
                             </div>
                             <div class=" mb-2">
 
@@ -657,7 +691,7 @@ const date = ref(new Date());
                     </div>
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">VAT({{ form.vat }}%)</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.vat * product?.price) / 100) }} vnd
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.vat * (product?.price + ((form.discount_deal * product?.price) / 100))/100 ) }} vnd
                         </p>
                     </div>
                     <div class="flex justify-between my-2">
