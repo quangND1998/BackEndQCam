@@ -20,7 +20,7 @@ class ProductServiceOwner extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['id', 'user_id', 'product_service_owner_id', 'time_approve','time_end', 'description', 'number_deliveries_current', 'state', 'visited_time'];
+    protected $fillable = ['id', 'user_id', 'product_service_owner_id', 'time_approve','time_end', 'description', 'number_deliveries_current', 'state', 'visited_time','order_id'];
 
     protected static function newFactory(): ProductServiceOwnerFactory
     {

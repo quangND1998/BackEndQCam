@@ -188,7 +188,7 @@ const save = () => {
         });
     }
     else {
-        form.post(route('admin.orders.package.editOrderPackage'), {
+        form.post(route('admin.orders.package.editToCartPackage',props.order.id), {
             onError: () => {
             },
             onSuccess: () => {
@@ -671,7 +671,7 @@ const date = ref(new Date());
                     </div>
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">VAT({{ form.vat }}%)</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.vat * product?.price) / 100) }} vnd
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.vat * (product?.price + ((form.discount_deal * product?.price) / 100))/100 ) }} vnd
                         </p>
                     </div>
                     <div class="flex justify-between my-2">

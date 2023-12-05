@@ -115,8 +115,9 @@ class OrderPackageController extends Controller
         $leaders = User::role('leader-sale')->get();
         $product_services = ProductService::where("status", 1)->get();
         $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();
-
-        return Inertia::render('Modules/Order/Package/editOrderPackage', compact('order','product_services','trees','sales','leaders'));
+        $telesale = User::role('telesale')->get();
+        $ctv = User::role('ctv')->get();
+        return Inertia::render('Modules/Order/Package/editOrderPackage', compact('order','product_services','trees','sales','leaders','telesale','ctv'));
         }else{
             return redirect()->route('admin.orders.package.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
         }
@@ -171,11 +172,13 @@ class OrderPackageController extends Controller
             }
             $payment_date = Carbon::now();
             $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date);
+            $this->storeOrderPackage($order);
             return redirect()->route('admin.orders.package.pending',[$order->id]);
         }
     }
     public function saveEditOrder(Request $request, $id){
         $order = OrderPackage::findOrFail($id);
+        // return $order;
         $product_service = ProductService::findOrFail($request->product_selected);
         $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
         $total_price = $product_service->price;
@@ -221,8 +224,11 @@ class OrderPackageController extends Controller
             foreach ($request->images as $image) {
                 $order->addMedia($image)->toMediaCollection('order_package_images');
             }
-
         }
+        $order->historyPayment()->delete();
+        $payment_date = Carbon::now();
+        $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date);
+        return redirect()->route('admin.orders.package.detail',[$order->id]);
     }
     public function saveHistoryPaymentOrder(Request $request,$id){
         $this->validate($request, [
@@ -278,7 +284,8 @@ class OrderPackageController extends Controller
         $order = OrderPackage::create($request->all());
     }
     public function OrderPending(Request $request,$id){
-            $order = OrderPackage::with('customer','product_service','historyPayment')->findOrFail($id);
+            $order = OrderPackage::with('customer','product_service','product_service_owner.trees','historyPayment')->findOrFail($id);
+            // return $order;
             return Inertia::render('Modules/Order/Package/CashPaymentPackage', compact('order'));
     }
     public function checkDay($lif_time, $unit)
@@ -333,7 +340,7 @@ class OrderPackageController extends Controller
 
         $customer = $order->customer;
         $product_service = $order->product_service;
-        if ($product_service) {
+        if ($product_service && $order->product_service_owner == null) {
 
             $new_product_owner = new ProductServiceOwner;
             $new_product_owner->time_approve = $order->time_approve;
@@ -343,15 +350,15 @@ class OrderPackageController extends Controller
             $new_product_owner->state = "active"; //active, expired, stop
             $new_product_owner->user_id = $customer->id;
             $new_product_owner->product_service_id = $product_service->id;
+            $new_product_owner->order_id = $order->id;
             $new_product_owner->save();
 
             $trees = Tree::where('state','public')->where('product_service_owner_id',null)->first();
             if($trees){
+                $trees->pay_status = "đã nhận nuôi";
                 $new_product_owner->trees()->save($trees);
                 $customer->save();
             }
-
-
             //history
 
             $history_extend = new HistoryExtend;

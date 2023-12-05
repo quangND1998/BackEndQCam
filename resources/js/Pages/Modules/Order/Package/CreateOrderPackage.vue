@@ -171,6 +171,9 @@ const onSearchUser = async () => {
 
 }
 const save = () => {
+    if(form.name == null){
+        form.name = search.value;
+    }
     if (form.name == null || form.phone_number == null) {
         swal.fire({
             title: "Lỗi?",
@@ -666,7 +669,7 @@ const date = ref(new Date());
                     </div>
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">VAT({{ form.vat }}%)</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.vat * product?.price) / 100) }} vnd
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.vat * (product?.price + ((form.discount_deal * product?.price) / 100))/100 ) }} vnd
                         </p>
                     </div>
                     <div class="flex justify-between my-2">

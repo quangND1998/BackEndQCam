@@ -9,6 +9,7 @@ use Modules\Tree\app\Models\ProductService;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Modules\Customer\app\Models\ProductServiceOwner;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -111,5 +112,9 @@ class OrderPackage extends Model implements HasMedia
     public function resources()
     {
         return $this->belongsTo(User::class, 'customer_resources_id');
+    }
+    public function product_service_owner()
+    {
+        return $this->hasOne(ProductServiceOwner::class, 'order_id');
     }
 }
