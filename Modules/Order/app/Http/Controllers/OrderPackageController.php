@@ -168,9 +168,9 @@ class OrderPackageController extends Controller
 
             ]);
 
-            foreach ($request->images as $image) {
-                $order->addMedia($image)->toMediaCollection('order_package_images');
-            }
+            // foreach ($request->images as $image) {
+            //     $order->addMedia($image)->toMediaCollection('order_package_images');
+            // }
             $payment_date = Carbon::now();
             $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
             $this->storeOrderPackage($order);
@@ -219,13 +219,13 @@ class OrderPackageController extends Controller
             'customer_resources_id' => $request->customer_resource_id,
 
         ]);
-        if ($request->hasFile('images')) {
-            $order->clearMediaCollection('order_package_images');
+        // if ($request->hasFile('images')) {
+        //     $order->clearMediaCollection('order_package_images');
 
-            foreach ($request->images as $image) {
-                $order->addMedia($image)->toMediaCollection('order_package_images');
-            }
-        }
+        //     foreach ($request->images as $image) {
+        //         $order->addMedia($image)->toMediaCollection('order_package_images');
+        //     }
+        // }
         $order->historyPayment()->delete();
         $payment_date = Carbon::now();
         $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);

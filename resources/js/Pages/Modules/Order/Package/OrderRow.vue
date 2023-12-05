@@ -78,7 +78,7 @@ const deleteHistory = (id) => {
             }
         });
 };
-const openAcceptPayment = () => {
+const openAcceptPayment = (id) => {
     let query = {
         status: "complete"
       };
@@ -94,11 +94,7 @@ const openAcceptPayment = () => {
         })
         .then((result) => {
             if (result.isConfirmed) {
-                router.post(route("admin.orders.package.setPaymentComplete", [form.order?.id,id]), query,
-                    {
-                        preserveState: true,
-                        preserveScroll: true
-                    }, {
+                form.post(route("admin.orders.package.setPaymentComplete", [form.order?.id,id]),  { preserveState: false },{
                     onSuccess: () => {
                         swal.fire("Thành Công!", "Đã thêm hợp đồng với khách hàng.", "success");
                     },

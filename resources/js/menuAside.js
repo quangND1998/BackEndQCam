@@ -123,14 +123,12 @@ export default [{
         menu: [{
                 route: 'admin.land.index',
                 label: 'Cây',
-
                 permissions: ['super-admin'],
                 route_list: null
             },
             {
                 route: 'admin.product-retail.index',
                 label: 'Sản phẩm bán lẻ',
-
                 permissions: ['super-admin'],
                 route_list: null
             },

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Order\app\Models\HistoryPayment;
 use Modules\Order\app\Models\OrderPackage;
+use Illuminate\Support\Facades\Auth;
 class HistoryPaymentController extends Controller
 {
     /**
@@ -32,6 +33,7 @@ class HistoryPaymentController extends Controller
         $history = HistoryPayment::find($id);
         if($history){
             $history->status = "complete";
+            $history->user_id = Auth::user()->id;
             $history->save();
         }
         return redirect()->back()->with('success', "duyệt  thành công");
