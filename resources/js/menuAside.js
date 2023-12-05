@@ -118,32 +118,33 @@ export default [{
     {
         label: 'Sản phẩm',
         icon: mdiSale,
-        permissions: ['view-user'],
+        permissions: ['super-admin', 'view-land', 'create-land', 'update-land', 'delete-land', 'view-product', 'create-product', 'update-product', 'delete-product'],
         route_list: ['admin.land.index', 'admin.product-retail.index', 'admin.product-service.index', 'admin.land.tree.index', 'admin.voucher.index'],
         menu: [{
                 route: 'admin.land.index',
+                permissions: ['super-admin', 'create-land', 'create-land', 'update-land', 'delete-land'],
                 label: 'Cây',
 
-                permissions: ['super-admin'],
+                permissions: ['super-admin', 'create-land', 'create-land', 'update-land', 'delete-land'],
                 route_list: null
             },
             {
                 route: 'admin.product-retail.index',
                 label: 'Sản phẩm bán lẻ',
 
-                permissions: ['super-admin'],
+                permissions: ['view-product', 'create-product', 'update-product', 'delete-product'],
                 route_list: null
             },
             {
                 route: 'admin.product-service.index',
                 label: 'Sản phẩm dịch vụ',
-                permissions: ['super-admin'],
+                permissions: ['view-product', 'create-product', 'update-product', 'delete-product'],
                 route_list: null
             },
             {
                 route: 'admin.voucher.index',
                 label: "Mã giảm giá",
-                permissions: ['super-admin'],
+                permissions: ['view-product', 'create-product', 'update-product', 'delete-product'],
             },
 
         ]
@@ -181,7 +182,7 @@ export default [{
     {
         label: 'Cài đặt',
         icon: mdiCogOutline,
-        permissions: ['view-user','view-news','create-news','update-news','delete-news'],
+        permissions: ['view-user', 'view-news', 'create-news', 'update-news', 'delete-news'],
         route_list: ['news.index', 'admin.terms.index', 'admin.contact.index', 'admin.FAQs.index'],
         menu: [{
                 route: '',
