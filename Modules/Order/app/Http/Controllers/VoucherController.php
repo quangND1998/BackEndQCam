@@ -24,10 +24,10 @@ class VoucherController extends Controller
 
         $this->percent = $percent;
         $this->money = $money;
-        $this->middleware('permission:view-land', ['only' => ['index', 'voucher_project']]);
-        $this->middleware('permission:create-land', ['only' => ['store']]);
-        $this->middleware('permission:update-land', ['only' => ['update']]);
-        $this->middleware('permission:delete-land', ['only' => ['destroy']]);
+        $this->middleware('permission:view-product', ['only' => ['index', 'voucher_project']]);
+        $this->middleware('permission:create-product', ['only' => ['store']]);
+        $this->middleware('permission:update-product', ['only' => ['update']]);
+        $this->middleware('permission:delete-product', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.

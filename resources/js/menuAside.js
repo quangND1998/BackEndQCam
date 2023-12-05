@@ -118,30 +118,33 @@ export default [{
     {
         label: 'Sản phẩm',
         icon: mdiSale,
-        permissions: ['view-user'],
+        permissions: ['super-admin', 'view-land', 'create-land', 'update-land', 'delete-land', 'view-product', 'create-product', 'update-product', 'delete-product'],
         route_list: ['admin.land.index', 'admin.product-retail.index', 'admin.product-service.index', 'admin.land.tree.index', 'admin.voucher.index'],
         menu: [{
                 route: 'admin.land.index',
+                permissions: ['super-admin', 'create-land', 'create-land', 'update-land', 'delete-land'],
                 label: 'Cây',
-                permissions: ['super-admin'],
+
+                permissions: ['super-admin', 'create-land', 'create-land', 'update-land', 'delete-land'],
                 route_list: null
             },
             {
                 route: 'admin.product-retail.index',
                 label: 'Sản phẩm bán lẻ',
-                permissions: ['super-admin'],
+
+                permissions: ['view-product', 'create-product', 'update-product', 'delete-product'],
                 route_list: null
             },
             {
                 route: 'admin.product-service.index',
                 label: 'Sản phẩm dịch vụ',
-                permissions: ['super-admin'],
+                permissions: ['view-product', 'create-product', 'update-product', 'delete-product'],
                 route_list: null
             },
             {
                 route: 'admin.voucher.index',
                 label: "Mã giảm giá",
-                permissions: ['super-admin'],
+                permissions: ['view-product', 'create-product', 'update-product', 'delete-product'],
             },
 
         ]
@@ -179,12 +182,12 @@ export default [{
     {
         label: 'Cài đặt',
         icon: mdiCogOutline,
-        permissions: ['view-user','view-news','create-news','update-news','delete-news','view-setting','view-notification','view-setting-privacy','view-setting-contact'],
+        permissions: ['view-user', 'view-news', 'create-news', 'update-news', 'delete-news', 'view-setting', 'view-notification', 'view-setting-privacy', 'view-setting-contact'],
         route_list: ['news.index', 'admin.terms.index', 'admin.contact.index', 'admin.FAQs.index'],
         menu: [{
                 route: '',
                 label: 'Thông báo',
-                permissions: ['super-admin','view-notification'],
+                permissions: ['super-admin', 'view-notification'],
                 route_list: null
             },
             {
@@ -196,25 +199,25 @@ export default [{
             {
                 route: '',
                 label: 'Thông tin chung',
-                permissions: ['super-admin','view-setting'],
+                permissions: ['super-admin', 'view-setting'],
                 route_list: null
             },
             {
                 route: 'admin.terms.index',
                 label: 'Điều khoản',
-                permissions: ['super-admin','view-setting-privacy'],
+                permissions: ['super-admin', 'view-setting-privacy'],
                 route_list: null
             },
             {
                 route: 'admin.contact.index',
                 label: 'Liên hệ',
-                permissions: ['super-admin','view-setting-contact'],
+                permissions: ['super-admin', 'view-setting-contact'],
                 route_list: null
             },
             {
                 route: 'admin.FAQs.index',
                 label: 'FAQs',
-                permissions: ['super-admin','view-setting-faq'],
+                permissions: ['super-admin', 'view-setting-faq'],
                 route_list: null
             }
         ]

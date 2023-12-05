@@ -174,6 +174,12 @@ class OrderPackageController extends Controller
             $payment_date = Carbon::now();
             $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
             $this->storeOrderPackage($order);
+            if($order->status =='pending'){
+                $order->time_expried = Carbon::now()->addDay($order->time_reservations);
+                $order->save();
+                OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
+            }
+          
             return redirect()->route('admin.orders.package.pending',[$order->id]);
         }
     }
@@ -229,6 +235,7 @@ class OrderPackageController extends Controller
         $order->historyPayment()->delete();
         $payment_date = Carbon::now();
         $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
+      
         return redirect()->route('admin.orders.package.detail',[$order->id]);
     }
     public function saveHistoryPaymentOrder(Request $request,$id){
