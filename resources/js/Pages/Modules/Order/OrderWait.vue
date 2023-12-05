@@ -447,7 +447,7 @@ const loadOrder = async $state => {
                         <div class="tableFixHead panel-body relative overflow-x-auto">
                             <div>
                                 <div
-                                    class="mr-2 px-2 mb-2 text-xs  uppercase bg-gray-200 grid grid-cols-8 grid-flow-col auto-cols-max py-2  text-gray-400">
+                                    class="mr-2 px-2 mb-2 text-xs  uppercase bg-gray-200 grid grid-cols-9 grid-flow-col auto-cols-max py-2  text-gray-400">
                                     <div>
                                         <p>Mã đơn hàng</p>
                                     </div>
@@ -462,6 +462,9 @@ const loadOrder = async $state => {
                                     </div>
                                     <div>
                                         <p>Trạng thái</p>
+                                    </div>
+                                    <div>
+                                        <p>TT thanh toán</p>
                                     </div>
                                     <div>
                                         <p>Loại đơn</p>
@@ -522,4 +525,13 @@ const loadOrder = async $state => {
 .collapse {
     visibility: inherit;
 }
+
+.partiallyPaid {
+    background-color: rgb(254 252 232/var(--tw-bg-opacity));
+    border-color: rgb(254 240 138/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 1px;
+    color: rgb(202 138 4/var(--tw-text-opacity));
+}
+
 </style>

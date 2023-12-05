@@ -15,7 +15,11 @@ class NewsController extends Controller
 {
     function __construct()
     {
-        $this->middleware('role:super-admin');
+        // $this->middleware('role:super-admin');
+        $this->middleware('permission:view-news|create-news|delete-news|update-news', ['only' => ['index']]);
+        $this->middleware('permission:create-news', ['only' => ['store']]);
+        $this->middleware('permission:update-news', ['only' => ['update']]);
+        $this->middleware('permission:delete-news', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.

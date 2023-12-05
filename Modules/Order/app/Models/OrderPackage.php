@@ -26,8 +26,13 @@ class OrderPackage extends Model implements HasMedia
         'discount_deal',
         'type',
         'sale_id','to_id','customer_resources','customer_resources_id',
-        'wards',  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent","time_reservations"
+        'wards',  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent","time_reservations","time_expried"
     ];
+
+    public function gettimeExpriedAttribute($value)
+    {
+        return strtotime($value);
+    }
     /**
      * The attributes that are mass assignable.
      */

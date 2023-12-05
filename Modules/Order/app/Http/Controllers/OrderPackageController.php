@@ -20,7 +20,8 @@ use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\HistoryExtend;
 use Illuminate\Support\Facades\DB;
 use Modules\Order\app\Models\HistoryPayment;
-
+use App\Jobs\OrderPackageCreatedJob;
+use App\Jobs\OrderPackageEndTimeJob;
 class OrderPackageController extends Controller
 {
     protected $orderRepository;
@@ -171,6 +172,8 @@ class OrderPackageController extends Controller
             }
             $payment_date = Carbon::now();
             $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date);
+            // OrderPackageCreatedJob::dispatch($order);
+            // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_expried));
             return redirect()->route('admin.orders.package.pending',[$order->id]);
         }
     }
@@ -279,6 +282,7 @@ class OrderPackageController extends Controller
     }
     public function OrderPending(Request $request,$id){
             $order = OrderPackage::with('customer','product_service','historyPayment')->findOrFail($id);
+           
             return Inertia::render('Modules/Order/Package/CashPaymentPackage', compact('order'));
     }
     public function checkDay($lif_time, $unit)

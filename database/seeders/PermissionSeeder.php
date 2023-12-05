@@ -80,5 +80,10 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'create-schedule']);
         Permission::create(['name' => 'add-order-shipper']);
 
+
+        Permission::create(['name' => 'view-news']);
+        Permission::create(['name' => 'create-news']);
+        Permission::create(['name' => 'update-news']);
+        Permission::create(['name' => 'delete-news']);
     }
 }
