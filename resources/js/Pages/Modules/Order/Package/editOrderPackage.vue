@@ -456,14 +456,14 @@ const date = ref(new Date());
                         </div>
 
                         <div class="my-3">
-                            <div class="mr-2 inline-block" v-for="(img, index) in order.order_package_images " :key="index">
+                            <!-- <div class="mr-2 inline-block" v-for="(img, index) in order.order_package_images " :key="index">
                                 <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
                                     @click="DeleteImage(index)" size="16">
                                 </BaseIcon>
                                 <img :src="img.original_url" class="w-20 h-20 object-cover rounded-lg" alt="">
-                            </div>
+                            </div> -->
 
-                            <UploadImage :max_files="4" v-model="form.images" :multiple="true"
+                            <UploadImage :max_files="4" v-model="form.images" :old_images="order.order_package_images" :multiple="true"
                                 :label="`Chứng từ liên quan`" />
 
                             <InputError class="mt-2" :message="form.errors.images" />

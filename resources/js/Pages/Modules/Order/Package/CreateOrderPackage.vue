@@ -31,6 +31,7 @@ import Dropdown from 'primevue/dropdown';
 import BaseIcon from '@/Components/BaseIcon.vue'
 import NewOrderPackage from '@/Pages/Modules/Order/Create/NewOrderPackage.vue'
 import axios from "axios";
+import UploadImage from '@/Components/UploadImage.vue'
 const swal = inject("$swal");
 
 const props = defineProps({
@@ -454,8 +455,8 @@ const date = ref(new Date());
                         </div>
 
                         <div class="my-3">
-
-                            <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
+                            <UploadImage :max_files="4" v-model="form.images" :multiple="true" :label="`Chứng từ liên quan`" />
+                            <!-- <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
                                 <div class="mr-2 inline-block" v-for="(img, index) in images " :key="index">
                                     <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
@@ -475,7 +476,7 @@ const date = ref(new Date());
                                 </label>
                                 <input id="uploadFile" @change="onFileChange" multiple type="file" class="hidden"
                                     accept="image/*">
-                            </div>
+                            </div> -->
                             <InputError class="mt-2" :message="form.errors.images" />
                             <div v-for="(error, index) in images" :key="index">
 

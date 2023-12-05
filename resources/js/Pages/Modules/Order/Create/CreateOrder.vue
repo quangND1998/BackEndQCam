@@ -33,6 +33,7 @@ import axios from "axios";
 import MazSelect from 'maz-ui/components/MazSelect'
 import { useCartStore } from "@/stores/cart";
 import Multiselect from '@vueform/multiselect'
+import UploadImage from '@/Components/UploadImage.vue'
 const swal = inject("$swal");
 
 const props = defineProps({
