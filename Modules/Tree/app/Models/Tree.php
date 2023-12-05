@@ -16,7 +16,7 @@ class Tree extends Model implements HasMedia
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id",    "name",    "qr_code",    "land_id", "address", "price",    "state", "status",    "description", "user_manual",    "terms_policy", "product_service_owner_id","transfer_value","price_origin" ,   "created_at",    "updated_at"];
+    protected $fillable = ["id",    "name",    "qr_code",    "land_id", "address", "price",    "state", "status",    "description", "user_manual",    "terms_policy", "product_service_owner_id","transfer_value","price_origin" ,'pay_status',   "created_at",    "updated_at"];
 
     protected static function newFactory(): TreeFactory
     {

@@ -79,7 +79,10 @@ class LandController extends Controller
      */
     public function destroy(Land $land)
     {
-        $land->delete();
-        return back()->with('success', 'Delete successfully');
+        if($land->state !== 'public'){
+            $land->delete();
+            return back()->with('success', 'Delete successfully');
+        }
+        return back()->with('warning', 'Lô đang mở bản ko xóa');
     }
 }

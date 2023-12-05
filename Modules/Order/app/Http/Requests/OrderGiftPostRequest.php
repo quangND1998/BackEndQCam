@@ -21,6 +21,8 @@ class OrderGiftPostRequest extends FormRequest
             'type' => 'required',
             'images' => 'required',
             'images.*' => 'mimes:jpeg,png,jpg|max:2048',
+            'receive_at' =>'required',
+            'shipper_id' =>'required',
         ];
     }
 

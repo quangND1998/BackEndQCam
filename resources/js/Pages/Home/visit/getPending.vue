@@ -88,6 +88,22 @@ const cancelState = (visit) => {
             <SectionTitleLineWithButton class="font-semibold flex mr-2" title="Quản lý đặt lịch tham quan" main></SectionTitleLineWithButton>
             <div>
                 <LayoutBar></LayoutBar>
+                <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
+                <div>
+                    <h2 class="font-semibold  flex mr-2">
+                        Quản lý Lịch tham quan
+                        <!-- <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p> -->
+                    </h2>
+                </div>
+
+                <div>
+
+                    <Link v-if="hasAnyPermission(['create-schedule'])" :href="route('visit.createShedule')"
+                        class="px-2 py-2 text-sm  bg-btn_green hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
+                    Tạo lịch tham quan
+                    </Link>
+                </div>
+            </div>
                 <div class="px-2 flex">
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <div class="min-[320px]:w-full sm:w-3/12  md:w-3/12 mr-3 text-gray-500">
@@ -201,6 +217,10 @@ const cancelState = (visit) => {
 
                                         </th>
                                         <th class="py-1 px-6 text-right flex justify-end my-1">
+                                            <Link v-if="visit.state=='pending'" :href="route('visit.edit', visit.id)"
+                                                class="inline-block px-6 py-2 bg-gray-200 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
+                                                Chỉnh sửa
+                                            </Link>
                                             <button @click="changeState(visit)"
                                                 class="inline-block px-6 py-2 bg-gray-200 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                                 Xác nhận

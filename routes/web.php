@@ -79,6 +79,12 @@ Route::middleware(['auth'])->group(
             Route::get('confirm', [ScheduleVisitController::class, 'getConfirm'])->name('confirm');
             Route::get('cancel', [ScheduleVisitController::class, 'getCancel'])->name('cancel');
             Route::get('completed', [ScheduleVisitController::class, 'getComplete'])->name('completed');
+
+            Route::get('createShedule', [ScheduleVisitController::class, 'createShedule'])->name('createShedule');
+            Route::get('edit/{schedule}', [ScheduleVisitController::class, 'edit'])->name('edit');
+            Route::post('saveShedule', [ScheduleVisitController::class, 'saveShedule'])->name('saveShedule');
+            Route::post('updateShedule/{schedule}', [ScheduleVisitController::class, 'updateShedule'])->name('updateShedule');
+            
         });
 
 

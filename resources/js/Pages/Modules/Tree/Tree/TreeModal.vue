@@ -1,6 +1,7 @@
 
 <script setup>
 import { computed, ref, inject, watch, toRef, onMounted, onUnmounted, reactive } from 'vue'
+import { mdiMinus, mdiPlus, mdiChevronDown, mdiChevronUp } from '@mdi/js'
 
 import { useForm } from '@inertiajs/vue3';
 import CardBoxModal from '@/Components/CardBoxModal.vue'
@@ -9,11 +10,54 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import { useTreeStore } from '@/stores/tree.js'
 import { emitter } from '@/composable/useEmitter';
-import MazInputPrice from 'maz-ui/components/MazInputPrice'
+import MazInputPrice from 'maz-ui/components/MazInputPrice';
+import BaseIcon from '@/Components/BaseIcon.vue'
+
+// import MazDropzone, { MazDropzoneInstance, MazDropzoneOptions } from 'maz-ui/components/MazDropzone'
+// import MazBtn from 'maz-ui/components/MazBtn'
 
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
+// const loading = ref(false)
+//   const mazDropzoneInstance = ref()
+//   const errorMessage = ref()
 
+//   const error = ({ file, message }) => {
+//     console.log('dropzone-error', { file, message })
+//     errorMessage.value = message
+//   }
+//   const success = ({ file, response }) => {
+//     console.log('dropzone-success', { file, response })
+//   }
+//   const sendFiles = () => mazDropzoneInstance.value?.processQueue()
+
+//   const dropzoneOptionsBase = {
+//     url: 'https://httpbin.org/post',
+//     headers: { 'My-Awesome-Header': 'header value' },
+//     acceptedFiles: 'image/jpeg,image/jpg,image/png',
+//     maxFilesize: 5,
+//     maxFiles: 5,
+//     maxThumbnailFilesize: 3,
+//     autoProcessQueue: false,
+//     autoRemoveOnError: true,
+//   }
+
+//   const translations = {
+//     dictDefaultMessage: 'Choose or drop a file',
+//     dictFilesDescriptions: `(PNG or JPG under ${dropzoneOptionsBase.maxFilesize} MB)`,
+//     dictFallbackMessage: 'Your browser is not supported',
+//     dictFileTooBig: `File(s) too big (max: ${dropzoneOptionsBase.maxFilesize} MB)`,
+//     dictInvalidFileType: `File(s) too big (max: ${dropzoneOptionsBase.maxFilesize} MB)`,
+//     dictRemoveFile: 'Remove',
+//     dictCancelUpload: 'Cancel upload',
+//     dictMaxFilesExceeded: `You can not upload any more files. (max: ${dropzoneOptionsBase.maxFiles})`,
+//     dictUploadCanceled: 'Upload canceled',
+//   }
+
+//   const dropzoneOptions = {
+//     ...dropzoneOptionsBase,
+//     ...translations
+//   }
 
 const swal = inject('$swal')
 const store = useTreeStore()
@@ -206,6 +250,8 @@ const state = reactive({
                             <InputError class="mt-2" :message="form.errors.price" />
                         </div>
                         <div class=" ">
+                            
+                           
                             <InputLabel for="name_amenities" value="Ảnh đại diện" />
                             <label for="dropzone-images_thumb"
                                 class="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -276,7 +322,7 @@ const state = reactive({
                             <InputError class="mt-2" :message="form.errors.transfer_value" />
                         </div> -->
                         <div class="">
-                            <InputLabel for="name_amenities" value="Bộ sưu tập ảnh" />
+                            <!-- <InputLabel for="name_amenities" value="Bộ sưu tập ảnh" />
                             <label for="dropzone-images"
                                 class="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6 px-2">
@@ -294,7 +340,16 @@ const state = reactive({
                                 <input id="dropzone-images" type="file" class="hidden"
                                     @input="form.images = $event.target.files" multiple accept="image/*" />
                             </label>
-                            <InputError class="mt-2" :message="form.errors.images" />
+                            <InputError class="mt-2" :message="form.errors.images" /> -->
+                            <div class="flex">
+                                <div>
+
+                                </div>
+                                <div class="w-16 h-16 border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg">
+                                    <BaseIcon :path="mdiPlus" :size="16" />
+                                </div>
+                            </div>
+                           
                         </div>
                     </div>
                     <div>

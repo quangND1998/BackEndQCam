@@ -31,6 +31,7 @@ class Order extends Model implements HasMedia
         'product_service_owner_id',
         'shipper_id',
         'sale_id',
+        'receive_at',
         'wards',  "created_at", "updated_at"
     ];
 

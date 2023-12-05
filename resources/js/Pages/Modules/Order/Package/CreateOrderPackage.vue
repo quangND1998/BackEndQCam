@@ -70,7 +70,7 @@ const form = useForm({
     images: [],
     sale_id:null,
     leader_sale_id:null,
-    type_customer_resource:null,
+    type_customer_resource:"private",
     customer_resource_id: null,
 
 })
@@ -200,7 +200,7 @@ const changeProduct = (event) => {
     if(product.value){
     form.max_price =product.value.price
     }
-  
+
 }
 const product = computed(() => {
     // props.products.find(e => e.id == form.product_service);
@@ -249,7 +249,7 @@ const maxPrice = computed({
     },
     // setter
     set(newValue) {
-        
+
         console.log(newValue)
         if (newValue > 0) {
             let maxPrice = newValue
@@ -352,7 +352,7 @@ const date = ref(new Date());
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                                 <div class="min-[320px]:ml-0 md:ml-3">
                                     <div class="my-3">
@@ -480,8 +480,6 @@ const date = ref(new Date());
                                 <InputError class="mt-2" :message="form.errors[`images.${index}`]" />
                             </div>
                         </div>
-
-
                     </div>
                     <div class="min-[320px]:mx-0 md:mx-5">
 
@@ -514,7 +512,7 @@ const date = ref(new Date());
                             <!-- <input type="number" id="first_name" v-model="form.price_percent" min="0"  :max="product_services?.price"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required> -->
-                         
+
                                 <MazInputPrice  v-model="form.price_percent" currency="VND"  locale="vi-VN" :min="0"  :max="maxPrice"
                                 @formatted="formattedPrice = $event" />
 
@@ -547,25 +545,25 @@ const date = ref(new Date());
                              <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Nguồn khách hàng</label>
                             <div class="flex items-center justify-center mb-2">
-                               
+
                                 <input class=" mr-2" type="radio" id="one" value="telesale" v-model="form.type_customer_resource" />
                                 <label for="one" class="w-[80px] mr-2">Telesale</label>
                                 <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false" :disabled="form.type_customer_resource == 'telesale' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="Chọn Telesale"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="telesale"  placeholder="Chọn Telesale"
                                 />
                             </div>
-                            
+
 
                             <div class="flex items-center justify-center mb-2">
-                               
+
                                 <input class=" mr-2" type="radio" id="one" value="ctv" v-model="form.type_customer_resource" />
                                 <label for="one" class="w-[80px] mr-2">CTV</label>
                                 <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false" :disabled="form.type_customer_resource == 'ctv' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="Chọn ctv"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="ctv"  placeholder="Chọn ctv"
                                 />
                             </div>
                             <div class=" mb-2">
-                               
+
                                 <input class=" mr-2" type="radio" id="one" value="private" v-model="form.type_customer_resource" />
                                 <label for="one" class="w-[80px] mr-2">Private</label>
                             </div>

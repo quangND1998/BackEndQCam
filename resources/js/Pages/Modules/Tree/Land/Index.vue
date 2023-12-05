@@ -188,7 +188,7 @@ const Delete = (id) => {
                                             <BaseButton :icon="mdiPencil" small class="text-[#2264E5]" type="button"
                                                 data-toggle="modal" data-target="#exampleModal" />
                                         </div>
-                                        <div @click="Delete(land.id)"
+                                        <div @click="Delete(land.id)" v-if="land.state !== 'public'"
                                             class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
                                             <p class="hover:text-red-700"> Delete</p>
                                             <BaseButton :icon="mdiTrashCanOutline" small class="text-[#D12953]" />

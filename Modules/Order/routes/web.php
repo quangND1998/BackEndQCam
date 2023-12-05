@@ -70,11 +70,11 @@ Route::middleware(['auth'])->group(
                 Route::get('/{order}/update', [OrderController::class, 'edit'])->name('update');
                 Route::get('/searchUser', [OrderController::class, 'searchUser'])->name('searchUser');
                 Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
-                Route::post('saveOrder/{user}', [OrderController::class, 'saveOrder'])->name('saveOrder');
-                Route::post('saveOrderGift/{user}', [OrderController::class, 'saveOrderGift'])->name('saveOrderGift');
+                Route::post('saveOrder', [OrderController::class, 'saveOrder'])->name('saveOrder');
+                Route::post('saveOrderGift', [OrderController::class, 'saveOrderGift'])->name('saveOrderGift');
                 Route::post('/{order}/orderChangeShipping', [OrderController::class, 'orderChangeShipping'])->name('orderChangeShipping');
                 Route::post('{order}/updateOrderRetail/{user}', [OrderController::class, 'updateOrderRetail'])->name('updateOrderRetail');
-                Route::post('{order}updateOrderGift/{user}', [OrderController::class, 'updateOrderGift'])->name('updateOrderGift');
+                Route::post('{order}/updateOrderGift/{user}', [OrderController::class, 'updateOrderGift'])->name('updateOrderGift');
                 Route::prefix('package')->as('package.')->group(function () {
                     Route::get('all', [OrderPackageController::class, 'index'])->name('index');
                     Route::get('pending', [OrderPackageController::class, 'index'])->name('pending');
@@ -88,6 +88,8 @@ Route::middleware(['auth'])->group(
                     Route::get('edit/{id}', [OrderPackageController::class, 'editOrderPackage'])->name('edit');
                     Route::get('detail/{id}', [OrderPackageController::class, 'OrderPending'])->name('detail');
                     Route::post('/addToCartPackage', [OrderPackageController::class, 'addToCart'])->name('addToCartPackage');
+                    Route::post('/editOrderPackage', [OrderPackageController::class, 'saveEditOrder'])->name('editToCartPackage');
+                    // editOrderPackage
                     Route::post('orderCancel/{order}', [OrderPackageController::class, 'orderCancel'])->name('orderCancel');
                     Route::post('orderComplete/{order}', [OrderPackageController::class, 'orderComplete'])->name('orderComplete');
                     Route::post('historyPayment/{order}', [OrderPackageController::class, 'saveHistoryPaymentOrder'])->name('historyPayment');

@@ -288,7 +288,8 @@ class OrderController extends Controller
         $total_price = Cart::getSubTotalWithoutConditions();
         $sub_total = Cart::getSubTotal();
         $product_retails = ProductRetail::with('images')->get();
-        return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails', 'cart', 'total_price', 'sub_total'));
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails', 'cart', 'total_price', 'sub_total','shippers'));
     }
 
     public function searchUser(Request $request)
@@ -400,10 +401,14 @@ class OrderController extends Controller
     }
 
     // Save Order
-    public function saveOrder(SaveOrderRequest $request, User $user)
+    public function saveOrder(SaveOrderRequest $request)
     {
-        // OrderStoreRequest
+      
+        $user = User::where('phone_number', $request->phone_number)->first();
+        if(!$user){
 
+            $user = $this->orderRepository->createUser($request->only('name', 'phone_number','sex','address', 'city','wards','district'));
+        }
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
@@ -430,7 +435,9 @@ class OrderController extends Controller
                 'type' => $request->type,
                 'shipping_fee' => $request->shipping_fee,
                 'amount_paid' => $request->amount_paid,
-                'sale_id' => Auth::user()->id
+                'sale_id' => Auth::user()->id,
+                'receive_at' => $request->receive_at,
+                'shipper_id' => $request->shipper_id
 
             ]);
 
@@ -529,9 +536,13 @@ class OrderController extends Controller
     }
 
 
-    public function saveOrderGift(OrderGiftPostRequest $request, User $user)
+    public function saveOrderGift(OrderGiftPostRequest $request)
     {
+        $user = User::where('phone_number', $request->phone_number)->first();
+        if(!$user){
 
+            $user = $this->orderRepository->createUser($request->only('name', 'phone_number','sex','address', 'city','wards','district'));
+        }
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
@@ -556,7 +567,8 @@ class OrderController extends Controller
                 'type' => $request->type,
                 'product_service_owner_id' => $request->product_service_owner_id,
                 'sale_id' => Auth::user()->id,
-
+                'receive_at' => $request->receive_at,
+                'shipper_id' => $request->shipper_id
             ]);
             $order->save();
 
@@ -632,7 +644,8 @@ class OrderController extends Controller
             $total_price = Cart::getSubTotalWithoutConditions();
             $sub_total = Cart::getSubTotal();
             $product_retails = ProductRetail::with('images')->get();
-            return Inertia::render('Modules/Order/Create/UpdateOrder', compact('customers', 'product_retails', 'cart', 'total_price', 'sub_total', 'order'));
+            $shippers = $this->shipperRepository->getShipper();
+            return Inertia::render('Modules/Order/Create/UpdateOrder', compact('customers', 'product_retails', 'cart', 'total_price', 'sub_total', 'order', 'shippers'));
         } else {
             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
         }

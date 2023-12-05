@@ -145,8 +145,9 @@ const searchTree = () => {
                             <th scope="col" class="py-3 px-6 text-xs">Giá bán</th>
                             <th scope="col" class="py-3 px-6 text-xs">Giá chuyển nhượng</th>
                             <th scope="col" class="py-3 px-6 text-xs">Trang thái</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
                             <th scope="col" class="py-3 px-6 text-xs">Tình Trạng cây</th>
-                            <th scope="col" class="py-3 px-6 text-xs">Bộ sưu tập</th>
+                            <!-- <th scope="col" class="py-3 px-6 text-xs">Bộ sưu tập</th> -->
                             <th scope="col" class="py-3 px-6 text-xs">
                                 <span class="sr-only">Edit</span>
                             </th>
@@ -189,12 +190,16 @@ const searchTree = () => {
                                     </span>
                                 </div>
                             </th>
-
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <strong>{{ tree.pay_status }}</strong>
+                            </th>
                             <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <strong>{{ tree.status }}</strong>
                             </th>
-                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                link</th>
+
+
+                            <!-- <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                link</th> -->
                             <td class="py-1 px-6 text-right">
                                 <BaseButtons type="justify-start lg:justify-end" no-wrap>
                                     <BaseButton color="contrast" :icon="mdiPencilOutline" small @click="edit(tree)"

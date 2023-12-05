@@ -18,13 +18,15 @@ class SaveOrderRequest extends FormRequest
             'district' => 'required',
             'wards' => 'required',
             'phone_number' => 'required',
-            'vat' => 'nullable|numeric|gt:-1',
-            'discount_deal' => 'nullable|nullable|gt:-1',
+            'vat' => 'nullable|numeric|between:0,100',
+            'discount_deal' => 'nullable|nullable|between:0,100',
             'type' => 'required',
             'shipping_fee' => 'nullable|nullable|gt:-1',
             'amount_paid' => 'nullable|nullable|gt:-1',
             'images' => 'required',
             'images.*' => 'mimes:jpeg,png,jpg|max:2048',
+            'receive_at' =>'required',
+            'shipper_id' =>'required',
         ];
     }
 
