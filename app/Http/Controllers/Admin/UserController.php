@@ -182,7 +182,8 @@ class UserController extends Controller
             $user->password = Hash::make('cammattroi');
         }
         $user->save();
-        return back()->with('success', 'Create user successfully');
+        return redirect()->route('users.index')->with('success', 'Tạo mới thành công');
+ 
     }
 
     public function update(Request $request, $id)
@@ -252,13 +253,13 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
         }
         $user->save();
-        return back()->with('success', 'Update user successfully');
+        return redirect()->route('users.index')->with('success',  'Cập nhật user thành công');
     }
 
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        return   $this->DeleteUser($user);
+        // return   $this->DeleteUser($user);
         // $user->delete();
         return redirect()->back()->with('success', "Xóa tài khoản  thành công");
     }
