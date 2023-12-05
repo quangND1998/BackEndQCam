@@ -175,6 +175,9 @@ const save = () => {
     if (form.name == null) {
         form.name = search.value;
     }
+    if (form.phone_number == null) {
+        form.phone_number = search.value;
+    }
     if (form.name == null || form.phone_number == null) {
         swal.fire({
             title: "Lỗi?",
@@ -321,22 +324,23 @@ const date = ref(new Date());
 
                             <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt-2">
                                 <div>
+
+                                    <div class="my-3">
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Số điện thoại *</label>
+                                        <input type="text" id="first_name" v-model="search" @keyup="onSearchUser()"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="" required>
+                                    </div>
                                     <div class="my-3">
                                         <label for="name" class="block mb-2 text-sm  text-gray-900 dark:text-white">Tên
                                             Khách
                                             Hàng
                                             *</label>
-                                        <input type="text" id="name" v-model="search" @keyup="onSearchUser()"
+                                        <input type="text" id="name" v-model="form.name"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                         <div class="text-red-500" v-if="flash"> {{ flash }}</div>
-                                    </div>
-                                    <div class="my-3">
-                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                            Số điện thoại *</label>
-                                        <input type="text" id="first_name" v-model="form.phone_number"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" required>
                                     </div>
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
