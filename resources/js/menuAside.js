@@ -192,7 +192,7 @@ export default [{
             {
                 route: 'news.index',
                 label: 'Tin tức',
-                permissions: ['super-admin'],
+                permissions: ['super-admin', 'view-news'],
                 route_list: null
             },
             {
