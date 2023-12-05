@@ -99,14 +99,14 @@ const user = computed({
                 foundUser(user)
                 return user
             }
-            else{
-                form.name= form.user_id
+            else {
+                form.name = form.user_id
             }
 
 
         }
         else {
-            form.reset('address', 'phone_number', 'city','wards', 'district')
+            form.reset('address', 'phone_number', 'city', 'wards', 'district')
             return null
         }
     },
@@ -118,17 +118,17 @@ const user = computed({
     }
 })
 const selectUser = (option) => {
-    console.log('selectUser',option)
+    console.log('selectUser', option)
 
     console.log(user)
     if (user.value == undefined) {
         form.user_id = null
-        form.phone_number =null
-        form.sex =null
+        form.phone_number = null
+        form.sex = null
         form.address = null
         form.city = null
         form.district = null
-        form.wards =null
+        form.wards = null
     }
 }
 const wards = computed(() => {
@@ -157,16 +157,16 @@ const onChangeCity = (event) => {
     form.district = null;
     form.wards = null;
 }
-const onChangeUser = (value,select$) => {
+const onChangeUser = (value, select$) => {
 
-    if(typeof value ==='string'){
-        console.log( 'onChangeUser',form.name)
-        form.name= value
+    if (typeof value === 'string') {
+        console.log('onChangeUser', form.name)
+        form.name = value
     }
-    if(typeof value ==='number'){
-        console.log( 'onChangeUser',form.name)
-        form.user_id= value
-    }  
+    if (typeof value === 'number') {
+        console.log('onChangeUser', form.name)
+        form.user_id = value
+    }
 }
 const onChangeDistrict = (event) => {
     form.wards = null;
@@ -349,19 +349,36 @@ const date = ref(new Date());
                                             Khách
                                             Hàng
                                             *</label>
-                                          
-                                        <Multiselect v-model="form.user_id" @change="onChangeUser" 
-                                            @select="selectUser" :createOption="true" :canClear="true" :searchable="true"
-                                            label="name" valueProp="id" trackBy="name" :options="customers"
-                                            placeholder="Chọn khác hàng" :appendNewOption="true">
 
+                                        <Multiselect v-model="form.user_id" @change="onChangeUser" @select="selectUser"
+                                            :createOption="true" :canClear="true" :searchable="true" label="name"
+                                            valueProp="id" trackBy="name" :options="customers" placeholder="Chọn khác hàng"
+                                            :appendNewOption="true">
                                             <template v-slot:singlelabel="{ value }">
+                                                <div class="multiselect-single-label">
+                                                    {{ value.name ? value.name : value }} ({{ value.phone_number ?
+                                                       '....'+ value.phone_number.split('').slice(-4).join('') : null }})
+                                                </div>
+                                            </template>
+
+                                            <template v-slot:option="{ option }">
+                                                {{ option.name ? option.name : value }} ({{ option.phone_number ?
+                                                        '....' +option.phone_number.split('').slice(-4).join('') : null }})
+                                            </template>
+                                            <!-- <template v-slot:singlelabel="{ value }">
 
                                                 <div class="multiselect-single-label">
                                                     {{ value.name ? value.name : value }} ({{ value.phone_number ?
                                                         value.phone_number.split('').slice(-4).join('') : null }})
                                                 </div>
                                             </template>
+                                            <template  v-slot:option="{ option }">
+
+                                                <div class="multiselect-single-label">
+                                                    {{ option.name ? option.name : value }} ({{ option.phone_number ?
+                                                        option.phone_number.split('').slice(-4).join('') : null }})
+                                                </div>
+                                            </template> -->
                                         </MultiSelect>
                                     </div>
                                     <div class="my-3">
@@ -376,8 +393,8 @@ const date = ref(new Date());
                                                     class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nam</label>
                                             </div>
                                             <div class="flex items-center mx-5">
-                                                <input  id="default-sex-2" type="radio" value="female"
-                                                    v-model="form.sex" name="default-radio"
+                                                <input id="default-sex-2" type="radio" value="female" v-model="form.sex"
+                                                    name="default-radio"
                                                     class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-sex-2"
                                                     class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nữ</label>
@@ -492,8 +509,9 @@ const date = ref(new Date());
                             </div>
                         </div>
                         <div class="my-3">
-
-                            <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
+                            <UploadImage :max_files="4" v-model="form.images" :multiple="true"
+                                :label="`Chứng từ liên quan`" />
+                            <!-- <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
                                 <div class="mr-2 inline-block relative" v-for="(img, index) in images " :key="index">
                                     <BaseIcon :path="mdiTrashCanOutline"
@@ -514,7 +532,7 @@ const date = ref(new Date());
                                 </label>
                                 <input id="uploadFile" @change="onFileChange" multiple type="file" class="hidden"
                                     accept="image/*">
-                            </div>
+                            </div> -->
                             <InputError class="mt-2" :message="form.errors.images" />
                             <div v-for="(error, index) in images" :key="index">
 
@@ -555,12 +573,12 @@ const date = ref(new Date());
                             <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
-                                
+
                         </div>
                         <div class="my-2" v-if="form.type == 'retail'">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Ưu đãi (%)</label>
-                                
+
                             <input type="number" id="first_name" v-model="form.discount_deal"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
@@ -593,29 +611,29 @@ const date = ref(new Date());
                                 Nhận hàng</label>
                             <div class="flex">
                                 <div class="flex items-center ">
-                                    <input id="default-radio-1" type="radio" value="Tại nhà" 
-                                        v-model="form.receive_at"
+                                    <input id="default-radio-1" type="radio" value="Tại nhà" v-model="form.receive_at"
                                         class="w-4 h-4  text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="default-receive_at-1" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Tại
+                                    <label for="default-receive_at-1"
+                                        class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Tại
                                         nhà</label>
                                 </div>
                                 <div class="flex items-center mx-5">
-                                    <input id="default-receive_at-2" type="radio" value="Tại sự kiện" v-model="form.receive_at"
-                                      
+                                    <input id="default-receive_at-2" type="radio" value="Tại sự kiện"
+                                        v-model="form.receive_at"
                                         class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="default-receive_at-2" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Tại
+                                    <label for="default-receive_at-2"
+                                        class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Tại
                                         sự kiện</label>
                                 </div>
 
                                 <div class="flex items-center mx-5">
                                     <input id="default-receive_at-3" type="radio" value="Khác" v-model="form.receive_at"
-                                       
                                         class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="default-receive_at-2"
                                         class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Khác</label>
                                 </div>
                                 <InputError class="mt-2" :message="form.errors.receive_at" />
-                
+
                             </div>
                         </div>
                         <div class="my-2">
@@ -638,10 +656,10 @@ const date = ref(new Date());
                 </div>
             </div>
 
-            <ProductGiff @saveGift="saveGift" v-if="form.type == 'gift_delivery'" :products="product_retails" 
+            <ProductGiff @saveGift="saveGift" v-if="form.type == 'gift_delivery'" :products="product_retails"
                 :cart="cart" />
 
-            <NewOrderProduct v-if="form.type == 'retail'" :products="product_retails"  :cart="cart"
+            <NewOrderProduct v-if="form.type == 'retail'" :products="product_retails" :cart="cart"
                 :total_price="total_price" :vat="form.vat" :discount_deal="form.discount_deal"
                 :shipping_fee="form.shipping_fee" :payment_method="form.payment_method" :type="form.type"
                 :amount_paid="form.amount_paid" :sub_total="sub_total" @confirm="saveOrder" />

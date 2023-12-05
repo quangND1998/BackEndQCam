@@ -618,13 +618,14 @@ class OrderController extends Controller
 
     public function edit(Request $request, Order $order)
     {
+       
         Cart::clear();
         Cart::clearCartConditions();
         if ($order->payment_status == 1) {
             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
         }
         if ($order->status == 'pending') {
-            $order->load('orderItems.product', 'customer');
+            $order->load('orderItems.product', 'customer','order_related_images');
             if (Cart::isEmpty()) {
                 foreach ($order->orderItems as $item) {
                     Cart::add(array(
@@ -658,6 +659,7 @@ class OrderController extends Controller
 
     public function updateOrderRetail(UpdateOrderReuquest $request , Order $order, User $user){
      
+   
         if ($order->payment_status == 1) {
             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
         }
@@ -680,12 +682,12 @@ class OrderController extends Controller
 
             return  redirect()->route('admin.payment.orderCashBankingPayment', [$order_update]);
         }
-
+        return redirect()->route('admin.orders.pending')->with('success', 'Đã cập nhật đơn');
     }
 
 
     public function updateOrderGift(OrderGiftUpdateRequest $request , Order $order, User $user){
-       
+   
         if ($order->status !== 'pending') {
              return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
         }

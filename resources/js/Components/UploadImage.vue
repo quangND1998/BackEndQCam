@@ -154,7 +154,7 @@ const Delete = (img) => {
                 <div class="flex flex-wrap">
                     <div class="w-16 h-14 relative m-1 border border-gray-400 rounded-lg"
                         v-for="(img, index) in old_images " :key="index">
-                        <BaseIcon :path="mdiDelete" class="absolute text-red-600 hover:text-red-700  " @click="Delete(img)"
+                        <BaseIcon :path="mdiDelete" class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  " @click="Delete(img)"
                             size="16">
                         </BaseIcon>
                         <img :src="img.original_url" class="w-16 h-14 object-cover rounded-lg" alt="">
@@ -166,6 +166,7 @@ const Delete = (img) => {
                         </BaseIcon>
                         <img :src="img.image" class="w-16 h-14 object-cover rounded-lg" alt="">
                     </div>
+                  
                     <label :for="id" v-if="form.images.length < max_files"
                         class="cursor-pointer w-16 h-16 border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg">
                         <BaseIcon :path="mdiPlus" class="" :size="16" />

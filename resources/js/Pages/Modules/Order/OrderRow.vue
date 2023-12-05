@@ -27,7 +27,7 @@ const props = defineProps({
 
 <template>
     <div>
-        <div @click.prevent="toggleContent" class=" grid grid-cols-8 px-3 py-1 mt-2 mb-2 text-sm  text-gray-400">
+        <div @click.prevent="toggleContent" class=" grid grid-cols-9 px-3 py-1 mt-2 mb-2 text-sm  text-gray-400">
             <div>
                 <Link class="flex items-center" :href="route('admin.payment.orderCashBankingPayment', order.id)">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -46,7 +46,7 @@ const props = defineProps({
                 <p>{{ formatTimeDayMonthyear(order.created_at) }}</p>
             </div>
             <div>
-                <p>{{ order.status }}</p>
+                <p class="btn_label mr-2 paid">{{ order.status }}</p>
             </div>
 
             <div>
@@ -54,6 +54,15 @@ const props = defineProps({
             </div>
             <div>
                 <p v-if="order.saler">{{ order.saler.name }}</p>
+            </div>
+
+            <div>
+                <p v-if="order.type == 'gift_delivery'" class="btn_label mr-2 paid" 
+                  > Không cần thành toán</p>
+                <p v-else class="btn_label mr-2" 
+                    :class="order.payment_status  ==  0 ? 'unpaid' : 'paid'">
+                    {{ order.payment_status  ==  0
+                        ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
             </div>
             <div>
                 <Link
@@ -182,4 +191,31 @@ const props = defineProps({
 
 
 
-<style></style>
+<style>
+
+
+.paid {
+    background-color: rgb(240 253 244/var(--tw-bg-opacity));
+    border-color: rgb(187 247 208/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 1px;
+    color: rgb(22 163 74/var(--tw-text-opacity));
+}
+
+.unpaid {
+    background-color: rgb(254 242 242/var(--tw-bg-opacity));
+    border-color: rgb(254 226 226/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 1px;
+    color: rgb(220 38 38/var(--tw-text-opacity));
+}
+
+.btn_label {
+    align-items: center;
+    border-radius: 0.5rem;
+    display: inline-flex;
+    font-size: .75rem;
+    font-weight: 500;
+    line-height: 1rem;
+    padding: 0.25rem 0.625rem;
+}</style>

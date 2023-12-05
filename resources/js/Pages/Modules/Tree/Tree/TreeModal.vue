@@ -225,7 +225,7 @@ const onFileChange = (e) => {
                         </div>
                         <div class=" ">
                             <UploadImage v-if="editMode ==false" :max_files="1" v-model="form.images_thumb" :multiple="false" :label="`Ảnh đại diện`" />
-                            <UploadImage v-else :max_files="1" v-model="form.images_thumb" :multiple="false" :images="tree?.thumb_image"  :label="`Ảnh đại diện`" />
+                            <UploadImage v-else :max_files="1" v-model="form.images_thumb" :multiple="false" :old_images="tree?.thumb_image"  :label="`Ảnh đại diện`" />
                             <!-- <InputLabel for="name_amenities" value="Ảnh đại diện" />
                             <label for="dropzone-images_thumb"
                                 class="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">

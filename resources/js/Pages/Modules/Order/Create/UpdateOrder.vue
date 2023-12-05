@@ -32,6 +32,7 @@ import ProductGiff from '@/Pages/Modules/Order/Create/ProductGiff.vue'
 import axios from "axios";
 import MazSelect from 'maz-ui/components/MazSelect'
 import { useCartStore } from "@/stores/cart";
+import UploadImage from '@/Components/UploadImage.vue'
 const swal = inject("$swal");
 
 const props = defineProps({
@@ -458,8 +459,8 @@ const date = ref(new Date());
                             </div>
                         </div>
                         <div class="my-3">
-
-                            <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
+                            <UploadImage  :max_files="4"  v-model="form.images" :multiple="true"  :old_images="order.order_related_images"  :label="`Bộ sưu tập ảnh`" />
+                            <!-- <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
                                 <div class="mr-2 inline-block relative" v-for="(img, index) in images " :key="index">
                                     <BaseIcon :path="mdiTrashCanOutline"
@@ -480,7 +481,7 @@ const date = ref(new Date());
                                 </label>
                                 <input id="uploadFile" @change="onFileChange" multiple type="file" class="hidden"
                                     accept="image/*">
-                            </div>
+                            </div> -->
                             <InputError class="mt-2" :message="form.errors.images" />
                             <div v-for="(error, index) in images" :key="index">
 

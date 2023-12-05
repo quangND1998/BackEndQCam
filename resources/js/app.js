@@ -32,7 +32,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
-
+import VueCountdown from '@chenfengyuan/vue-countdown';
 
 // import 'vue3-carousel/dist/carousel.css'
 createInertiaApp({
@@ -48,6 +48,7 @@ createInertiaApp({
             .component('QuillEditor', QuillEditor)
             .component('VueDatePicker', VueDatePicker)
             .component("infinite-loading", InfiniteLoading)
+            .component('vue-countdown', VueCountdown)
             .use(VueSweetalert2)
             .directive('tooltip', Tooltip)
             .mixin(helper, base)
@@ -63,12 +64,12 @@ const treeStore = useTreeStore(pinia)
 const profileStore = useProfileStore(pinia)
 const cartStore = useCartStore(pinia)
 document.documentElement.classList.forEach((token) => {
-    if (token.indexOf('style') === 0) {
+        if (token.indexOf('style') === 0) {
+            document.documentElement.classList.replace(token, `style-basic`)
+        }
         document.documentElement.classList.replace(token, `style-basic`)
-    }
-    document.documentElement.classList.replace(token, `style-basic`)
-})
-/* Dark mode */
+    })
+    /* Dark mode */
 if (
     (!localStorage[darkModeKey] && window.matchMedia('(prefers-color-scheme: dark)').matches) ||
     localStorage[darkModeKey] === '1'

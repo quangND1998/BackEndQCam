@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive } from "vue";
+import { computed, ref, inject, reactive,onMounted } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
@@ -19,7 +19,8 @@ import {
     mdiTrashCanOutline,
     mdiCodeBlockBrackets,
     mdiPencil,
-    mdiLandFields
+    mdiLandFields,
+    mdiContentSaveMove
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -45,8 +46,15 @@ const props = defineProps({
     to: String,
     statusGroup: Array
 });
-
-
+onMounted(() => {
+    getNow();
+    setInterval(getNow(), 1000);
+})
+const  timestamp= ref('');
+const getNow= ()=> {
+      const today = new Date();
+      timestamp.value = parseInt(today.getTime() / 1000);
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -57,6 +65,7 @@ const props = defineProps({
                 <div class="min-[320px]:block sm:block md:grid grid-cols-3 gap-4">
                     <div class="col-span-2">
                         <InvoiceInformation :order="order" />
+                       
                         <div class="mt-5">
                             <h3 class="text-[17px] font-bold">Thông tin liên hệ</h3>
                             <p class="text-[#686868] text-base my-2">Khách hàng: <strong class="ml-3">
@@ -190,7 +199,15 @@ const props = defineProps({
                     </div>
                     <div class="text-center ">
                         <h1 class="my-2">Đơn hàng hết hạn trong</h1>
-                        <h1 class="text-[30px] font-semibold text-[#686868] my-2">3:30</h1>
+                        <h1 class="text-[30px] font-semibold text-[#686868] my-2">
+                          
+                        <vue-countdown class="block" v-if="order.time_expried && timestamp != null && (order.time_expried - timestamp) > 0"
+                          :time="(order.time_expried - timestamp) * 1000" 
+                          v-slot="{days, hours, minutes, seconds }">
+                          {{ days }}:{{ hours }} : {{ minutes }}: {{ seconds }}
+                        </vue-countdown>  
+                        <span class="font-semibold text-yellow-600 text-center"  v-if="order.time_expried && timestamp != null && (order.time - timestamp) < 0"> Hết hạn </span>                  
+                        </h1>
                         <p class="font-semibold text-base text-[#FF0000]">Chưa thanh toán</p>
                         <div class="mt-5">
                             <img src="/assets/images/qr.png" class="w-44 h-44 m-auto" alt="">
