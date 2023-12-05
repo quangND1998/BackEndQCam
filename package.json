@@ -44,7 +44,7 @@
         "laravel-echo": "^1.11.3",
         "libphonenumber-js": "^1.10.49",
         "lodash": "^4.17.15",
-        "maz-ui": "^3.22.1",
+        "maz-ui": "^3.29.4",
         "mdb-vue-ui-kit": "^4.1.1",
         "mitt": "^3.0.1",
         "moment": "^2.29.4",

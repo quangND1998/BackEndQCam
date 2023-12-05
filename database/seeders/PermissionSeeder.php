@@ -75,5 +75,10 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'info-customer']);
         Permission::create(['name' => 'pakage-custommer']);
         Permission::create(['name' => 'document-custommer']);
+
+        Permission::create(['name' => 'view-shipper']);
+        Permission::create(['name' => 'create-schedule']);
+        Permission::create(['name' => 'add-order-shipper']);
+
     }
 }
