@@ -182,12 +182,12 @@ export default [{
     {
         label: 'Cài đặt',
         icon: mdiCogOutline,
-        permissions: ['view-user', 'view-news', 'create-news', 'update-news', 'delete-news'],
+        permissions: ['view-user', 'view-news', 'create-news', 'update-news', 'delete-news', 'view-setting', 'view-notification', 'view-setting-privacy', 'view-setting-contact'],
         route_list: ['news.index', 'admin.terms.index', 'admin.contact.index', 'admin.FAQs.index'],
         menu: [{
                 route: '',
                 label: 'Thông báo',
-                permissions: ['super-admin'],
+                permissions: ['super-admin', 'view-notification'],
                 route_list: null
             },
             {
@@ -199,25 +199,25 @@ export default [{
             {
                 route: '',
                 label: 'Thông tin chung',
-                permissions: ['super-admin'],
+                permissions: ['super-admin', 'view-setting'],
                 route_list: null
             },
             {
                 route: 'admin.terms.index',
                 label: 'Điều khoản',
-                permissions: ['super-admin'],
+                permissions: ['super-admin', 'view-setting-privacy'],
                 route_list: null
             },
             {
                 route: 'admin.contact.index',
                 label: 'Liên hệ',
-                permissions: ['super-admin'],
+                permissions: ['super-admin', 'view-setting-contact'],
                 route_list: null
             },
             {
                 route: 'admin.FAQs.index',
                 label: 'FAQs',
-                permissions: ['super-admin'],
+                permissions: ['super-admin', 'view-setting-faq'],
                 route_list: null
             }
         ]

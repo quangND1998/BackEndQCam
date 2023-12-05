@@ -78,6 +78,36 @@ const deleteHistory = (id) => {
             }
         });
 };
+const openAcceptPayment = () => {
+    let query = {
+        status: "complete"
+      };
+    swal
+        .fire({
+            title: "Bạn có muốn?",
+            text: `Duyệt khoản thanh toán này không`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Có",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                router.post(route("admin.orders.package.setPaymentComplete", [form.order?.id,id]), query,
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã thêm hợp đồng với khách hàng.", "success");
+                    },
+                });
+
+            }
+        });
+}
+
 const save = () => {
     console.log(form);
     form.post(route("admin.orders.package.historyPayment", form.order?.id), {
@@ -174,6 +204,8 @@ const save = () => {
                             </td>
                             <td class="border-0">
                                 {{ payment.status == 'complete' ? payment.user?.name : null}}
+                                <button v-if="payment.status != 'complete'"
+                                    class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary"  @click="openAcceptPayment(payment.id)">Duyệt </button>
                             </td>
                             <td class="border-0">
                                 <BaseButton v-if="payment.status != 'complete'" color="gray" class="border-0 text=gray=300 hover:text-black"

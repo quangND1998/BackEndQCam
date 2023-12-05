@@ -279,20 +279,6 @@ class OrderPackageController extends Controller
         }
         return $history_payment;
     }
-    public function deleteHistoryPayment($orderpackage,$id){
-        $history = HistoryPayment::find($id);
-        $history->delete();
-        $order = OrderPackage::find($orderpackage);
-        if($order->totalPayment() >= $order->grand_total){
-            $order->payment_status = 1;
-            $order->save();
-        }else{
-            $order->price_percent = $order->totalPayment();
-            $order->payment_status = 0;
-            $order->save();
-        }
-        return redirect()->back()->with('success', "Xóa tài khoản  thành công");
-    }
     public function saveOrderPackage(Request $request){
         $order = OrderPackage::create($request->all());
     }

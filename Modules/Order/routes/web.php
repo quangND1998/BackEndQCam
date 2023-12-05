@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Order\app\Http\Controllers\HistoryPaymentController;
 use Modules\Order\app\Http\Controllers\OrderController;
 use Modules\Order\app\Http\Controllers\PaymentController;
 use Modules\Order\app\Http\Controllers\ProductServiceVoucherController;
@@ -93,7 +94,8 @@ Route::middleware(['auth'])->group(
                     Route::post('orderCancel/{order}', [OrderPackageController::class, 'orderCancel'])->name('orderCancel');
                     Route::post('orderComplete/{order}', [OrderPackageController::class, 'orderComplete'])->name('orderComplete');
                     Route::post('historyPayment/{order}', [OrderPackageController::class, 'saveHistoryPaymentOrder'])->name('historyPayment');
-                    Route::post('{order}/deleteHistoryPayment/{id}', [OrderPackageController::class, 'deleteHistoryPayment'])->name('deleteHistoryPayment');
+                    Route::post('{order}/deleteHistoryPayment/{id}', [HistoryPaymentController::class, 'deleteHistoryPayment'])->name('deleteHistoryPayment');
+                    Route::post('{order}/payment/{id}/complete', [HistoryPaymentController::class, 'setPaymentComplete'])->name('setPaymentComplete');
                     //
                     // saveHistoryPaymentOrder
                 });
