@@ -85,16 +85,20 @@ class UserController extends Controller
         if ($user->hasRole('super-admin')) {
             $roles = Role::where('name', '!=', 'super-admin')->get();
             $leader_sales = User::role('leader-sale')->get();
+            $leader_shipper = User::role('leader-shipper')->get();
         } elseif($user->hasRole('leader-sale')) {
             $roles = Role::where('name', 'saler')->get();
             $leader_sales = null;
+            $leader_shipper =null;
+
         }
         elseif($user->hasRole('leader-shipper')) {
             $roles = Role::where('name', 'shipper')->get();
             $leader_sales = null;
+            $leader_shipper =null;
         }
 
-        return Inertia::render('Admin/CreateUser', compact('roles', 'leader_sales'));
+        return Inertia::render('Admin/CreateUser', compact('roles', 'leader_sales','leader_shipper'));
     }
 
 

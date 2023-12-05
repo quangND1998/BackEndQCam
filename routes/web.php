@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Home\ScheduleVisitController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TestController;
 use Modules\Landingpage\app\Http\Controllers\TermsConditionController;
@@ -90,6 +91,10 @@ Route::middleware(['auth'])->group(
 
         Route::prefix('notification')->as('notification.')->group(function () {
             Route::get('all', [NotificationController::class, 'index'])->name('all');
+        });
+
+        Route::prefix('media')->as('media.')->group(function () {
+            Route::delete('delete/{id}', [MediaController::class, 'delete'])->name('delete');
         });
 
 

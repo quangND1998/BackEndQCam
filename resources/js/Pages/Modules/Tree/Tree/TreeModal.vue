@@ -17,6 +17,7 @@ import UploadImage from '@/Components/UploadImage.vue'
 const swal = inject('$swal')
 const store = useTreeStore();
 const images = ref([]);
+const tree = ref(null)
 const form = useForm({
     id: null,
     name: null,
@@ -66,6 +67,7 @@ onMounted(() => {
         form.status = data.status;
         form.description = data.description;
         form.user_manual = data.user_manual;
+        tree.value=data
     });
 
 
@@ -222,7 +224,8 @@ const onFileChange = (e) => {
                             <InputError class="mt-2" :message="form.errors.price" />
                         </div>
                         <div class=" ">
-                            <UploadImage :max_files="1" v-model="form.images_thumb" :multiple="false" :label="`Ảnh đại diện`" />
+                            <UploadImage v-if="editMode ==false" :max_files="1" v-model="form.images_thumb" :multiple="false" :label="`Ảnh đại diện`" />
+                            <UploadImage v-else :max_files="1" v-model="form.images_thumb" :multiple="false" :images="tree?.thumb_image"  :label="`Ảnh đại diện`" />
                             <!-- <InputLabel for="name_amenities" value="Ảnh đại diện" />
                             <label for="dropzone-images_thumb"
                                 class="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -294,8 +297,9 @@ const onFileChange = (e) => {
                             <InputError class="mt-2" :message="form.errors.transfer_value" />
                         </div> -->
                         <div class="">
-                    
-                          <UploadImage :max_files="4" v-model="form.images" :multiple="true" :label="`Bộ sưu tập ảnh`" />
+                           
+                          <UploadImage v-if="editMode ==false" :max_files="4"  v-model="form.images" :multiple="true" :label="`Bộ sưu tập ảnh`" />
+                          <UploadImage v-else :max_files="4"  v-model="form.images" :multiple="true"  :old_images="tree?.images"  :label="`Bộ sưu tập ảnh`" />
                           <InputError class="mt-2" :message="form.errors.images" /> 
                         </div>
                     </div>

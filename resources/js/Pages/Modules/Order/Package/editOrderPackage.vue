@@ -28,6 +28,7 @@ import { initFlowbite } from 'flowbite'
 import Dropdown from 'primevue/dropdown';
 import BaseIcon from '@/Components/BaseIcon.vue'
 import NewOrderPackage from '@/Pages/Modules/Order/Create/NewOrderPackage.vue'
+import UploadImage from "@/Components/UploadImage.vue"
 import axios from "axios";
 const swal = inject("$swal");
 
@@ -62,14 +63,14 @@ const form = useForm({
     payment_method: props.order?.payment_method,
     shipping_fee: 0,
     time_reservations: props.order.time_reservations,
-    price_percent: props.order?.grand_total ,
+    price_percent: props.order?.grand_total,
     product_selected: props.order?.product_service?.id,
     time_approve: new Date(),
-    max_price : props.order.grand_total,
-    images: props.order.order_package_images,
-    sale_id:props.order.sale_id,
-    leader_sale_id:props.order.to_id,
-    type_customer_resource:props.order.customer_resources,
+    max_price: props.order.grand_total,
+    images: [],
+    sale_id: props.order.sale_id,
+    leader_sale_id: props.order.to_id,
+    type_customer_resource: props.order.customer_resources,
     customer_resource_id: props.order.customer_resources_id,
 
 })
@@ -200,8 +201,8 @@ const save = () => {
 }
 const changeProduct = (event) => {
     form.product_selected = event.target.value;
-    if(product.value){
-    form.max_price =product.value.price
+    if (product.value) {
+        form.max_price = product.value.price
     }
 
 }
@@ -234,19 +235,19 @@ const maxPrice = computed({
 
 
     get() {
-         if (form.max_price > 0) {
+        if (form.max_price > 0) {
             let maxPrice = form.max_price
             if (form.discount_deal > 0) {
-                maxPrice = maxPrice - (( maxPrice * form.discount_deal) / 100)
+                maxPrice = maxPrice - ((maxPrice * form.discount_deal) / 100)
             }
             if (form.vat > 0) {
-                maxPrice+=  ((maxPrice * form.vat) / 100)
+                maxPrice += ((maxPrice * form.vat) / 100)
             }
-            form.price_percent= maxPrice;
+            form.price_percent = maxPrice;
             return maxPrice;
         }
         else {
-            form.price_percent= 0;
+            form.price_percent = 0;
             return 0
         }
     },
@@ -257,16 +258,16 @@ const maxPrice = computed({
         if (newValue > 0) {
             let maxPrice = newValue
             if (form.discount_deal > 0) {
-                maxPrice =newValue - ((newValue * form.discount_deal) / 100)
+                maxPrice = newValue - ((newValue * form.discount_deal) / 100)
             }
             if (form.vat > 0) {
-                maxPrice +=  ((maxPrice * form.vat) / 100)
+                maxPrice += ((maxPrice * form.vat) / 100)
             }
             console.log(maxPrice)
-            form.price_percent= maxPrice;
+            form.price_percent = maxPrice;
         }
         else {
-            form.price_percent= 0;
+            form.price_percent = 0;
         }
     }
 })
@@ -368,9 +369,8 @@ const date = ref(new Date());
                                     </div>
 
                                     <div class="my-3">
-                                        <label for="first_name"
-                                                class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                                Thành phố*</label>
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Thành phố*</label>
                                         <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name"
                                             @change="onChangeCity($event)" optionValue="Name" placeholder="Chọn tỉnh thành"
                                             class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm ">
@@ -456,34 +456,16 @@ const date = ref(new Date());
                         </div>
 
                         <div class="my-3">
-
-                            <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
-                            <div class="flex mt-2">
-                                <div class="mr-2 inline-block" v-for="(img, index) in order.order_package_images " :key="index">
-                                    <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
-                                        @click="DeleteImage(index)" size="16">
-                                    </BaseIcon>
-                                    <img :src="img.original_url" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div>
-                                <!-- <div class="mr-2 inline-block" v-for="(img, index) in images " :key="index">
-                                    <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
-                                        @click="DeleteImage(index)" size="16">
-                                    </BaseIcon>
-                                    <img :src="img.image" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div> -->
-
-                                <label for="uploadFile"
-                                    class="mr-2 cursor-pointer border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg w-20 h-20">
-                                    <svg width="10" height="11" viewBox="0 0 10 11" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M3.88228 10.1406V0.311079H6.11239V10.1406H3.88228ZM0.0825639 6.34091V4.1108H9.91211V6.34091H0.0825639Z"
-                                            fill="#D9D9D9" />
-                                    </svg>
-                                </label>
-                                <input id="uploadFile" @change="onFileChange" multiple type="file" class="hidden"
-                                    accept="image/*">
+                            <div class="mr-2 inline-block" v-for="(img, index) in order.order_package_images " :key="index">
+                                <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
+                                    @click="DeleteImage(index)" size="16">
+                                </BaseIcon>
+                                <img :src="img.original_url" class="w-20 h-20 object-cover rounded-lg" alt="">
                             </div>
+
+                            <UploadImage :max_files="4" v-model="form.images" :multiple="true"
+                                :label="`Chứng từ liên quan`" />
+
                             <InputError class="mt-2" :message="form.errors.images" />
                             <div v-for="(error, index) in images" :key="index">
 
@@ -505,7 +487,7 @@ const date = ref(new Date());
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Ưu đãi (%)</label>
-                            <input type="number" id="first_name" v-model="form.discount_deal"  min="0" max="100"
+                            <input type="number" id="first_name" v-model="form.discount_deal" min="0" max="100"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
                         </div>
@@ -523,8 +505,8 @@ const date = ref(new Date());
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required> -->
 
-                                <MazInputPrice  v-model="form.price_percent" currency="VND"  locale="vi-VN" :min="0"  :max="maxPrice"
-                                @formatted="formattedPrice = $event" />
+                            <MazInputPrice v-model="form.price_percent" currency="VND" locale="vi-VN" :min="0"
+                                :max="maxPrice" @formatted="formattedPrice = $event" />
 
                         </div>
                         <div class="my-2">
@@ -540,38 +522,43 @@ const date = ref(new Date());
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 NV tư vấn bán hàng(Ref)</label>
-                            <Multiselect v-model="form.sale_id"  :appendNewTag="false" :createTag="false"
-                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="Chọn sale"
-                           />
+                            <Multiselect v-model="form.sale_id" :appendNewTag="false" :createTag="false" :searchable="true"
+                                label="name" valueProp="id" trackBy="name" :options="sales" placeholder="Chọn sale" />
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Chọn TO(Người chốt đơn)</label>
-                            <Multiselect v-model="form.leader_sale_id"  :appendNewTag="false" :createTag="false"
-                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="leaders"  placeholder="Chọn To"
-                           />
+                            <Multiselect v-model="form.leader_sale_id" :appendNewTag="false" :createTag="false"
+                                :searchable="true" label="name" valueProp="id" trackBy="name" :options="leaders"
+                                placeholder="Chọn To" />
                         </div>
                         <div class="my-2">
-                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Nguồn khách hàng</label>
                             <div class="flex items-center justify-center mb-2">
-                                <input class=" mr-2" type="radio" id="telesale" value="telesale" v-model="form.type_customer_resource" />
+                                <input class=" mr-2" type="radio" id="telesale" value="telesale"
+                                    v-model="form.type_customer_resource" />
                                 <label for="telesale" class="w-[80px] mr-2">Telesale </label>
-                                <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false" :disabled="form.type_customer_resource == 'telesale' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="form.type_customer_resource == 'ctv' ? telesale : null"  placeholder="Chọn Telesale"
-                                />
+                                <Multiselect v-model="form.customer_resource_id" :appendNewTag="false" :createTag="false"
+                                    :disabled="form.type_customer_resource == 'telesale' ? false : true" :searchable="true"
+                                    label="name" valueProp="id" trackBy="name"
+                                    :options="form.type_customer_resource == 'ctv' ? telesale : null"
+                                    placeholder="Chọn Telesale" />
                             </div>
                             <div class="flex items-center justify-center mb-2">
 
-                                <input class=" mr-2" type="radio" id="ctv" value="ctv" v-model="form.type_customer_resource" />
+                                <input class=" mr-2" type="radio" id="ctv" value="ctv"
+                                    v-model="form.type_customer_resource" />
                                 <label for="ctv" class="w-[80px] mr-2">CTV</label>
-                                <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false"  :disabled="form.type_customer_resource == 'ctv' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="form.type_customer_resource == 'ctv' ? ctv : null"  placeholder="Chọn ctv"
-                                />
+                                <Multiselect v-model="form.customer_resource_id" :appendNewTag="false" :createTag="false"
+                                    :disabled="form.type_customer_resource == 'ctv' ? false : true" :searchable="true"
+                                    label="name" valueProp="id" trackBy="name"
+                                    :options="form.type_customer_resource == 'ctv' ? ctv : null" placeholder="Chọn ctv" />
                             </div>
                             <div class=" mb-2">
 
-                                <input class=" mr-2" type="radio" id="private" value="private" v-model="form.type_customer_resource" />
+                                <input class=" mr-2" type="radio" id="private" value="private"
+                                    v-model="form.type_customer_resource" />
                                 <label for="private" class="w-[80px] mr-2">Private</label>
                             </div>
                         </div>
@@ -601,8 +588,7 @@ const date = ref(new Date());
                             <tbody>
                                 <tr class="bg-white border-b ">
                                     <td class="px-6 py-4 ">
-                                        <select id="countries" @change="changeProduct"
-                                            v-model="form.product_selected"
+                                        <select id="countries" @change="changeProduct" v-model="form.product_selected"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 ">
                                             <option v-for="(product, index) in product_services" :key="index"
                                                 :value="product.id">{{
@@ -695,7 +681,7 @@ const date = ref(new Date());
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold" v-if="((product?.price +
                             ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
-                            form.price_percent ) > 0 ">Còn thiếu</p>
+                            form.price_percent) > 0">Còn thiếu</p>
                         <p v-else class="text-sm text-[#686868] font-bold">Còn thừa</p>
                         <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice(maxPrice -
                             form.price_percent) }} vnđ</p>
