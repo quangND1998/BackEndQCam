@@ -324,7 +324,7 @@ class UserController extends Controller
             else{
                 $order->sale_id = $admin->id;
             }
-           
+
             $order->save();
         }
         // Update orders_sale
@@ -335,7 +335,7 @@ class UserController extends Controller
             else{
                 $order->sale_id = $admin->id;
             }
-           
+
             $order->save();
         }
     }

@@ -151,9 +151,9 @@ const save = () => {
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Giới tính</label>
                                         <div class="flex">
-                                        
+
                                             <div class="flex items-center ">
-                                                <input id="default-radio-1" type="radio" value="male" 
+                                                <input id="default-radio-1" type="radio" value="male"
                                                     v-model="form.sex"
                                                     class="w-4 h-4  text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-radio-1"
@@ -257,18 +257,10 @@ const save = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
-                            <h3 class="text-[17px] font-bold">Chọn Team</h3>
-                            <div class="grid grid-cols-2 gap-4">
-
-                                <Multiselect v-model="form.leader_sale_id"  :appendNewTag="false" :createTag="false"
-                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"  placeholder="Chọn Team"
-                             />
-                            </div>
-                        </div>
 
                         <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
-                            <h3 class="text-[17px] font-bold">Chọn Team</h3>
+                            <label for="cic_number" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Chọn Team</label>
                             <div class="grid grid-cols-2 gap-4">
 
                                 <Multiselect v-model="form.leader_shipper_id"  :appendNewTag="false" :createTag="false"

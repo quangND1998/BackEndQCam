@@ -25,7 +25,7 @@ class OrderPackage extends Model implements HasMedia
         'vat',
         'discount_deal',
         'type',
-        'sale_id',
+        'sale_id','to_id','customer_resources','customer_resources_id',
         'wards',  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent","time_reservations"
     ];
     /**
@@ -104,5 +104,12 @@ class OrderPackage extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'sale_id');
     }
-
+    public function leader()
+    {
+        return $this->belongsTo(User::class, 'to_id');
+    }
+    public function resources()
+    {
+        return $this->belongsTo(User::class, 'customer_resources_id');
+    }
 }
