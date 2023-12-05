@@ -19,23 +19,36 @@ class HistoryPaymentController extends Controller
         $history->delete();
         $order = OrderPackage::find($orderpackage);
         if($order->totalPayment() >= $order->grand_total){
-            $order->payment_status = 1;
-            $order->save();
+            // $order->payment_status = 1;
+            // $order->save();
         }else{
             $order->price_percent = $order->totalPayment();
-            $order->payment_status = 0;
+           // $order->payment_status = 0;
             $order->save();
         }
         return redirect()->back()->with('success', "Xóa tài khoản  thành công");
     }
 
     public function setPaymentComplete($orderpackage,$id){
+        
         $history = HistoryPayment::find($id);
         if($history){
             $history->status = "complete";
             $history->user_id = Auth::user()->id;
             $history->save();
         }
+        $order = OrderPackage::with('historyPayment')->find($orderpackage);
+        $allHistory = $order->historyPayment->every(function ($history) {
+            return $history->status == "complete";
+        });
+        if ($allHistory) {
+            $order->payment_status = 1;
+            $order->save();
+        } else {
+            $order->payment_status = 0;
+            $order->save();
+        }
+                
         return redirect()->back()->with('success', "duyệt  thành công");
     }
 }

@@ -9,7 +9,7 @@ import CardBox from "@/Components/CardBox.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import PackageBar from "@/Pages/Modules/Order/Package/PackageBar.vue";
 import ModalDecline from "./ModalDecline.vue";
-import ModelRefund from "./../ModelRefund.vue";
+import ModelRefund from "../ModelRefund.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -269,10 +269,10 @@ const changeDate = () => {
                                         <p>Trạng thái</p>
                                     </div>
                                      <div>
-                                        <p>Lý do</p>
+                                        <p>Người duyệt cuối</p>
                                     </div>
                                     <div>
-                                        <p>Người hủy</p>
+                                        <p>Tài liệu</p>
                                     </div>
                                 </div>
 

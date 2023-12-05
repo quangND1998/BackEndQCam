@@ -52,7 +52,10 @@ class OrderPackageController extends Controller
         $status = 'pending';
         // $orders =  OrderPackage::with('customer','product_service')->where('status','pending')->get();
         $orders  = $this->getOrder($request,$status);
-        //  return $orders;
+        // foreach($orders as $order){
+        //     dd($order->checkPaymentComplete());
+        // }
+        // return $orders;
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
@@ -67,7 +70,7 @@ class OrderPackageController extends Controller
         // $orders =  OrderPackage::with('customer','product_service')->where('status','decline')->get();
         //return $orders;
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/OrderCancel', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listOrderComplete(Request $request)
     {
@@ -78,7 +81,7 @@ class OrderPackageController extends Controller
         // return $orders;
         // $orders =  OrderPackage::with('customer','product_service')->where('status','complete')->orderBy('created_at','desc')->get();
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/OrderComplete', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function partiallyPaid(Request $request)
     {
@@ -254,14 +257,14 @@ class OrderPackageController extends Controller
         $order->save();
         $order = OrderPackage::find($id);
         $order->price_percent = $order->totalPayment();
-        if($order->totalPayment() >= $order->grand_total){
-            $order->payment_status = 1;
-            $order->save();
-        }else{
+        // if($order->totalPayment() >= $order->grand_total){
+        //     $order->payment_status = 1;
+        //     $order->save();
+        // }else{
 
-            $order->payment_status = 0;
-            $order->save();
-        }
+        //     $order->payment_status = 0;
+        //     $order->save();
+        // }
 
         return back()->with('success', 'Lưu payment thành công');
     }
@@ -331,6 +334,7 @@ class OrderPackageController extends Controller
 
         $order->update([
             'status' => $request->status,
+            'package_reviewer' => Auth::user()->id
         ]);
         $this->storeOrderPackage($order);
         return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
@@ -344,7 +348,7 @@ class OrderPackageController extends Controller
             $new_product_owner = new ProductServiceOwner;
             $new_product_owner->time_approve = $order->time_approve;
             $new_product_owner->time_end = $order->time_end;
-
+            $new_product_owner->price = $order->grand_total;
             $new_product_owner->description = $customer->name . " sử dụng gói " . $product_service->name;
             $new_product_owner->state = "active"; //active, expired, stop
             $new_product_owner->user_id = $customer->id;
@@ -361,7 +365,7 @@ class OrderPackageController extends Controller
             //history
 
             $history_extend = new HistoryExtend;
-            $history_extend->price = $product_service->price;
+            $history_extend->price = $order->grand_total;
             $history_extend->product_name = $product_service->name;
             $history_extend->date_from = $order->time_approve;
             $history_extend->date_to = $order->time_end;
@@ -421,7 +425,7 @@ class OrderPackageController extends Controller
     }
     public function getOrder($request, $status)
     {
-        return OrderPackage::with(['customer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler'])->role()->whereHas(
+        return OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');

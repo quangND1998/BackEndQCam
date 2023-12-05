@@ -6,19 +6,26 @@
             data-target="#exampleModalDecline" @click="openDecline(order)">Hủy gói</button>
             <Link v-if="status == 'pending' " :href="`/admin/orders/package/edit/${order.id}`"
             class="border text-blue-700 rounded-lg bg-gray-100 px-3 py-2">Chỉnh sửa</Link>
+            <button v-if="status == 'decline'" class="border rounded-lg bg-gray-100 px-3 py-2" @click="orderChangePending(order)">Làm mới hợp đồng</button>
+            <button v-if="status == 'decline'  "
+            class="border text-red-700 rounded-lg bg-gray-100 px-3 py-2" data-toggle="modal"
+            data-target="#exampleModalDecline" @click="openDecline(order)">Xóa gói</button>
         </div>
 
-         <button v-if="status == 'decline'" class="border rounded-lg bg-gray-100 px-3 py-2" @click="orderChangePending(order)">Làm mới hợp đồng</button>
+         
         <div class="flex">
-            <select v-if="status == 'pending' || status == 'packing' || status == 'shipping' || status == 'completed'"
+            <!-- <select v-if="status == 'pending' || status == 'packing' || status == 'shipping' || status == 'completed'"
                 id="countries" @change="orderChangePayment( $event)"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-4.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option :value="0" :selected="order.payment_status == 0 ? true : false">Chưa thanh toán</option>
 
                 <option :value="1" :selected="order.payment_status == 1 ? true : false">Đã thanh toán</option>
-            </select>
-            <button v-if="hasAnyPermission(['create-contract-complete']) && status == 'pending' && (order.payment_status == 1 || order?.price_percent >= order?.grand_total)" @click="orderChangePacking(order)"
+            </select> -->
+
+            <button  v-if="hasAnyPermission(['create-contract-complete']) && status == 'pending' && (order.payment_status == 1)" @click="orderChangePacking(order)"
                 class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Duyệt gói</button>
+            <button  v-else-if="status == 'pending'" disabled
+                class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg">Duyệt gói</button>
             <button v-if="status == 'packing'" @click="orderChangeShipping(order)"
                 class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Bắt đầu giao hàng</button>
             <button v-if="status == 'shipping'" @click="orderChangeCompleted(order)"

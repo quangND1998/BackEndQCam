@@ -213,9 +213,9 @@ const save = () => {
                 </table>
             </div>
         </CardBoxModal>
-        <div @click.prevent="toggleContent" class=" grid grid-cols-7  text-sm px-3 mt-2 mb-1 text-gray-400">
+        <div @click.prevent="toggleContent" class=" grid   text-sm px-3 mt-2 mb-1 text-gray-400" :class="status == 'pending' ? 'grid-cols-7' :  'grid-cols-9'">
             <div>
-                <a class="flex items-center text-blue-600">
+                <a class="flex items-center text-blue-600 text-[12px]">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -251,6 +251,22 @@ const save = () => {
             </div>
 
             <div class="flex">
+                <p v-if="status == 'pending' "></p>
+                <p v-if="status == 'decline' " class="text-[12px]">
+                    {{ order.reason }}
+                </p>
+                <p v-if="status == 'complete' ">
+                    {{  order.package_reviewer?.name }}
+                </p>
+                
+            </div>
+            <div>
+                <p v-if="status == 'decline' ">
+                     {{ order.package_reviewer ? order.package_reviewer?.name : 'hệ thống' }}
+                </p>
+                <p v-if="status == 'complete' ">
+                   <Link></Link>
+                </p>
             </div>
         </div>
 

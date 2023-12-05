@@ -118,8 +118,18 @@ class OrderPackage extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'customer_resources_id');
     }
+    public function package_reviewer(){
+        return $this->belongsTo(User::class, 'package_reviewer');
+    }
     public function product_service_owner()
     {
         return $this->hasOne(ProductServiceOwner::class, 'order_id');
+    }
+    public function scopePaymenCompleted()
+    {
+        $allHistory = $this->historyPayment->every(function ($history) {
+            return $history->status == "complete";
+        });
+        return $allHistory;
     }
 }
