@@ -1,8 +1,13 @@
 <template>
     <div class="flex justify-between">
-        <button v-if="status == 'pending' || status == 'complete' "
+        <div class="left">
+            <button v-if="status == 'pending' || status == 'complete' "
             class="border text-red-700 rounded-lg bg-gray-100 px-3 py-2" data-toggle="modal"
             data-target="#exampleModalDecline" @click="openDecline(order)">Hủy gói</button>
+            <Link v-if="status == 'pending' " :href="`/admin/orders/package/edit/${order.id}`"
+            class="border text-blue-700 rounded-lg bg-gray-100 px-3 py-2">Chỉnh sửa</Link>
+        </div>
+
          <button v-if="status == 'decline'" class="border rounded-lg bg-gray-100 px-3 py-2" @click="orderChangePending(order)">Làm mới hợp đồng</button>
         <div class="flex">
             <select v-if="status == 'pending' || status == 'packing' || status == 'shipping' || status == 'completed'"
@@ -24,7 +29,7 @@
 
 <script setup>
 import { computed, ref, inject } from "vue";
-import { useForm, router } from "@inertiajs/vue3";
+import { useForm, router,Link } from "@inertiajs/vue3";
 import { emitter } from '@/composable/useEmitter';
 const swal = inject("$swal");
 const props = defineProps({

@@ -123,7 +123,7 @@ class OrderPackageController extends Controller
         }
     }
     public function addToCart(Request $request){
-     
+
         $product_service = ProductService::findOrFail($request->product_selected);
         if($product_service){
             $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
@@ -171,7 +171,7 @@ class OrderPackageController extends Controller
                 $order->addMedia($image)->toMediaCollection('order_package_images');
             }
             $payment_date = Carbon::now();
-            $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date);
+            $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
             $this->storeOrderPackage($order);
             return redirect()->route('admin.orders.package.pending',[$order->id]);
         }
@@ -227,7 +227,7 @@ class OrderPackageController extends Controller
         }
         $order->historyPayment()->delete();
         $payment_date = Carbon::now();
-        $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date);
+        $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
         return redirect()->route('admin.orders.package.detail',[$order->id]);
     }
     public function saveHistoryPaymentOrder(Request $request,$id){
@@ -238,7 +238,7 @@ class OrderPackageController extends Controller
         ]);
         $order = OrderPackage::find($id);
         if($order->totalPayment() < $order->grand_total){
-            $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->amount_received,$request->payment_date);
+            $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->amount_received,$request->payment_date,$request->images);
             $order->price_percent = $order->totalPayment() + $request->amount_received;
         }else{
             $order->price_percent = $order->grand_total;
@@ -257,13 +257,18 @@ class OrderPackageController extends Controller
 
         return back()->with('success', 'Lưu payment thành công');
     }
-    public function storeHistoryPayment($order_package_id,$payment_method,$amount_received,$payment_date){
+    public function storeHistoryPayment($order_package_id,$payment_method,$amount_received,$payment_date,$images){
         $history_payment = new HistoryPayment;
         $history_payment->order_package_id = $order_package_id;
         $history_payment->payment_method = $payment_method;
         $history_payment->amount_received = $amount_received;
         $history_payment->payment_date = $payment_date;
+        $history_payment->user_id = Auth::user()->id;
         $history_payment->save();
+
+        foreach ($images as $image) {
+            $history_payment->addMedia($image)->toMediaCollection('order_package_payment');
+        }
         return $history_payment;
     }
     public function deleteHistoryPayment($orderpackage,$id){
@@ -422,7 +427,7 @@ class OrderPackageController extends Controller
     }
     public function getOrder($request, $status)
     {
-        return OrderPackage::with(['customer', 'product_service','historyPayment','saler'])->role()->whereHas(
+        return OrderPackage::with(['customer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');

@@ -67,11 +67,11 @@ const form = useForm({
     price_percent: props.product_services.length > 0 ? props.product_services[0].price : null,
     product_selected: props.product_services.length > 0 ? props.product_services[0].id : null,
     time_approve: new Date(),
-    max_price : props.product_services.length > 0 ? props.product_services[0].price  : null,
+    max_price: props.product_services.length > 0 ? props.product_services[0].price : null,
     images: [],
-    sale_id:null,
-    leader_sale_id:null,
-    type_customer_resource:"private",
+    sale_id: null,
+    leader_sale_id: null,
+    type_customer_resource: "private",
     customer_resource_id: null,
 
 })
@@ -172,7 +172,7 @@ const onSearchUser = async () => {
 
 }
 const save = () => {
-    if(form.name == null){
+    if (form.name == null) {
         form.name = search.value;
     }
     if (form.name == null || form.phone_number == null) {
@@ -202,8 +202,8 @@ const save = () => {
 }
 const changeProduct = (event) => {
     form.product_selected = event.target.value;
-    if(product.value){
-    form.max_price =product.value.price
+    if (product.value) {
+        form.max_price = product.value.price
     }
 
 }
@@ -236,19 +236,19 @@ const maxPrice = computed({
 
 
     get() {
-         if (form.max_price > 0) {
+        if (form.max_price > 0) {
             let maxPrice = form.max_price
             if (form.discount_deal > 0) {
-                maxPrice = maxPrice - (( maxPrice * form.discount_deal) / 100)
+                maxPrice = maxPrice - ((maxPrice * form.discount_deal) / 100)
             }
             if (form.vat > 0) {
-                maxPrice+=  ((maxPrice * form.vat) / 100)
+                maxPrice += ((maxPrice * form.vat) / 100)
             }
-            form.price_percent= maxPrice;
+            form.price_percent = maxPrice;
             return maxPrice;
         }
         else {
-            form.price_percent= 0;
+            form.price_percent = 0;
             return 0
         }
     },
@@ -259,16 +259,16 @@ const maxPrice = computed({
         if (newValue > 0) {
             let maxPrice = newValue
             if (form.discount_deal > 0) {
-                maxPrice =newValue - ((newValue * form.discount_deal) / 100)
+                maxPrice = newValue - ((newValue * form.discount_deal) / 100)
             }
             if (form.vat > 0) {
-                maxPrice +=  ((maxPrice * form.vat) / 100)
+                maxPrice += ((maxPrice * form.vat) / 100)
             }
             console.log(maxPrice)
-            form.price_percent= maxPrice;
+            form.price_percent = maxPrice;
         }
         else {
-            form.price_percent= 0;
+            form.price_percent = 0;
         }
     }
 })
@@ -326,7 +326,7 @@ const date = ref(new Date());
                                             Khách
                                             Hàng
                                             *</label>
-                                        <input type="text" id="name"  v-model="search" @keyup="onSearchUser()"
+                                        <input type="text" id="name" v-model="search" @keyup="onSearchUser()"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                         <div class="text-red-500" v-if="flash"> {{ flash }}</div>
@@ -370,9 +370,8 @@ const date = ref(new Date());
                                     </div>
 
                                     <div class="my-3">
-                                        <label for="first_name"
-                                                class="block mb-2 text-sm  text-gray-900 dark:text-white">
-                                                Thành phố *</label>
+                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                            Thành phố *</label>
                                         <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name"
                                             @change="onChangeCity($event)" optionValue="Name" placeholder="Chọn tỉnh thành"
                                             class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm ">
@@ -458,7 +457,8 @@ const date = ref(new Date());
                         </div>
 
                         <div class="my-3">
-                            <UploadImage :max_files="4" v-model="form.images" :multiple="true" :label="`Chứng từ liên quan`" />
+                            <UploadImage :max_files="4" v-model="form.images" :multiple="true"
+                                :label="`Chứng từ liên quan`" />
                             <!-- <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
                                 <div class="mr-2 inline-block" v-for="(img, index) in images " :key="index">
@@ -495,13 +495,13 @@ const date = ref(new Date());
                             <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
-                                <!-- <InputNumber  v-model="form.vat"  min="0"  max="100"
+                            <!-- <InputNumber  v-model="form.vat"  min="0"  max="100"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" /> -->
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Ưu đãi (%)</label>
-                            <input type="number" id="first_name" v-model="form.discount_deal"  min="0" max="100"
+                            <input type="number" id="first_name" v-model="form.discount_deal" min="0" max="100"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required>
                         </div>
@@ -519,8 +519,8 @@ const date = ref(new Date());
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required> -->
 
-                                <MazInputPrice  v-model="form.price_percent" currency="VND"  locale="vi-VN" :min="0"  :max="maxPrice"
-                                @formatted="formattedPrice = $event" />
+                            <MazInputPrice v-model="form.price_percent" currency="VND" locale="vi-VN" :min="0"
+                                :max="maxPrice" @formatted="formattedPrice = $event" />
 
                         </div>
                         <div class="my-2">
@@ -536,41 +536,90 @@ const date = ref(new Date());
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 NV tư vấn bán hàng(Ref)</label>
-                            <Multiselect v-model="form.sale_id"  :appendNewTag="false" :createTag="false"
+                            <!-- <Multiselect v-model="form.sale_id"  :appendNewTag="false" :createTag="false"
                             :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="None"
-                           />
+                           /> -->
+
+                            <Multiselect v-model="form.sale_id" :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="sales" :classes="{
+                            tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                            container: 'relative mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                            }" >
+                                <template v-slot:singlelabel="{ value }">
+                                    <div class="multiselect-single-label">
+                                        {{ value.name }} ({{ value.email }})
+                                    </div>
+                                </template>
+
+                                <template v-slot:option="{ option }">
+                                    {{ option.name }} ({{ option.email }})
+                                </template>
+                            </Multiselect>
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Chọn TO(Người chốt đơn)</label>
-                            <Multiselect v-model="form.leader_sale_id"  :appendNewTag="false" :createTag="false"
-                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="leaders"  placeholder="None"
-                           />
+                            <!-- <Multiselect v-model="form.leader_sale_id" :appendNewTag="false" :createTag="false"
+                                :searchable="true" label="name" valueProp="id" trackBy="name" :options="leaders"
+                                placeholder="None" /> -->
+                                <Multiselect v-model="form.leader_sale_id" :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="leaders" :classes="{
+                                tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                                container: 'relative mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                                }" >
+                                <template v-slot:singlelabel="{ value }">
+                                    <div class="multiselect-single-label">
+                                        {{ value.name }} ({{ value.email }})
+                                    </div>
+                                </template>
+
+                                <template v-slot:option="{ option }">
+                                    {{ option.name }} ({{ option.email }})
+                                </template>
+                            </Multiselect>
                         </div>
                         <div class="my-2">
-                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Nguồn khách hàng</label>
                             <div class="flex items-center justify-center mb-2">
 
-                                <input class=" mr-2" type="radio" id="one" value="telesale" v-model="form.type_customer_resource" />
+                                <input class=" mr-2" type="radio" id="one" value="telesale"
+                                    v-model="form.type_customer_resource" />
                                 <label for="one" class="w-[80px] mr-2">Telesale</label>
-                                <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false" :disabled="form.type_customer_resource == 'telesale' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="telesale"  placeholder="None"
-                                />
+                                <Multiselect v-model="form.customer_resource_id" :appendNewTag="false" :createTag="false"
+                                    :disabled="form.type_customer_resource == 'telesale' ? false : true" :searchable="true"
+                                    label="name" valueProp="id" trackBy="name" :options="telesale" placeholder="None" :classes="{
+                                container: 'relative mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                                }"/>
                             </div>
 
 
                             <div class="flex items-center justify-center mb-2">
 
-                                <input class=" mr-2" type="radio" id="one" value="ctv" v-model="form.type_customer_resource" />
+                                <input class=" mr-2" type="radio" id="one" value="ctv"
+                                    v-model="form.type_customer_resource" />
                                 <label for="one" class="w-[80px] mr-2">CTV</label>
-                                <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false" :disabled="form.type_customer_resource == 'ctv' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="ctv"  placeholder="None"
-                                />
+                                <!-- <Multiselect v-model="form.customer_resource_id" :appendNewTag="false" :createTag="false"
+                                    :disabled="form.type_customer_resource == 'ctv' ? false : true" :searchable="true"
+                                    label="name" valueProp="id" trackBy="name" :options="ctv" placeholder="None" /> -->
+                                    <Multiselect v-model="form.customer_resource_id"  :disabled="form.type_customer_resource == 'ctv' ? false : true"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="ctv" :classes="{
+                                container: 'relative mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                                }"
+                                     >
+                                        <template v-slot:singlelabel="{ value }">
+                                            <div class="multiselect-single-label">
+                                                {{ value.name }} ({{ value.email }})
+                                            </div>
+                                        </template>
+
+                                        <template v-slot:option="{ option }">
+                                            {{ option.name }} ({{ option.email }})
+                                        </template>
+                                    </Multiselect>
                             </div>
                             <div class=" mb-2">
 
-                                <input class=" mr-2" type="radio" id="one" value="private" v-model="form.type_customer_resource" />
+                                <input class=" mr-2" type="radio" id="one" value="private"
+                                    v-model="form.type_customer_resource" />
                                 <label for="one" class="w-[80px] mr-2">Private</label>
                             </div>
                         </div>
@@ -600,8 +649,7 @@ const date = ref(new Date());
                             <tbody>
                                 <tr class="bg-white border-b ">
                                     <td class="px-6 py-4 ">
-                                        <select id="countries" @change="changeProduct"
-                                            v-model="form.product_selected"
+                                        <select id="countries" @change="changeProduct" v-model="form.product_selected"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 ">
                                             <option v-for="(product, index) in product_services" :key="index"
                                                 :value="product.id">{{
@@ -670,7 +718,8 @@ const date = ref(new Date());
                     </div>
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold">VAT({{ form.vat }}%)</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.vat * (product?.price + ((form.discount_deal * product?.price) / 100))/100 ) }} vnd
+                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.vat * (product?.price +
+                            ((form.discount_deal * product?.price) / 100)) / 100) }} vnd
                         </p>
                     </div>
                     <div class="flex justify-between my-2">
@@ -694,7 +743,7 @@ const date = ref(new Date());
                     <div class="flex justify-between my-2">
                         <p class="text-sm text-[#686868] font-bold" v-if="((product?.price +
                             ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
-                            form.price_percent ) > 0 ">Còn thiếu</p>
+                            form.price_percent) > 0">Còn thiếu</p>
                         <p v-else class="text-sm text-[#686868] font-bold">Còn thừa</p>
                         <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice(maxPrice -
                             form.price_percent) }} vnđ</p>
