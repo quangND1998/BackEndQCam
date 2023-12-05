@@ -43,7 +43,7 @@ const props = defineProps({
     sub_total: Number
 });
 
-const search = ref(null)
+const search = ref(props.order?.customer?.name)
 
 const flash = ref(null);
 const provinces = ref(null)
@@ -188,7 +188,7 @@ const save = () => {
         });
     }
     else {
-        form.post(route('admin.orders.package.addToCartPackage'), {
+        form.post(route('admin.orders.package.editOrderPackage'), {
             onError: () => {
             },
             onSuccess: () => {
@@ -312,21 +312,22 @@ const date = ref(new Date());
                         <div class="my-3">
                             <div class="flex  items-center">
                                 <h3 class="text-[17px] font-bold mr-[20px]">Thông tin liên hệ</h3>
-                                <input type="string" id="first_name" v-model="search" @keyup="onSearchUser()"
+                                <!-- <input type="string" id="first_name" v-model="search" @keyup="onSearchUser()"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Tìm kiếm SĐT" required>
+                                    placeholder="Tìm kiếm SĐT" required> -->
                             </div>
-                            <div class="text-red-500" v-if="flash"> {{ flash }}</div>
-                            <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt-5">
+
+                            <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt-2">
                                 <div>
                                     <div class="my-3">
                                         <label for="name" class="block mb-2 text-sm  text-gray-900 dark:text-white">Tên
                                             Khách
                                             Hàng
                                             *</label>
-                                        <input type="text" id="name" v-model="form.name"
+                                        <input type="text" id="name" v-model="search" @keyup="onSearchUser()"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
+                                        <div class="text-red-500" v-if="flash"> {{ flash }}</div>
                                     </div>
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -458,12 +459,18 @@ const date = ref(new Date());
 
                             <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
-                                <div class="mr-2 inline-block" v-for="(img, index) in images " :key="index">
+                                <div class="mr-2 inline-block" v-for="(img, index) in order.order_package_images " :key="index">
+                                    <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
+                                        @click="DeleteImage(index)" size="16">
+                                    </BaseIcon>
+                                    <img :src="img.original_url" class="w-20 h-20 object-cover rounded-lg" alt="">
+                                </div>
+                                <!-- <div class="mr-2 inline-block" v-for="(img, index) in images " :key="index">
                                     <BaseIcon :path="mdiTrashCanOutline" class="absolute text-red-600 hover:text-red-700  "
                                         @click="DeleteImage(index)" size="16">
                                     </BaseIcon>
                                     <img :src="img.image" class="w-20 h-20 object-cover rounded-lg" alt="">
-                                </div>
+                                </div> -->
 
                                 <label for="uploadFile"
                                     class="mr-2 cursor-pointer border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg w-20 h-20">
@@ -477,7 +484,6 @@ const date = ref(new Date());
                                 <input id="uploadFile" @change="onFileChange" multiple type="file" class="hidden"
                                     accept="image/*">
                             </div>
-                            {{ images }}
                             <InputError class="mt-2" :message="form.errors.images" />
                             <div v-for="(error, index) in images" :key="index">
 

@@ -109,9 +109,6 @@ class OrderPackageController extends Controller
     public function editOrderPackage(Request $request,$id){
         $order = OrderPackage::with('customer','product_service','saler','leader','resources','order_package_images')->findOrFail($id);
         if($order->status == "pending"){
-        // return ($order);
-    //    return $order->order_package_images;
-       // return $images
 
         $user = Auth::user();
         $sales = User::role('saler')->get();
@@ -124,7 +121,6 @@ class OrderPackageController extends Controller
             return redirect()->route('admin.orders.package.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
         }
     }
-
     public function addToCart(Request $request){
       // dd($request);
         $product_service = ProductService::findOrFail($request->product_selected);
@@ -194,7 +190,6 @@ class OrderPackageController extends Controller
             $customer = $this->createCustomerDefault($request);
         }
         $order->update([
-            'order_number'      =>  'ORD-' . strtoupper(uniqid()),
             'user_id'           => $customer->id,
             'status'            =>  'pending',
             'payment_status'    =>  0,
@@ -220,6 +215,14 @@ class OrderPackageController extends Controller
             'customer_resources_id' => $request->customer_resource_id,
 
         ]);
+        if ($request->hasFile('images')) {
+            $order->clearMediaCollection('order_package_images');
+
+            foreach ($request->images as $image) {
+                $order->addMedia($image)->toMediaCollection('order_package_images');
+            }
+
+        }
     }
     public function saveHistoryPaymentOrder(Request $request,$id){
         $this->validate($request, [

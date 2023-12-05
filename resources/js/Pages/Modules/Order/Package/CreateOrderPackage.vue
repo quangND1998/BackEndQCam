@@ -161,6 +161,7 @@ const onSearchUser = async () => {
         if (res.data) {
             user.value = res.data;
             foundUser(res.data)
+            flash.value = null;
         }
     }).catch(err => {
         user.value = null
@@ -309,21 +310,22 @@ const date = ref(new Date());
                         <div class="my-3">
                             <div class="flex  items-center">
                                 <h3 class="text-[17px] font-bold mr-[20px]">Thông tin liên hệ</h3>
-                                <input type="string" id="first_name" v-model="search" @keyup="onSearchUser()"
+                                <!-- <input type="string" id="first_name" v-model="search" @keyup="onSearchUser()"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Tìm kiếm SĐT" required>
+                                    placeholder="Tìm kiếm SĐT" required> -->
                             </div>
-                            <div class="text-red-500" v-if="flash"> {{ flash }}</div>
-                            <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt-5">
+
+                            <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt-2">
                                 <div>
                                     <div class="my-3">
                                         <label for="name" class="block mb-2 text-sm  text-gray-900 dark:text-white">Tên
                                             Khách
                                             Hàng
                                             *</label>
-                                        <input type="text" id="name" v-model="form.name"
+                                        <input type="text" id="name"  v-model="search" @keyup="onSearchUser()"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
+                                        <div class="text-red-500" v-if="flash"> {{ flash }}</div>
                                     </div>
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -531,14 +533,14 @@ const date = ref(new Date());
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 NV tư vấn bán hàng(Ref)</label>
                             <Multiselect v-model="form.sale_id"  :appendNewTag="false" :createTag="false"
-                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="Chọn sale"
+                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="None"
                            />
                         </div>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Chọn TO(Người chốt đơn)</label>
                             <Multiselect v-model="form.leader_sale_id"  :appendNewTag="false" :createTag="false"
-                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="leaders"  placeholder="Chọn To"
+                            :searchable="true" label="name" valueProp="id" trackBy="name" :options="leaders"  placeholder="None"
                            />
                         </div>
                         <div class="my-2">
@@ -549,7 +551,7 @@ const date = ref(new Date());
                                 <input class=" mr-2" type="radio" id="one" value="telesale" v-model="form.type_customer_resource" />
                                 <label for="one" class="w-[80px] mr-2">Telesale</label>
                                 <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false" :disabled="form.type_customer_resource == 'telesale' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="telesale"  placeholder="Chọn Telesale"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="telesale"  placeholder="None"
                                 />
                             </div>
 
@@ -559,7 +561,7 @@ const date = ref(new Date());
                                 <input class=" mr-2" type="radio" id="one" value="ctv" v-model="form.type_customer_resource" />
                                 <label for="one" class="w-[80px] mr-2">CTV</label>
                                 <Multiselect v-model="form.customer_resource_id"  :appendNewTag="false" :createTag="false" :disabled="form.type_customer_resource == 'ctv' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="ctv"  placeholder="Chọn ctv"
+                                    :searchable="true" label="name" valueProp="id" trackBy="name" :options="ctv"  placeholder="None"
                                 />
                             </div>
                             <div class=" mb-2">
