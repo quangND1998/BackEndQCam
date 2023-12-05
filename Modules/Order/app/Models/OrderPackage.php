@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-
+use Illuminate\Database\Eloquent\Casts\Attribute;
 class OrderPackage extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -29,6 +29,7 @@ class OrderPackage extends Model implements HasMedia
         'sale_id','to_id','customer_resources','customer_resources_id',
         'wards',  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent","time_reservations","time_expried"
     ];
+    protected $appends = ['payment_check'];
 
     public function gettimeExpriedAttribute($value)
     {
@@ -126,6 +127,13 @@ class OrderPackage extends Model implements HasMedia
         return $this->hasOne(ProductServiceOwner::class, 'order_id');
     }
     public function scopePaymenCompleted()
+    {
+        $allHistory = $this->historyPayment->every(function ($history) {
+            return $history->status == "complete";
+        });
+        // return $allHistory;
+    }
+    public function getPaymentCheckAttribute()
     {
         $allHistory = $this->historyPayment->every(function ($history) {
             return $history->status == "complete";
