@@ -74,6 +74,7 @@ class UserController extends Controller
             }
 
          }
+         
         return Inertia::render('Admin/User', compact('filters', 'users', 'roles'));
     }
 
@@ -225,6 +226,7 @@ class UserController extends Controller
             'cic_date_expried' => $request->cic_date_expried,
 
         ]);
+        dd($request);
         if ($auth_user->hasPermissionTo('super-admin')) {
             if ($request->leader_sale_id && !$user->hasRole('leader-sale')) {
                 $lead_sale = User::findOrFail($request->leader_sale_id);
@@ -238,8 +240,8 @@ class UserController extends Controller
 
         if ($auth_user->hasPermissionTo('super-admin')) {
             if ($request->leader_shipper_id && !$user->hasRole('leader-shipper')) {
-                $lead_sale = User::findOrFail($request->leader_shipper_id);
-                $user->created_byId = $lead_sale->id;
+                $leader_shipper = User::findOrFail($request->leader_shipper_id);
+                $user->created_byId = $leader_shipper->id;
                 $user->save();
             } else {
                 $user->created_byId = null;
