@@ -51,7 +51,7 @@ class RoleSeeder extends Seeder
             'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'
         ]);
 
-        $leader_shipper = Role::create(['name' => 'leader-sale']);
+        $leader_shipper = Role::create(['name' => 'leader-shipper']);
         $leader_shipper->givePermissionTo([
             'update-user',
             'delete-user',
