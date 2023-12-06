@@ -51,7 +51,7 @@ class CustomerProductOwerController extends Base2Controller
    {
         $customer = Auth::user();
         if($customer){
-        $product_owner = ProductServiceOwner::with('product.images','trees','tree.images','history_extend.contract.lastcontract.images','extend_last.contract.lastcontract.images','visit','history_gift')->where('user_id',$customer->id)->find($id);
+        $product_owner = ProductServiceOwner::with('product.images','trees','tree.thumb_image','history_extend.contract.lastcontract.images','extend_last.contract.lastcontract.images','visit','history_gift')->where('user_id',$customer->id)->find($id);
         $dt = Carbon::now();
         $time = $dt->diffInDays($product_owner->time_end);
         $response = [
