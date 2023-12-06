@@ -23,7 +23,7 @@ class CustomerProductController extends Controller
     }
     public function index($id)
     {
-        $customer = User::with('product_service_owners.product','product_service_owners.trees','product_service_owners.history_extend')->whereHas('roles', function ($query) {
+        $customer = User::with('product_service_owners.product','product_service_owners.trees','product_service_owners.history_extend','product_service_owners.history_gift')->whereHas('roles', function ($query) {
             $query->where('name', 'Customer');
         })->findOrFail($id);
         $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();

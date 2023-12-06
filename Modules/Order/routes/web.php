@@ -93,6 +93,7 @@ Route::middleware(['auth'])->group(
                     // editOrderPackage
                     Route::post('orderCancel/{order}', [OrderPackageController::class, 'orderCancel'])->name('orderCancel');
                     Route::post('orderComplete/{order}', [OrderPackageController::class, 'orderComplete'])->name('orderComplete');
+                    Route::post('orderDelete/{order}', [OrderPackageController::class, 'orderDelete'])->name('orderDelete');
                     Route::post('historyPayment/{order}', [OrderPackageController::class, 'saveHistoryPaymentOrder'])->name('historyPayment');
                     Route::post('{order}/deleteHistoryPayment/{id}', [HistoryPaymentController::class, 'deleteHistoryPayment'])->name('deleteHistoryPayment');
                     Route::post('{order}/payment/{id}/complete', [HistoryPaymentController::class, 'setPaymentComplete'])->name('setPaymentComplete');

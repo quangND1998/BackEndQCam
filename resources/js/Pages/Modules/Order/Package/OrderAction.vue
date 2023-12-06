@@ -9,10 +9,10 @@
             <button v-if="status == 'decline'" class="border rounded-lg bg-gray-100 px-3 py-2" @click="orderChangePending(order)">Làm mới hợp đồng</button>
             <button v-if="status == 'decline'  "
             class="border text-red-700 rounded-lg bg-gray-100 px-3 py-2" data-toggle="modal"
-            data-target="#exampleModalDecline" @click="openDecline(order)">Xóa gói</button>
+            data-target="#exampleModalDelete" @click="deleteOrder(order)">Xóa gói</button>
         </div>
 
-         
+
         <div class="flex">
             <!-- <select v-if="status == 'pending' || status == 'packing' || status == 'shipping' || status == 'completed'"
                 id="countries" @change="orderChangePayment( $event)"
@@ -25,10 +25,6 @@
                 class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Duyệt gói</button>
             <button  v-else-if="status == 'pending'" disabled
                 class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg">Duyệt gói</button>
-            <button v-if="status == 'packing'" @click="orderChangeShipping(order)"
-                class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Bắt đầu giao hàng</button>
-            <button v-if="status == 'shipping'" @click="orderChangeCompleted(order)"
-                class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Hoàn thành đơn hàng</button>
         </div>
     </div>
 </template>
@@ -45,7 +41,9 @@ const props = defineProps({
 const openDecline = () => {
     emitter.emit('OpenModalDecline', props.order)
 }
-
+const deleteOrder = () => {
+    emitter.emit('OpenModalDelete', props.order)
+}
 
 const openRefund = () => {
     emitter.emit('OpenModalRefund', props.order)

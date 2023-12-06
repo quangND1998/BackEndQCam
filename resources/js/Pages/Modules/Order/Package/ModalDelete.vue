@@ -1,14 +1,13 @@
 <template>
-    <div class="modal fade" id="exampleModalDecline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="exampleModalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="flex">
-                        <img src="img/icon_delete.png" alt="">
                         <div class="ml-2">
-                            <h3 class="text-black font-bold my-1 text-base">Bạn có muốn Hủy gói?</h3>
-                            <p class="text-gray-500 text-sm">Đơn hàng sẽ được chuyển đến tab "Đơn hủy"</p>
+                            <h3 class="text-black font-bold my-1 text-base">Bạn có muốn Xóa gói?</h3>
+                            <p class="text-gray-500 text-sm">Khi xoá đơn hàng các dữ liệu về gói kèm theo sẽ bị xoá khỏi hệ thống. Để xoá đơn hàng hãy nhập chữ delete vào ô dưới đây và ấn nút "xác nhận xoá</p>
                         </div>
                     </div>
 
@@ -22,11 +21,9 @@
 
                         <div class="form-group" :class="form.errors.reason ? 'has-error' : ''">
 
-                            <label for="message" class="  block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lý
-                                do</label>
-                            <textarea v-model="form.reason" id="message" rows="4"
+                            <input v-model="form.reason" id="message" rows="4"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Tại sao khách muốn hủy đơn hàng?"></textarea>
+                                placeholder="delete">
 
                         </div>
                         <div class="text-red-500" v-if="form.errors.reason">{{ form.errors.reason }}</div>
@@ -35,9 +32,12 @@
                             <button type="button"
                                 class="inline-block px-3 py-2 border text-gray-700 font-black text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out"
                                 data-dismiss="modal">Quay lại</button>
-                            <button type="submit" @click.prevent="orderCancel()"
+                            <button type="submit" v-if="form.reason == 'delete'" @click.prevent="orderDelete()"
                                 class="inline-block px-3 py-2 bg-red-700 text-white font-black text-sm leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Xác
-                                nhận hủy đơn</button>
+                                nhận xóa</button>
+                            <button type="submit" v-else disabled
+                                class="inline-block px-3 py-2  text-gray font-black text-sm leading-tight uppercase rounded shadow-md  focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Xác
+                                nhận xóa</button>
                         </div>
                     </form>
                 </div>
@@ -61,15 +61,15 @@ const form = useForm({
     reason: null
 })
 onMounted(() => {
-    emitter.on('OpenModalDecline', (order) => {
+    emitter.on('OpenModalDelete', (order) => {
         // console.log(order)
 
         form.id = order.id,
             form.order_number = order.order_number
     })
 });
-const orderCancel = () => {
-    form.post(route("admin.orders.package.orderCancel", form.id), {
+const orderDelete = () => {
+    form.post(route("admin.orders.package.orderDelete", form.id), {
         preserveState: true,
         onError: errors => {
             if (Object.keys(errors).length > 0) {
@@ -77,8 +77,7 @@ const orderCancel = () => {
             }
         },
         onSuccess: page => {
-            // $("#exampleModalDecline").modal("hide");
-            // emitter.off('OpenModalDecline', listener)
+            emitter.off('OpenModalDelete', listener);
             form.reset();
         }
     });
@@ -86,7 +85,7 @@ const orderCancel = () => {
 const listener = () => {
 }
 onUnmounted(() => {
-    emitter.off('OpenModalDecline', listener)
+    emitter.off('OpenModalDelete', listener)
 })
 </script>
 

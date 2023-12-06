@@ -105,8 +105,8 @@ const save = () => {
 
 };
 const upgrade_extend = () => {
-    console.log(form.product_service.id);
-    form.post(route("product_owner.extend", [props.customer.id, form.product_service.id]), {
+    console.log(form.product_service?.id);
+    form.post(route("product_owner.extend", [props.customer.id, form.product_service?.id]), {
                 onError: () => {
                     console.log("form error");
                 },
@@ -192,7 +192,7 @@ const limit_tree = computed(() => {
                 <div class="p-6 flex-auto">
                         <div class="w-full  px-3">
 
-                            <InputLabel class="py-5" for="owner" :value="form.product_service.id " />
+                            <InputLabel class="py-5" for="owner" :value="form.product_service?.id " />
 
                             <InputLabel for="owner" value="Thời gian bắt đầu áp dụng" />
 
@@ -219,7 +219,7 @@ const limit_tree = computed(() => {
                         form_reset();
                         " label="Thêm gói sản phẩm" />
                 </div>
-               
+
                 <div class=" relative shadow-md sm:rounded-lg mt-5">
                     <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -251,7 +251,7 @@ const limit_tree = computed(() => {
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ formatPrice(product_owner?.product?.price) }}
+                                    {{ formatPrice(product_owner?.price) }}
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -278,7 +278,7 @@ const limit_tree = computed(() => {
                                 </th>
                                 <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    1/{{ product_owner?.product?.number_deliveries }}
+                                    {{ product_owner?.history_gift?.length }}/{{ product_owner?.product?.number_deliveries }}
                                 </th>
                                 <td class="py-4 px-6 text-right flex justify-end my-3" @click="extend(product_owner)" >
                                     <BaseButton color="info" class="bg-[#F78F43] border-[0px] mx-2 text-white p-2 hover:bg-bg_green_active"
