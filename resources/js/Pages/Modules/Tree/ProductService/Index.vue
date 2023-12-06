@@ -440,13 +440,14 @@ const Delete = (id) => {
 
                                 </td>
                                 <td class="px-6 py-1">
-                                    {{ product_service.life_time }}
-                                </td>
-                                <td class="px-6 py-1">
                                     {{ product_service.number_deliveries }}
                                 </td>
                                 <td class="px-6 py-1">
+                                    
                                     {{ product_service.life_time }}
+                                </td>
+                                <td class="px-6 py-1">
+                                    {{ product_service.unit == "year" ? "năm" : product_service.unit }}
                                 </td>
                                 <td class="px-6 py-1" >
                                     <p class="string_long" v-html="product_service.description"></p>
