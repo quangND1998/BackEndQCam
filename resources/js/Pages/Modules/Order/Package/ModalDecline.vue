@@ -77,7 +77,7 @@ const orderCancel = () => {
             }
         },
         onSuccess: page => {
-            // $("#exampleModalDecline").modal("hide");
+            $("#exampleModalDecline").modal("hide");
             // emitter.off('OpenModalDecline', listener)
             form.reset();
         }

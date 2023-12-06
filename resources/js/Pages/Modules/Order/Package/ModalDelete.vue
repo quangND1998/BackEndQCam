@@ -32,7 +32,7 @@
                             <button type="button"
                                 class="inline-block px-3 py-2 border text-gray-700 font-black text-sm leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out"
                                 data-dismiss="modal">Quay lại</button>
-                            <button type="submit" v-if="form.reason == 'delete'" @click.prevent="orderDelete()"
+                            <button type="submit" v-if="form.reason.toUpperCase() == 'DELETE'" @click.prevent="orderDelete()"
                                 class="inline-block px-3 py-2 bg-red-700 text-white font-black text-sm leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Xác
                                 nhận xóa</button>
                             <button type="submit" v-else disabled
@@ -77,7 +77,7 @@ const orderDelete = () => {
             }
         },
         onSuccess: page => {
-            emitter.off('OpenModalDelete', listener);
+            $("#exampleModalDelete").modal("hide");
             form.reset();
         }
     });

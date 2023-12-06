@@ -71,9 +71,7 @@ const state = reactive({
     editorOption: {
         placeholder: 'core',
         modules: {
-
         },
-
     },
     disabled: false
 })
