@@ -107,7 +107,8 @@ class OrderPackageController extends Controller
     }
     public function orderPackage(Request $request){
         $user = Auth::user();
-        $sales = User::role('saler')->get();
+        $sales = User::with('team')->has('team', '!=', 0)->role('saler')->get();
+        return $sales;
         $leaders = User::role('leader-sale')->get();
         $telesale = User::role('telesale')->get();
         $ctv = User::role('ctv')->get();
@@ -193,10 +194,12 @@ class OrderPackageController extends Controller
             $this->storeOrderPackage($order);
             if($order->status =='pending'){
                 $order->time_expried = Carbon::now()->addDay($order->time_reservations);
+                // $order->time_expried = Carbon::now()->addSecond(20);
                 $order->save();
                 OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
+                // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addSecond(20));
             }
-            return redirect()->route('admin.orders.package.pending',[$order->id]);
+            return redirect()->route('admin.orders.package.detail',[$order->id]);
         }
     }
     public function saveEditOrder(Request $request, $id){
@@ -331,7 +334,7 @@ class OrderPackageController extends Controller
             'package_reviewer' => Auth::user()->id
         ]);
 
-        $product_service_owner = ProductServiceOwner::where('user_id',$order->user_id)->whereHas('trees')->where('product_service_id',$order->product_service)->first();
+        $product_service_owner = $product_service_owner = $order->product_service_owner;
 
         if($product_service_owner){
             foreach($product_service_owner->trees as $tree){
