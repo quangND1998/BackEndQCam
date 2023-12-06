@@ -9,7 +9,7 @@ import CardBox from "@/Components/CardBox.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import PackageBar from "@/Pages/Modules/Order/Package/PackageBar.vue";
 import ModalDecline from "./ModalDecline.vue";
-import ModelRefund from "./../ModelRefund.vue";
+import ModelRefund from "./ModalDelete.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,

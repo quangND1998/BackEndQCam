@@ -338,6 +338,21 @@ class OrderPackageController extends Controller
         $this->storeOrderPackage($order);
         return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
     }
+    //
+    public function orderDelete(OrderPackage $order)
+    {
+        $product_service_owner = ProductServiceOwner::where('user_id',$order->user_id)->whereHas('trees')->where('product_service_id',$order->product_service)->first();
+
+        if($product_service_owner){
+            foreach($product_service_owner->trees as $tree){
+                $tree->product_service_owner_id = null;
+                $tree->save();
+            }
+            $product_service_owner->delete();
+        }
+        $order->delete();
+        return back()->with('success', 'Hủy đơn thành công');
+    }
     public function storeOrderPackage($order){
 
         $customer = $order->customer;
