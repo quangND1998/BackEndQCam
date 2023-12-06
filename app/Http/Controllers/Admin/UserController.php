@@ -226,7 +226,7 @@ class UserController extends Controller
             'cic_date_expried' => $request->cic_date_expried,
 
         ]);
-        dd($request);
+     
         if ($auth_user->hasPermissionTo('super-admin')) {
             if ($request->leader_sale_id && !$user->hasRole('leader-sale')) {
                 $lead_sale = User::findOrFail($request->leader_sale_id);
