@@ -107,7 +107,8 @@ class OrderPackageController extends Controller
     }
     public function orderPackage(Request $request){
         $user = Auth::user();
-        $sales = User::role('saler')->get();
+        $sales = User::with('team')->has('team', '!=', 0)->role('saler')->get();
+        return $sales;
         $leaders = User::role('leader-sale')->get();
         $telesale = User::role('telesale')->get();
         $ctv = User::role('ctv')->get();
