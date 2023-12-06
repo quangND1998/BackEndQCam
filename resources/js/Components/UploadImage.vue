@@ -37,7 +37,7 @@ const props = defineProps({
     label: {
         type: String,
         required: false,
-        default: 'Upload Ảnh'
+        default: ''
     },
     multiple: {
         type: Boolean,

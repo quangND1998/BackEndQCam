@@ -214,11 +214,10 @@ const Delete = (id) => {
                             <InputError class="mt-2" :message="form.errors.price" />
                         </div>
                         <div class="mt-2">
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                for="multiple_files">Upload Images</label>
-                            <input @input="form.images = $event.target.files" multiple accept="image/*"
+                            
+                            <!-- <input @input="form.images = $event.target.files" multiple accept="image/*"
                                 class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                id="multiple_files" type="file">
+                                id="multiple_files" type="file"> -->
                           
                             <UploadImage v-if="editMode ==false" :max_files="4" v-model="form.images" :multiple="true" :label="`Upload Images`" />
                             <UploadImage v-else :max_files="4" v-model="form.images" :multiple="true" :old_images="product_retail?.images"  :label="`Upload Images`" />
