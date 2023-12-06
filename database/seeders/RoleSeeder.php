@@ -72,7 +72,7 @@ class RoleSeeder extends Seeder
         ]);
 
         $cskh = Role::create(['name' => 'cskh']);
-        $cskh->givePermissionTo(['saler','document-customer', 'package-customer', 'info-customer',  'viewer-customer']);
+        $cskh->givePermissionTo(['saler','document-custommer', 'package-custommer', 'info-customer',  'viewer-custommer']);
 
         $event = Role::create(['name' => 'event']);
         $event->givePermissionTo(['order','complaint','change-state-order','order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline','saler',
