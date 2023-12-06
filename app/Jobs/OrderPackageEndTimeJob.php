@@ -28,6 +28,11 @@ class OrderPackageEndTimeJob implements ShouldQueue
      */
     public function handle(): void
     {
-        
+        $order = OrderPackage::with('historyPayment')->find($this->order->id);
+        if($order){
+            if($order->payment_check){
+                // đã thanh toán và kế toán đã duyệt toàn bộ => dùng đếm
+            }
+        }
     }
 }

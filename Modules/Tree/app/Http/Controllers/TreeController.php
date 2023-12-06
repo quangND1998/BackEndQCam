@@ -29,6 +29,11 @@ class TreeController extends Controller
      */
     public function index(Request $request, Land $land)
     {
+        // $trees = Tree::with('land')->whereHas('land', function ($query) {
+        //     $query->where('state', 'public');
+        // })->where('state','public')->where('product_service_owner_id',null)->first();
+        // dd($trees);
+
         $trees = Tree::with('images', 'thumb_image')->where('land_id', $land->id)->where(function ($query) use ($request) {
             $query->where('name', 'LIKE', '%' . $request->search . '%');
             $query->orwhere('qr_code', 'LIKE', '%' . $request->search . '%');
