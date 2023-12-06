@@ -207,10 +207,10 @@ class OrderController extends Controller
         ], [
             'reason.required' => 'Điền lý do hủy đơn'
         ]);
-        // $order->update([
-        //     'status' => 'decline',
-        //     'reason' => $request->reason
-        // ]);
+        $order->update([
+            'status' => 'decline',
+            'reason' => $request->reason
+        ]);
 
         return back()->with('success', 'Hủy đơn thành công');
     }

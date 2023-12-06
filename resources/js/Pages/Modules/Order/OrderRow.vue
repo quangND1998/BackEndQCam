@@ -71,7 +71,7 @@ const props = defineProps({
                 <BaseIcon  :path="mdiEye" :size="16" />
                 </Link>
 
-                <Link 
+                <Link  v-if="order.status =='pending'"
                     :href="route('admin.orders.update', [order.id])"
                    >
                 <BaseIcon  :path="mdiPencil" :size="16" />
