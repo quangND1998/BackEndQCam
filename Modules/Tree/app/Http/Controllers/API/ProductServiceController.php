@@ -19,7 +19,7 @@ class ProductServiceController extends Base2Controller
     }
     public function listProduct()
     {
-        $product_service = ProductService::with('images')->get();
+        $product_service = ProductService::with('images')->where('status',1)->get();
         $response = [
             'product_service' =>$product_service,
         ];

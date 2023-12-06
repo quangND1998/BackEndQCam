@@ -397,10 +397,10 @@ const Delete = (id) => {
                                     Mô tả
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Đơn vị
+                                   Trang thái
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-
+                                    Hoạt động
                                 </th>
 
                             </tr>

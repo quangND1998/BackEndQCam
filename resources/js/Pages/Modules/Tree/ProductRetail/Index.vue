@@ -139,6 +139,33 @@ const searchFilter = () => {
         // only: ["image360s", "errors", 'flash'],
     });
 }
+
+const Delete = (id) => {
+    swal
+        .fire({
+            title: "Are you sure?",
+            text: "Xóa Sản phẩm!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Xóa!",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                console.log(id);
+                form.delete(route("admin.product-retail.destroy", id), {
+                    onSuccess: () => {
+                        swal.fire(
+                            "Deleted!",
+                            "Đã xóa sản phẩm.",
+                            "success"
+                        );
+                    },
+                });
+            }
+        });
+};
 </script>
 <template>
     <LayoutAuthenticated>
