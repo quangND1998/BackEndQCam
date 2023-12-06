@@ -213,7 +213,7 @@ const save = () => {
                 </table>
             </div>
         </CardBoxModal>
-        <div @click.prevent="toggleContent" class=" grid   text-sm px-3 mt-2 mb-1 text-gray-400" :class="status == 'pending' ? 'grid-cols-7' :  'grid-cols-9'">
+        <div @click.prevent="toggleContent" class=" grid   text-sm px-3 mt-2 mb-1 text-gray-400" :class="status == 'pending' ? 'grid-cols-8' :  'grid-cols-10'">
             <div>
                 <a class="flex items-center text-blue-600 text-[12px]">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -238,27 +238,30 @@ const save = () => {
             <div class="text-center">
                 <p>{{ order?.customer?.name }}</p>
             </div>
-            <div class="text-center flex">
-                <p class="btn_label mr-2"
+            <div class="text-center ">
+                <p class="btn_label "
                     :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
                     {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' : order?.price_percent == 0
                         ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
-                <!-- <div class="right">
-                    <Link :href="`/admin/orders/package/edit/${order.id}`">Edit</Link>
 
-                </div> -->
+            </div>
+            <div class="text-center ">
+                <p class="btn_label "
+                    :class="order.payment_check ?  'paid' : 'partiallyPaid' ">
+                    {{ order.payment_check ? 'đã duyệt' : 'chờ duyệt' }}</p>
 
             </div>
 
+
             <div class="flex">
                 <p v-if="status == 'pending' "></p>
-                <p v-if="status == 'decline' " class="text-[12px]">
+                <p v-if="status == 'decline' " class="text-[12px] text-center">
                     {{ order.reason }}
                 </p>
                 <p v-if="status == 'complete' ">
                     {{  order.package_reviewer?.name }}
                 </p>
-                
+
             </div>
             <div>
                 <p v-if="status == 'decline' ">

@@ -40,7 +40,14 @@ class OrderPackageController extends Controller
     }
     public function orderChangeStatus(Request $request, OrderPackage $order)
     {
-        $order->update(['payment_status' => $request->payment_status]);
+        // 'payment_status' => $request->payment_status]
+        $order->update(
+            [
+            'status' => 'pending',
+            'reason' => $request->reason,
+            'package_reviewer' => Auth::user()->id
+            ]
+        );
         return back()->with('success', 'Đơn hàng đã được chuyển sang trạng thái');
     }
     public function index(Request $request)
@@ -129,6 +136,13 @@ class OrderPackageController extends Controller
     public function addToCart(Request $request){
 
         $product_service = ProductService::findOrFail($request->product_selected);
+        $trees = Tree::with('land')->whereHas('land', function ($query) {
+            $query->where('state', 'public');
+        })->where('state','public')->where('product_service_owner_id',null)->first();
+        if($trees == null){
+            return redirect()->route('admin.orders.package.pending')->with('warning', 'Cây đã bán hết!');
+        }
+
         if($product_service){
             $time_life = (int)$this->checkDay($product_service->life_time,$product_service->unit);
             $total_price = $product_service->price;
@@ -313,7 +327,8 @@ class OrderPackageController extends Controller
         ]);
         $order->update([
             'status' => 'decline',
-            'reason' => $request->reason
+            'reason' => $request->reason,
+            'package_reviewer' => Auth::user()->id
         ]);
 
         $product_service_owner = ProductServiceOwner::where('user_id',$order->user_id)->whereHas('trees')->where('product_service_id',$order->product_service)->first();
@@ -357,6 +372,10 @@ class OrderPackageController extends Controller
 
         $customer = $order->customer;
         $product_service = $order->product_service;
+        $trees = Tree::where('state','public')->where('product_service_owner_id',null)->first();
+        if(!$trees){
+            return back()->with('error', 'Hết cây');
+        }
         if ($product_service && $order->product_service_owner == null) {
 
             $new_product_owner = new ProductServiceOwner;
@@ -370,7 +389,7 @@ class OrderPackageController extends Controller
             $new_product_owner->order_id = $order->id;
             $new_product_owner->save();
 
-            $trees = Tree::where('state','public')->where('product_service_owner_id',null)->first();
+
             if($trees){
                 $trees->pay_status = "đã nhận nuôi";
                 $new_product_owner->trees()->save($trees);
@@ -385,6 +404,8 @@ class OrderPackageController extends Controller
             $history_extend->date_to = $order->time_end;
             $history_extend->description = "tạo mới";
             $new_product_owner->history_extend()->save($history_extend);
+        }else{
+            return back()->with('error', 'Đơn đã tạo hợp đồng');
         }
 
 
