@@ -111,7 +111,7 @@ class Order extends Model implements HasMedia
             } elseif ($filters['date'] == 'week') {
                 $query->whereBetween('updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
             } elseif ($filters['date'] == 'month') {
-                $query->whereBetween('updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+                $query->whereBetween('updated_at', [Carbon::now()->subMonths(2), Carbon::now()->endOfMonth()]);
             } else {
                 $query->whereBetween('updated_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
             }
