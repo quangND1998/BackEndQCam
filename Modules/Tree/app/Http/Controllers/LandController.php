@@ -27,7 +27,9 @@ class LandController extends Controller
     public function index()
     {
 
-        $lands = Land::paginate(12);
+        $lands = Land::withCount('trees')->paginate(12);
+
+    //  return $lands;
         return Inertia::render('Modules/Tree/Land/Index', compact('lands'));
     }
 
