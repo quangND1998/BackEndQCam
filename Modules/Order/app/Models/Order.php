@@ -111,7 +111,7 @@ class Order extends Model implements HasMedia
             } elseif ($filters['date'] == 'week') {
                 $query->whereBetween('updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
             } elseif ($filters['date'] == 'month') {
-                $query->whereBetween('updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+                $query->whereBetween('updated_at', [Carbon::now()->subMonths(2), Carbon::now()->endOfMonth()]);
             } else {
                 $query->whereBetween('updated_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
             }
@@ -148,11 +148,12 @@ class Order extends Model implements HasMedia
 
         //     $query->get();
         // }
+
         if ( $user->hasPermissionTo('super-admin') || $user->hasRole('Kế toán') ) {
             $query->get();
         } else {
             if ($user->hasRole('leader-sale')) {
-                $query->whereIn('sale_id', $user->salers->pluck('id'));
+                $query->whereIn('sale_id', $user->salers->pluck('id')->concat([$user->id]) );
             } else {
                 $query->where('sale_id', $user->id);
             }

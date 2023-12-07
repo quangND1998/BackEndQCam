@@ -134,7 +134,7 @@ const Delete = (id) => {
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                     :title="editMode ? 'Update Role' : 'Create Role'">
                     <InputLabel for="name" value="Name" />
-                    <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
+                    <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" :disabled="editMode" required autofocus
                         autocomplete="name" />
                     <InputError class="mt-2" :message="form.errors.name" />
 

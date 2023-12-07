@@ -51,7 +51,6 @@ const form = useForm({
     date_of_birth: null,
     roles: null,
     leader_sale_id: null,
-
     leader_shipper_id: null
 })
 const getProvinces = async () => {
@@ -111,7 +110,16 @@ const format = (date) => {
 
     return `${day}/${month}/${year}`;
 }
-
+const onChangeUser=(value)=>{
+    if(form.leader_sale_id){
+        form.leader_shipper_id =null;
+        console.log(form.leader_shipper_id)
+    }
+    if(form.leader_shipper_id){
+        form.leader_sale_id =null;
+        console.log(form.leader_sale_id)
+    }
+}
 
 const save = () => {
 
@@ -262,7 +270,7 @@ const save = () => {
                         <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
                             <h3 class="text-[17px] font-bold">Team Sale *</h3>
                             <div class="grid grid-cols-2 gap-4">
-                                <Multiselect v-model="form.leader_sale_id" :appendNewTag="false" :createTag="false"
+                                <Multiselect v-model="form.leader_sale_id" :appendNewTag="false" :createTag="false"   @select="onChangeUser"
                                     :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"
                                     placeholder="Chọn Team"   />
                                 <InputError class="mt-2" :message="form.errors.leader_sale_id" />
@@ -271,7 +279,7 @@ const save = () => {
                         <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
                             <h3 class="text-[17px] font-bold">Team Shipper *</h3>
                             <div class="grid grid-cols-2 gap-4">
-                                <Multiselect v-model="form.leader_shipper_id" :appendNewTag="false" :createTag="false"
+                                <Multiselect v-model="form.leader_shipper_id" :appendNewTag="false" :createTag="false"  @select="onChangeUser"
                                     :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_shipper"
                                     placeholder="Chọn Team"   />
                                 <InputError class="mt-2" :message="form.errors.leader_shipper_id" />

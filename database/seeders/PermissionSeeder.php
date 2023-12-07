@@ -63,17 +63,19 @@ class PermissionSeeder extends Seeder
 
 
         Permission::create(['name' => 'shipper']);
+        Permission::create(['name' => 'saler']);
 
         Permission::create(['name' => 'contract-pending']);
         Permission::create(['name' => 'contract-create']);
         Permission::create(['name' => 'contract-cancle']);
         Permission::create(['name' => 'contract-complete']);
         Permission::create(['name' => 'create-contract-complete']);
+
         Permission::create(['name' => 'add-new-package']);
 
         Permission::create(['name' => 'viewer-custommer']);
         Permission::create(['name' => 'info-customer']);
-        Permission::create(['name' => 'pakage-custommer']);
+        Permission::create(['name' => 'package-custommer']);
         Permission::create(['name' => 'document-custommer']);
 
         Permission::create(['name' => 'view-shipper']);
@@ -85,5 +87,11 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'create-news']);
         Permission::create(['name' => 'update-news']);
         Permission::create(['name' => 'delete-news']);
+
+
+        Permission::create(['name' => 'view-setting']);
+        Permission::create(['name' => 'view-notification']);
+        Permission::create(['name' => 'view-setting-privacy']);
+        Permission::create(['name' => 'view-setting-contact']);
     }
 }

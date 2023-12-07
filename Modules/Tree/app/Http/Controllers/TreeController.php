@@ -101,7 +101,7 @@ class TreeController extends Controller
             if ($user->hasPermissionTo('super-admin')) {
                 $tree->update($request->all());
                 if ($request->hasFile('images')) {
-                    $tree->clearMediaCollection('tree_images');
+                    // $tree->clearMediaCollection('tree_images');
 
                     foreach ($request->images as $image) {
                         $tree->addMedia($image)->toMediaCollection('tree_images');
@@ -135,7 +135,7 @@ class TreeController extends Controller
         } else {
             $tree->update($request->all());
             if ($request->hasFile('images')) {
-                $tree->clearMediaCollection('tree_images');
+                // $tree->clearMediaCollection('tree_images');
 
                 foreach ($request->images as $image) {
                     $tree->addMedia($image)->toMediaCollection('tree_images');

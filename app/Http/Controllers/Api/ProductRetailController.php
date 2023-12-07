@@ -26,7 +26,7 @@ class ProductRetailController extends Base2Controller
 
     public function productDetail($id)
     {
-        $product = ProductRetail::with('images')->find($id);
+        $product = ProductRetail::with('images')->where('status',true)->find($id);
         if ($product) {
             return new ProductRetailResource($product);
         } else {

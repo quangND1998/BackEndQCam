@@ -30,11 +30,13 @@ import BaseIcon from '@/Components/BaseIcon.vue'
 import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
+import UploadImage from "@/Components/UploadImage.vue"
 const props = defineProps({
     product_services: Object,
 });
 const searchVal = ref("");
 const swal = inject("$swal");
+const product_service = ref(null)
 const form = useForm({
     id: null,
     name: null,
@@ -131,6 +133,7 @@ const edit = (product) => {
     form.unit = product.unit;
     form.transfer_value = product.transfer_value;
     form.price_origin = product.price_origin;
+    product_service.value =product
 
 };
 const isModalActive = ref(false);
@@ -260,7 +263,7 @@ const Delete = (id) => {
                         </div>
                         <InputLabel for="image" value="Ảnh mô tả" />
                         <div class=" flex items-center justify-center w-full">
-                            <label for="dropzone-file"
+                            <!-- <label for="dropzone-file"
                                 class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                 <div class="h-[160px] flex flex-col items-center justify-center pt-5 pb-6">
                                     <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -277,7 +280,10 @@ const Delete = (id) => {
                                     class="hidden" accept="image/*" />
                                 <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
                                     class="hidden" accept="image/*" />
-                            </label>
+                            </label> -->
+
+                            <UploadImage v-if="editMode ==false" :max_files="4" v-model="form.images" :multiple="true"  />
+                            <UploadImage v-else :max_files="4" v-model="form.images" :multiple="true" :old_images="product_service?.images"   />
                             <InputError class="mt-2" :message="form.errors.images" />
                         </div>
                     </div>
@@ -440,13 +446,14 @@ const Delete = (id) => {
 
                                 </td>
                                 <td class="px-6 py-1">
-                                    {{ product_service.life_time }}
-                                </td>
-                                <td class="px-6 py-1">
                                     {{ product_service.number_deliveries }}
                                 </td>
                                 <td class="px-6 py-1">
+                                    
                                     {{ product_service.life_time }}
+                                </td>
+                                <td class="px-6 py-1">
+                                    {{ product_service.unit == "year" ? "năm" : product_service.unit }}
                                 </td>
                                 <td class="px-6 py-1" >
                                     <p class="string_long" v-html="product_service.description"></p>

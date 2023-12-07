@@ -56,6 +56,10 @@ class ProductServiceOwner extends Model
     {
         return $this->hasMany(Tree::class,'product_service_owner_id');
     }
+    public function tree()
+    {
+        return $this->hasOne(Tree::class,'product_service_owner_id')->latest();
+    }
     public function contract()
     {
         return $this->hasOne(Contract::class,'product_service_owner_id');
