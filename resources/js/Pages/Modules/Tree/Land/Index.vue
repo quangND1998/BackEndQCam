@@ -168,7 +168,7 @@ const Delete = (id) => {
                         <!-- <BaseIcon :path="mdiLandFields" size="160" class="w-full h-40 object-cover" /> -->
                         <!-- </Link> -->
                         <Link :href="route('admin.land.tree.index',  land.id)">
-                        <div class="bg-[#ffffff] border px-2 py-1 items-center  rounded-xl">
+                        <div class="bg-[#ffffff] border px-2 py-2 items-center  rounded-xl">
                             <div class="flex justify-between">
 
                                     <h3 class="text-black text-sm font-medium ">{{ land.name }} (Đã nuôi {{ land.tree_owner_count }}/{{ land.trees_count }})</h3>
