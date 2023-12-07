@@ -20,7 +20,7 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-
+import UploadImage from '@/Components/UploadImage.vue'
 // import Multiselect from '@vueform/multiselect'
 
 
@@ -31,6 +31,7 @@ defineProps({
 });
 const searchVal = ref("");
 const swal = inject("$swal");
+const tintuc = ref(null);
 const form = useForm({
     id: null,
     title: null,
@@ -51,7 +52,7 @@ const isModalDangerActive = ref(false);
 // ])
 const reset = () => {
     editMode.value = false;
-    search.value = null;
+
     form.id = null;
     form.title = null;
     form.state = null;
@@ -69,12 +70,13 @@ const edit = (new_data) => {
     form.type = new_data.type;
     form.short_description = new_data.short_description;
     form.description = new_data.description;
+    tintuc.value=new_data
 };
 
 const save = () => {
-    console.log(form);
+
     if (editMode.value == true) {
-        form.post(route("news.updatenew", form.id), {
+        form.post(route("new.update", form.id), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = true;
@@ -193,7 +195,7 @@ const Delete = (id) => {
 
                 </label>
                 <InputLabel for="name" value="Chi tiết bài viết" />
-                <label class="input w-full" for="recipient-name">
+                <label class="input w-full h-40" for="recipient-name">
 
                     <quill-editor v-model:content="form.description" contentType="html"></quill-editor>
 
@@ -201,7 +203,7 @@ const Delete = (id) => {
 
                 <InputLabel for="image" value="Image" />
                 <div class="flex items-center justify-center w-full">
-                    <label for="dropzone-file"
+                    <!-- <label for="dropzone-file"
                         class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -218,7 +220,9 @@ const Delete = (id) => {
                             class="hidden" accept="image/*" />
                         <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
                             class="hidden" accept="image/*" />
-                    </label>
+                    </label> -->
+                    <UploadImage v-if="editMode ==false" :max_files="1" v-model="form.images" :multiple="true" class="w-30" />
+                        <UploadImage v-else :max_files="1" v-model="form.images" :multiple="false" :old_images="tintuc?.images"  />
                     <InputError class="mt-2" :message="form.errors.images" />
                 </div>
             </CardBoxModal>
@@ -229,6 +233,7 @@ const Delete = (id) => {
                         <tr>
                             <th scope="col" class="py-3 px-6 text-xs">STT</th>
                             <th scope="col" class="py-3 px-6 text-xs">Tiêu đề</th>
+                            <th scope="col" class="py-3 px-6 text-xs">Ảnh</th>
                             <th scope="col" class="py-3 px-6 text-xs">Loại</th>
                             <th scope="col" class="py-3 px-6 text-xs">Mô tả</th>
                             <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
@@ -245,6 +250,9 @@ const Delete = (id) => {
                             </th>
                             <th scope="row" class="py-4 px-6 text-[14px] text-gray-900 whitespace-nowrap dark:text-white">
                                 <a class="text-blue-600" :href="new_data.link">{{ new_data.title }}</a>
+                            </th>
+                            <th scope="row" class="py-4 px-6 text-[14px] text-gray-900 whitespace-nowrap dark:text-white">
+                               <img :src="new_data.images.length > 0 ? new_data.images[0].original_url : null" class="w-16" alt="">
                             </th>
                             <th scope="row" class="py-4 px-6 text-[14px] text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ new_data.type }}

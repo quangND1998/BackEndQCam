@@ -62,15 +62,24 @@ class UserController extends Controller
         } else {
             return  abort(403);
         }
+        // foreach($users as $us){
+        //     if($us->doesntHave('roles')){
+        //         // dd($us);
+        //         // if(str_contains($us->email,'leader')){
+        //         //     $us->assignRole('leader-sale');
+        //         // }
+        //         if(str_contains($us->email,'sale')){
+        //             $us->assignRole('saler');
+        //         }
+        //     }
 
+        //  }
         return Inertia::render('Admin/User', compact('filters', 'users', 'roles'));
     }
-
 
     public function create(Request $request)
     {
         $user = Auth::user();
-
         if ($user->hasRole('super-admin')) {
             $roles = Role::where('name', '!=', 'super-admin')->get();
             $leader_sales = User::role('leader-sale')->get();
