@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Modules\Tree\app\Http\Requests\Land\StoreRequest;
 use Modules\Tree\app\Http\Requests\Land\UpdateRequest;
@@ -27,7 +28,11 @@ class LandController extends Controller
     public function index()
     {
 
-        $lands = Land::paginate(12);
+        $lands = Land::withCount([
+            'trees', 'trees AS tree_owner_count' => function ($query) {
+                $query->whereNotNull('product_service_owner_id');
+            }
+        ])->paginate(12);
         return Inertia::render('Modules/Tree/Land/Index', compact('lands'));
     }
 

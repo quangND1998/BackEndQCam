@@ -79,6 +79,7 @@ class NewsController extends Controller
      */
     public function update(UpdateRequest $request, $new) : RedirectResponse
     {
+      
         $new = News::findOrFail($new);
         $new->update([
             'title' => $request->title,

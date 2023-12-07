@@ -60,10 +60,10 @@ const getNow= ()=> {
     <LayoutAuthenticated>
 
         <Head title="Quản lý đơn hàng" />
-        <SectionMain>
-            <div class="mx-5">
+        <SectionMain class="mt-6">
+            <div class="mx-5 mt-12">
                 <div class="min-[320px]:block sm:block md:grid grid-cols-3 gap-4">
-                    <div class="col-span-2">
+                    <div class="col-span-2 mt-6">
                         <InvoiceInformation :order="order" />
                        
                         <div class="mt-5">
@@ -210,11 +210,11 @@ const getNow= ()=> {
                         </h1>
                         <p class="font-semibold text-base text-[#FF0000]">Chưa thanh toán</p>
                         <div class="mt-5">
-                            <img src="/assets/images/qr.png" class="w-44 h-44 m-auto" alt="">
+                            <img src="/assets/images/QR_CODE.png" class="w-50 h-50 m-auto" alt="">
                             <p class="text-base my-1 ">Nội dung: 12535</p>
-                            <p class="text-base my-1 ">STK: 9999999</p>
-                            <p class="text-base my-1 ">CTK: CÔNG TY ABC</p>
-                            <p class="text-base my-1 ">NGÂN HÀNG: ABC</p>
+                            <p class="text-base my-1 ">STK: 6161616888</p>
+                            <p class="text-base my-1 ">CTK:CÔNG TY CỔ PHẦN CAM MẶT TRỜI</p>
+                            <p class="text-base my-1 ">NGÂN HÀNG: Ngân Hàng Quân Đội (MB)</p>
                         </div>
                         <BaseButton color="info"
                             class="bg-black text-white p-2 mt-3 w-3/5 text-center justify-center rounded-lg"
