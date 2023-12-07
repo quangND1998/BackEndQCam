@@ -50,6 +50,7 @@ const isModalDangerActive = ref(false);
 //     'Robin',
 //     'Joker',
 // ])
+const editor = ref()
 const reset = () => {
     editMode.value = false;
 
@@ -59,6 +60,7 @@ const reset = () => {
     form.type = null;
     form.short_description = null;
     form.description = null;
+    editor.value.setHTML(null)
 };
 
 const edit = (new_data) => {
@@ -197,7 +199,7 @@ const Delete = (id) => {
                 <InputLabel for="name" value="Chi tiết bài viết" />
                 <label class="input w-full h-40" for="recipient-name">
 
-                    <quill-editor v-model:content="form.description" contentType="html"></quill-editor>
+                    <quill-editor ref="editor" v-model:content="form.description" content-type="html"></quill-editor>
 
                 </label>
 

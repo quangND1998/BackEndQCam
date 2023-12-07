@@ -18,6 +18,8 @@ const swal = inject('$swal')
 const store = useTreeStore();
 const images = ref([]);
 const tree = ref(null)
+const user_manual = ref(null)
+const description = ref(null)
 const form = useForm({
     id: null,
     name: null,
@@ -55,6 +57,10 @@ const editMode = computed(
 )
 const formattedPrice = ref()
 onMounted(() => {
+    emitter.on('createTree', async()=>{
+        user_manual.value.setHTML(null)
+        description.value.setHTML(null)
+    });
     emitter.on('editTree', async (data) => {
 
         form.id = data.id
@@ -67,13 +73,15 @@ onMounted(() => {
         form.status = data.status;
         form.description = data.description;
         form.user_manual = data.user_manual;
-        tree.value=data
+        tree.value=data;
+      
     });
 
 
 })
 onUnmounted(() => {
     emitter.off('editTree', listener)
+    emitter.off('createTree', listener)
 })
 const listener = (data) => {
 
@@ -307,7 +315,7 @@ const onFileChange = (e) => {
                         <div class="my-4">
                             <label class="input w-full" for="recipient-name">
 
-                                <quill-editor v-model:content="form.user_manual" contentType="html"></quill-editor>
+                                <quill-editor ref="user_manual" v-model:content="form.user_manual" contentType="html"></quill-editor>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Hướng dẫn sử dụng</span>
                             </label>
                             <InputError class="mt-2" :message="form.errors.user_manual" />
@@ -317,7 +325,7 @@ const onFileChange = (e) => {
                         <div class="my-4">
                             <label class="input w-full" for="recipient-name">
 
-                                <quill-editor v-model:content="form.description" contentType="html"></quill-editor>
+                                <quill-editor ref="description" v-model:content="form.description" contentType="html"></quill-editor>
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Mô
                                     tả</span>
                             </label>

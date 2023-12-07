@@ -47,6 +47,7 @@ const isModalDangerActive = ref(false);
 const createTree = (data) => {
     store.changeisModalTree(true)
     store.changeEditMode(false)
+    emitter.emit('createTree')
 }
 const edit = (land) => {
     store.changeisModalTree(true);
