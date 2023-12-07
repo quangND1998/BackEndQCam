@@ -552,12 +552,12 @@ const date = ref(new Date());
                             }" >
                                 <template v-slot:singlelabel="{ value }">
                                     <div class="multiselect-single-label">
-                                        {{ value.name }} ({{ value.email }})
+                                        {{ value.name }} (Team: {{ value.team?.name }})
                                     </div>
                                 </template>
 
                                 <template v-slot:option="{ option }">
-                                    {{ option.name }} ({{ option.email }})
+                                    {{ option.name }} (Team: {{ option.team?.name }})
                                 </template>
                             </Multiselect>
                         </div>

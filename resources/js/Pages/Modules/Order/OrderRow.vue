@@ -49,13 +49,8 @@ const props = defineProps({
                 <p class="btn_label mr-2 paid">{{ order.status }}</p>
             </div>
 
-            <div>
-                <p>{{ order.type == 'gift_delivery' ? 'Giao quà' : 'Đơn lẻ' }}</p>
-            </div>
-            <div>
-                <p v-if="order.saler">{{ order.saler.name }}</p>
-            </div>
-
+          
+          
             <div>
                 <p v-if="order.type == 'gift_delivery'" class="btn_label mr-2 paid" 
                   > Không cần thành toán</p>
@@ -64,6 +59,13 @@ const props = defineProps({
                     {{ order.payment_status  ==  0
                         ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
             </div>
+            <div>
+                <p>{{ order.type == 'gift_delivery' ? 'Giao quà' : 'Đơn lẻ' }}</p>
+            </div>
+            <div>
+                <p v-if="order.saler">{{ order.saler.name }}</p>
+            </div>
+
             <div>
                 <Link
                     :href="route('admin.payment.orderCashBankingPayment', order.id)"

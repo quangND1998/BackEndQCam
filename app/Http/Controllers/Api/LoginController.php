@@ -29,7 +29,10 @@ class LoginController extends Base2Controller
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
             $success['user'] =  $user;
             $success['user']['can'] = $user->getRolesArray();
-            return $this->sendResponse($success, 'User login successfully.');
+            if($user->hasAnyRole(['shipper','super-admin','customer'])){
+                return $this->sendResponse($success, 'User login successfully.');
+            }
+            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         } else {
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }

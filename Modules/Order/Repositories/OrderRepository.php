@@ -8,6 +8,7 @@ use App\Models\User;
 use Cart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Modules\Order\app\Models\Order;
 use Modules\Order\app\Models\OrderItem;
 use Modules\ProductCategory\Entities\Product;
@@ -244,8 +245,9 @@ class OrderRepository implements OrderContract
             'district' =>  $data['district'],
 
         ]);
-
+        $user->password = Hash::make('cammattroi');
         $user->assignRole('customer');
+        $user->save();
         return $user;
 
     }

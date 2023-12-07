@@ -24,7 +24,7 @@ class CustomerProductOwerController extends Base2Controller
             $customer = Auth::user();
             if($customer){
                 // $product_owner = $customer->product_service_owners;
-                $product_owner = ProductServiceOwner::with('product.images','history_gift')->where('user_id',$customer->id)->get();
+                $product_owner = ProductServiceOwner::with('product.images','history_gift','tree.images')->where('user_id',$customer->id)->get();
                 $product_not_owner = ProductService::with('images')->whereDoesntHave('productServiceOwner')->where('status',1)->get();
 
                 $response = [
@@ -51,7 +51,7 @@ class CustomerProductOwerController extends Base2Controller
    {
         $customer = Auth::user();
         if($customer){
-        $product_owner = ProductServiceOwner::with('product.images','trees','history_extend.contract.lastcontract.images','extend_last.contract.lastcontract.images','visit','history_gift')->where('user_id',$customer->id)->find($id);
+        $product_owner = ProductServiceOwner::with('product.images','trees','tree.thumb_image','tree.images','history_extend.contract.lastcontract.images','extend_last.contract.lastcontract.images','visit','history_gift')->where('user_id',$customer->id)->find($id);
         $dt = Carbon::now();
         $time = $dt->diffInDays($product_owner->time_end);
         $response = [
