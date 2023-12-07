@@ -13,6 +13,7 @@ use App\Http\Controllers\TestController;
 use Modules\Landingpage\app\Http\Controllers\TermsConditionController;
 use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OtpTestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -103,6 +104,8 @@ Route::middleware(['auth'])->group(
             Route::get('payment', [PaymentController::class, 'payment'])->name('payment');
         });
 
+        Route::get('otp/token', [OtpTestController::class,'test'])->name('otp.test');
+        Route::get('checkOtp/{otp}', [OtpTestController::class,'checkOtp'])->name('otp.checkOtp');
 
     }
 

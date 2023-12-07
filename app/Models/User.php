@@ -164,10 +164,7 @@ class User extends Authenticatable implements HasMedia
     }
     public function team()
     {
-
-         return $this->belongsTo(User::class, 'created_byId');
-
-
+        return $this->belongsTo(User::class, 'created_byId');
     }
 
     public function saler_orders()
@@ -178,5 +175,9 @@ class User extends Authenticatable implements HasMedia
 
     public function sale_order_packages(){
         return $this->hasMany(OrderPackage::class, 'sale_id');
+    }
+
+    public function otp(){
+        return $this->hasOne(OtpVerify::class, 'user_id');
     }
 }

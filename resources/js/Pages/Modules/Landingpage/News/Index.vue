@@ -162,20 +162,27 @@ const Delete = (id) => {
                     autocomplete="title" />
                 <InputError class="mt-2" :message="form.errors.title" />
 
-                <InputLabel for="owner" value="Trạng thái" />
+                <div class="flex w-full">
+                    <div class="w-1/2 mr-4">
+                        <InputLabel for="owner" value="Trạng thái" />
+                        <select id="category_project_id" v-model="form.state"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="public">public</option>
+                            <option value="private">private</option>
+                        </select>
+                    </div>
+                    <div class="w-1/2">
+                        <InputLabel for="owner" value="Loại bài viết" />
+                        <select id="category_project_id" v-model="form.type"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="news">Tin tức trang trại</option>
+                            <option value="activity">Các hoạt động trang trại</option>
+                        </select>
+                    </div>
 
-                <select id="category_project_id" v-model="form.state"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="public">public</option>
-                    <option value="private">private</option>
-                </select>
-                <InputLabel for="owner" value="Loại bài viết" />
+                </div>
 
-                <select id="category_project_id" v-model="form.type"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="news">Tin tức trang trại</option>
-                    <option value="activity">Các hoạt động trang trại</option>
-                </select>
+
 
                 <InputLabel for="name" value="Mô tả ngắn (Tối đa 220 kí tự)" />
                 <label class="input w-full" for="recipient-name">
@@ -207,7 +214,7 @@ const Delete = (id) => {
                             <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)
                             </p>
                         </div>
-                        <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.file[0]" type="file"
+                        <input v-if="editMode" id="dropzone-file" @input="form.images = $event.target.files[0]" type="file"
                             class="hidden" accept="image/*" />
                         <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
                             class="hidden" accept="image/*" />
