@@ -29,6 +29,8 @@ class OtpTestController extends Controller
         //     "session_id"=>  Session::getId(),
         //     "grant_type"=> "client_credentials"
         // ]);  
+
+        // return $response->json();
         $otp=  $this->otpService->createOtp(60, Auth::user());    
      
         OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addSecond(60));
