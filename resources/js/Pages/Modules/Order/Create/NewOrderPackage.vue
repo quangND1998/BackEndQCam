@@ -80,7 +80,7 @@
         <div class="mx-5">
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Tổng</p>
-                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(product?.price) }} vnđ</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(product?.price) }} VND</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">VAT({{vat}}%)</p>
@@ -100,7 +100,7 @@
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868]">Đã thanh toán</p>
-                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(price_percent) }} vnđ</p>
+                <p class="text-sm text-[#686868] font-bold">{{ formatPrice(price_percent) }} VND</p>
             </div>
             <div class="flex justify-between my-2">
                 <p class="text-sm text-[#686868] font-bold">Còn lại</p>

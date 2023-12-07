@@ -125,7 +125,7 @@ const priceVat = computed(() => {
                                             </th>
 
                                             <td class="px-6 py-4">
-                                                {{ formatPrice(item.total_price) }} VNĐ
+                                                {{ formatPrice(item.total_price) }} VND
                                             </td>
                                         </tr>
                                     </tbody>

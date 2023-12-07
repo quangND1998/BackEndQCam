@@ -4,7 +4,7 @@ namespace Modules\Order\app\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveOrderRequest extends FormRequest
+class SaveOrderpackageRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,6 +12,7 @@ class SaveOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'idPackage' => 'required|unique:order_packages,idPackage',
             'payment_method' => 'required',
             'address' => 'required',
             'city' => 'required',
@@ -22,9 +23,10 @@ class SaveOrderRequest extends FormRequest
             'discount_deal' => 'nullable|nullable|between:0,100',
             'type' => 'required',
             'shipping_fee' => 'nullable|nullable|gt:-1',
-            'amount_paid' => 'nullable|nullable|gt:-1',
-            'receive_at' =>'required',
-            'shipper_id' =>'required',
+            'time_reservations' => 'required|gt:0',
+            'price_percent' => 'required|gt:-1',
+            'product_selected' => 'required',
+            'time_approve' =>'required',
         ];
     }
 
@@ -40,6 +42,8 @@ class SaveOrderRequest extends FormRequest
     public function messages()
     {
         return [
+            'idPackage.required' => 'Chưa điền số phiếu',
+            'idPackage.unique:order_packages,idPackage' => 'Mã phiếu đã tồn tại trên hệ thống',
             'images.required' => 'Ảnh chứng từ liên quan phải có',
             "images.*.mimes" => 'Phải là định dạng ảnh',
         ];

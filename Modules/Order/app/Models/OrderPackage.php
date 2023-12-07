@@ -19,7 +19,7 @@ class OrderPackage extends Model implements HasMedia
     use HasFactory;
     protected $table = 'order_packages';
     protected $fillable = [
-        "id",   "order_number", "user_id", "status", "item_count", "payment_status", "payment_method", "grand_total", "discount", "shipping_fee", "last_price", "notes", "reason", 'specific_address',
+        "id", "idPackage",  "order_number", "user_id", "status", "item_count", "payment_status", "payment_method", "grand_total", "discount", "shipping_fee", "last_price", "notes", "reason", 'specific_address',
         'address',
         'city',
         'district',

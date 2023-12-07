@@ -370,15 +370,15 @@ const RemoveMutipleProduct =()=>{
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    {{ formatPrice(product_voucher.product.price) }} vnđ
+                                    {{ formatPrice(product_voucher.product.price) }} VND
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ product_voucher.unit=='percent'? product_voucher.discount: formatPrice(product_voucher.discount) }}
                                     <span v-if=" product_voucher.unit =='percent'">%</span>
-                                    <span v-else>VNĐ</span>
+                                    <span v-else>VND</span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{  formatPrice(product_voucher.price_sale) }} vnđ
+                                    {{  formatPrice(product_voucher.price_sale) }} VND
                                 </td>
                                 <td class="px-6 py-4">
                                     <BaseButton :icon="mdiTrashCanOutline" @click="RemoveProductVoucher(product_voucher.id)" small class="text-[#D12953] " />
