@@ -74,7 +74,7 @@ const edit = (new_data) => {
 const save = () => {
     console.log(form);
     if (editMode.value == true) {
-        form.put(route("news.update", form.id), {
+        form.post(route("news.updatenew", form.id), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = true;
