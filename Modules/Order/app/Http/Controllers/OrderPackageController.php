@@ -122,7 +122,7 @@ class OrderPackageController extends Controller
         if($order->status == "pending"){
 
         $user = Auth::user();
-        $sales = User::role('saler')->get();
+        $sales = User::whereHas('team')->with('team')->role('saler')->get();
         $leaders = User::role('leader-sale')->get();
         $product_services = ProductService::where("status", 1)->get();
         $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();

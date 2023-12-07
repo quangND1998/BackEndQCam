@@ -528,12 +528,12 @@ const date = ref(new Date());
                             }" >
                                 <template v-slot:singlelabel="{ value }">
                                     <div class="multiselect-single-label">
-                                        {{ value.name }} ({{ value.email }})
+                                        {{ value.name }} (Team: {{ value.team?.name }})
                                     </div>
                                 </template>
 
                                 <template v-slot:option="{ option }">
-                                    {{ option.name }} ({{ option.email }})
+                                    {{ option.name }} (Team: {{ option.team?.name }})
                                 </template>
                             </Multiselect>
                         </div>
@@ -670,7 +670,7 @@ const date = ref(new Date());
                             </div>
                             <div class="block ml-2 w-4/5 mb-2">
                                 <h3 class="text-base font-semibold">4. Nhận nông sản sạch
-                                    {{ product?.number_receive_product }} lần/năm</h3>
+                                    {{ product?.number_receive_product/product?.life_time }} lần/năm</h3>
                                 <p class="text-xs font-normal">Các sản phẩm nông sản như thanh long
                                     sầu riêng là quà tặng đến cho bạn</p>
                             </div>
