@@ -171,7 +171,7 @@ const Delete = (id) => {
                         <div class="bg-[#ffffff] border px-2 py-1 items-center  rounded-xl">
                             <div class="flex justify-between">
 
-                                    <h3 class="text-black text-sm font-medium ">{{ land.name }}</h3>
+                                    <h3 class="text-black text-sm font-medium ">{{ land.name }} (Đã nuôi {{ land.tree_owner_count }}/{{ land.trees_count }})</h3>
 
                                 <Dropdown align="right" width="40" @click.prevent>
                                 <template #trigger>

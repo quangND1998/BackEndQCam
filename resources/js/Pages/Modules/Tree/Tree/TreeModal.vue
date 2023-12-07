@@ -163,7 +163,7 @@ const onFileChange = (e) => {
     if (files.length > 0) {
         for (var i = 0; i < files.length; i++) {
             form.images.push(files[i])
-        
+
             images.value.push({
                 name: files[i].name,
                 image: URL.createObjectURL(files[i])
@@ -245,7 +245,7 @@ const onFileChange = (e) => {
                                     @input="form.images_thumb = $event.target.files[0]" accept="image/*" />
                             </label>
                             <InputError class="mt-2" :message="form.errors.images_thumb" /> -->
-                            <InputError class="mt-2" :message="form.errors.images_thumb" /> 
+                            <InputError class="mt-2" :message="form.errors.images_thumb" />
                         </div>
 
                     </div>
@@ -253,7 +253,7 @@ const onFileChange = (e) => {
                     <div>
                         <div class="py-4">
                             <label class="input w-full" for="recipient-name">
-                                <input class="input__field border" type="text" placeholder="" v-model="form.address">
+                                <input class="input__field border" type="text" placeholder="" v-model="form.address" :disabled="hasAnyPermission(['super-admin']) ? false : true">
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Địa
                                     chỉ</span>
                             </label>
@@ -261,7 +261,7 @@ const onFileChange = (e) => {
                         </div>
                         <div class="my-4">
                             <label class="input w-full" for="recipient-name">
-                                <input class="input__field border " type="text" placeholder="" v-model="form.status">
+                                <input class="input__field border " type="text" placeholder="" v-model="form.status" :disabled="hasAnyPermission(['super-admin']) ? false : true">
                                 <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">
                                     Tình trạng cây</span>
                             </label>
@@ -297,10 +297,10 @@ const onFileChange = (e) => {
                             <InputError class="mt-2" :message="form.errors.transfer_value" />
                         </div> -->
                         <div class="">
-                           
+
                           <UploadImage v-if="editMode ==false" :max_files="4"  v-model="form.images" :multiple="true" :label="`Bộ sưu tập ảnh`" />
                           <UploadImage v-else :max_files="4"  v-model="form.images" :multiple="true"  :old_images="tree?.images"  :label="`Bộ sưu tập ảnh`" />
-                          <InputError class="mt-2" :message="form.errors.images" /> 
+                          <InputError class="mt-2" :message="form.errors.images" />
                         </div>
                     </div>
                     <div>
