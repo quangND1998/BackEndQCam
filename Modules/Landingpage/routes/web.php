@@ -24,8 +24,10 @@ Route::group([], function () {
 Route::middleware(['auth'])->group(
     function () {
         Route::resource('news', NewsController::class)->names('news');
-        Route::post('news/update/{new}', [NewsController::class, 'update'])->names('news.update');
+        Route::post('new/update/{new}', [NewsController::class, 'update'])->name('new.update');
         Route::delete('news/{id}', [NewsController::class, 'destroy'])->name('news.delete');
+        Route::post('updatenew/{id}', [NewsController::class, 'update'])->name('updatenew');
+
 
         Route::prefix('admin')->as('admin.')->group(function () {
             Route::prefix('terms')->as('terms.')->group(function () {

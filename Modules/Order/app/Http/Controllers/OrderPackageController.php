@@ -107,9 +107,7 @@ class OrderPackageController extends Controller
     }
     public function orderPackage(Request $request){
         $user = Auth::user();
-        // $sales = User::with('team')->has('team', '=', 0)->role('saler')->get();
         $sales = User::whereHas('team')->with('team')->role('saler')->get();
-        //  return $sales;
         $leaders = User::role('leader-sale')->get();
         $telesale = User::role('telesale')->get();
         $ctv = User::role('ctv')->get();
@@ -124,7 +122,7 @@ class OrderPackageController extends Controller
         if($order->status == "pending"){
 
         $user = Auth::user();
-        $sales = User::role('saler')->get();
+        $sales = User::whereHas('team')->with('team')->role('saler')->get();
         $leaders = User::role('leader-sale')->get();
         $product_services = ProductService::where("status", 1)->get();
         $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();

@@ -39,21 +39,21 @@ class UserController extends Controller
         )->get();
 
         if ($user->hasRole('super-admin')) {
-            $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
+            $users =  User::with('roles', 'tokens', 'team')->where('email','!=','admin@admin.com')->where(function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
                 $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
                 // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
             })->paginate(20)->appends($request->search);
             $roles = Role::get();
         } elseif ($user->hasRole('leader-sale')) {
-            $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
+            $users =  User::with('roles', 'tokens', 'team')->where('email','!=','admin@admin.com')->where(function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
                 $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
                 // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
             })->where('created_byId', $user->id)->paginate(20)->appends($request->search);
             $roles = Role::where('name', 'saler')->get();
         }elseif ($user->hasRole('leader-shipper')) {
-            $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
+            $users =  User::with('roles', 'tokens', 'team')->where('email','!=','admin@admin.com')->where(function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
                 $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
                 // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
@@ -62,7 +62,18 @@ class UserController extends Controller
         } else {
             return  abort(403);
         }
-      
+        // foreach($users as $us){
+        //     if($us->doesntHave('roles')){
+        //         // dd($us);
+        //         // if(str_contains($us->email,'leader')){
+        //         //     $us->assignRole('leader-sale');
+        //         // }
+        //         if(str_contains($us->email,'sale')){
+        //             $us->assignRole('saler');
+        //         }
+        //     }
+
+        //  }
         return Inertia::render('Admin/User', compact('filters', 'users', 'roles'));
     }
 
@@ -178,7 +189,7 @@ class UserController extends Controller
         }
         $user->save();
         return redirect()->route('users.index')->with('success', 'Tạo mới thành công');
- 
+
     }
 
     public function update(Request $request, $id)
@@ -220,7 +231,7 @@ class UserController extends Controller
             'cic_date_expried' => $request->cic_date_expried,
 
         ]);
-     
+
         if ($auth_user->hasPermissionTo('super-admin')) {
             if ($request->leader_sale_id && !$user->hasRole('leader-sale')) {
                 $lead_sale = User::findOrFail($request->leader_sale_id);

@@ -197,7 +197,7 @@ const loadOrder = async $state => {
 
                 <div>
 
-                    <Link v-if="hasAnyPermission(['create-contract-complete'])" :href="route('admin.orders.create')"
+                    <Link v-if="hasAnyPermission(['add-new-package'])" :href="route('admin.orders.create')"
                         class="px-2 py-2 text-sm  bg-btn_green hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
                     Tạo đơn hàng
                     </Link>

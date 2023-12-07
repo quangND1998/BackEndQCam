@@ -79,7 +79,7 @@ class NewsController extends Controller
      */
     public function update(UpdateRequest $request, $new) : RedirectResponse
     {
-      
+     
         $new = News::findOrFail($new);
         $new->update([
             'title' => $request->title,
@@ -89,10 +89,12 @@ class NewsController extends Controller
             'description' => $request->description
         ]);
         if( $request->file('images') != null){
+          
             $new->clearMediaCollection('news_images');
-            foreach ($request->images as $image) {
-                $new->addMedia($image)->toMediaCollection('news_images');
-            }
+            
+           
+            $new->addMedia($request->images)->toMediaCollection('news_images');
+            
         }
         return back()->with('success', 'Update successffully');
     }

@@ -28,11 +28,13 @@ class LandController extends Controller
     public function index()
     {
 
+        // $lands = Land::paginate(12);
         $lands = Land::withCount([
             'trees', 'trees AS tree_owner_count' => function ($query) {
                 $query->whereNotNull('product_service_owner_id');
             }
         ])->paginate(12);
+        //  return $lands;
         return Inertia::render('Modules/Tree/Land/Index', compact('lands'));
     }
 
