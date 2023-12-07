@@ -7,7 +7,7 @@ import SectionMain from "@/Components/SectionMain.vue";
 import { Head } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import PillTag from '@/Components/PillTag.vue'
-import CardBoxModal from "@/Components/CardBoxModal.vue";
+import CardBoxModalFull from "@/Components/CardBoxModalFull.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -157,7 +157,7 @@ const Delete = (id) => {
                         " label="Create Land" />
                 </div>
             </div>
-            <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
+            <CardBoxModalFull v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                 :title="editMode ? 'Sửa bài viết ' : 'Tạo mới'">
                 <InputLabel for="title" value="Tiêu đề" />
                 <TextInput id="title" v-model="form.title" type="text" class="mt-1 block w-full" required autofocus
@@ -202,7 +202,7 @@ const Delete = (id) => {
                 </label>
 
                 <InputLabel for="image" value="Image" />
-                <div class="flex items-center justify-center w-full">
+                <div class="flex  w-full">
                     <!-- <label for="dropzone-file"
                         class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -221,11 +221,11 @@ const Delete = (id) => {
                         <input v-else id="dropzone-file" @input="form.images = $event.target.files" type="file" multiple
                             class="hidden" accept="image/*" />
                     </label> -->
-                    <UploadImage v-if="editMode ==false" :max_files="1" v-model="form.images" :multiple="true" class="w-30" />
-                        <UploadImage v-else :max_files="1" v-model="form.images" :multiple="false" :old_images="tintuc?.images"  />
+                    <UploadImage v-if="editMode ==false" :max_files="1" v-model="form.images" :multiple="true" class="w-30 justify-start" />
+                    <UploadImage v-else :max_files="1" v-model="form.images" :multiple="false" :old_images="tintuc?.images" class="w-30 justify-start" />
                     <InputError class="mt-2" :message="form.errors.images" />
                 </div>
-            </CardBoxModal>
+            </CardBoxModalFull>
             <!-- End Modal -->
             <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
