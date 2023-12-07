@@ -12,6 +12,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TestController;
 use Modules\Landingpage\app\Http\Controllers\TermsConditionController;
 use App\Http\Controllers\PreviewController;
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -95,6 +96,11 @@ Route::middleware(['auth'])->group(
 
         Route::prefix('media')->as('media.')->group(function () {
             Route::delete('delete/{id}', [MediaController::class, 'delete'])->name('delete');
+        });
+
+
+        Route::prefix('payoo')->as('payoo.')->group(function () {
+            Route::get('payment', [PaymentController::class, 'payment'])->name('payment');
         });
 
 
