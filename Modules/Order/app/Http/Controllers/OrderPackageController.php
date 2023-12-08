@@ -441,7 +441,7 @@ class OrderPackageController extends Controller
             $new_product_owner->history_extend()->save($history_extend);
         }else{
             $order->product_service_owner->state = "active";
-            $order->save();
+            $order->product_service_owner->save();
             return back()->with('error', 'Đơn đã tạo hợp đồng');
         }
 
@@ -510,20 +510,5 @@ class OrderPackageController extends Controller
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
             }
         )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(20);
-    }
-    public function searchUserCustomer(Request $request)
-    {
-        if($request->search){
-            $customer = User::role('customer')->search($request->only('search'))->first();
-
-            if ($customer) {
-                return $customer;
-            } else {
-                return response()->json('Không tìm thấy Khách hàng!', 404);
-            }
-        }
-        else{
-            return response()->json('Không tìm thấy Khách hàng!', 404);
-        }
     }
 }

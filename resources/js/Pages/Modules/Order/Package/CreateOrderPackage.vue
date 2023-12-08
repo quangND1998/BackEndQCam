@@ -175,12 +175,12 @@ const onSearchUser = async () => {
 
 }
 const save = () => {
-    // if (form.name == null) {
-    //     form.name = search.value;
-    // }
-    // if (form.phone_number == null) {
-    //     form.phone_number = search.value;
-    // }
+    if (form.name == null) {
+        form.name = search.value;
+    }
+    if (form.phone_number == null) {
+        form.phone_number = search.value;
+    }
     if (form.name == null || form.phone_number == null) {
         swal.fire({
             title: "Lỗi?",
