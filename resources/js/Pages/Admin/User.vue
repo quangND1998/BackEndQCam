@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, watch, toRef } from "vue";
+import { computed, ref, inject, watch, toRef, reactive } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { useForm } from "@inertiajs/vue3";
@@ -25,12 +25,9 @@ import BaseButtons from "@/Components/BaseButtons.vue";
 import Multiselect from "@vueform/multiselect";
 import { useHelper } from "@/composable/useHelper";
 import { router, Link } from "@inertiajs/vue3";
-import SearchFilter from "@/Components/SearchFilter.vue";
 import throttle from "lodash/throttle";
 import mapValues from "lodash/mapValues";
 import pickBy from "lodash/pickBy";
-import SearchInput from "vue-search-input";
-import "vue-search-input/dist/styles.css";
 import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
 const phoneNumber = ref()
 const results = ref()
@@ -43,7 +40,6 @@ const props = defineProps({
 const swal = inject("$swal");
 const form = useForm({
     id: null,
-    search: null,
     name: null,
     email: null,
     roles: null,
@@ -55,7 +51,9 @@ const isModalActive = ref(false);
 const isActive = ref(false);
 const editMode = ref(false);
 const isModalDangerActive = ref(false);
-const search = ref(null);
+const filter = reactive({
+    search:null
+});
 const { multipleSelect } = useHelper();
 // console.log(multipleSelect)
 const edit = (user) => {
@@ -83,7 +81,7 @@ const edit = (user) => {
 // );
 const searchUser=()=>{
     router.get(route(`users.index`),
-        {search:search.value},
+        {search:filter.search},
         {
             preserveState: true,
             preserveScroll: true
@@ -185,9 +183,10 @@ const Delete = (id) => {
                             <label class="block text-gray-700">Trashed:</label>
                         </search-filter> -->
                         <!-- <SearchInput v-model="search"   placeholder="Search..." aria-label="Search" size="24"/> -->
-                        <input    v-model="search" @keyup="searchUser"
+                        <input   id="default-search" name="search" data-toggle="hideseek"
+                             data-list=".menu-category" v-model="filter.search" @keyup="searchUser"
                             class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            type="search" name="search" placeholder="Search…"  />
+                            type="search"  placeholder="Search…"  />
                     </div>
                 </div>
                 <div class="right">

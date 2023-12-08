@@ -188,6 +188,7 @@ class User extends Authenticatable implements HasMedia
 
             $query->where('name', 'LIKE', '%' .$filters['search'] . '%');
             $query->orwhere('email', 'LIKE', '%' .$filters['search'] . '%');
+            $query->orwhere('phone_number', 'LIKE', '%' .$filters['search'] . '%');
         }
        
     }

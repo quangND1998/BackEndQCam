@@ -267,19 +267,19 @@ const save = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
+                        <div class="my-3" v-if="hasAnyPermission(['super-admin']) && form.leader_shipper_id ==null">
                             <h3 class="text-[17px] font-bold">Team Sale *</h3>
                             <div class="grid grid-cols-2 gap-4">
-                                <Multiselect v-model="form.leader_sale_id" :appendNewTag="false" :createTag="false"   @select="onChangeUser"
+                                <Multiselect  v-model="form.leader_sale_id"    @select="onChangeUser"
                                     :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_sales"
                                     placeholder="Chọn Team"   />
                                 <InputError class="mt-2" :message="form.errors.leader_sale_id" />
                             </div>
                         </div>
-                        <div class="my-3" v-if="hasAnyPermission(['super-admin'])">
+                        <div class="my-3" v-if="hasAnyPermission(['super-admin']) && form.leader_sale_id ==null">
                             <h3 class="text-[17px] font-bold">Team Shipper *</h3>
                             <div class="grid grid-cols-2 gap-4">
-                                <Multiselect v-model="form.leader_shipper_id" :appendNewTag="false" :createTag="false"  @select="onChangeUser"
+                                <Multiselect v-model="form.leader_shipper_id"   @select="onChangeUser"
                                     :searchable="true" label="name" valueProp="id" trackBy="name" :options="leader_shipper"
                                     placeholder="Chọn Team"   />
                                 <InputError class="mt-2" :message="form.errors.leader_shipper_id" />
