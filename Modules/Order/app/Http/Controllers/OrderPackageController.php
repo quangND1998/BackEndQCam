@@ -418,7 +418,7 @@ class OrderPackageController extends Controller
             $new_product_owner->time_end = $order->time_end;
             $new_product_owner->price = $order->grand_total;
             $new_product_owner->description = $customer->name . " sử dụng gói " . $product_service->name;
-            $new_product_owner->state = "active"; //active, expired, stop
+            $new_product_owner->state = "pending"; //active, expired, stop, pending
             $new_product_owner->user_id = $customer->id;
             $new_product_owner->product_service_id = $product_service->id;
             $new_product_owner->order_id = $order->id;
@@ -440,6 +440,8 @@ class OrderPackageController extends Controller
             $history_extend->description = "tạo mới";
             $new_product_owner->history_extend()->save($history_extend);
         }else{
+            $order->product_service_owner->state = "active";
+            $order->save();
             return back()->with('error', 'Đơn đã tạo hợp đồng');
         }
 

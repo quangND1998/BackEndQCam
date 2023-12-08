@@ -30,13 +30,13 @@ class UserSeeder extends Seeder
             ]);
             $user1->assignRole('super-admin');
 
-            // $user2 = User::create([
-            //     'name' => 'Admin',
-            //     'username' => 'quangnd620',
-            //     'email' => 'quangnd620@wru.vn',
-            //     'phone_number' => '0989227252',
-            //     'password' => bcrypt('Abcd1234')
-            // ]);
+            $user2 = User::create([
+                'name' => 'Admin',
+                'username' => 'quangnd620',
+                'email' => 'quangnd620@wru.vn',
+                'phone_number' => '0989227252',
+                'password' => bcrypt('Abcd1234')
+            ]);
         }
     }
 }

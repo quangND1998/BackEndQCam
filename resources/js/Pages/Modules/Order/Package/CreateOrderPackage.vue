@@ -160,26 +160,27 @@ const foundUser = (data) => {
     search.value = data.name;
 }
 const onSearchUser = async () => {
-    axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
+    return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
         if (res.data) {
-            user.value = res.data;
-            foundUser(res.data)
-            flash.value = null;
+                user.value = res.data;
+                foundUser(res.data)
+                flash.value = null;
         }
-    }).catch(err => {
-        user.value = null
-        flash.value = err.response.data
-        form.reset()
-    })
+        }).catch(err => {
+            console.log('not user');
+            user.value = null
+            flash.value = err.response.data
+            form.reset()
+        })
 
 }
 const save = () => {
-    if (form.name == null) {
-        form.name = search.value;
-    }
-    if (form.phone_number == null) {
-        form.phone_number = search.value;
-    }
+    // if (form.name == null) {
+    //     form.name = search.value;
+    // }
+    // if (form.phone_number == null) {
+    //     form.phone_number = search.value;
+    // }
     if (form.name == null || form.phone_number == null) {
         swal.fire({
             title: "Lỗi?",
@@ -342,7 +343,7 @@ const date = ref(new Date());
                                             *</label>
                                         <input type="text" id="name"  v-model="search" @keyup="onSearchUser()"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" required>
+                                            placeholder="" >
                                         <div class="text-red-500" v-if="flash"> {{ flash }}</div>
                                     </div>
                                     <div class="my-3">
@@ -350,7 +351,7 @@ const date = ref(new Date());
                                             Số điện thoại *</label>
                                         <input type="text" id="first_name" v-model="form.phone_number"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" required>
+                                            placeholder="" >
                                     </div>
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">

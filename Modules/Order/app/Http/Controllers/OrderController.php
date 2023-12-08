@@ -299,8 +299,8 @@ class OrderController extends Controller
         $customer = User::with(['product_service_owners' => function ($q) {
             $q->where('state', 1);
         }])->role('customer')->where(function ($query) use ($request) {
-            $query->where('phone_number',$request->search );
-            $query->orwhere('cic_number',$request->search );
+            $query->where('phone_number', 'LIKE', '%' . $request->search . '%');
+            $query->orwhere('cic_number', 'LIKE', '%' . $request->search . '%');
             // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
         })->first();
 
@@ -409,7 +409,7 @@ class OrderController extends Controller
     // Save Order
     public function saveOrder(SaveOrderRequest $request)
     {
-      
+
         $user = User::where('phone_number', $request->phone_number)->first();
         if(!$user){
 
@@ -620,7 +620,7 @@ class OrderController extends Controller
 
     public function edit(Request $request, Order $order)
     {
-       
+
         Cart::clear();
         Cart::clearCartConditions();
         if ($order->payment_status == 1) {
@@ -660,21 +660,21 @@ class OrderController extends Controller
 
 
     public function updateOrderRetail(UpdateOrderReuquest $request , Order $order, User $user){
-     
-   
+
+
         if ($order->payment_status == 1) {
             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
         }
         if ($order->status !== 'pending') {
              return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
         }
-        
+
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
         $this->addConditionToCart($request);
         $order_update =  $this->orderRepository->updateOrderRetail($request->all(),$order, $user);
-        
+
         foreach ($request->images as $image) {
             $order_update->addMedia($image)->toMediaCollection('order_related_images');
         }
@@ -689,17 +689,17 @@ class OrderController extends Controller
 
 
     public function updateOrderGift(OrderGiftUpdateRequest $request , Order $order, User $user){
-   
+
         if ($order->status !== 'pending') {
              return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
         }
-        
+
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
         $this->addConditionToCart($request);
         $order_update =  $this->orderRepository->updateOrderGift($request->all(),$order, $user);
-        
+
         foreach ($request->images as $image) {
             $order_update->addMedia($image)->toMediaCollection('order_related_images');
         }

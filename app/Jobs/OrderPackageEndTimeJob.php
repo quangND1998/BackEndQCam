@@ -39,6 +39,11 @@ class OrderPackageEndTimeJob implements ShouldQueue
             $product_service_owner->delete();
         }
     }
+    public function changeStateProductOwner($order){
+        $product_service_owner = $order->product_service_owner;
+        $product_service_owner->state = "active";
+        $product_service_owner->save();
+    }
     public function handle(): void
     {
 
@@ -55,6 +60,8 @@ class OrderPackageEndTimeJob implements ShouldQueue
                 }
                 if($order->payment_check && $order->price_percent >= $order->grand_total){
                     // đã thanh toán và kế toán đã duyệt toàn bộ => dừng đếm
+                    // chuyen state product owner sang active
+                    $this->changeStateProductOwner($order);
                 }
 
             }
