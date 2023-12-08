@@ -10,6 +10,7 @@ import TextInput from "@/Components/TextInput.vue";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
+import { vFullscreenImg } from 'maz-ui'
 import UploadImage from '@/Components/UploadImage.vue'
 import {
     mdiPlus,
@@ -196,8 +197,8 @@ const save = () => {
                             </td>
                             <td class="border-0 flex">
 
-                                <div class="list_image flex" v-for="image in payment.order_package_payment" :key="image.id">
-                                    <img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
+                                <div class="list_image flex mr-1" v-for="image in payment.order_package_payment" :key="image.id">
+                                    <img  v-fullscreen-img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
                                 </div>
                             </td>
                             <td class="border-0">
