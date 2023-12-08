@@ -32,12 +32,14 @@ class OrderPackageController extends Controller
         $this->orderRepository = $orderRepository;
 
         // $this->middleware('permission:users-manager', ['only' => ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline']]);
-        $this->middleware('permission:order-pending', ['only' => ['index', 'pending', 'create']]);
-        $this->middleware('permission:order-packing', ['only' => ['index', 'packing']]);
-        $this->middleware('permission:order-shipping', ['only' => ['index', 'shipping']]);
-        $this->middleware('permission:order-completed', ['only' => ['index', 'completed']]);
-        $this->middleware('permission:order-refund', ['only' => ['index', 'refund']]);
-        $this->middleware('permission:order-decline', ['only' => ['index', 'decline']]);
+        $this->middleware('permission:order-pending|order-packing|order-shipping|order-completed|order-refund|order-decline', ['only' => [ 'index']]);
+        $this->middleware('permission:add-new-package', ['only' => [ 'create','update']]);
+        $this->middleware('permission:order-pending', ['only' => [ 'pending']]);
+        $this->middleware('permission:order-packing', ['only' => [ 'packing']]);
+        $this->middleware('permission:order-shipping', ['only' => [ 'shipping']]);
+        $this->middleware('permission:order-completed', ['only' => [ 'completed']]);
+        $this->middleware('permission:order-refund', ['only' => ['refund']]);
+        $this->middleware('permission:order-decline', ['only' => [ 'decline']]);
     }
     public function orderChangeStatus(Request $request, OrderPackage $order)
     {
@@ -440,7 +442,7 @@ class OrderPackageController extends Controller
     public function groupByOrderStatus()
     {
         $array_status = ['pending','complete', 'decline'];
-        $statusGroup = OrderPackage::select('status', DB::raw('count(*) as total'))
+        $statusGroup = OrderPackage::role()->select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
             ->get();
         foreach ($array_status as $status) {
@@ -471,7 +473,7 @@ class OrderPackageController extends Controller
         return $newCollections;
     }
     public function groupByPayment(){
-        $paymentGroup = OrderPackage::whereColumn('price_percent', '<', 'grand_total')->count();
+        $paymentGroup = OrderPackage::role()->whereColumn('price_percent', '<', 'grand_total')->count();
         return $paymentGroup;
     }
     public function getOrder($request, $status)
