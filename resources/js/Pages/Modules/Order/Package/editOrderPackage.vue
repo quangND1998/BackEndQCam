@@ -165,8 +165,9 @@ const onSearchUser = async () => {
                     }else{
                         console.log('not user');
                         user.value = null
-                        flash.value = err.response.data
+                        // flash.value = err.response.data
                         findUser.value = false;
+                               search.value = null;
                         searchPhone.value = null;
                         form.reset()
                     }
@@ -210,9 +211,10 @@ const onSearchUserPhone = async () => {
                     }else{
                          console.log('not user');
                         user.value = null
-                        flash.value = err.response.data
+                        // flash.value = err.response.data
                         findUser.value = false;
-                        search.value = null;
+                               search.value = null;
+                        searchPhone.value = null;
                         form.reset()
                     }
                 });
