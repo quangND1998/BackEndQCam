@@ -64,7 +64,7 @@ const form = useForm({
     payment_method: 'cash',
     shipping_fee: 0,
     time_reservations: 1,
-    price_percent: props.product_services.length > 0 ? props.product_services[0].price : null,
+    price_percent: 0,
     product_selected: props.product_services.length > 0 ? props.product_services[0].id : null,
     time_approve: new Date(),
     max_price: props.product_services.length > 0 ? props.product_services[0].price : null,
@@ -207,9 +207,9 @@ const save = () => {
 }
 const changeProduct = (event) => {
     form.product_selected = event.target.value;
-    if (product.value) {
-        form.max_price = product.value.price
-    }
+    // if (product.value) {
+    //     form.max_price = product.value.price
+    // }
 
 }
 const product = computed(() => {
@@ -249,7 +249,7 @@ const maxPrice = computed({
             if (form.vat > 0) {
                 maxPrice += ((maxPrice * form.vat) / 100)
             }
-            form.price_percent = maxPrice;
+            // form.price_percent = maxPrice;
             return maxPrice;
         }
         else {
@@ -270,7 +270,7 @@ const maxPrice = computed({
                 maxPrice += ((maxPrice * form.vat) / 100)
             }
             console.log(maxPrice)
-            form.price_percent = maxPrice;
+            // form.price_percent = maxPrice;
         }
         else {
             form.price_percent = 0;
@@ -296,7 +296,7 @@ const date = ref(new Date());
                                 <p class="text-sm text-[#5F5F5F]">Farm:</p>
                                 <p class="text-sm text-[#5F5F5F]">Điện thoại: {{ $page.props.company_infor?.hotline }}</p>
                                 <p class="text-sm text-[#5F5F5F]">Email: {{ $page.props.company_infor?.email }}</p>
-                            </div>      
+                            </div>
                             </div>
                             <div class="min-[320px]:w-full min-[320px]:mt-3 min-[320px]:px-0 md:w-1/2 md:mt-0 md:px-2">
                                 <div class="w-full">
@@ -315,7 +315,7 @@ const date = ref(new Date());
                                             <InputError class="mt-2" :message="form.errors.idPackage" />
                                         </div>
                                     </div>
-                                    
+
                                     <div class="flex items-center w-full my-2">
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Ngày</p>
                                         <div class="relative w-full">
@@ -348,7 +348,7 @@ const date = ref(new Date());
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Số điện thoại *</label>
-                                        <input type="text" id="first_name" v-model="form.phone_number" 
+                                        <input type="text" id="first_name" v-model="form.phone_number"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                     </div>

@@ -14,7 +14,7 @@ export const helper = {
         },
         hasAnyRoles: function (roles) {
 
-            var allroles = this.$page.props.auth.roles;
+            var allroles = this.$page.props.auth.can_role;
 
             var hasRole = false;
             roles.forEach(function (item) {

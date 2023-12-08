@@ -29,7 +29,7 @@ class OrderPackage extends Model implements HasMedia
         'sale_id','to_id','customer_resources','customer_resources_id','package_reviewer',
         'wards',  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent","time_reservations","time_expried"
     ];
-    protected $appends = ['payment_check'];
+    protected $appends = ['payment_check','exist_accept'];
 
     public function gettimeExpriedAttribute($value)
     {
@@ -137,6 +137,13 @@ class OrderPackage extends Model implements HasMedia
     {
         $allHistory = $this->historyPayment->every(function ($history) {
             return $history->status == "complete";
+        });
+        return $allHistory;
+    }
+    public function getExistAcceptAttribute()
+    {
+        $allHistory = $this->historyPayment->every(function ($history) {
+            return $history->status != "complete";
         });
         return $allHistory;
     }

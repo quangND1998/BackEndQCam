@@ -119,9 +119,9 @@ class OrderPackageController extends Controller
         return Inertia::render('Modules/Order/Package/CreateOrderPackage', compact('product_services','trees','sales','leaders','telesale','ctv'));
     }
     public function editOrderPackage(Request $request,$id){
-        $order = OrderPackage::with('customer','product_service','saler','leader','resources','order_package_images')->findOrFail($id);
+        $order = OrderPackage::with('customer','product_service','saler','leader','resources','order_package_images','historyPayment.order_package_payment','historyPayment.user')->findOrFail($id);
         if($order->status == "pending"){
-
+        //   return $order->historyPayment;
         $user = Auth::user();
         $sales = User::whereHas('team')->with('team')->role('saler')->get();
         $leaders = User::role('leader-sale')->get();
@@ -214,6 +214,12 @@ class OrderPackageController extends Controller
         if ($request->vat > 0) {
             $total_price +=  (( $total_price * $request->vat) / 100);
         }
+        if (count($order->historyPayment) > 0){
+            // neu khong xoa lich su thanh toán
+            $price_percent = $order->price_percent;
+        }else{
+            $price_percent = $request->price_percent;
+        }
         $customer = User::where('phone_number',$request->phone_number)->first();
         if(!$customer){
             $customer = $this->createCustomerDefault($request);
@@ -238,7 +244,7 @@ class OrderPackageController extends Controller
             'product_selected' => $request->product_selected,
             'time_approve' => $request->time_approve,
             'time_end' => Carbon::parse($request->time_approve)->addDays($time_life),
-            'price_percent' => $request->price_percent,
+            'price_percent' => $price_percent,
             'sale_id' => $request->sale_id,
             'to_id' => $request->leader_sale_id,
             'customer_resources' => $request->type_customer_resource,
@@ -252,10 +258,16 @@ class OrderPackageController extends Controller
         //         $order->addMedia($image)->toMediaCollection('order_package_images');
         //     }
         // }
-        $order->historyPayment()->delete();
-        $payment_date = Carbon::now();
-        $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
-
+        if (count($order->historyPayment) == 0){
+            $order->historyPayment()->delete();
+            $payment_date = Carbon::now();
+            $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
+        }
+        if($order->status =='pending'){
+            $order->time_expried = Carbon::now()->addDay($order->time_reservations);
+            $order->save();
+            OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
+        }
         return redirect()->route('admin.orders.package.detail',[$order->id]);
     }
     public function saveHistoryPaymentOrder(Request $request,$id){

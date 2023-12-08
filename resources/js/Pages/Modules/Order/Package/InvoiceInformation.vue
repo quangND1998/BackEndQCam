@@ -22,7 +22,7 @@ const props = defineProps({
         <div class="min-[320px]:w-full md:w-1/2">
             <div class="flex my-2 items-center">
                 <p class="text-sm text-[#5F5F5F] w-36">Số phiếu #</p>
-                <p class="text-sm text-[#5F5F5F] ">{{ order.order_number }}</p>
+                <p class="text-sm text-[#5F5F5F] ">{{ order.idPackage }}</p>
             </div>
             <div class="flex my-2 items-center">
                 <p class="text-sm text-[#5F5F5F] w-36">Ngày</p>

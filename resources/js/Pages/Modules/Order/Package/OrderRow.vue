@@ -184,7 +184,9 @@ const save = () => {
                             <td class="border-0">
                                 {{ index + 1 }}
                             </td>
-                            <td class="border-0">{{ payment?.payment_method == 'cash' ? 'tiền mặt' : "thẻ" }}</td>
+                            <td class="border-0">
+                                {{ payment?.payment_method == 'banking' ? 'Chuyển khoản' : payment?.payment_method == "cash" ? 'Tiền mặt' : 'Payoo'}}
+                            </td>
                             <td class="border-0">{{ payment?.payment_date }}</td>
                             <td class="border-0">{{ formatPrice(payment?.amount_received) }}₫</td>
                             <td class="border-0">
