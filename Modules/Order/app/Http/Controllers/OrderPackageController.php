@@ -173,6 +173,9 @@ class OrderPackageController extends Controller
             if(!$customer){
                 $customer = $this->createCustomerDefault($request);
             }
+            if($customer){
+
+            }
             $order = OrderPackage::create([
                 'idPackage' => $request->idPackage,
                 'order_number'      =>  'ORD-' . strtoupper(uniqid()),
@@ -448,6 +451,13 @@ class OrderPackageController extends Controller
 
     }
     public function createCustomerDefault($request){
+        $this->validate(
+            $request,
+            [
+                'name' => 'required',
+                'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone_number,',
+            ]
+        );
         $customer = new User;
         $customer->name = $request->name;
         $customer->username = $request->name;

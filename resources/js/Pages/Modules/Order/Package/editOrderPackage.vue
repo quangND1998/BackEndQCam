@@ -45,9 +45,10 @@ const props = defineProps({
     total_price: Number,
     sub_total: Number
 });
-
+const user = ref(null);
 const search = ref(props.order?.customer?.name)
-
+const searchPhone = ref(props.order?.customer?.phone_number)
+const findUser = ref(false)
 const flash = ref(null);
 const provinces = ref(null)
 const images = ref([])
@@ -100,30 +101,7 @@ const districts = computed(() => {
 
     }
 })
-const user = computed({
 
-
-    get() {
-        if (form.user_id) {
-            const user = props.customers.find((customer) => customer.id == form.user_id)
-            if (user) {
-                foundUser(user)
-                return user
-            }
-
-        }
-        else {
-            form.reset()
-            return null
-        }
-    },
-    // setter
-    set(newValue) {
-        return newValue
-        // Note: we are using destructuring assignment syntax here.
-        console.log(newValue)
-    }
-})
 const wards = computed(() => {
     if (form.city == null && form.district == null) {
         return [];
@@ -164,19 +142,88 @@ const foundUser = (data) => {
     form.city = data.city
     form.district = data.district
     form.wards = data.wards
+    search.value = data.name;
+    searchPhone.value = data.phone_number
 }
 const onSearchUser = async () => {
-    axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
+    if(search.value.length > 7){
+    return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
+        console.log(res);
         if (res.data) {
-            user.value = res.data;
-            foundUser(res.data)
+                user.value = res.data;
+                swal.fire({
+                    text: "Số điện thoại này đã tồn tại, bạn có muốn load thông tin có sẵn không?",
+                    showCancelButton: true,
+                    confirmButtonText: "Có",
+                    cancelButtonText: "Không",
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        foundUser(res.data)
+                        findUser.value = true;
+                    }
+                });
+                // foundUser(res.data)
+                
+                flash.value = null;
         }
-    }).catch(err => {
-        user.value = null
-        flash.value = err.response.data
-        form.reset()
-    })
+        }).catch(err => {
+            console.log('not user');
+            user.value = null
+            flash.value = err.response.data
+            findUser.value = false;
+            searchPhone.value = null;
+            form.reset()
+        })
+    }else{
+         user.value = null
+         form.reset()
+         searchPhone.value = null;
+         findUser.value = false;
+         foundUser(null)
+    }
 
+}
+const onSearchUserPhone = async () => {
+    
+    if(searchPhone.value.length > 7){
+    return axios.get(`/admin/orders/searchUser?search=${searchPhone.value}`).then(res => {
+        console.log(res);
+        if (res.data) {
+                user.value = res.data;
+                swal.fire({
+                    text: "Số điện thoại này đã tồn tại, bạn có muốn load thông tin có sẵn không?",
+                    showCancelButton: true,
+                    confirmButtonText: "Có",
+                    cancelButtonText: "Không",
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        foundUser(res.data)
+                        findUser.value = true;
+                    }
+                });
+                // foundUser(res.data)
+                
+                flash.value = null;
+        }
+        }).catch(err => {
+            console.log('not user');
+            user.value = null
+            flash.value = err.response.data
+            findUser.value = false;
+            search.value = null;
+            form.reset()
+        })
+    }else{
+        user.value = null
+        form.reset()
+        search.value = null;
+        findUser.value = false;
+        foundUser(null)
+    }
 }
 const save = () => {
     if (form.name == null || form.phone_number == null) {
@@ -404,7 +451,7 @@ const date = ref(new Date());
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Số điện thoại *</label>
-                                        <input type="text" id="first_name" v-model="form.phone_number"
+                                        <input type="text" id="first_name"   v-model="searchPhone" @keyup="onSearchUserPhone()"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                     </div>
@@ -434,7 +481,7 @@ const date = ref(new Date());
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Địa chỉ *</label>
-                                        <input type="text" id="first_name" v-model="form.address"
+                                        <input type="text" id="first_name" v-model="form.address" :disabled="findUser && user?.address != null"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                     </div>
@@ -442,7 +489,7 @@ const date = ref(new Date());
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Thành phố *</label>
-                                        <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name"
+                                        <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name" :disabled="findUser && user?.city != null"
                                             @change="onChangeCity($event)" optionValue="Name" placeholder="Chọn tỉnh thành"
                                             class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
                                             <template #value="slotProps">
@@ -470,7 +517,7 @@ const date = ref(new Date());
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
 
-                                            <Dropdown v-model="form.district" :options="districts.Districts" filter
+                                            <Dropdown v-model="form.district" :options="districts.Districts" filter :disabled="findUser && user?.district != null"
                                                 @change="onChangeDistrict($event)" optionLabel="Name" optionValue="Name"
                                                 placeholder="Chọn Quận/huyện"
                                                 class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
@@ -499,7 +546,7 @@ const date = ref(new Date());
                                                 Phường xã*</label>
 
 
-                                            <Dropdown v-model="form.wards" :options="wards.Wards" filter optionLabel="Name"
+                                            <Dropdown v-model="form.wards" :options="wards.Wards" filter optionLabel="Name" :disabled="findUser && user?.wards != null"
                                                 optionValue="Name" placeholder="Chọn Phường xã"
                                                 class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
                                                 <template #value="slotProps">
