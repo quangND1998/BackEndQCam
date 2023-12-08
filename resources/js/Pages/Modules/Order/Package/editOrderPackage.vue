@@ -30,6 +30,7 @@ import Dropdown from 'primevue/dropdown';
 import BaseIcon from '@/Components/BaseIcon.vue'
 import NewOrderPackage from '@/Pages/Modules/Order/Create/NewOrderPackage.vue'
 import UploadImage from "@/Components/UploadImage.vue"
+import { vFullscreenImg } from 'maz-ui'
 import axios from "axios";
 const swal = inject("$swal");
 
@@ -600,7 +601,7 @@ const date = ref(new Date());
 
                                                     <div class="list_image flex"
                                                         v-for="image in payment.order_package_payment" :key="image.id">
-                                                        <img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
+                                                        <img  v-fullscreen-img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
                                                     </div>
                                                 </td>
                                                 <td class="border-0">
