@@ -300,7 +300,7 @@ class OrderController extends Controller
             $customer = User::with(['product_service_owners' => function ($q) {
                 $q->where('state', 1);
             }])->role('customer')->search($request->only('search'))->first();
-           
+
             if ($customer) {
                 return new UserResource($customer);
             } else {
@@ -310,9 +310,6 @@ class OrderController extends Controller
         else{
             return response()->json('Không tìm thấy Khách hàng!', 404);
         }
-
-
-
     }
 
 

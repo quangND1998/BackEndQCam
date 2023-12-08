@@ -511,4 +511,19 @@ class OrderPackageController extends Controller
             }
         )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(20);
     }
+    public function searchUserCustomer(Request $request)
+    {
+        if($request->search){
+            $customer = User::role('customer')->search($request->only('search'))->first();
+
+            if ($customer) {
+                return $customer;
+            } else {
+                return response()->json('Không tìm thấy Khách hàng!', 404);
+            }
+        }
+        else{
+            return response()->json('Không tìm thấy Khách hàng!', 404);
+        }
+    }
 }
