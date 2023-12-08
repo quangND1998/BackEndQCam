@@ -180,4 +180,6 @@ class User extends Authenticatable implements HasMedia
     public function otp(){
         return $this->hasOne(OtpVerify::class, 'user_id');
     }
+
+
 }
