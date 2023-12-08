@@ -371,16 +371,16 @@ const RemoveProductVoucher = (id) => {
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    {{ formatPrice(product_service_voucher.product_service.price) }} vnđ
+                                    {{ formatPrice(product_service_voucher.product_service.price) }} VND
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ product_service_voucher.unit == 'percent' ? product_service_voucher.discount :
                                         formatPrice(product_service_voucher.discount) }}
                                     <span v-if="product_service_voucher.unit == 'percent'">%</span>
-                                    <span v-else>VNĐ</span>
+                                    <span v-else>VND</span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ formatPrice(product_service_voucher.price_sale) }} vnđ
+                                    {{ formatPrice(product_service_voucher.price_sale) }} VND
                                 </td>
                                 <td class="px-6 py-4">
                                     <BaseButton :icon="mdiTrashCanOutline"

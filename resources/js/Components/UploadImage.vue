@@ -166,7 +166,7 @@ const Delete = (img) => {
                         </BaseIcon>
                         <img :src="img.image" class="w-16 h-14 object-cover rounded-lg" alt="">
                     </div>
-                  
+
                     <label :for="id" v-if="((old_images? old_images.length:0)+form.images.length) < max_files"
                         class="cursor-pointer w-16 h-16 border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg">
                         <BaseIcon :path="mdiPlus" class="" :size="16" />

@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Order\app\Models\HistoryPayment;
 use App\Jobs\OrderPackageCreatedJob;
 use App\Jobs\OrderPackageEndTimeJob;
+use Modules\Order\app\Http\Requests\SaveOrderpackageRequest;
 class OrderPackageController extends Controller
 {
     protected $orderRepository;
@@ -133,8 +134,7 @@ class OrderPackageController extends Controller
             return redirect()->route('admin.orders.package.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
         }
     }
-    public function addToCart(Request $request){
-
+    public function addToCart(SaveOrderpackageRequest $request){
         $product_service = ProductService::findOrFail($request->product_selected);
         $trees = Tree::with('land')->whereHas('land', function ($query) {
             $query->where('state', 'public');
@@ -158,6 +158,7 @@ class OrderPackageController extends Controller
                 $customer = $this->createCustomerDefault($request);
             }
             $order = OrderPackage::create([
+                'idPackage' => $request->idPackage,
                 'order_number'      =>  'ORD-' . strtoupper(uniqid()),
                 'user_id'           => $customer->id,
                 'status'            =>  'pending',
@@ -218,6 +219,7 @@ class OrderPackageController extends Controller
             $customer = $this->createCustomerDefault($request);
         }
         $order->update([
+            'idPackage' => $request->idPackage,
             'user_id'           => $customer->id,
             'status'            =>  'pending',
             'payment_status'    =>  0,

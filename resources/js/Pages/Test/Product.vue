@@ -165,7 +165,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -183,7 +183,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -201,7 +201,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -219,7 +219,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -237,7 +237,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -255,7 +255,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -273,7 +273,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -291,7 +291,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -309,7 +309,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -327,7 +327,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -344,7 +344,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -362,7 +362,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -380,7 +380,7 @@ const selectAll = computed({
                                     Product 1
                                 </td>
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh
@@ -435,7 +435,7 @@ const selectAll = computed({
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    150.000 vnđ
+                                    150.000 VND
                                 </td>
                                 <td class="px-6 py-4">
                                     hhhh

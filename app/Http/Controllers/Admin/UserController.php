@@ -77,11 +77,9 @@ class UserController extends Controller
         return Inertia::render('Admin/User', compact('filters', 'users', 'roles'));
     }
 
-
     public function create(Request $request)
     {
         $user = Auth::user();
-
         if ($user->hasRole('super-admin')) {
             $roles = Role::where('name', '!=', 'super-admin')->get();
             $leader_sales = User::role('leader-sale')->get();

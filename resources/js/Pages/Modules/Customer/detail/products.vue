@@ -226,7 +226,7 @@ const limit_tree = computed(() => {
                             <tr>
                                 <th scope="col" class="py-3 px-6 text-xs">STT</th>
                                 <th scope="col" class="py-3 px-6 text-xs">Gói</th>
-                                <th scope="col" class="py-3 px-6 text-xs">Giá (vnđ)</th>
+                                <th scope="col" class="py-3 px-6 text-xs">Giá (VND)</th>
                                 <th scope="col" class="py-3 px-6 text-xs">Thời gian</th>
                                 <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
                                 <th scope="col" class="py-3 px-6 text-xs">Số cây</th>

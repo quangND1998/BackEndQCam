@@ -141,7 +141,7 @@ const getNow= ()=> {
                                             <td class="border-0 px-6 py-3">
                                                 {{ index + 1 }}
                                             </td>
-                                            <td class="border-0 px-6 py-3">{{ payment?.payment_method == 'cash' ? 'tiền mặt' : "thẻ"}}</td>
+                                            <td class="border-0 px-6 py-3">{{ payment?.payment_method == 'banking' ? 'Chuyển khoản' : payment?.payment_method == "cash" ? 'Tiền mặt' : 'Payoo'}}</td>
                                             <td class="border-0 px-6 py-3">{{ payment?.payment_date }}</td>
                                             <td class="border-0 px-6 py-3">{{ formatPrice(payment?.amount_received) }}₫</td>
                                             <td class="border-0 px-6 py-3">
@@ -161,11 +161,11 @@ const getNow= ()=> {
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Tổng</p>
                                         <p class="text-sm text-[#686868] font-bold"> {{
-                                            formatPrice(order?.product_service?.price) }} vnđ</p>
+                                            formatPrice(order?.product_service?.price) }} VND</p>
                                     </div>
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">VAT({{ order?.vat }}%)</p>
-                                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(order?.vat * (order?.product_service?.price + ((order?.discount_deal * order?.product_service?.price) / 100))/100 ) }} vnđ</p>
+                                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(order?.vat * (order?.product_service?.price + ((order?.discount_deal * order?.product_service?.price) / 100))/100 ) }} VND</p>
                                     </div>
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
@@ -174,22 +174,22 @@ const getNow= ()=> {
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
                                         <p class="text-sm text-[#686868] font-bold">{{
-                                            formatPrice(((order?.product_service?.price) * (order?.discount_deal)) / 100) }} vnđ</p>
+                                            formatPrice(((order?.product_service?.price) * (order?.discount_deal)) / 100) }} VND</p>
                                     </div>
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
                                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice(order?.grand_total) }}
-                                            vnđ</p>
+                                            VND</p>
                                     </div>
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Đã thanh toán</p>
                                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice(order?.price_percent) }}
-                                            vnđ</p>
+                                            VND</p>
                                     </div>
                                     <div class="flex justify-between my-2">
                                         <p class="text-sm text-[#686868] font-bold">Còn lại</p>
                                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice(order?.grand_total -
-                                            order?.price_percent) }} vnđ</p>
+                                            order?.price_percent) }} VND</p>
                                     </div>
                                 </div>
                             </div>
