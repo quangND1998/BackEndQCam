@@ -41,12 +41,14 @@ class OrderController extends Controller
         $this->orderRepository = $orderRepository;
         $this->shipperRepository = $shipperRepository;
         // $this->middleware('permission:users-manager', ['only' => ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline']]);
-        $this->middleware('permission:order-pending', ['only' => ['index', 'pending', 'create']]);
-        $this->middleware('permission:order-packing', ['only' => ['index', 'packing']]);
-        $this->middleware('permission:order-shipping', ['only' => ['index', 'shipping']]);
-        $this->middleware('permission:order-completed', ['only' => ['index', 'completed']]);
-        $this->middleware('permission:order-refund', ['only' => ['index', 'refund']]);
-        $this->middleware('permission:order-decline', ['only' => ['index', 'decline']]);
+        $this->middleware('permission:order-pending|order-packing|order-shipping|order-completed|order-refund|order-decline', ['only' => [ 'index']]);
+        $this->middleware('permission:add-new-package', ['only' => [ 'create','update']]);
+        $this->middleware('permission:order-pending', ['only' => [ 'pending']]);
+        $this->middleware('permission:order-packing', ['only' => [ 'packing']]);
+        $this->middleware('permission:order-shipping', ['only' => [ 'shipping']]);
+        $this->middleware('permission:order-completed', ['only' => [ 'completed']]);
+        $this->middleware('permission:order-refund', ['only' => ['refund']]);
+        $this->middleware('permission:order-decline', ['only' => [ 'decline']]);
     }
     /**
      * Display a listing of the resource.

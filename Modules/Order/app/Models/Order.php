@@ -152,6 +152,7 @@ class Order extends Model implements HasMedia
         if ( $user->hasPermissionTo('super-admin') || $user->hasRole('Kế toán') ) {
             $query->get();
         } else {
+           
             if ($user->hasRole('leader-sale')) {
                 $query->whereIn('sale_id', $user->salers->pluck('id')->concat([$user->id]) );
             } else {
