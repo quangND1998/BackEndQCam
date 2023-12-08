@@ -455,6 +455,12 @@ class OrderPackageController extends Controller
         $roles = 'customer';
         $customer->assignRole($roles);
         $customer->password = Hash::make('cammattroi');
+        if($request->address){
+            $customer->address = $request->address;
+            $customer->city = $request->city;
+            $customer->district = $request->district;
+            $customer->wards = $request->wards;
+        }
         $customer->save();
         return $customer;
     }
