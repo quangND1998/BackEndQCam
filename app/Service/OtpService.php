@@ -31,5 +31,16 @@ class OtpService {
         ]);
         return $otp;
     }
+
+
+    public function updateOtp($otp){
+        $new_otp = OtpVerify::where('otp_number',$otp)->first();
+        if($new_otp){
+           $new_otp->update([
+                'expried_at' => Carbon::now()->addSecond(20),
+           ]);
+        }
+        return $new_otp;
+    }
     
 }

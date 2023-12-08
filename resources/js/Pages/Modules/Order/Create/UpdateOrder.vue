@@ -42,7 +42,7 @@ const props = defineProps({
     total_price: Number,
     sub_total: Number,
     customers: Array,
-    shippers:Array
+    shippers: Array
 });
 const store = useCartStore();
 const search = ref(null)
@@ -68,7 +68,7 @@ const form = useForm({
     amount_paid: 0,
     images: [],
     shipper_id: props.order.shipper_id,
-    receive_at:  props.order.receive_at
+    receive_at: props.order.receive_at
 
 })
 const getProvinces = async () => {
@@ -280,12 +280,13 @@ const date = ref(new Date());
                             <div class="min-[320px]:w-full md:w-1/2 px-2">
                                 <div class="block">
                                     <img src="assets/images/cammattroi.png" alt="">
-                                    <h1>CÔNG TY CỔ PHẦN CAM MẶT TRỜI</h1>
-
-                                    <p class="text-sm text-[#5F5F5F] my-1">Địa chỉ:</p>
-                                    <p class="text-sm text-[#5F5F5F] my-1">Farm:</p>
-                                    <p class="text-sm text-[#5F5F5F] my-1">Điện thoại:</p>
-                                    <p class="text-sm text-[#5F5F5F] my-1">Email:</p>
+                                    <h1 class="text-base font-semibold uppercase">CÔNG TY CỔ PHẦN {{
+                                        $page.props.company_infor?.name }}</h1>
+                                    <p class="text-sm text-[#5F5F5F]">Địa chỉ: {{ $page.props.company_infor?.address }}</p>
+                                    <p class="text-sm text-[#5F5F5F]">Farm:</p>
+                                    <p class="text-sm text-[#5F5F5F]">Điện thoại: {{ $page.props.company_infor?.hotline }}
+                                    </p>
+                                    <p class="text-sm text-[#5F5F5F]">Email: {{ $page.props.company_infor?.email }}</p>
                                 </div>
                             </div>
                             <div class="min-[320px]:w-full min-[320px]:mt-3 min-[320px]:px-0 md:w-1/2 md:mt-0 md:px-2">
@@ -320,11 +321,10 @@ const date = ref(new Date());
                                             Khách
                                             Hàng
                                             *</label>
-                                        
-                                        <Multiselect v-model="form.user_id" @change="onChangeUser"
-                                            :createOption="false" :canClear="false" :searchable="false" label="name"
-                                            valueProp="id" trackBy="name" :options="customers" placeholder="Chọn khác hàng"
-                                            :appendNewOption="false">
+
+                                        <Multiselect v-model="form.user_id" @change="onChangeUser" :createOption="false"
+                                            :canClear="false" :searchable="false" label="name" valueProp="id" trackBy="name"
+                                            :options="customers" placeholder="Chọn khác hàng" :appendNewOption="false">
 
                                             <template v-slot:singlelabel="{ value }">
 
@@ -459,7 +459,8 @@ const date = ref(new Date());
                             </div>
                         </div>
                         <div class="my-3">
-                            <UploadImage  :max_files="4"  v-model="form.images" :multiple="true"  :old_images="order.order_related_images"  :label="`Bộ sưu tập ảnh`" />
+                            <UploadImage :max_files="4" v-model="form.images" :multiple="true"
+                                :old_images="order.order_related_images" :label="`Bộ sưu tập ảnh`" />
                             <!-- <h3 class="text-base font-semibold">Chứng từ liên quan</h3>
                             <div class="flex mt-2">
                                 <div class="mr-2 inline-block relative" v-for="(img, index) in images " :key="index">
@@ -539,7 +540,7 @@ const date = ref(new Date());
                                 locale="vi-VN" :min="0" @formatted="formattedPrice = $event" />
                             <InputError class="mt-2" :message="form.errors.shipping_fee" />
                         </div>
-                        
+
                         <!-- <div class="my-2" v-if="form.type == 'retail'">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Số tiền đã thanh toán</label>
@@ -564,29 +565,29 @@ const date = ref(new Date());
                                 Nhận hàng</label>
                             <div class="flex">
                                 <div class="flex items-center ">
-                                    <input id="default-radio-1" type="radio" value="Tại nhà" 
-                                        v-model="form.receive_at"
+                                    <input id="default-radio-1" type="radio" value="Tại nhà" v-model="form.receive_at"
                                         class="w-4 h-4  text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="default-receive_at-1" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Tại
+                                    <label for="default-receive_at-1"
+                                        class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Tại
                                         nhà</label>
                                 </div>
                                 <div class="flex items-center mx-5">
-                                    <input id="default-receive_at-2" type="radio" value="Tại sự kiện" v-model="form.receive_at"
-                                      
+                                    <input id="default-receive_at-2" type="radio" value="Tại sự kiện"
+                                        v-model="form.receive_at"
                                         class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="default-receive_at-2" class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Tại
+                                    <label for="default-receive_at-2"
+                                        class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Tại
                                         sự kiện</label>
                                 </div>
 
                                 <div class="flex items-center mx-5">
                                     <input id="default-receive_at-3" type="radio" value="Khác" v-model="form.receive_at"
-                                       
                                         class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="default-receive_at-2"
                                         class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Khác</label>
                                 </div>
                                 <InputError class="mt-2" :message="form.errors.receive_at" />
-                
+
                             </div>
                         </div>
                         <div class="my-2">
