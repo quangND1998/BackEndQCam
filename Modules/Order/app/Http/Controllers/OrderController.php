@@ -299,11 +299,8 @@ class OrderController extends Controller
         if($request->search){
             $customer = User::with(['product_service_owners' => function ($q) {
                 $q->where('state', 1);
-            }])->role('customer')->where(function ($query) use ($request) {
-                $query->where('phone_number',$request->search );
-                $query->orwhere('cic_number',$request->search );
-                // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
-            })->first();
+            }])->role('customer')->search($request->only('search'))->first();
+           
             if ($customer) {
                 return new UserResource($customer);
             } else {

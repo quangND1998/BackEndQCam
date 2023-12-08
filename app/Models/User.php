@@ -181,5 +181,15 @@ class User extends Authenticatable implements HasMedia
         return $this->hasOne(OtpVerify::class, 'user_id');
     }
 
+    public function scopeSearch($query, array $filters)
+    {
+      
+        if (isset($filters['search']) && isset($filters['search'])) {
+
+            $query->where('name', 'LIKE', '%' .$filters['search'] . '%');
+            $query->orwhere('email', 'LIKE', '%' .$filters['search'] . '%');
+        }
+       
+    }
 
 }
