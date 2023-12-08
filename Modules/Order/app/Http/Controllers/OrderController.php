@@ -296,19 +296,26 @@ class OrderController extends Controller
 
     public function searchUser(Request $request)
     {
-        $customer = User::with(['product_service_owners' => function ($q) {
-            $q->where('state', 1);
-        }])->role('customer')->where(function ($query) use ($request) {
-            $query->where('phone_number',$request->search );
-            $query->orwhere('cic_number',$request->search );
-            // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
-        })->first();
-
-        if ($customer) {
-            return new UserResource($customer);
-        } else {
+        if($request->search){
+            $customer = User::with(['product_service_owners' => function ($q) {
+                $q->where('state', 1);
+            }])->role('customer')->where(function ($query) use ($request) {
+                $query->where('phone_number',$request->search );
+                $query->orwhere('cic_number',$request->search );
+                // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
+            })->first();
+            if ($customer) {
+                return new UserResource($customer);
+            } else {
+                return response()->json('Không tìm thấy Khách hàng!', 404);
+            }
+        }
+        else{
             return response()->json('Không tìm thấy Khách hàng!', 404);
         }
+      
+
+      
     }
 
 
