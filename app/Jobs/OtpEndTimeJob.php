@@ -27,14 +27,12 @@ class OtpEndTimeJob implements ShouldQueue
      */
     public function handle(): void
     {
-      
+
         if($this->otp){
             $otp = OtpVerify::find($this->otp->id);
-         
             if($otp){
                 $otp->delete();
             }
         }
-       
     }
 }
