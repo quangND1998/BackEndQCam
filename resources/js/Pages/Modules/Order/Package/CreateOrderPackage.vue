@@ -161,6 +161,7 @@ const foundUser = (data) => {
 }
 const onSearchUser = async () => {
     return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
+        console.log(res);
         if (res.data) {
                 user.value = res.data;
                 foundUser(res.data)
