@@ -297,7 +297,7 @@ const save = () => {
                         <!-- <p class="text-black text-sm">Hình thức thanh toán</p> -->
                         <div class="text-sm rounded-lg">
                             <p class="text-sm"><strong>Ngày:</strong> {{ formatDate(order?.created_at) }} </p>
-                            <p class="text-sm"><strong>Sale:</strong> {{ order?.saler ? order?.saler?.name : 'Admin' }} </p>
+                            <p class="text-sm"><strong>Người tạo đơn:</strong> {{ order?.saler ? order?.saler?.name : 'Admin' }} </p>
                         </div>
                     </div>
                 </div>

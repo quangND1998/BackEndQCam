@@ -517,4 +517,5 @@ class OrderPackageController extends Controller
             }
         )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(20);
     }
+
 }

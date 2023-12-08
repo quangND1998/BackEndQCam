@@ -305,7 +305,6 @@ class OrderController extends Controller
                 $query->orwhere('cic_number',$request->search );
                 // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
             })->first();
-
             if ($customer) {
                 return new UserResource($customer);
             } else {
