@@ -160,6 +160,7 @@ const foundUser = (data) => {
     search.value = data.name;
 }
 const onSearchUser = async () => {
+    if(search.value.length > 7){
     return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
         console.log(res);
         if (res.data) {
@@ -173,6 +174,7 @@ const onSearchUser = async () => {
             flash.value = err.response.data
             form.reset()
         })
+    }
 
 }
 const save = () => {
