@@ -146,7 +146,7 @@ const foundUser = (data) => {
     searchPhone.value = data.phone_number
 }
 const onSearchUser = async () => {
-    if(search.value.length > 7){
+    if(search.value.length > 7 && search.value.includes(" ") == false){
     return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
         console.log(res);
         if (res.data) {
@@ -162,6 +162,13 @@ const onSearchUser = async () => {
                     if (result.isConfirmed) {
                         foundUser(res.data)
                         findUser.value = true;
+                    }else{
+                        console.log('not user');
+                        user.value = null
+                        flash.value = err.response.data
+                        findUser.value = false;
+                        searchPhone.value = null;
+                        form.reset()
                     }
                 });
                 // foundUser(res.data)
@@ -170,23 +177,20 @@ const onSearchUser = async () => {
         }
         }).catch(err => {
             console.log('not user');
-            user.value = null
-            flash.value = err.response.data
-            findUser.value = false;
-            searchPhone.value = null;
-            form.reset()
         })
     }else{
-         user.value = null
-         form.reset()
-         searchPhone.value = null;
-         findUser.value = false;
-         foundUser(null)
+        //  user.value = null
+        //  form.reset()
+        // searchPhone.value = null;
+        //  findUser.value = false;
     }
 
 }
+const isNumber =  (value) => {
+  return typeof value === 'number';
+}
 const onSearchUserPhone = async () => {
-    
+    console.log(isNumber(searchPhone.value));
     if(searchPhone.value.length > 7){
     return axios.get(`/admin/orders/searchUser?search=${searchPhone.value}`).then(res => {
         console.log(res);
@@ -203,6 +207,13 @@ const onSearchUserPhone = async () => {
                     if (result.isConfirmed) {
                         foundUser(res.data)
                         findUser.value = true;
+                    }else{
+                         console.log('not user');
+                        user.value = null
+                        flash.value = err.response.data
+                        findUser.value = false;
+                        search.value = null;
+                        form.reset()
                     }
                 });
                 // foundUser(res.data)
@@ -211,21 +222,17 @@ const onSearchUserPhone = async () => {
         }
         }).catch(err => {
             console.log('not user');
-            user.value = null
-            flash.value = err.response.data
-            findUser.value = false;
-            search.value = null;
-            form.reset()
         })
     }else{
-        user.value = null
-        form.reset()
-        search.value = null;
-        findUser.value = false;
-        foundUser(null)
+        // user.value = null
+        // form.reset()
+        // search.value = null;
+        // findUser.value = false;
     }
 }
 const save = () => {
+    form.name = search.value;
+    form.phone_number = searchPhone.value;
     if (form.name == null || form.phone_number == null) {
         swal.fire({
             title: "Lỗi?",

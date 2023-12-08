@@ -169,60 +169,83 @@ class OrderPackageController extends Controller
                 $total_price +=  (( $total_price * $request->vat) / 100);
             }
             // $total_price = ($product_service->price - (($request->discount_deal *$product_service->price) / 100)) - ($request->vat * $product_service->price) / 100) ;
-            $customer = User::where('phone_number',$request->phone_number)->first();
+            $customer = User::where('phone_number',$request->phone_number)->where('name',$request->name)->first();
+        
             if(!$customer){
                 $customer = $this->createCustomerDefault($request);
             }
             if($customer){
+                $order = OrderPackage::create([
+                    'idPackage' => $request->idPackage,
+                    'order_number'      =>  'ORD-' . strtoupper(uniqid()),
+                    'user_id'           => $customer->id,
+                    'status'            =>  'pending',
+                    'payment_status'    =>  0,
+                    'payment_method' => $request->payment_method,
+                    'address' => $request->address,
+                    'city' => $request->city,
+                    'district' => $request->district,
+                    'wards' => $request->wards,
+                    'phone_number'        =>  $request->phone_number,
+                    'notes'         =>  $request->notes,
+                    'vat' =>$request->vat,
+                    'discount_deal' =>$request->discount_deal,
+                    'grand_total' => $total_price,
+                    'type' => 'new',
+                    'time_reservations' => $request->time_reservations,
+                    'product_selected' => $request->product_selected,
+                    'time_approve' => $request->time_approve,
+                    'time_end' => Carbon::parse($request->time_approve)->addDays($time_life),
+                    'price_percent' => $request->price_percent,
+                    'sale_id' => Auth::user()->id,
+                    'ref_id' => $request->ref_id,
+                    'to_id' => $request->leader_sale_id,
+                    'customer_resources' => $request->type_customer_resource,
+                    'customer_resources_id' => $request->customer_resource_id,
 
+                ]);
+
+                // foreach ($request->images as $image) {
+                //     $order->addMedia($image)->toMediaCollection('order_package_images');
+                // }
+                $payment_date = Carbon::now();
+                $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
+                $this->storeOrderPackage($order);
+                if($order->status =='pending'){
+                    $order->time_expried = Carbon::now()->addDay($order->time_reservations);
+                    // $order->time_expried = Carbon::now()->addSecond(20);
+                    $order->save();
+                    // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
+                    // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addSecond(20));
+                }
+                return redirect()->route('admin.orders.package.detail',[$order->id]);
+            }else{
+                return back()->with('error', 'Customer k ton tai');
             }
-            $order = OrderPackage::create([
-                'idPackage' => $request->idPackage,
-                'order_number'      =>  'ORD-' . strtoupper(uniqid()),
-                'user_id'           => $customer->id,
-                'status'            =>  'pending',
-                'payment_status'    =>  0,
-                'payment_method' => $request->payment_method,
-                'address' => $request->address,
-                'city' => $request->city,
-                'district' => $request->district,
-                'wards' => $request->wards,
-                'phone_number'        =>  $request->phone_number,
-                'notes'         =>  $request->notes,
-                'vat' =>$request->vat,
-                'discount_deal' =>$request->discount_deal,
-                'grand_total' => $total_price,
-                'type' => 'new',
-                'time_reservations' => $request->time_reservations,
-                'product_selected' => $request->product_selected,
-                'time_approve' => $request->time_approve,
-                'time_end' => Carbon::parse($request->time_approve)->addDays($time_life),
-                'price_percent' => $request->price_percent,
-                'sale_id' => Auth::user()->id,
-                'ref_id' => $request->ref_id,
-                'to_id' => $request->leader_sale_id,
-                'customer_resources' => $request->type_customer_resource,
-                'customer_resources_id' => $request->customer_resource_id,
-
-            ]);
-
-            // foreach ($request->images as $image) {
-            //     $order->addMedia($image)->toMediaCollection('order_package_images');
-            // }
-            $payment_date = Carbon::now();
-            $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
-            $this->storeOrderPackage($order);
-            if($order->status =='pending'){
-                $order->time_expried = Carbon::now()->addDay($order->time_reservations);
-                // $order->time_expried = Carbon::now()->addSecond(20);
-                $order->save();
-                OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
-                // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addSecond(20));
-            }
-            return redirect()->route('admin.orders.package.detail',[$order->id]);
         }
     }
     public function saveEditOrder(Request $request, $id){
+        // dd($request);
+        $this->validate(
+            $request,
+            [
+                'name' => 'required',
+                'payment_method' => 'required',
+                'address' => 'required',
+                'city' => 'required',
+                'district' => 'required',
+                'wards' => 'required',
+                'phone_number' => 'required',
+                'vat' => 'nullable|numeric|between:0,100',
+                'discount_deal' => 'nullable|nullable|between:0,100',
+                'type' => 'required',
+                'shipping_fee' => 'nullable|nullable|gt:-1',
+                'time_reservations' => 'required|gt:0',
+                'price_percent' => 'required|gt:-1',
+                'product_selected' => 'required',
+                'time_approve' =>'required',
+            ]
+        );
         $order = OrderPackage::findOrFail($id);
         // return $order;
         $product_service = ProductService::findOrFail($request->product_selected);
@@ -240,10 +263,8 @@ class OrderPackageController extends Controller
         }else{
             $price_percent = $request->price_percent;
         }
-        $customer = User::where('phone_number',$request->phone_number)->first();
-        if(!$customer){
-            $customer = $this->createCustomerDefault($request);
-        }
+        $customer = $order->customer;
+        $customer = $this->updateCustomer($request,$customer);
         $order->update([
             'idPackage' => $request->idPackage,
             'user_id'           => $customer->id,
@@ -287,7 +308,7 @@ class OrderPackageController extends Controller
         if($order->status =='pending'){
             $order->time_expried = Carbon::now()->addDay($order->time_reservations);
             $order->save();
-            OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
+            // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
         }
         return redirect()->route('admin.orders.package.detail',[$order->id]);
     }
@@ -471,6 +492,24 @@ class OrderPackageController extends Controller
             $customer->district = $request->district;
             $customer->wards = $request->wards;
         }
+        $customer->save();
+        return $customer;
+    }
+    public function updateCustomer($request,$customer){
+        $this->validate(
+            $request,
+            [
+                'name' => 'required',
+                'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone_number,' . $customer->id,
+            ]
+        );
+        $customer->name = $request->name;
+        $customer->username = $request->name;
+        $customer->phone_number = $request->phone_number;
+        $customer->address = $request->address;
+        $customer->city = $request->city;
+        $customer->district = $request->district;
+        $customer->wards = $request->wards;
         $customer->save();
         return $customer;
     }
