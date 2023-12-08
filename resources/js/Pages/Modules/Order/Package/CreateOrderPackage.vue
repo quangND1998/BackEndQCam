@@ -69,7 +69,7 @@ const form = useForm({
     time_approve: new Date(),
     max_price: props.product_services.length > 0 ? props.product_services[0].price : null,
     images: [],
-    sale_id: null,
+    ref_id: null,
     leader_sale_id: null,
     type_customer_resource: "private",
     customer_resource_id: null,
@@ -601,11 +601,11 @@ const date = ref(new Date());
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 NV tư vấn bán hàng(Ref)</label>
-                            <!-- <Multiselect v-model="form.sale_id"  :appendNewTag="false" :createTag="false"
+                            <!-- <Multiselect v-model="form.ref_id"  :appendNewTag="false" :createTag="false"
                             :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="None"
                            /> -->
 
-                            <Multiselect v-model="form.sale_id" :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="sales" :classes="{
+                            <Multiselect v-model="form.ref_id" :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="sales" :classes="{
                             tagsSearch: 'absolute  inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
                             container: 'relative border_round mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
                             }" >

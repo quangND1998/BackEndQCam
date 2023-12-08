@@ -124,7 +124,7 @@ const save = () => {
 <template>
     <div>
         <!-- Modal -->
-        <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Save" :hasSave="form?.amount_unpaid > 0 ? true  :false "   has-cancel @confirm="save"
+        <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật" :hasSave="form?.amount_unpaid > 0 ? true  :false "   has-cancel @confirm="save"
             :title="`Thanh toán cho ${form.order?.order_number}`">
             <div class="p-6 flex-auto">
                 <div v-if="form?.amount_unpaid > 0" class="flex flex-wrap -mx-3 mb-6">

@@ -69,7 +69,7 @@ const defaultClass= ref('shadow-lg max-h-modal w-8/12  md:w-11/12 lg:w-8/12 xl:w
 
       <template #footer>
         <BaseButtons class="flex justify-end">
-          <BaseButton v-if="hasCancel" label="Cancel" :color="button" outline @click="cancel" />
+          <BaseButton v-if="hasCancel" label="Hủy" :color="button" outline @click="cancel" />
           <BaseButton v-if="hasSave" :label="buttonLabel" :color="button" @click="confirm" />
 
         </BaseButtons>

@@ -82,6 +82,7 @@ Route::middleware(['auth'])->group(
                     Route::get('decline', [OrderPackageController::class, 'listOrderCancel'])->name('decline');
                     Route::get('complete', [OrderPackageController::class, 'listOrderComplete'])->name('complete');
                     Route::get('partiallyPaid', [OrderPackageController::class, 'partiallyPaid'])->name('partiallyPaid');
+                    Route::get('draf', [OrderPackageController::class, 'drafPaid'])->name('draf');
 
                     Route::post('orderChangeStatus/{order}', [OrderPackageController::class, 'orderChangeStatus'])->name('orderChangeStatus');
 

@@ -108,6 +108,20 @@ class OrderPackageController extends Controller
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
+    public function drafPaid(Request $request){
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'draf';
+        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment','saler'])->role()->whereHas(
+            'customer',
+            function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->customer . '%');
+            }
+        )->where('price_percent', '=', 0)
+        ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(15);
+        $statusGroup = $this->groupByOrderStatus();
+        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
     public function orderPackage(Request $request){
         $user = Auth::user();
         $sales = User::whereHas('team')->with('team')->role('saler')->get();
@@ -181,7 +195,8 @@ class OrderPackageController extends Controller
                 'time_approve' => $request->time_approve,
                 'time_end' => Carbon::parse($request->time_approve)->addDays($time_life),
                 'price_percent' => $request->price_percent,
-                'sale_id' => $request->sale_id,
+                'sale_id' => Auth::user()->id,
+                'ref_id' => $request->ref_id,
                 'to_id' => $request->leader_sale_id,
                 'customer_resources' => $request->type_customer_resource,
                 'customer_resources_id' => $request->customer_resource_id,
@@ -247,8 +262,9 @@ class OrderPackageController extends Controller
             'time_approve' => $request->time_approve,
             'time_end' => Carbon::parse($request->time_approve)->addDays($time_life),
             'price_percent' => $price_percent,
-            'sale_id' => $request->sale_id,
+
             'to_id' => $request->leader_sale_id,
+            'ref_id'  => $request->ref_id,
             'customer_resources' => $request->type_customer_resource,
             'customer_resources_id' => $request->customer_resource_id,
 
@@ -468,12 +484,19 @@ class OrderPackageController extends Controller
         $newCollections[] = array(
             'status' => 'partiallyPaid',
             'total' => $this->groupByPayment(),
-
+        );
+        $newCollections[] = array(
+            'status' => 'draf',
+            'total' => $this->groupByPaymentDraf(),
         );
         return $newCollections;
     }
     public function groupByPayment(){
         $paymentGroup = OrderPackage::role()->whereColumn('price_percent', '<', 'grand_total')->count();
+        return $paymentGroup;
+    }
+    public function groupByPaymentDraf(){
+        $paymentGroup = OrderPackage::role()->where('price_percent','=',0)->count();
         return $paymentGroup;
     }
     public function getOrder($request, $status)

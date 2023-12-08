@@ -68,9 +68,9 @@ const defaultClass= ref('shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-4/
 
       <template #footer>
         <BaseButtons class="flex justify-end">
-          <BaseButton v-if="hasCancel" label="Cancel" :color="button" outline @click="cancel" />
+          <BaseButton v-if="hasCancel" label="Hủy" :color="button" outline @click="cancel" />
           <BaseButton :label="buttonLabel" :color="button" @click="confirm" />
-         
+
         </BaseButtons>
       </template>
     </CardBox>
