@@ -47,6 +47,7 @@ const props = defineProps({
 const store = useCartStore();
 const search = ref(null)
 // const user = ref(null);
+const formattedPrice = ref()
 const flash = ref(null);
 const provinces = ref(null)
 const images = ref([])
@@ -588,7 +589,8 @@ const date = ref(new Date());
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 Vận chuyển</label>
                             <MazInputPrice v-model="form.shipping_fee" label="Enter your price" currency="VND"
-                                locale="vi-VN" :min="0" @formatted="formattedPrice = $event" />
+                                locale="vi-VN" :min="0" @formatted="formattedPrice = $event" :minFractionDigits="1" />
+                                <!-- <InputNumber v-model="form.shipping_fee" inputId="locale-vi" locale="vi-VN" :minFractionDigits="0"  :min="0"/> -->
                         </div>
                         <!-- <div class="my-2" v-if="form.type == 'retail'">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">

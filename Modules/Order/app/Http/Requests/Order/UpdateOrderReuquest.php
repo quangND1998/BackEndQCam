@@ -3,6 +3,7 @@
 namespace Modules\Order\app\Http\Requests\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateOrderReuquest extends FormRequest
 {
@@ -27,6 +28,11 @@ class UpdateOrderReuquest extends FormRequest
             'images.*' => 'mimes:jpeg,png,jpg|max:2048',
             'receive_at' =>'required',
             'shipper_id' =>'required',
+            'phone_number' => [
+                'required',
+                Rule::unique('users', 'phone_number')->ignore($this->user),
+
+            ],
         ];
     }
 
