@@ -304,6 +304,7 @@ class OrderPackageController extends Controller
         $order->save();
         $order = OrderPackage::find($id);
         $order->price_percent = $order->totalPayment();
+        $order->save();
         // if($order->totalPayment() >= $order->grand_total){
         //     $order->payment_status = 1;
         //     $order->save();
