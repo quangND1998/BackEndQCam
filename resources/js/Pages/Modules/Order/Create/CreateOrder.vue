@@ -309,12 +309,13 @@ const date = ref(new Date());
                             <div class="min-[320px]:w-full md:w-1/2 px-2">
                                 <div class="block">
                                     <img src="assets/images/cammattroi.png" alt="">
-                                    <h1>CÔNG TY CỔ PHẦN CAM MẶT TRỜI</h1>
-
-                                    <p class="text-sm text-[#5F5F5F] my-1">Địa chỉ:</p>
-                                    <p class="text-sm text-[#5F5F5F] my-1">Farm:</p>
-                                    <p class="text-sm text-[#5F5F5F] my-1">Điện thoại:</p>
-                                    <p class="text-sm text-[#5F5F5F] my-1">Email:</p>
+                                    <h1 class="text-base font-semibold uppercase">CÔNG TY CỔ PHẦN {{
+                                        $page.props.company_infor?.name }}</h1>
+                                    <p class="text-sm text-[#5F5F5F]">Địa chỉ: {{ $page.props.company_infor?.address }}</p>
+                                    <p class="text-sm text-[#5F5F5F]">Farm:</p>
+                                    <p class="text-sm text-[#5F5F5F]">Điện thoại: {{ $page.props.company_infor?.hotline }}
+                                    </p>
+                                    <p class="text-sm text-[#5F5F5F]">Email: {{ $page.props.company_infor?.email }}</p>
                                 </div>
                             </div>
                             <div class="min-[320px]:w-full min-[320px]:mt-3 min-[320px]:px-0 md:w-1/2 md:mt-0 md:px-2">
@@ -357,13 +358,13 @@ const date = ref(new Date());
                                             <template v-slot:singlelabel="{ value }">
                                                 <div class="multiselect-single-label">
                                                     {{ value.name ? value.name : value }} ({{ value.phone_number ?
-                                                       '....'+ value.phone_number.split('').slice(-4).join('') : null }})
+                                                        '....' + value.phone_number.split('').slice(-4).join('') : null }})
                                                 </div>
                                             </template>
 
                                             <template v-slot:option="{ option }">
                                                 {{ option.name ? option.name : value }} ({{ option.phone_number ?
-                                                        '....' +option.phone_number.split('').slice(-4).join('') : null }})
+                                                    '....' + option.phone_number.split('').slice(-4).join('') : null }})
                                             </template>
                                             <!-- <template v-slot:singlelabel="{ value }">
 

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -40,20 +41,24 @@ class OrderPackageEndTimeJob implements ShouldQueue
     }
     public function handle(): void
     {
-        $order = OrderPackage::with('historyPayment')->find($this->order->id);
-        if($order){
-            if($order->price_percent == 0){
-                $this->changeStatus($order,"decline");
-                // chuyen sang trang thai huy, xoa cac hop dong lien quan
-            }
-            if($order->price_percent > 0 && $order->payment_check == false){
-                $this->changeStatus($order,"pending");
-                // chuyen sang trang thai cho duyet, xoa cac hop dong lien quan
-            }
-            if($order->payment_check && $order->price_percent >= $order->grand_total){
-                // đã thanh toán và kế toán đã duyệt toàn bộ => dừng đếm
-            }
 
+        $order = $this->order;
+        if($order->time_expried == Carbon::now()){
+            if($order){
+                if($order->price_percent == 0){
+                    $this->changeStatus($order,"decline");
+                    // chuyen sang trang thai huy, xoa cac hop dong lien quan
+                }
+                if($order->price_percent > 0 && $order->payment_check == false){
+                    $this->changeStatus($order,"pending");
+                    // chuyen sang trang thai cho duyet, xoa cac hop dong lien quan
+                }
+                if($order->payment_check && $order->price_percent >= $order->grand_total){
+                    // đã thanh toán và kế toán đã duyệt toàn bộ => dừng đếm
+                }
+
+            }
         }
+
     }
 }
