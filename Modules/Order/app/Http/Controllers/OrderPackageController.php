@@ -497,6 +497,7 @@ class OrderPackageController extends Controller
         return $customer;
     }
     public function updateCustomer($request,$customer){
+
         $this->validate(
             $request,
             [

@@ -463,13 +463,13 @@ const date = ref(new Date());
                                         <div class="flex">
                                             <div class="flex items-center ">
                                                 <input id="default-radio-1" type="radio" value="male" name="default-radio"
-                                                    v-model="form.sex"
+                                                    v-model="form.sex" :checked="form.sex =='male'"
                                                     class="w-4 h-4  text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-radio-1"
                                                     class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nam</label>
                                             </div>
                                             <div class="flex items-center mx-5">
-                                                <input checked id="default-radio-2" type="radio" value="female"
+                                                <input :checked="form.sex =='female'" id="default-radio-2" type="radio" value="female"
                                                     v-model="form.sex" name="default-radio"
                                                     class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-radio-2"
