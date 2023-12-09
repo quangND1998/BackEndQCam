@@ -302,7 +302,7 @@ const orderChangePending = () => {
                 <p>{{ formatPrice(order?.grand_total) }}</p>
             </div>
 
-            <div class="text-left">
+            <div class="text-left text-[12px]">
                 <p>{{ order?.product_service?.name }}</p>
             </div>
             <div class="text-left">
@@ -353,26 +353,26 @@ const orderChangePending = () => {
             <div v-show="showAction">
                     <BaseIcon :path="mdiCashMultiple " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" data-toggle="modal"
                         data-target="#exampleModal" @click="detail(order)" aria-label="Thanh toán"
-                          size="24">
+                          size="20">
                     </BaseIcon>
                     <Link   :href="route('admin.orders.package.detail', order?.id)" >
                         <BaseIcon :path="mdiEyeOutline " class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"
                             aria-label="Chi tiết gói"
-                            size="24">
+                            size="20">
                         </BaseIcon>
                     </Link>
                     <Link  v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`" >
                         <BaseIcon :path="mdiSquareEditOutline " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" aria-label="Chỉnh sửa"
-                             size="24">
+                             size="20">
                         </BaseIcon>
                     </Link>
                     <BaseIcon :path="mdiDeleteOutline " class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"  aria-label="Hủy gói"
                     data-toggle="modal" data-target="#exampleModalDecline" @click="openDecline(order)"
-                        v-if="status == 'pending' || status == 'complete'"  size="24">
+                        v-if="status == 'pending' || status == 'complete'"  size="20">
                     </BaseIcon>
                     <BaseIcon :path="mdiCheckAll " class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"  aria-label="Duyệt gói"
                         v-if="hasAnyPermission(['create-contract-complete']) && status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
-                        @click="orderChangePacking(order)"  size="24">
+                        @click="orderChangePacking(order)"  size="20">
                     </BaseIcon>
                     <!-- <button v-if="status == 'pending' || status == 'complete'"
                         class="border text-red-700 rounded-lg bg-gray-100 px-3 py-2" data-toggle="modal"
