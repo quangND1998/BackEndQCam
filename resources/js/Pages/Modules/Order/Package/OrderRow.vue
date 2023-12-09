@@ -203,8 +203,12 @@ const save = () => {
                             </td>
                             <td class="border-0">
                                 {{ payment.status == 'complete' ? payment.user?.name : null}}
-                                <button v-if="payment.status != 'complete'"
-                                    class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary"  @click="openAcceptPayment(payment.id)">Duyệt </button>
+                                <button v-if="payment.status != 'complete' && hasAnyPermission(['create-contract-complete'])"
+                                    class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary"  @click="openAcceptPayment(payment.id)"
+                                    >Duyệt </button>
+                                <button v-else-if="payment.status != 'complete'"
+                                    class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg"  disable
+                                    >Duyệt </button>
                             </td>
                             <td class="border-0">
                                 <BaseButton v-if="payment.status != 'complete'" color="gray" class="border-0 text=gray=300 hover:text-black"
