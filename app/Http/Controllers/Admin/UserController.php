@@ -200,7 +200,7 @@ class UserController extends Controller
             [
                 'name' => 'required',
                 'cic_number' => 'nullable|unique:users,cic_number,' . $user->id,
-                'email' => 'required|email|unique:users,email,' . $user->id,
+                'email' => 'nullable|email|unique:users,email,' . $user->id,
                 'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone_number,' . $user->id,
                 'sex' => 'required',
                 'address' => 'required',
