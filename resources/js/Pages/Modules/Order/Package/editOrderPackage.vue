@@ -152,23 +152,21 @@ const onSearchUser = async () => {
         if (res.data) {
                 user.value = res.data;
                 swal.fire({
-                    text: "Số điện thoại này đã tồn tại, bạn có muốn load thông tin có sẵn không?",
-                    showCancelButton: true,
-                    confirmButtonText: "Có",
-                    cancelButtonText: "Không",
+                    text: "Số điện thoại này đã tồn tại, vui lòng kiểm tra lại",
+                    confirmButtonText: "OK",
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        foundUser(res.data)
-                        findUser.value = true;
-                    }else{
+                    //     foundUser(res.data)
+                    //     findUser.value = true;
+                    // }else{
                         console.log('not user');
                         user.value = null
                         // flash.value = err.response.data
                         findUser.value = false;
-                        // search.value = null;
-                        // searchPhone.value = null;
+                        search.value = props.order?.customer.name;
+                        searchPhone.value = null;
                         form.reset()
                     }
                 });
@@ -198,23 +196,18 @@ const onSearchUserPhone = async () => {
         if (res.data) {
                 user.value = res.data;
                 swal.fire({
-                    text: "Số điện thoại này đã tồn tại, bạn có muốn load thông tin có sẵn không?",
-                    showCancelButton: true,
-                    confirmButtonText: "Có",
-                    cancelButtonText: "Không",
+                    text: "Số điện thoại này đã tồn tại, vui lòng kiểm tra lại",
+                    confirmButtonText: "OK",
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        foundUser(res.data)
-                        findUser.value = true;
-                    }else{
                          console.log('not user');
                         user.value = null
                         // flash.value = err.response.data
                         findUser.value = false;
-                        //        search.value = null;
-                        // searchPhone.value = null;
+                        search.value = props.order?.customer.name;
+                        searchPhone.value = null;
                         form.reset()
                     }
                 });
