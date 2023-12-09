@@ -173,7 +173,7 @@ const onSearchUser = async () => {
                     }
                 });
                 // foundUser(res.data)
-                
+
                 flash.value = null;
         }
         }).catch(err => {
@@ -219,7 +219,7 @@ const onSearchUserPhone = async () => {
                     }
                 });
                 // foundUser(res.data)
-                
+
                 flash.value = null;
         }
         }).catch(err => {
@@ -733,7 +733,7 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber v-model="form.vat" min="0" max="100"
+                                <InputNumber v-model="form.vat" :min="0" :max="100"
                                     inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="w-1/4 mr-3">
@@ -742,7 +742,7 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" v-model="form.discount_deal" min="0" max="100"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber v-model="form.discount_deal" min="0" max="100"
+                                <InputNumber v-model="form.discount_deal" :min="0" :max="100"
                                     inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="w-1/2">
@@ -751,7 +751,7 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" v-model="form.time_reservations"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber v-model="form.time_reservations" min="0" max="100"
+                                <InputNumber v-model="form.time_reservations" :min="0" :max="100"
                                     inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
 
                             </div>
@@ -760,9 +760,10 @@ const date = ref(new Date());
                             <div class="w-1/2 mr-3">
                                 <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                     Số tiền</label>
-                                <MazInputPrice v-model="form.price_percent" currency="VND" locale="vi-VN" :min="0" :disabled="order?.history_payment.length > 0"
-                                    :max="maxPrice" @formatted="formattedPrice = $event" />
-
+                                <!-- <MazInputPrice v-model="form.price_percent" currency="VND" locale="vi-VN" :min="0" :disabled="order?.history_payment.length > 0"
+                                    :max="maxPrice" @formatted="formattedPrice = $event" /> -->
+                                    <InputNumber v-model="form.price_percent" :min="0"  :max="maxPrice"
+                                    inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="w-1/2">
                                 <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">

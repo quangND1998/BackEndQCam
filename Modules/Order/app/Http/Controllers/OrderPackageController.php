@@ -170,7 +170,7 @@ class OrderPackageController extends Controller
             }
             // $total_price = ($product_service->price - (($request->discount_deal *$product_service->price) / 100)) - ($request->vat * $product_service->price) / 100) ;
             $customer = User::where('phone_number',$request->phone_number)->where('name',$request->name)->first();
-        
+
             if(!$customer){
                 $customer = $this->createCustomerDefault($request);
             }
@@ -215,7 +215,7 @@ class OrderPackageController extends Controller
                     $order->time_expried = Carbon::now()->addDay($order->time_reservations);
                     // $order->time_expried = Carbon::now()->addSecond(20);
                     $order->save();
-                    // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
+                    OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
                     // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addSecond(20));
                 }
                 return redirect()->route('admin.orders.package.detail',[$order->id]);
@@ -308,7 +308,7 @@ class OrderPackageController extends Controller
         if($order->status =='pending'){
             $order->time_expried = Carbon::now()->addDay($order->time_reservations);
             $order->save();
-            // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
+            OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
         }
         return redirect()->route('admin.orders.package.detail',[$order->id]);
     }
