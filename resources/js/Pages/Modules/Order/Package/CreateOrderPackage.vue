@@ -141,7 +141,7 @@ const foundUser = (data) => {
 const onSearchUser = async () => {
     if(search.value.length > 7 && search.value.includes(" ") == false ){
     return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.data) {
                 user.value = res.data;
                 swal.fire({
@@ -165,7 +165,6 @@ const onSearchUser = async () => {
                     }
                 });
                 // foundUser(res.data)
-
                 flash.value = null;
         }
         }).catch(err => {
@@ -183,10 +182,10 @@ const isNumber =  (value) => {
   return typeof value === 'number';
 }
 const onSearchUserPhone = async () => {
-    console.log(isNumber(searchPhone.value));
+    // console.log(isNumber(searchPhone.value));
     if(searchPhone.value.length > 7){
     return axios.get(`/admin/orders/searchUser?search=${searchPhone.value}`).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.data) {
                 user.value = res.data;
                 swal.fire({

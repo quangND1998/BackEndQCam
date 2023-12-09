@@ -167,8 +167,8 @@ const onSearchUser = async () => {
                         user.value = null
                         // flash.value = err.response.data
                         findUser.value = false;
-                               search.value = null;
-                        searchPhone.value = null;
+                        // search.value = null;
+                        // searchPhone.value = null;
                         form.reset()
                     }
                 });
@@ -213,8 +213,8 @@ const onSearchUserPhone = async () => {
                         user.value = null
                         // flash.value = err.response.data
                         findUser.value = false;
-                               search.value = null;
-                        searchPhone.value = null;
+                        //        search.value = null;
+                        // searchPhone.value = null;
                         form.reset()
                     }
                 });
