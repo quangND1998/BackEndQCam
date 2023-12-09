@@ -39,11 +39,7 @@ class UserController extends Controller
         )->get();
 
         if ($user->hasRole('super-admin')) {
-            $users =  User::with('roles', 'tokens', 'team')->where('email','!=','admin@admin.com')->where(function ($query) use ($request) {
-                $query->where('name', 'LIKE', '%' . $request->search . '%');
-                $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
-                // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
-            })->paginate(20)->appends($request->search);
+            $users =  User::with('roles', 'tokens', 'team')->where('email','!=','admin@admin.com')->paginate(20)->appends($request->search);
             $roles = Role::get();
         } elseif ($user->hasRole('leader-sale')) {
             $users =  User::with('roles', 'tokens', 'team')->where('email','!=','admin@admin.com')->where(function ($query) use ($request) {
