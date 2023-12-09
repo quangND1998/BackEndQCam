@@ -146,7 +146,7 @@ const foundUser = (data) => {
     searchPhone.value = data.phone_number
 }
 const onSearchUser = async () => {
-    if(search.value.length > 7 && search.value.includes(" ") == false){
+    if(search.value.length > 7 && search.value.includes(" ") == false && searchPhone.value != props.order?.customer?.phone_number){
     return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
         console.log(res);
         if (res.data) {
@@ -192,7 +192,7 @@ const isNumber =  (value) => {
 }
 const onSearchUserPhone = async () => {
     console.log(isNumber(searchPhone.value));
-    if(searchPhone.value.length > 7){
+    if(searchPhone.value.length > 7 && searchPhone.value != props.order?.customer?.phone_number){
     return axios.get(`/admin/orders/searchUser?search=${searchPhone.value}`).then(res => {
         console.log(res);
         if (res.data) {
