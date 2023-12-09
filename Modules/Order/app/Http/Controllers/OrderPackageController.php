@@ -98,7 +98,7 @@ class OrderPackageController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'partiallyPaid';
-        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment','saler'])->role()->whereHas(
+        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment','saler','product_service_owner'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
@@ -112,7 +112,7 @@ class OrderPackageController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'draf';
-        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment','saler'])->role()->whereHas(
+        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment','saler','product_service_owner'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
@@ -562,7 +562,7 @@ class OrderPackageController extends Controller
     }
     public function getOrder($request, $status)
     {
-        return OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler'])->role()->whereHas(
+        return OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
