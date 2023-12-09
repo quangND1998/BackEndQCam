@@ -1,6 +1,7 @@
 <?php
 namespace App\Service;
 
+use App\Jobs\OtpEndTimeJob;
 use App\Models\OtpVerify;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
@@ -60,13 +61,14 @@ class OtpService {
     }
 
 
-    public function createOtp($second, $user){
+    public function createOtp($minute, $user){
         $otp = OtpVerify::create([
             'otp_number' => random_int(100000, 999999),
-            'expried_at' => Carbon::now()->addSecond($second),
-            'time_live' => $second,
+            'expried_at' => Carbon::now()->addMinute($minute),
+            'time_live' => $minute*60,
             'user_id' => $user->id
         ]);
+      
         return $otp;
     }
 

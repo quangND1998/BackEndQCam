@@ -177,8 +177,8 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(OrderPackage::class, 'sale_id');
     }
 
-    public function otp(){
-        return $this->hasOne(OtpVerify::class, 'user_id');
+    public function otps(){
+        return $this->hasMany(OtpVerify::class, 'user_id');
     }
 
     public function scopeSearch($query, array $filters)

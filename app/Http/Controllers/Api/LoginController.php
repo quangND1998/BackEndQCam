@@ -14,7 +14,9 @@ use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-
+use App\Service\OtpService;
+use App\Jobs\OtpEndTimeJob;
+use Carbon\Carbon;
 class LoginController extends Base2Controller
 {
     public function login(Request $request)
@@ -39,70 +41,53 @@ class LoginController extends Base2Controller
     }
 
 
-    protected function loginOtp(Request $request)
+    protected function loginOtp(OtpService $otpService,Request $request)
     {
         $validator = Validator::make($request->all(), [
             'phone_number' => 'required',
 
         ]);
+       
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-
-
         $user = User::where('phone_number', preg_replace('/\s+/', '', $request->phone_number))->first();
-
         if (!$user) {
             return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 404);
         }
-        $response = Http::withHeaders([
-            'Cookie' => 'ASP.NET_SessionId=nhizlj210llu1cbvucp133aa',
-            'Content-Type' => 'application/json'
-        ])->get('https://rest.esms.vn/MainService.svc/json/SendMessageAutoGenCode_V4_get', [
-            "Phone" => $request->phone_number,
-            "ApiKey" => config('esms.esms_api_key'),
-            "SecretKey" => config('esms.esms_secret_key'),
-            "SmsType" => 2,
-            "TimeAlive" => 45,
-            "NumCharOfCode" => 6,
-            "Brandname" => "Baotrixemay",
-            "Type" => 2,
-            "message" => "{OTP} la ma xac minh dang ky Baotrixemay cua ban",
-            "IsNumber" => 1
-        ]);
-        $data = $response->json();
-        if ($data["CodeResult"] == 100) {
-            return response()->json('We send otp to your phone ' . $request->phone_number, 200);
+        if(!$user->hasAnyRole(['shipper','super-admin','customer'])){
+            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+        }
+       
+        $access_token = $otpService->createToken();
+        
+        if($access_token){
+            $user->otps()->delete();
+            $otp =  $otpService->createOtp(5, $user);
+            OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
+            $message = "CamMatTroi: Vui long nhap ma OTP ".$otp->otp_number." de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
+            $response=  $otpService->sendSMS($access_token,$message, preg_replace('/\s+/', '', $request->phone_number));
+          
+            if ($response->ok()) {
+                return response()->json('We send otp to your phone ' . $request->phone_number, 200);
+            }
         }
         return response()->json("Lỗi xảy ra", 404);
     }
 
 
-    protected function verify(Request $request)
+    protected function verify(OtpService $otpService, Request $request)
     {
         $validator = Validator::make($request->all(), [
             'verification_code' => ['required', 'numeric'],
             'phone_number' => ['required', 'string'],
         ]);
-
-
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
+    
 
-        $response = Http::withHeaders([
-            'Cookie' => 'ASP.NET_SessionId=nhizlj210llu1cbvucp133aa',
-            'Content-Type' => 'application/json'
-        ])->get('https://rest.esms.vn/MainService.svc/json/CheckCodeGen_V4_get', [
-            "Phone" => $request->phone_number,
-            "ApiKey" => config('esms.esms_api_key'),
-            "SecretKey" => config('esms.esms_secret_key'),
-            "Code" => $request->verification_code,
-
-        ]);
-        $data = $response->json();
-
-        if ($data['CodeResult'] == 100) {
+        if($otpService->isOtpExpried($request->verification_code)){
             $user = User::where('phone_number', preg_replace('/\s+/', '', $request->phone_number))->first();
             Auth::login($user);
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
@@ -110,7 +95,6 @@ class LoginController extends Base2Controller
             $success['user']['can'] = $user->getRolesArray();
             return $this->sendResponse($success, 'User login successfully.');
         }
-
         return response()->json('Mã code không chính xác hoặc đã sử dụng!. Vui lòng thử lại', 404);
     }
 
@@ -130,7 +114,7 @@ class LoginController extends Base2Controller
     }
 
 
-    public function updatePassword(Request $request)
+    public function updatePassword(OtpService $otpService,Request $request)
     {
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
@@ -144,16 +128,114 @@ class LoginController extends Base2Controller
 
         #Match The Old Password
         if (!Hash::check($request->old_password, auth()->user()->password)) {
-            return $this->sendError('Mật khẩu cũ không chính xác.', 404);
+            return $this->sendError('Mật khẩu cũ không chính xác.',null, 400);
         }
 
 
-        #Update the new Password
-        User::whereId(auth()->user()->id)->update([
-            'password' => Hash::make($request->new_password)
-        ]);
+       
+    
+        $user =Auth::user();
+        if (!$user) {
+            return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 400);
+        }
+        if(!$user->hasAnyRole(['shipper','super-admin','customer'])){
+            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+        }
+       
+        $access_token = $otpService->createToken();
+    
+        if($access_token){
+            $user->otps()->delete();
+    
+            $otp =  $otpService->createOtp(5, $user);
+            OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
+            $message = "CamMatTroi: Vui long nhap ma OTP ".$otp->otp_number." de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
+            $response=  $otpService->sendSMS($access_token,$message, preg_replace('/\s+/', '', $user->phone_number));
+         
+            if ($response->ok()) {
+               
+                return response()->json('We send otp to your phone ' . $user->phone_number, 200);
+            }
+            else{
+                $response = $response->json();
+                if($response['error']==1014){
+                    return response()->json("Số điện thoại không hợp lệ", 400);
+                }
+                if($response['error']){
+                    return response()->json("Lỗi xảy ra", 400);
+                }
+            }
+        }
+        else{
+          
+            return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 400);
+        }
+      
 
-        return response()->json('Cập nhật mật khẩu thành công.', Response::HTTP_OK);
+       
+    }
+
+    public function sendOtp(OtpService $otpService){
+        $user =Auth::user();
+        if (!$user) {
+            return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 404);
+        }
+        if(!$user->hasAnyRole(['shipper','super-admin','customer'])){
+            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+        }
+       
+        $access_token = $otpService->createToken();
+    
+        if($access_token){
+            $user->otps()->delete();
+    
+            $otp =  $otpService->createOtp(5, $user);
+            OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
+            $message = "CamMatTroi: Vui long nhap ma OTP ".$otp->otp_number." de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
+            $response=  $otpService->sendSMS($access_token,$message, preg_replace('/\s+/', '', $user->phone_number));
+         
+            if ($response->ok()) {
+               
+                return response()->json('We send otp to your phone ' . $user->phone_number, 200);
+            }
+            else{
+                $response = $response->json();
+                if($response['error']==1014){
+                    return response()->json("Số điện thoại không hợp lệ", 400);
+                }
+                if($response['error']){
+                    return response()->json("Lỗi xảy ra", 400);
+                }
+               
+            }
+        }
+        else{
+          
+            return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 400);
+        }
+    }
+
+
+    protected function verifyChangePassword(OtpService $otpService, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'verification_code' => ['required', 'numeric'],
+            'new_password' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors(), 422);
+        }
+    
+
+        if($otpService->isOtpExpried($request->verification_code)){
+    
+            User::whereId(Auth::user()->id)->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+
+            return response()->json('Cập nhật mật khẩu thành công.', Response::HTTP_OK);
+        }
+        return response()->json('Mã code không chính xác hoặc đã sử dụng!. Vui lòng thử lại', 400);
     }
 
     public function getFireBaseToken(Request $request)
