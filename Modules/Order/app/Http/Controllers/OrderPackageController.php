@@ -483,6 +483,7 @@ class OrderPackageController extends Controller
         $customer->name = $request->name;
         $customer->username = $request->name;
         $customer->phone_number = $request->phone_number;
+        'sex' => $request->sex,
         $roles = 'customer';
         $customer->assignRole($roles);
         $customer->password = Hash::make('cammattroi');
@@ -510,6 +511,7 @@ class OrderPackageController extends Controller
         $customer->city = $request->city;
         $customer->district = $request->district;
         $customer->wards = $request->wards;
+        $customer->sex = $request->sex;
         $customer->save();
         return $customer;
     }

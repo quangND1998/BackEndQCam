@@ -253,9 +253,9 @@ const save = () => {
 }
 const changeProduct = (event) => {
     form.product_selected = event.target.value;
-    // if (product.value) {
-    //     form.max_price = product.value.price
-    // }
+    if (product.value) {
+        form.max_price = product.value.price
+    }
 
 }
 const product = computed(() => {
