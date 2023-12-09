@@ -350,7 +350,7 @@ const orderChangePending = () => {
                     </Link>
                 </p>
             </div>
-            <div v-show="showAction">
+            <div v-show="showAction" class="flex">
                     <BaseIcon :path="mdiCashMultiple " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" data-toggle="modal"
                         data-target="#exampleModal" @click="detail(order)" aria-label="Thanh toán"
                           size="20">
