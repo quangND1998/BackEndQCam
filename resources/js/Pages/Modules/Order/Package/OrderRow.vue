@@ -352,25 +352,25 @@ const orderChangePending = () => {
             </div>
             <div  class="flex">
                     <BaseIcon :path="mdiCashMultiple " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" data-toggle="modal"
-                        data-target="#exampleModal" @click="detail(order)" aria-label="Thanh toán"
+                        data-target="#exampleModal" @click="detail(order)" v-tooltip.top="'Thanh toán'"
                           size="20">
                     </BaseIcon>
-                    <Link   :href="route('admin.orders.package.detail', order?.id)" >
+                    <a   :href="route('admin.orders.package.detail', order?.id)" target="_blank"  v-tooltip.top="'Chi tiết gói'" >
                         <BaseIcon :path="mdiEyeOutline " class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"
-                            aria-label="Chi tiết gói"
+
                             size="20">
                         </BaseIcon>
-                    </Link>
-                    <Link  v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`" >
-                        <BaseIcon :path="mdiSquareEditOutline " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" aria-label="Chỉnh sửa"
+                    </a>
+                    <a  v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`" target="_blank" >
+                        <BaseIcon :path="mdiSquareEditOutline " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" v-tooltip.top="'Chỉnh sửa'"
                              size="20">
                         </BaseIcon>
-                    </Link>
-                    <BaseIcon :path="mdiDeleteOutline " class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"  aria-label="Hủy gói"
+                    </a>
+                    <BaseIcon :path="mdiDeleteOutline " class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"  v-tooltip.top="'Hủy gói'"
                     data-toggle="modal" data-target="#exampleModalDecline" @click="openDecline(order)"
                         v-if="status == 'pending' || status == 'complete'"  size="20">
                     </BaseIcon>
-                    <BaseIcon :path="mdiCheckAll " class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"  aria-label="Duyệt gói"
+                    <BaseIcon :path="mdiCheckAll " class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"  v-tooltip.top="'Duyệt gói'"
                         v-if="hasAnyPermission(['create-contract-complete']) && status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
                         @click="orderChangePacking(order)"  size="20">
                     </BaseIcon>

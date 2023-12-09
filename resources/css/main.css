@@ -63,3 +63,7 @@
 .border_round{
     border-radius: 0.75rem !important;
 }
+.vue-tooltip {
+    background-color: red;
+}
+

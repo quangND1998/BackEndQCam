@@ -48,13 +48,10 @@ const props = defineProps({
             <div>
                 <p class="btn_label mr-2 paid">{{ order.status }}</p>
             </div>
-
-          
-          
             <div>
-                <p v-if="order.type == 'gift_delivery'" class="btn_label mr-2 paid" 
+                <p v-if="order.type == 'gift_delivery'" class="btn_label mr-2 paid"
                   > Không cần thành toán</p>
-                <p v-else class="btn_label mr-2" 
+                <p v-else class="btn_label mr-2"
                     :class="order.payment_status  ==  0 ? 'unpaid' : 'paid'">
                     {{ order.payment_status  ==  0
                         ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
@@ -78,8 +75,6 @@ const props = defineProps({
                    >
                 <BaseIcon  :path="mdiPencil" :size="16" />
                 </Link>
-           
-              
             </div>
         </div>
 
