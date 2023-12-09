@@ -124,7 +124,7 @@ class UserController extends Controller
             $request,
             [
                 'name' => 'required',
-                'cic_number' => 'required|unique:users,cic_number',
+                'cic_number' => 'nullable|unique:users,cic_number',
                 'email' => 'required|email|unique:users,email',
                 'phone_number' => 'required|unique:users,phone_number|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
 
