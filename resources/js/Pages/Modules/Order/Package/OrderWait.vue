@@ -246,16 +246,16 @@ const changeDate = () => {
                 <div class="w-full mt-6 ">
                     <div class="panel panel-default">
                         <div class="tableFixHead panel-body relative overflow-x-auto ">
-                                <div class="mr-2 px-2 mb-2 text-xs  uppercase grid grid-cols-12 bg-gray-200   py-2  text-gray-400">
+                                <div class="mr-2 px-2 mb-2 text-xs  uppercase grid grid-cols-11 bg-gray-200   py-2  text-gray-400">
                                     <div class="text-left">
-                                        <p>Mã đơn hàng</p>
+                                        <p>Mã phiếu</p>
                                     </div>
                                     <div class="text-left">
                                         <p>Ngày lập phiếu</p>
                                     </div>
-                                    <div class="text-left">
+                                    <!-- <div class="text-left">
                                         <p>Mã phiếu</p>
-                                    </div>
+                                    </div> -->
                                     <div class="text-left">
                                         <p>Sản phẩm</p>
                                     </div>

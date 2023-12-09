@@ -294,7 +294,7 @@ const orderChangePending = () => {
                 </table>
             </div>
         </CardBoxModal>
-        <div  @mouseover="showButton" @mouseout="hideButton"  class="grid grid-cols-12  text-sm px-3 p-1 text-gray-400 border-b-[1px] border-[#f5f5f5] text-left items-center"
+        <div  @mouseover="showButton" @mouseout="hideButton"  class="grid grid-cols-11  text-sm px-3 p-1 text-gray-400 border-b-[1px] border-[#f5f5f5] text-left items-center"
             >
             <div @click.prevent="toggleContent">
                 <a class="flex items-center text-blue-600 text-[10px]">
@@ -302,14 +302,14 @@ const orderChangePending = () => {
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5 5 1 1 5" />
-                    </svg>{{ order?.order_number }}</a>
+                    </svg>{{ order?.idPackage }}</a>
             </div>
             <div class="text-left">
                 <p>{{ formatDateOnly(order?.created_at) }}</p>
             </div>
-            <div class="text-left">
+            <!-- <div class="text-left">
                 <p>{{ order?.idPackage }}</p>
-            </div>
+            </div> -->
             <div class="text-left text-[12px]">
                 <p>{{ order?.product_service?.name }}</p>
             </div>
