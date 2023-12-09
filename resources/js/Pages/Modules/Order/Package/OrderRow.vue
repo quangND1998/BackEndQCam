@@ -288,7 +288,7 @@ const orderChangePending = () => {
                 </table>
             </div>
         </CardBoxModal>
-        <div  @mouseover="showButton" @mouseout="hideButton"  class=" grid   text-sm px-3 mt-2 mb-1 text-gray-400"
+        <div  @mouseover="showButton" @mouseout="hideButton"  class=" grid text-sm px-3 p-1 text-gray-400 border-b-[1px] border-[#f5f5f5] text-left items-center"
             :class="status == 'decline' || status == 'complete' ? 'grid-cols-12' : 'grid-cols-10'">
             <div @click.prevent="toggleContent">
                 <a class="flex items-center text-blue-600 text-[12px]">
@@ -298,30 +298,30 @@ const orderChangePending = () => {
                             d="M9 5 5 1 1 5" />
                     </svg>{{ order?.order_number }}</a>
             </div>
-            <div class="text-center">
+            <div class="text-left">
                 <p>{{ formatPrice(order?.grand_total) }}</p>
             </div>
 
-            <div class="text-center">
+            <div class="text-left">
                 <p>{{ order?.product_service?.name }}</p>
             </div>
-            <div class="text-center">
+            <div class="text-left">
                 <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
             </div>
-            <div class="text-center">
+            <div class="text-left">
                 <p>{{ formatTimeDayMonthyear(order?.created_at) }}</p>
             </div>
-            <div class="text-center">
+            <div class="text-left">
                 <p>{{ order?.customer?.name }}</p>
             </div>
-            <div class="text-center ">
+            <div class="text-left ">
                 <p class="btn_label "
                     :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
                     {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' : order?.price_percent == 0
                         ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
 
             </div>
-            <div class="text-center ">
+            <div class="text-left ">
                 <p class="btn_label " :class="order.payment_check ? 'paid' : 'partiallyPaid'">
                     {{ order.payment_check ? 'đã duyệt' : 'chờ duyệt' }}</p>
 
@@ -333,7 +333,7 @@ const orderChangePending = () => {
                 </p>
             </div>
             <div class="flex" v-if="status == 'decline' || status == 'complete'">
-                <p v-if="status == 'decline'" class="text-[12px] text-center">
+                <p v-if="status == 'decline'" class="text-[12px] text-left">
                     {{ order.reason }}
                 </p>
                 <p v-if="status == 'complete'">
@@ -419,7 +419,7 @@ const orderChangePending = () => {
                     </div>
                 </div>
                 <table class="table w-full text-sm text-left text-gray-500 bg-white rounded-lg">
-                    <thead class="text-xs text-center text-gray-700 uppercase">
+                    <thead class="text-xs text-left text-gray-700 uppercase">
                         <tr>
                             <th>Sản phẩm</th>
                             <th>Ưu đãi</th>
