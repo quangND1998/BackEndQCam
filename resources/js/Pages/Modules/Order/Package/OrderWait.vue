@@ -275,7 +275,7 @@ const changeDate = () => {
                                         <p>Trạng thái</p>
                                     </div>
                                     <div class="text-left">
-                                        <p>Trạng thái duyệt</p>
+                                        <p>TT duyệt</p>
                                     </div>
                                     <div>
                                         <p>Trạng thái gói</p>

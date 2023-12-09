@@ -281,7 +281,7 @@ const changeDate = () => {
                                         <p>Trạng thái gói</p>
                                     </div> -->
                                      <div>
-                                        <p>Người duyệt cuối</p>
+                                        <p>Người duyệt</p>
                                     </div>
                                     <!-- <div>
                                         <p>Tài liệu</p>
