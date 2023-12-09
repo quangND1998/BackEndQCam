@@ -39,20 +39,24 @@ class UserController extends Controller
         )->get();
 
         if ($user->hasRole('super-admin')) {
-            $users =  User::with('roles', 'tokens', 'team')->paginate(20)->appends($request->search);
-            $roles = Role::get();
-        } elseif ($user->hasRole('leader-sale')) {
-            $users =  User::with('roles', 'tokens', 'team')->where('email','!=','admin@admin.com')->where(function ($query) use ($request) {
+            $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
                 $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
-                // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
+                $query->orwhere('phone_number', 'LIKE', '%' . $request->search . '%');
+            })->paginate(20)->appends($request->search);
+            $roles = Role::get();
+        } elseif ($user->hasRole('leader-sale')) {
+            $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->search . '%');
+                $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
+                $query->orwhere('phone_number', 'LIKE', '%' . $request->search . '%');
             })->where('created_byId', $user->id)->paginate(20)->appends($request->search);
             $roles = Role::where('name', 'saler')->get();
         }elseif ($user->hasRole('leader-shipper')) {
-            $users =  User::with('roles', 'tokens', 'team')->where('email','!=','admin@admin.com')->where(function ($query) use ($request) {
+            $users =  User::with('roles', 'tokens', 'team')->where(function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
                 $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
-                // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
+                $query->orwhere('phone_number', 'LIKE', '%' . $request->search . '%');
             })->where('created_byId', $user->id)->paginate(20)->appends($request->search);
             $roles = Role::where('name', 'saler')->get();
         } else {
