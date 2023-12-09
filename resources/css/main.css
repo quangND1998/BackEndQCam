@@ -66,4 +66,10 @@
 .vue-tooltip {
     background-color: red;
 }
-
+.fit-content{
+    width: fit-content;
+}
+.table_trip div{
+    width: 120px;
+    margin-right: 10px;
+}

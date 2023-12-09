@@ -251,16 +251,22 @@ const changeDate = () => {
                                         <p>Mã đơn hàng</p>
                                     </div>
                                     <div class="text-left">
+                                        <p>Ngày lập phiếu</p>
+                                    </div>
+                                    <div class="text-left">
+                                        <p>Mã phiếu</p>
+                                    </div>
+                                    <div class="text-left">
+                                        <p>Sản phẩm</p>
+                                    </div>
+                                    <div class="text-left">
+                                        <p>Ngày áp dụng</p>
+                                    </div>
+                                    <div class="text-left ">
                                         <p>Số tiền</p>
                                     </div>
                                     <div class="text-left">
-                                        <p>Gói dịch vụ</p>
-                                    </div>
-                                    <div class="text-left">
                                         <p>Loại</p>
-                                    </div>
-                                    <div class="text-left">
-                                        <p>Ngày</p>
                                     </div>
                                     <div class="text-left">
                                         <p>Khách hàng</p>
@@ -271,15 +277,15 @@ const changeDate = () => {
                                     <div class="text-left">
                                         <p>Trạng thái tt</p>
                                     </div>
-                                    <div>
+                                    <!-- <div>
                                         <p>Trạng thái gói</p>
-                                    </div>
+                                    </div> -->
                                      <div>
                                         <p>Người duyệt cuối</p>
                                     </div>
-                                    <div>
+                                    <!-- <div>
                                         <p>Tài liệu</p>
-                                    </div>
+                                    </div> -->
                                     <div>
                                         <p>Hành động</p>
                                     </div>

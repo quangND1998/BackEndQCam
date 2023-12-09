@@ -246,21 +246,27 @@ const changeDate = () => {
                 <div class="w-full mt-6 ">
                     <div class="panel panel-default">
                         <div class="tableFixHead panel-body relative overflow-x-auto ">
-                                <div class="mr-2 px-2 mb-2 text-xs  uppercase bg-gray-200 grid grid-cols-10  py-2  text-gray-400">
+                                <div class="mr-2 px-2 mb-2 text-xs  uppercase grid grid-cols-12 bg-gray-200   py-2  text-gray-400">
                                     <div class="text-left">
                                         <p>Mã đơn hàng</p>
                                     </div>
                                     <div class="text-left">
+                                        <p>Ngày lập phiếu</p>
+                                    </div>
+                                    <div class="text-left">
+                                        <p>Mã phiếu</p>
+                                    </div>
+                                    <div class="text-left">
+                                        <p>Sản phẩm</p>
+                                    </div>
+                                    <div class="text-left">
+                                        <p>Ngày áp dụng</p>
+                                    </div>
+                                    <div class="text-left ">
                                         <p>Số tiền</p>
                                     </div>
                                     <div class="text-left">
-                                        <p>Gói dịch vụ</p>
-                                    </div>
-                                    <div class="text-left">
                                         <p>Loại</p>
-                                    </div>
-                                    <div class="text-left">
-                                        <p>Ngày</p>
                                     </div>
                                     <div class="text-left">
                                         <p>Khách hàng</p>

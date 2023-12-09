@@ -288,8 +288,8 @@ const orderChangePending = () => {
                 </table>
             </div>
         </CardBoxModal>
-        <div  @mouseover="showButton" @mouseout="hideButton"  class=" grid text-sm px-3 p-1 text-gray-400 border-b-[1px] border-[#f5f5f5] text-left items-center"
-            :class="status == 'decline' || status == 'complete' ? 'grid-cols-12' : 'grid-cols-10'">
+        <div  @mouseover="showButton" @mouseout="hideButton"  class="grid grid-cols-12  text-sm px-3 p-1 text-gray-400 border-b-[1px] border-[#f5f5f5] text-left items-center"
+            >
             <div @click.prevent="toggleContent">
                 <a class="flex items-center text-blue-600 text-[12px]">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -299,17 +299,22 @@ const orderChangePending = () => {
                     </svg>{{ order?.order_number }}</a>
             </div>
             <div class="text-left">
-                <p>{{ formatPrice(order?.grand_total) }}</p>
+                <p>{{ formatTimeDayMonthyear(order?.created_at) }}</p>
             </div>
-
+            <div class="text-left">
+                <p>{{ order?.idPackage }}</p>
+            </div>
             <div class="text-left text-[12px]">
                 <p>{{ order?.product_service?.name }}</p>
             </div>
-            <div class="text-left">
-                <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
+            <div class="text-left text-[12px]">
+                <p>{{ order?.time_approve }}</p>
+            </div>
+            <div class="text-left ">
+                <p>{{ formatPrice(order?.grand_total) }}</p>
             </div>
             <div class="text-left">
-                <p>{{ formatTimeDayMonthyear(order?.created_at) }}</p>
+                <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
             </div>
             <div class="text-left">
                 <p>{{ order?.customer?.name }}</p>
@@ -324,10 +329,9 @@ const orderChangePending = () => {
             <div class="text-left ">
                 <p class="btn_label " :class="order.payment_check ? 'paid' : 'partiallyPaid'">
                     {{ order.payment_check ? 'đã duyệt' : 'chờ duyệt' }}</p>
-
             </div>
 
-            <div>
+            <div v-if="status == 'pending'">
                 <p :class="order.product_service_owner?.state == 'active' ? 'text-green' : 'text-red'">
                     {{ order.product_service_owner?.state }}
                 </p>
@@ -341,7 +345,7 @@ const orderChangePending = () => {
                 </p>
 
             </div>
-            <div v-if="status == 'decline' || status == 'complete'">
+            <!-- <div v-if="status == 'decline' || status == 'complete'">
                 <p v-if="status == 'decline'">
                     {{ order.package_reviewer ? order.package_reviewer?.name : 'hệ thống' }}
                 </p>
@@ -349,7 +353,7 @@ const orderChangePending = () => {
                     <Link>
                     </Link>
                 </p>
-            </div>
+            </div> -->
             <div  class="flex">
                     <BaseIcon :path="mdiCashMultiple " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" data-toggle="modal"
                         data-target="#exampleModal" @click="detail(order)" v-tooltip.top="'Thanh toán'"
