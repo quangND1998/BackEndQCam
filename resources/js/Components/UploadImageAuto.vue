@@ -193,7 +193,7 @@ const Delete = (img) => {
                     <label :for="id" v-if="((old_images? old_images.length:0)+form.images.length) < max_files"
                         class="cursor-pointer w-16 h-16 border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg">
                         <BaseIcon :path="mdiPlus" class="" :size="16" />
-                        {{ idPayment }}
+                        <!-- {{ idPayment }} -->
                     </label>
                     <input @change="onFileChange" v-if="((old_images? old_images.length:0)  + form.images.length) < max_files"
                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 hidden"
