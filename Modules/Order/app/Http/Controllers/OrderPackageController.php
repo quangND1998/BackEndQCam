@@ -98,7 +98,7 @@ class OrderPackageController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'partiallyPaid';
-        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment','saler'])->role()->whereHas(
+        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment','saler','product_service_owner'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
@@ -112,7 +112,7 @@ class OrderPackageController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'draf';
-        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment','saler'])->role()->whereHas(
+        $orders  =  OrderPackage::with(['customer', 'product_service','historyPayment','saler','product_service_owner'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
@@ -170,7 +170,7 @@ class OrderPackageController extends Controller
             }
             // $total_price = ($product_service->price - (($request->discount_deal *$product_service->price) / 100)) - ($request->vat * $product_service->price) / 100) ;
             $customer = User::where('phone_number',$request->phone_number)->where('name',$request->name)->first();
-        
+
             if(!$customer){
                 $customer = $this->createCustomerDefault($request);
             }
@@ -215,7 +215,7 @@ class OrderPackageController extends Controller
                     $order->time_expried = Carbon::now()->addDay($order->time_reservations);
                     // $order->time_expried = Carbon::now()->addSecond(20);
                     $order->save();
-                    // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
+                    OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
                     // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addSecond(20));
                 }
                 return redirect()->route('admin.orders.package.detail',[$order->id]);
@@ -308,7 +308,7 @@ class OrderPackageController extends Controller
         if($order->status =='pending'){
             $order->time_expried = Carbon::now()->addDay($order->time_reservations);
             $order->save();
-            // OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
+            OrderPackageEndTimeJob::dispatch($order)->delay(now()->addDay($order->time_reservations));
         }
         return redirect()->route('admin.orders.package.detail',[$order->id]);
     }
@@ -483,6 +483,7 @@ class OrderPackageController extends Controller
         $customer->name = $request->name;
         $customer->username = $request->name;
         $customer->phone_number = $request->phone_number;
+        $customer->sex = $request->sex;
         $roles = 'customer';
         $customer->assignRole($roles);
         $customer->password = Hash::make('cammattroi');
@@ -496,6 +497,7 @@ class OrderPackageController extends Controller
         return $customer;
     }
     public function updateCustomer($request,$customer){
+
         $this->validate(
             $request,
             [
@@ -510,6 +512,7 @@ class OrderPackageController extends Controller
         $customer->city = $request->city;
         $customer->district = $request->district;
         $customer->wards = $request->wards;
+        $customer->sex = $request->sex;
         $customer->save();
         return $customer;
     }
@@ -559,7 +562,7 @@ class OrderPackageController extends Controller
     }
     public function getOrder($request, $status)
     {
-        return OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler'])->role()->whereHas(
+        return OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');

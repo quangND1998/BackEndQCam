@@ -25,6 +25,9 @@ Route::middleware(['auth'])->group(
         Route::get('orderPackage/create', [CustomerController::class, 'orderPackage'])->name('orderPackage.create');
         Route::post('orderPackage/save', [CustomerController::class, 'saveOrderPackage'])->name('orderPackage.save');
         Route::resource('customers', CustomerController::class)->names('customer');
+
+        Route::get('customer/{customer}/viewUpdateInfor', [CustomerDetailController::class,'viewUpdateInfor'])->name('customer.viewUpdateInfor');
+        Route::post('customer/{user}/approInfor', [CustomerDetailController::class,'approInfo'])->name('customer.approInfo');
         Route::prefix('customer/{id}')->as('customer.detail.')->group(function () {
             Route::get('info', [CustomerDetailController::class, 'info'])->name('info');
 

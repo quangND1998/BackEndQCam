@@ -146,34 +146,32 @@ const foundUser = (data) => {
     searchPhone.value = data.phone_number
 }
 const onSearchUser = async () => {
-    if(search.value.length > 7 && search.value.includes(" ") == false){
+    if(search.value.length > 7 && search.value.includes(" ") == false && searchPhone.value != props.order?.customer?.phone_number){
     return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
         console.log(res);
         if (res.data) {
                 user.value = res.data;
                 swal.fire({
-                    text: "Số điện thoại này đã tồn tại, bạn có muốn load thông tin có sẵn không?",
-                    showCancelButton: true,
-                    confirmButtonText: "Có",
-                    cancelButtonText: "Không",
+                    text: "Số điện thoại này đã tồn tại, vui lòng kiểm tra lại",
+                    confirmButtonText: "OK",
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        foundUser(res.data)
-                        findUser.value = true;
-                    }else{
+                    //     foundUser(res.data)
+                    //     findUser.value = true;
+                    // }else{
                         console.log('not user');
                         user.value = null
                         // flash.value = err.response.data
                         findUser.value = false;
-                               search.value = null;
+                        search.value = props.order?.customer.name;
                         searchPhone.value = null;
                         form.reset()
                     }
                 });
                 // foundUser(res.data)
-                
+
                 flash.value = null;
         }
         }).catch(err => {
@@ -192,34 +190,29 @@ const isNumber =  (value) => {
 }
 const onSearchUserPhone = async () => {
     console.log(isNumber(searchPhone.value));
-    if(searchPhone.value.length > 7){
+    if(searchPhone.value.length > 7 && searchPhone.value != props.order?.customer?.phone_number){
     return axios.get(`/admin/orders/searchUser?search=${searchPhone.value}`).then(res => {
         console.log(res);
         if (res.data) {
                 user.value = res.data;
                 swal.fire({
-                    text: "Số điện thoại này đã tồn tại, bạn có muốn load thông tin có sẵn không?",
-                    showCancelButton: true,
-                    confirmButtonText: "Có",
-                    cancelButtonText: "Không",
+                    text: "Số điện thoại này đã tồn tại, vui lòng kiểm tra lại",
+                    confirmButtonText: "OK",
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        foundUser(res.data)
-                        findUser.value = true;
-                    }else{
                          console.log('not user');
                         user.value = null
                         // flash.value = err.response.data
                         findUser.value = false;
-                               search.value = null;
+                        search.value = props.order?.customer.name;
                         searchPhone.value = null;
                         form.reset()
                     }
                 });
                 // foundUser(res.data)
-                
+
                 flash.value = null;
         }
         }).catch(err => {
@@ -262,9 +255,9 @@ const save = () => {
 }
 const changeProduct = (event) => {
     form.product_selected = event.target.value;
-    // if (product.value) {
-    //     form.max_price = product.value.price
-    // }
+    if (product.value) {
+        form.max_price = product.value.price
+    }
 
 }
 const product = computed(() => {
@@ -470,13 +463,13 @@ const date = ref(new Date());
                                         <div class="flex">
                                             <div class="flex items-center ">
                                                 <input id="default-radio-1" type="radio" value="male" name="default-radio"
-                                                    v-model="form.sex"
+                                                    v-model="form.sex" :checked="form.sex =='male'"
                                                     class="w-4 h-4  text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-radio-1"
                                                     class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nam</label>
                                             </div>
                                             <div class="flex items-center mx-5">
-                                                <input checked id="default-radio-2" type="radio" value="female"
+                                                <input :checked="form.sex =='female'" id="default-radio-2" type="radio" value="female"
                                                     v-model="form.sex" name="default-radio"
                                                     class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-radio-2"
@@ -733,7 +726,7 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber v-model="form.vat" min="0" max="100"
+                                <InputNumber v-model="form.vat" :min="0" :max="100"
                                     inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="w-1/4 mr-3">
@@ -742,7 +735,7 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" v-model="form.discount_deal" min="0" max="100"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber v-model="form.discount_deal" min="0" max="100"
+                                <InputNumber v-model="form.discount_deal" :min="0" :max="100"
                                     inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="w-1/2">
@@ -751,7 +744,7 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" v-model="form.time_reservations"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber v-model="form.time_reservations" min="0" max="100"
+                                <InputNumber v-model="form.time_reservations" :min="0" :max="100"
                                     inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
 
                             </div>
@@ -760,9 +753,10 @@ const date = ref(new Date());
                             <div class="w-1/2 mr-3">
                                 <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                     Số tiền</label>
-                                <MazInputPrice v-model="form.price_percent" currency="VND" locale="vi-VN" :min="0" :disabled="order?.history_payment.length > 0"
-                                    :max="maxPrice" @formatted="formattedPrice = $event" />
-
+                                <!-- <MazInputPrice v-model="form.price_percent" currency="VND" locale="vi-VN" :min="0" :disabled="order?.history_payment.length > 0"
+                                    :max="maxPrice" @formatted="formattedPrice = $event" /> -->
+                                    <InputNumber v-model="form.price_percent" :min="0"  :max="maxPrice" :disabled="order?.history_payment.length > 0"
+                                    inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="w-1/2">
                                 <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">

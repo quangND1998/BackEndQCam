@@ -28,7 +28,12 @@ class HistoryPaymentController extends Controller
         }
         return redirect()->back()->with('success', "Xóa tài khoản  thành công");
     }
-
+    public function updateImageHistoryPayment(Request $request, $id){
+        // return $request;
+        $history = HistoryPayment::find($id);
+        $history->addMedia($request->images)->toMediaCollection('order_package_payment');
+        return $history;
+    }
     public function setPaymentComplete($orderpackage,$id){
         
         $history = HistoryPayment::find($id);

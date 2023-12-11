@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, watch, toRef } from "vue";
+import { computed, ref, inject, watch, toRef, reactive } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { Link, useForm } from "@inertiajs/vue3";
@@ -74,7 +74,19 @@ const edit = (user) => {
     form.created_byId = user.created_byId;
     form.time_approve = user?.product_service_owners?.time_approve
 };
+const filter =reactive({
+    accept:null
+})
 
+const fillterAccept=()=>{
+    router.get(route(`customer.index`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 watch(
     search,
     throttle(() => {
@@ -226,7 +238,32 @@ const limit_tree = computed(() =>{
                         " label="Create User" />
                 </div>
             </div>
+            <div class="w-full flex justify-between">
+                    <div class="flex mr-2">
+                        <div class="mr-4 flex-col flex">
+                            <div class=" text-gray-500">
+                                <label for>Trạng thái Xét duyệt</label>
+                            </div>
+                            <div class="">
+                                <select id="countries"   v-model="filter.accept" @change="fillterAccept"
+                                    class="bg-gray-50 border  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
 
+                                    <option :value="null">Trạng thái</option>
+                                    <option :value="1">Đã xét duyệt</option>
+                                    <option :value="0">Chờ xét duyệt</option>
+                                </select>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <div class="flex">
+                     
+                     
+
+                      
+                    </div>
+
+                </div>
             <!-- Modal -->
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                 :title="editMode ? 'Update User' : 'Create User'">
@@ -345,6 +382,7 @@ const limit_tree = computed(() =>{
                             <th scope="col" class="py-2 px-3 text-xs">phone</th>
                             <th scope="col" class="py-2 px-3 text-xs">username</th>
                             <th scope="col" class="py-2 px-3 text-xs">Active</th>
+                            <th scope="col" class="py-2 px-3 text-xs">Xét duyệt</th>
                             <th scope="col" class="py-2 px-3 text-xs">created at</th>
                             <th scope="col" class="py-2 px-3 text-xs">
                                 <span class="sr-only">Edit</span>
@@ -382,6 +420,12 @@ const limit_tree = computed(() =>{
                                         class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                     </div>
                                 </label>
+                            </th>
+                            <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <span v-if="user.infor && user.infor.status ==0" class="btn_label partiallyPaid">
+                                   <Link :href="route('customer.viewUpdateInfor', user.id)">Chờ duyệt</Link> </span>
+                                   <span v-if="user.infor && user.infor.status ==1" class="btn_label paid">
+                                   Đã duyệt </span>
                             </th>
                             <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ formatDate(user.created_at) }}

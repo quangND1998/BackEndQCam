@@ -90,5 +90,38 @@ class CustomerDetailController extends Controller
 
         return Inertia::render('Modules/Customer/detail/document', compact('customer','images'));
     }
-
+    public function viewUpdateInfor(User $customer){
+        $info = $customer->infor;
+        if($info && $info->status ==0){
+            return Inertia::render('Modules/Customer/Infor', compact('customer', 'info'));
+        }
+        return back()->with('warning', "Thông tin cập nhật không có hoặc đã xét duyệt!");
+    }
+    public function approInfo(User $user){
+      
+        if($user->infor && $user->infor->status==0){
+            $new_info = $user->infor;
+            $user->update([
+                'name' => $new_info->name,
+                'address' => $new_info->address,
+                'cic_date' => $new_info->cic_date,
+                'cic_date_expried' => $new_info->cic_date_expried,
+                'cic_number' => $new_info->cic_number,
+                'city' => $new_info->city,
+                'date_of_birth' => $new_info->date_of_birth,
+                'district' => $new_info->district,
+                'email' => $new_info->email,
+                'phone_number' => $new_info->phone_number,
+                'sex' => $new_info->sex,
+                'wards' => $new_info->wards,
+            ]);
+            $user->infor->update([
+                'status' => true
+            ]);
+            return redirect()->route('customer.index')->with('success', "Xét duyệt thông tin khách hàng thành công!");
+        }
+        else{
+            return redirect()->route('customer.index')->with('warning', "Thông tin cập nhật không có hoặc đã xét duyệt!");
+        }
+    }
 }

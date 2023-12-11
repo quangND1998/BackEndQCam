@@ -138,10 +138,10 @@ const foundUser = (data) => {
     search.value = data.name;
     searchPhone.value = data.phone_number
 }
-const onSearchUser =  () => {
-    if(search.value.length > 7 && search.value.includes(" ") == false){
+const onSearchUser = async () => {
+    if(search.value.length > 7 && search.value.includes(" ") == false ){
     return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.data) {
                 user.value = res.data;
                 swal.fire({
@@ -165,11 +165,10 @@ const onSearchUser =  () => {
                     }
                 });
                 // foundUser(res.data)
-                
                 flash.value = null;
         }
         }).catch(err => {
-            // console.log('not user');
+            console.log('not user');
         })
     }else{
         //  user.value = null
@@ -183,10 +182,10 @@ const isNumber =  (value) => {
   return typeof value === 'number';
 }
 const onSearchUserPhone = async () => {
-    console.log(isNumber(searchPhone.value));
+    // console.log(isNumber(searchPhone.value));
     if(searchPhone.value.length > 7){
     return axios.get(`/admin/orders/searchUser?search=${searchPhone.value}`).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.data) {
                 user.value = res.data;
                 swal.fire({
@@ -211,7 +210,7 @@ const onSearchUserPhone = async () => {
                     }
                 });
                 // foundUser(res.data)
-                
+
                 flash.value = null;
         }
         }).catch(err => {
@@ -254,9 +253,9 @@ const save = () => {
 }
 const changeProduct = (event) => {
     form.product_selected = event.target.value;
-    // if (product.value) {
-    //     form.max_price = product.value.price
-    // }
+    if (product.value) {
+        form.max_price = product.value.price
+    }
 
 }
 const product = computed(() => {
@@ -375,7 +374,7 @@ const date = ref(new Date());
                         <div class="my-3">
                             <div class="flex  items-center">
                                 <h3 class="text-[17px] font-bold mr-[20px]">Thông tin liên hệ</h3>
-                              
+
                             </div>
 
                             <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt-2">
@@ -385,7 +384,7 @@ const date = ref(new Date());
                                             Khách
                                             Hàng
                                             *</label>
-                                        <input type="text" id="name"  v-model="search" @keydown="onSearchUser"
+                                        <input type="text" id="name"  v-model="search" @keyup="onSearchUser()" autocomplete="search"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" >
                                         <div class="text-red-500" v-if="flash"> {{ flash }}</div>
@@ -394,7 +393,7 @@ const date = ref(new Date());
                                     <div class="my-3">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Số điện thoại *</label>
-                                        <input type="text" id="first_name"  
+                                        <input type="text" id="first_name"
                                             v-model="searchPhone" @keyup="onSearchUserPhone()"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" >
@@ -607,7 +606,7 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber  v-model="form.vat"  min="0"  max="100"  inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                                <InputNumber  v-model="form.vat"  :min="0"  :max="100"  inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
                             </div>
                             <div class="w-1/4 mr-3">
                                 <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -615,7 +614,7 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" v-model="form.discount_deal" min="0" max="100"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                    <InputNumber  v-model="form.discount_deal"  min="0"  max="100" inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                                    <InputNumber  v-model="form.discount_deal"  :min="0"  :max="100" inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
                             </div>
                             <div class="w-1/2">
                                 <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -623,7 +622,7 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" v-model="form.time_reservations"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber  v-model="form.time_reservations"  min="0"  max="100" inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                                <InputNumber  v-model="form.time_reservations"  :min="0"  :max="100" inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
 
                             </div>
                         </div>
@@ -633,7 +632,7 @@ const date = ref(new Date());
                                     Số tiền</label>
                                 <!-- <MazInputPrice v-model="form.price_percent"  locale="vi-VN" :min="0"
                                     :max="maxPrice" @formatted="formattedPrice = $event" /> -->
-                                <InputNumber  v-model="form.price_percent"  min="0"  :max="maxPrice"  inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                                <InputNumber  v-model="form.price_percent"  :min="0"  :max="maxPrice"  inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
                             </div>
                             <div class="w-1/2">
                                 <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -805,7 +804,6 @@ const date = ref(new Date());
     </LayoutAuthenticated>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
-
 
 
 

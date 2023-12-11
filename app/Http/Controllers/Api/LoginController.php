@@ -29,7 +29,7 @@ class LoginController extends Base2Controller
 
             $user = Auth::user();
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
-            $success['user'] =  $user;
+            $success['user'] =  $user->load('infor');
             $success['user']['can'] = $user->getRolesArray();
             if($user->hasAnyRole(['shipper','super-admin','customer'])){
                 return $this->sendResponse($success, 'User login successfully.');
@@ -91,7 +91,7 @@ class LoginController extends Base2Controller
             $user = User::where('phone_number', preg_replace('/\s+/', '', $request->phone_number))->first();
             Auth::login($user);
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
-            $success['user'] =  $user;
+            $success['user'] =  $user->load('infor');
             $success['user']['can'] = $user->getRolesArray();
             return $this->sendResponse($success, 'User login successfully.');
         }
@@ -257,11 +257,11 @@ class LoginController extends Base2Controller
             'cic_number' => 'required|unique:users,cic_number,' . $user->id,
             'email' => 'required|email|unique:users,email,' . $user->id,
             'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone_number,' . $user->id,
-            'sex' => 'nullable',
+            'sex' => 'required',
             'address' => 'required',
-            'city' => 'nullable',
-            'wards' => 'nullable',
-            'district' => 'nullable',
+            'city' => 'required',
+            'wards' => 'required',
+            'district' => 'required',
             'date_of_birth' => 'nullable|date',
 
             'cic_date' => 'nullable|date',
@@ -283,20 +283,31 @@ class LoginController extends Base2Controller
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-
-        $userInfor = UserInfor::create($request->all());
-        $userInfor->user_id = $user->id;
-        $response = [
-            'message' => 'Chúng tôi đã nhận yêu cầu thay đổi thông tin tài khoản của bạn',
-            'user' => $userInfor,
-        ];
-        return response()->json($response, 200);
+     
+        if(!$user->infor){
+            $userInfor = UserInfor::create($request->all());
+            $userInfor->user_id = $user->id;
+            $userInfor->save();
+        }
+        else{
+            $user->infor->update($request->all());
+            $user->infor->status = false;
+            $user->infor->save();
+        }
+     
+        // $response = [
+        //     'message' => 'Chúng tôi đã nhận yêu cầu thay đổi thông tin tài khoản của bạn',
+        //     'user' =>  $user->load('infor'),
+        // ];
+        $success['user'] =  $user->load('infor');
+        $success['user']['can'] = $user->getRolesArray();
+        return $this->sendResponse($success, 'Chúng tôi đã nhận yêu cầu thay đổi thông tin tài khoản của bạn');
     }
 
     public function getUser()
     {
         $user = Auth::user();
-        $success['user'] =  $user;
+        $success['user'] =  $user->load('infor');
         $success['user']['can'] = $user->getRolesArray();
         return $this->sendResponse($success, 'User login successfully.');
     }

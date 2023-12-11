@@ -111,6 +111,7 @@ class OrderPackage extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'sale_id');
     }
+    
     public function leader()
     {
         return $this->belongsTo(User::class, 'to_id');
@@ -146,5 +147,10 @@ class OrderPackage extends Model implements HasMedia
             return $history->status != "complete";
         });
         return $allHistory;
+    }
+
+    public function ref()
+    {
+        return $this->belongsTo(User::class, 'ref_id');
     }
 }

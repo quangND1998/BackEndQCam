@@ -87,7 +87,13 @@ const state = reactive({
                         <Icon icon="info" class=" mr-2" />Thông tin
                     </Link>
                 </li>
+                <li v-if="hasAnyPermission(['super-admin','info-customer'])"  :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('Info') }"
+                    class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] dark:text-white inline-block my-2">
 
+                    <Link  :href="route('customer.viewUpdateInfor', customer.id)" class="flex">
+                        <Icon icon="info" class=" mr-2" />Xét duyệt Thông tin
+                    </Link>
+                </li>
                 <li v-if="hasAnyPermission(['super-admin','package-custommer'])"
                 :class="{ ' text-[#FF9B00] border-b-2 border-yellow-600': $page.component.includes('product','extend') }"
                 class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"

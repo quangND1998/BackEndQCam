@@ -37,7 +37,7 @@
     align-items: center;
     border-radius: 0.5rem;
     display: inline-flex;
-    font-size: .75rem;
+    font-size: 10px;
     font-weight: 500;
     line-height: 1rem;
     padding: 0.25rem 0.625rem;
@@ -62,4 +62,14 @@
 }
 .border_round{
     border-radius: 0.75rem !important;
+}
+.vue-tooltip {
+    background-color: red;
+}
+.fit-content{
+    width: fit-content;
+}
+.table_trip div{
+    width: 120px;
+    margin-right: 10px;
 }

@@ -12,9 +12,11 @@ import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 import { vFullscreenImg } from 'maz-ui'
 import UploadImage from '@/Components/UploadImage.vue'
+import UploadImageAuto from '@/Components/UploadImageAuto.vue'
+
+import BaseIcon from '@/Components/BaseIcon.vue'
 import {
-    mdiPlus,
-    mdiFilter, mdiPencilOutline, mdiTrashCan, mdiSquareEditOutline, mdiTrashCanOutline
+    mdiSquareEditOutline,mdiDeleteOutline , mdiCashMultiple ,mdiEyeOutline  ,mdiCheckCircle,mdiCheckAll
 } from '@mdi/js'
 const showContent = ref(false);
 // Hàm để toggle trạng thái của nội dung
@@ -29,8 +31,15 @@ const props = defineProps({
 })
 const isModalActive = ref(false);
 const isModalHistoryActive = ref(false);
+const showAction = ref(false);
 const images = ref([]);
 const swal = inject("$swal");
+const showButton = () =>{
+    showAction.value = true
+}
+const hideButton = () =>{
+    showAction.value = false
+}
 const form = useForm({
     id: null,
     payment_method: 'cash',
@@ -47,7 +56,7 @@ const detail = (order) => {
     isModalHistoryActive.value = false;
     form.order = order
     form.amount_unpaid = order.grand_total - order.price_percent
-    form.amount_received =   order.grand_total - order.price_percent
+    form.amount_received = order.grand_total - order.price_percent
 };
 const edit = (history) => {
     isModalActive.value = false;
@@ -67,7 +76,7 @@ const deleteHistory = (id) => {
         .then((result) => {
             if (result.isConfirmed) {
                 console.log(id);
-                form.post(route("admin.orders.package.deleteHistoryPayment", [form.order?.id,id]), { preserveState: false }, {
+                form.post(route("admin.orders.package.deleteHistoryPayment", [form.order?.id, id]), { preserveState: false }, {
                     onSuccess: () => {
                         swal.fire(
                             "Deleted!",
@@ -82,7 +91,7 @@ const deleteHistory = (id) => {
 const openAcceptPayment = (id) => {
     let query = {
         status: "complete"
-      };
+    };
     swal
         .fire({
             title: "Bạn có muốn?",
@@ -95,7 +104,7 @@ const openAcceptPayment = (id) => {
         })
         .then((result) => {
             if (result.isConfirmed) {
-                form.post(route("admin.orders.package.setPaymentComplete", [form.order?.id,id]),  { preserveState: false },{
+                form.post(route("admin.orders.package.setPaymentComplete", [form.order?.id, id]), { preserveState: false }, {
                     onSuccess: () => {
                         swal.fire("Thành Công!", "Đã thêm hợp đồng với khách hàng.", "success");
                     },
@@ -119,18 +128,79 @@ const save = () => {
         },
     });
 };
+const orderChangePacking = () => {
+    let query = {
+        status: "complete"
+      };
+    swal
+        .fire({
+            title: "Bạn có muốn?",
+            text: `Duyệt gói, thiết lập hợp đồng`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Có",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                router.post(route("admin.orders.package.orderComplete", props.order.id), query,
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã thêm hợp đồng với khách hàng.", "success");
+                    },
+                });
+
+            }
+        });
+}
+const orderChangePending = () => {
+    let query = {
+        status: "pending"
+      };
+    swal
+        .fire({
+            title: "Bạn có muốn?",
+            text: `Làm mới gói dịch vụ ${props.order.order_number} !`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Có",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+
+                router.post(route("admin.orders.package.orderChangeStatus", props.order.id), query,
+                    {
+                        preserveState: true,
+                        preserveScroll: true
+                    }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã làm mới hợp đồng, chuyển sang trạng thái chờ duyệt.", "success");
+                    },
+                });
+            }
+        });
+}
 </script>
 
 <template>
     <div>
         <!-- Modal -->
-        <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật" :hasSave="form?.amount_unpaid > 0 ? true  :false "   has-cancel @confirm="save"
+        <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật"
+        
+            :hasSave="form?.amount_unpaid > 0 ? true : false" has-cancel @confirm="save"
             :title="`Thanh toán cho ${form.order?.order_number}`">
             <div class="p-6 flex-auto">
                 <div v-if="form?.amount_unpaid > 0" class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                         <InputLabel for="amount_received" value="Số tiền" />
-                        <MazInputPrice  v-model="form.amount_received" currency="VND"  locale="vi-VN" :min="0" :max="(form?.order?.grand_total - form?.order?.price_percent)"
+                        <MazInputPrice v-model="form.amount_received" currency="VND" locale="vi-VN" :min="0"
+                            :max="(form?.order?.grand_total - form?.order?.price_percent)"
                             @formatted="formattedPrice = $event" />
                         <InputError class="mt-2" :message="form.errors.amount_received" />
                     </div>
@@ -149,8 +219,7 @@ const save = () => {
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 </div>
-                                <VueDatePicker v-model="form.payment_date"
-                                    placeholder="date" />
+                                <VueDatePicker v-model="form.payment_date" placeholder="date" />
                             </div>
                         </div>
                     </div>
@@ -161,8 +230,7 @@ const save = () => {
                         <InputError class="mt-2" :message="form.errors.note" />
                     </div>
                     <div class="w-full px-3">
-                        <UploadImage :max_files="4" v-model="form.images" :multiple="true"
-                                :label="`Chứng từ liên quan`" />
+                        <UploadImage :max_files="4" v-model="form.images" :multiple="true" :label="`Chứng từ liên quan`" />
                     </div>
                 </div>
 
@@ -186,29 +254,39 @@ const save = () => {
                                 {{ index + 1 }}
                             </td>
                             <td class="border-0">
-                                {{ payment?.payment_method == 'banking' ? 'Chuyển khoản' : payment?.payment_method == "cash" ? 'Tiền mặt' : 'Payoo'}}
+                                {{ payment?.payment_method == 'banking' ? 'Chuyển khoản' : payment?.payment_method == "cash"
+                                    ? 'Tiền mặt' : 'Payoo' }}
                             </td>
                             <td class="border-0">{{ payment?.payment_date }}</td>
                             <td class="border-0">{{ formatPrice(payment?.amount_received) }}₫</td>
                             <td class="border-0">
-                                <p class="btn_label"
-                                    :class="payment?.status != 'complete' ? 'partiallyPaid' : 'paid'">
+                                <p class="btn_label" :class="payment?.status != 'complete' ? 'partiallyPaid' : 'paid'">
                                     {{ payment?.status != 'complete' ? 'Chờ duyệt' : 'Đã duyệt' }}</p>
                             </td>
-                            <td class="border-0 flex">
+                            <td class="border-0 flex m-0 p-0">
 
-                                <div class="list_image flex mr-1" v-for="image in payment.order_package_payment" :key="image.id">
-                                    <img  v-fullscreen-img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
-                                </div>
+                                <!-- <div class="list_image flex mr-1" v-for="image in payment.order_package_payment"
+                                    :key="image.id">
+                                    <img v-fullscreen-img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
+                                </div> -->
+                                <!-- <UploadImage :max_files="4" v-model="form.images" :multiple="true"
+                                    :label="`Chứng từ liên quan`" /> -->
+                                <UploadImageAuto :idPayment="payment?.id" :max_files="1" v-model="form.images" :multiple="false" :old_images="payment?.order_package_payment" class="justify-start" />
                             </td>
                             <td class="border-0">
-                                {{ payment.status == 'complete' ? payment.user?.name : null}}
-                                <button v-if="payment.status != 'complete'"
-                                    class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary"  @click="openAcceptPayment(payment.id)">Duyệt </button>
+                                {{ payment.status == 'complete' ? payment.user?.name : null }}
+                                <button
+                                    v-if="payment.status != 'complete' && hasAnyPermission(['create-contract-complete'])"
+                                    class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary"
+                                    @click="openAcceptPayment(payment.id)">Duyệt </button>
+                                <button v-else-if="payment.status != 'complete'"
+                                    class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg" disable>Duyệt
+                                </button>
                             </td>
                             <td class="border-0">
-                                <BaseButton v-if="payment.status != 'complete'" color="gray" class="border-0 text=gray=300 hover:text-black"
-                                    :icon="mdiTrashCanOutline" small @click="deleteHistory(payment.id)" />
+                                <BaseButton v-if="payment.status != 'complete'" color="gray"
+                                    class="border-0 text=gray=300 hover:text-black" :icon="mdiTrashCanOutline" small
+                                    @click="deleteHistory(payment.id)" />
                             </td>
                         </tr>
 
@@ -216,63 +294,111 @@ const save = () => {
                 </table>
             </div>
         </CardBoxModal>
-        <div @click.prevent="toggleContent" class=" grid   text-sm px-3 mt-2 mb-1 text-gray-400" :class="status == 'pending' ? 'grid-cols-8' :  'grid-cols-10'">
-            <div>
-                <a class="flex items-center text-blue-600 text-[12px]">
+        <div  @mouseover="showButton" @mouseout="hideButton"  class="grid grid-cols-11  text-sm px-3 p-1 text-gray-400 border-b-[1px] border-[#f5f5f5] text-left items-center"
+            >
+            <div @click.prevent="toggleContent">
+                <a class="flex items-center text-blue-600 text-[10px]">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5 5 1 1 5" />
-                    </svg>{{ order?.order_number }}</a>
+                    </svg>{{ order?.idPackage }}</a>
             </div>
-            <div class="text-center">
-                <p>{{ formatPrice(order?.grand_total) }}</p>
-            </div >
-
-            <div class="text-center">
+            <div class="text-left">
+                <p>{{ formatDateOnly(order?.created_at) }}</p>
+            </div>
+            <!-- <div class="text-left">
+                <p>{{ order?.idPackage }}</p>
+            </div> -->
+            <div class="text-left text-[12px]">
                 <p>{{ order?.product_service?.name }}</p>
             </div>
-            <div class="text-center">
+            <div class="text-left text-[12px]">
+                <p>{{ formatDateOnly(order?.time_approve) }}</p>
+            </div>
+            <div class="text-left ">
+                <p>{{ formatPrice(order?.grand_total) }}</p>
+            </div>
+            <div class="text-left">
                 <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
             </div>
-            <div class="text-center">
-                <p>{{ formatTimeDayMonthyear(order?.created_at) }}</p>
-            </div>
-            <div class="text-center">
+            <div class="text-left text-[12px]">
                 <p>{{ order?.customer?.name }}</p>
             </div>
-            <div class="text-center ">
-                <p class="btn_label "
+            <div class="text-left text-[10px] ">
+                <p class="btn_label text-[10px]"
                     :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
                     {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' : order?.price_percent == 0
                         ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
 
             </div>
-            <div class="text-center ">
-                <p class="btn_label "
-                    :class="order.payment_check ?  'paid' : 'partiallyPaid' ">
+            <div class="text-left ">
+                <p class="btn_label text-[10px] " :class="order.payment_check ? 'paid' : 'partiallyPaid'">
                     {{ order.payment_check ? 'đã duyệt' : 'chờ duyệt' }}</p>
-
             </div>
 
-
-            <div class="flex">
-                <p v-if="status == 'pending' "></p>
-                <p v-if="status == 'decline' " class="text-[12px] text-center">
+            <div v-if="status != 'decline' && status != 'complete'">
+                <p :class="order.product_service_owner?.state == 'active' ? 'text-green' : 'text-red'">
+                    {{ order.product_service_owner?.state }}
+                </p>
+            </div>
+            <div class="flex" v-if="status == 'decline' || status == 'complete'">
+                <p v-if="status == 'decline'" class="text-[12px] text-left">
                     {{ order.reason }}
                 </p>
-                <p v-if="status == 'complete' ">
-                    {{  order.package_reviewer?.name }}
+                <p v-if="status == 'complete'">
+                    {{ order.package_reviewer?.name }}
                 </p>
 
             </div>
-            <div>
-                <p v-if="status == 'decline' ">
-                     {{ order.package_reviewer ? order.package_reviewer?.name : 'hệ thống' }}
+            <!-- <div v-if="status == 'decline' || status == 'complete'">
+                <p v-if="status == 'decline'">
+                    {{ order.package_reviewer ? order.package_reviewer?.name : 'hệ thống' }}
                 </p>
-                <p v-if="status == 'complete' ">
-                   <Link></Link>
+                <p v-if="status == 'complete'">
+                    <Link>
+                    </Link>
                 </p>
+            </div> -->
+            <div  class="flex">
+                    <BaseIcon :path="mdiCashMultiple " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" data-toggle="modal"
+                        data-target="#exampleModal" @click="detail(order)" v-tooltip.top="'Thanh toán'"
+                          size="20">
+                    </BaseIcon>
+                    <a   :href="route('admin.orders.package.detail', order?.id)" target="_blank"  v-tooltip.top="'Chi tiết gói'" >
+                        <BaseIcon :path="mdiEyeOutline " class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"
+
+                            size="20">
+                        </BaseIcon>
+                    </a>
+                    <a  v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`" target="_blank" >
+                        <BaseIcon :path="mdiSquareEditOutline " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" v-tooltip.top="'Chỉnh sửa'"
+                             size="20">
+                        </BaseIcon>
+                    </a>
+                    <BaseIcon :path="mdiDeleteOutline " class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"  v-tooltip.top="'Hủy gói'"
+                    data-toggle="modal" data-target="#exampleModalDecline" @click="openDecline(order)"
+                        v-if="status == 'pending' || status == 'complete'"  size="20">
+                    </BaseIcon>
+                    <BaseIcon :path="mdiCheckAll " class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"  v-tooltip.top="'Duyệt gói'"
+                        v-if="hasAnyPermission(['create-contract-complete']) && status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
+                        @click="orderChangePacking(order)"  size="20">
+                    </BaseIcon>
+                    <!-- <button v-if="status == 'pending' || status == 'complete'"
+                        class="border text-red-700 rounded-lg bg-gray-100 px-3 py-2" data-toggle="modal"
+                        data-target="#exampleModalDecline" @click="openDecline(order)">Hủy gói</button>
+                    <Link v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`"
+                        class="border text-blue-700 rounded-lg bg-gray-100 px-3 py-2">Chỉnh sửa</Link>
+                    <button v-if="status == 'decline'" class="border rounded-lg bg-gray-100 px-3 py-2"
+                        @click="orderChangePending(order)">Làm mới hợp đồng</button>
+                    <button v-if="status == 'decline'" class="border text-red-700 rounded-lg bg-gray-100 px-3 py-2"
+                        data-toggle="modal" data-target="#exampleModalDelete" @click="deleteOrder(order)">Xóa gói</button>
+                    <button
+                        v-if="hasAnyPermission(['create-contract-complete']) && status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
+                        @click="orderChangePacking(order)"
+                        class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary">Duyệt gói</button>
+                    <button v-else-if="status == 'pending'" disabled
+                        class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg">Duyệt gói</button> -->
             </div>
         </div>
 
@@ -282,7 +408,7 @@ const save = () => {
                 <div class="title_information flex justify-between p-2">
                     <h3>Thông tin khách hàng</h3>
                     <button class="border  rounded-lg bg-[#5cb85c] text-white px-3 py-2" type="button" data-toggle="modal"
-                                    data-target="#exampleModal" @click="detail(order)">Thanh toán</button>
+                        data-target="#exampleModal" @click="detail(order)">Thanh toán</button>
                 </div>
                 <div class=" grid-cols-4 gap-4 flex justify-between bg-white py-3 px-3">
                     <div class="block">
@@ -297,12 +423,13 @@ const save = () => {
                         <!-- <p class="text-black text-sm">Hình thức thanh toán</p> -->
                         <div class="text-sm rounded-lg">
                             <p class="text-sm"><strong>Ngày:</strong> {{ formatDate(order?.created_at) }} </p>
-                            <p class="text-sm"><strong>Người tạo đơn:</strong> {{ order?.saler ? order?.saler?.name : 'Admin' }} </p>
+                            <p class="text-sm"><strong>Người tạo đơn:</strong> {{ order?.saler ? order?.saler?.name :
+                                'Admin' }} </p>
                         </div>
                     </div>
                 </div>
                 <table class="table w-full text-sm text-left text-gray-500 bg-white rounded-lg">
-                    <thead class="text-xs text-center text-gray-700 uppercase">
+                    <thead class="text-xs text-left text-gray-700 uppercase">
                         <tr>
                             <th>Sản phẩm</th>
                             <th>Ưu đãi</th>
@@ -322,7 +449,8 @@ const save = () => {
                             <td class="border-0">{{ formatPrice(order.grand_total) }}₫</td>
                             <td class="border-0">{{ formatPrice(order.price_percent) }}</td>
                             <td class="border-0 text-right">
-                                <Link :href="route('admin.orders.package.detail', order?.id)" class=" text-sm text-blue hover:opacity-0.8 mx-1">
+                                <Link :href="route('admin.orders.package.detail', order?.id)"
+                                    class=" text-sm text-blue hover:opacity-0.8 mx-1">
                                 Chi tiết hóa đơn
                                 </Link>
 
@@ -341,7 +469,7 @@ const save = () => {
 
 
 <style scope>
-.partiallyPaid {
+/* .partiallyPaid {
     background-color: rgb(254 252 232/var(--tw-bg-opacity));
     border-color: rgb(254 240 138/var(--tw-border-opacity));
     border-style: solid;
@@ -373,5 +501,5 @@ const save = () => {
     font-weight: 500;
     line-height: 1rem;
     padding: 0.25rem 0.625rem;
-}
+} */
 </style>

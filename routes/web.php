@@ -110,3 +110,4 @@ Route::middleware(['auth'])->group(
     }
 
 );
+require __DIR__ . '/dashboard.php';
