@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Order\app\Http\Controllers\CskhController;
 use Modules\Order\app\Http\Controllers\HistoryPaymentController;
 use Modules\Order\app\Http\Controllers\OrderController;
 use Modules\Order\app\Http\Controllers\PaymentController;
@@ -78,6 +79,8 @@ Route::middleware(['auth'])->group(
                 Route::post('{order}/updateOrderGift/{user}', [OrderController::class, 'updateOrderGift'])->name('updateOrderGift');
                 Route::prefix('package')->as('package.')->group(function () {
                     Route::get('all', [OrderPackageController::class, 'index'])->name('index');
+                    // cskh
+                    Route::get('cskh', [CskhController::class, 'cskh'])->name('cskh');
                     Route::get('pending', [OrderPackageController::class, 'index'])->name('pending');
                     Route::get('decline', [OrderPackageController::class, 'listOrderCancel'])->name('decline');
                     Route::get('complete', [OrderPackageController::class, 'listOrderComplete'])->name('complete');

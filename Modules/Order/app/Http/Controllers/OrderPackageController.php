@@ -55,46 +55,29 @@ class OrderPackageController extends Controller
     }
     public function index(Request $request)
     {
-        // $order = Order::with('discount')->find(1);
-        // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
-        // $orders =  OrderPackage::with('customer','product_service')->where('status','pending')->get();
         $orders  = $this->getOrder($request,$status);
-        // foreach($orders as $order){
-        //     dd($order->checkPaymentComplete());
-        // }
-        // return $orders;
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
+
     public function listPending(Request $request)
     {
-        // $order = Order::with('discount')->find(1);
-        // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
-        // $orders =  OrderPackage::with('customer','product_service')->where('status','pending')->get();
         $orders  = $this->getOrder($request,$status);
-        // foreach($orders as $order){
-        //     dd($order->checkPaymentComplete());
-        // }
-        // return $orders;
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listOrderCancel(Request $request)
     {
-        // $order = Order::with('discount')->find(1);
-        // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'decline';
         $orders  = $this->getOrder($request,$status);
-        // $orders =  OrderPackage::with('customer','product_service')->where('status','decline')->get();
-        //return $orders;
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
@@ -104,8 +87,6 @@ class OrderPackageController extends Controller
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'complete';
         $orders  = $this->getOrder($request,$status);
-        // return $orders;
-        // $orders =  OrderPackage::with('customer','product_service')->where('status','complete')->orderBy('created_at','desc')->get();
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
@@ -584,5 +565,6 @@ class OrderPackageController extends Controller
             }
         )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(20);
     }
+
 
 }

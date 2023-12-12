@@ -93,6 +93,12 @@ export default [{
                 route_list: null
             },
             {
+                route: 'admin.orders.package.cskh',
+                label: 'CSKH',
+                permissions: ['super-admin','viewer-custommer', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
                 route: 'visit.pending',
                 label: 'Đặt lịch tham quan',
 
@@ -155,12 +161,14 @@ export default [{
         icon: mdiFileTreeOutline,
         permissions: ['view-user', 'viewer-custommer', 'leader-shipper'],
         route_list: ['customer.index', 'shippers.index'],
-        menu: [{
-            route: 'customer.index',
-            label: 'Customer',
-            permissions: ['super-admin', 'viewer-custommer'],
-            route_list: null
-        }, ]
+        menu: [
+            {
+                route: 'customer.index',
+                label: 'Customer',
+                permissions: ['super-admin', 'viewer-custommer']
+            },
+
+    ]
     },
     {
         label: 'Quản lý Shipper',

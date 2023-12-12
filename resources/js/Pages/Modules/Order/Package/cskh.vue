@@ -11,7 +11,7 @@ import PackageBar from "@/Pages/Modules/Order/Package/PackageBar.vue";
 import ModalDecline from "./ModalDecline.vue";
 import ModelRefund from "../ModelRefund.vue";
 import {
-    mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll,mdiTrashCanOutline
+    mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll,mdiTrashCanOutline,mdiOpenInNew
 } from '@mdi/js'
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -404,26 +404,17 @@ const deleteOrder = (order) => {
         <SectionMain class="p-3 mt-16 rounded-xl">
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
                 <div>
-                    <h2 class="font-semibold flex mr-2">
-                        Quản lý đơn hợp đồng
+                    <h2 class="font-semibold flex mr-2 mb-2">
+                        Quản lý chăm sóc khách hàng
                     </h2>
-                </div>
-                <div class="flex">
-                    <div>
-                        <Link v-if="hasAnyPermission(['add-new-package'])" :href="route('admin.orders.package.create')"
-                            class="px-2 py-2 rounded-2xl text-sm text-white  rounded-lg border mx-1 bg-btn_green hover:bg-[#318f02] hover:bg-[#008000]">
-                        Thêm đơn hàng hợp đồng
-                        </Link>
-                    </div>
                 </div>
             </div>
             <div>
-                <PackageBar :statusGroup="statusGroup"></PackageBar>
                 <ModalDecline></ModalDecline>
                 <ModelRefund></ModelRefund>
                 <div class="w-full flex justify-between">
                     <div class="mr-4 flex-col flex">
-                            <div class=" text-gray-500">
+                            <div class=" text-gray-500 ">
                                 <label for>Loại hình</label>
                             </div>
                             <div class="w-[160px]">
@@ -526,9 +517,13 @@ const deleteOrder = (order) => {
                                         <th scope="col" class="px-3 py-2 text-left">Số tiền</th>
                                         <th scope="col" class="px-3 py-2 text-left">Loại</th>
                                         <th scope="col" class="px-3 py-2 text-left">Khách hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Số điện thoại</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Số lần giao quà</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Hợp đồng</th>
                                         <th scope="col" class="px-3 py-2 text-left">Trạng thái</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT duyệt</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT gói</th>
+                                        
                                         <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Người duyệt cuối</th>
                                         <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Tài liệu</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hành động</th>
@@ -556,6 +551,20 @@ const deleteOrder = (order) => {
                                         </td>
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.customer?.name }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                             {{ hasAnyPermission(['super-admin']) ? order?.customer?.phone_number :  hidePhoneNumber(order?.customer?.phone_number) }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                             {{ order.product_service_owner?.history_gift?.length }}/{{ order.product_service_owner?.product?.number_deliveries }}
+                                        </td>
+                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <Link>
+                                                <BaseIcon :path="mdiOpenInNew"
+                                                class=" text-blue-400 rounded-lg mr-2 hover:text-blue-700"
+                                                v-tooltip.top="'Chi tiết hợp đồng'" size="20"></BaseIcon>
+                                            </Link>
+                                               
+                                        </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="btn_label "
                                                 :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
@@ -609,12 +618,12 @@ const deleteOrder = (order) => {
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
                                                 v-tooltip.top="'Hủy gói'" data-toggle="modal"
                                                 data-target="#exampleModalDecline" @click="openDecline(order)"
-                                                v-if="status == 'pending' || status == 'complete'" size="20">
+                                                v-if="order.status == 'pending' || order.status == 'complete'" size="20">
                                             </BaseIcon>
                                             <BaseIcon :path="mdiCheckAll"
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"
                                                 v-tooltip.top="'Duyệt gói'"
-                                                v-if="hasAnyPermission(['create-contract-complete']) && status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
+                                                v-if="hasAnyPermission(['create-contract-complete']) && order.status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
                                                 @click="orderChangePacking(order)" size="20">
                                             </BaseIcon>
                                         </td>
