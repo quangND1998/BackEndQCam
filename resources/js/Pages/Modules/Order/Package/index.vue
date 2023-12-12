@@ -620,5 +620,5 @@ td{
     background: #fff;
 }
 </style>
-<style src="@vueform/multiselect/themes/default.css"></style>
+
 
