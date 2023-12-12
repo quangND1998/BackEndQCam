@@ -67,6 +67,22 @@ class OrderPackageController extends Controller
         // }
         // return $orders;
         $statusGroup = $this->groupByOrderStatus();
+        return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+    }
+    public function listPending(Request $request)
+    {
+        // $order = Order::with('discount')->find(1);
+        // return $order;
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'pending';
+        // $orders =  OrderPackage::with('customer','product_service')->where('status','pending')->get();
+        $orders  = $this->getOrder($request,$status);
+        // foreach($orders as $order){
+        //     dd($order->checkPaymentComplete());
+        // }
+        // return $orders;
+        $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listOrderCancel(Request $request)

@@ -35,7 +35,7 @@ const isMenuNavBarActive = ref(false)
 
       </div>
       <div
-        class="max-h-screen-menu overflow-y-auto lg:overflow-visible absolute w-screen top-14 right-0  lg:w-auto lg:flex lg:static lg:shadow-none  left-0 justify-end"
+        class="max-h-screen-menu overflow-y-auto bg-white lg:overflow-visible absolute w-screen top-14 right-0  lg:w-auto lg:flex lg:static lg:shadow-none  left-0 justify-end"
         :class="[isMenuNavBarActive ? 'block' : 'hidden']">
         <NavBarMenuList :menu="menu" @menu-click="menuClick" />
       </div>

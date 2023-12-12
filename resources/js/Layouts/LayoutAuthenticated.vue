@@ -43,7 +43,7 @@ const menuClick = (event, item) => {
 
 <template>
   <div :class="{
-    'overflow-hidden lg:overflow-visible': isAsideMobileExpanded
+    'overflow-hidden lg:overflow-visible bg-white': isAsideMobileExpanded
   }">
 
     <div :class="[layoutAsidePadding, { 'ml-60 lg:ml-0': isAsideMobileExpanded }]"
