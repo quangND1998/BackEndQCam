@@ -20,7 +20,6 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 
-// import Multiselect from '@vueform/multiselect'
 
 
 import SearchInput from "vue-search-input";
@@ -281,7 +280,6 @@ const seachFilter =()=>{
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
 <style scope>
 .string_long {
     width: 200px;

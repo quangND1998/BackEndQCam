@@ -54,7 +54,7 @@ const asideLgCloseClick = (event) => {
   </aside>
 </template>
 
-<style scope>
+<style >
 .aside-menu-dropdown li:hover{
     background-color: rgb(246 247 250 / var(--tw-bg-opacity))
 }

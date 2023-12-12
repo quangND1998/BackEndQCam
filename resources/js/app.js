@@ -33,7 +33,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 import VueCountdown from '@chenfengyuan/vue-countdown';
-
+import "@vueform/multiselect/themes/default.css"
 // import 'vue3-carousel/dist/carousel.css'
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

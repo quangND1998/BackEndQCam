@@ -13,7 +13,6 @@ import TextInput from '@/Components/TextInput.vue';
 import SectionTitleLineWithButton from '@/Components/SectionTitleLineWithButton.vue'
 import BaseButtons from '@/Components/BaseButtons.vue';
 import PillTag from '@/Components/PillTag.vue'
-import Multiselect from "@vueform/multiselect";
 import Dropdown from '@/Components/Dropdown.vue';
 import moment from 'moment';
 import { useHelper } from '@/composable/useHelper';
