@@ -245,6 +245,6 @@ const cancelState = (visit) => {
 </template>
 <!-- <style src="@vueform/multiselect/themes/default.css">
 </style> -->
-<style scoped>.collapse {
+<style>.collapse {
     visibility: inherit;
 }</style>
