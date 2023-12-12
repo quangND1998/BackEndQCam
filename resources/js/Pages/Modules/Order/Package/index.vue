@@ -497,44 +497,44 @@ const deleteOrder = (order) => {
                                                 {{ order?.order_number }}
                                             </a>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 ">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p>{{formatTimeDayMonthyear(order?.created_at) }}</p>
                                             </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 ">{{ order?.idPackage }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{ order?.product_service?.name }}
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.idPackage }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.product_service?.name }}
                                         </td>
 
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{ order?.time_approve }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{ formatPrice(order?.grand_total)
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.time_approve }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ formatPrice(order?.grand_total)
                                         }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
                                         </td>
 
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{ order?.customer?.name }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.customer?.name }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="btn_label "
                                                 :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
                                                 {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' :
                                                     order?.price_percent == 0 ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="btn_label " :class="order.payment_check ? 'paid' : 'partiallyPaid'">
                                                 {{ order.payment_check ? 'đã duyệt' : 'chờ duyệt' }}</p>
                                         </td>
 
-                                        <td class="whitespace-nowrap text-left px-3 py-2">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p
                                                 :class="order.product_service_owner?.state == 'active' ? 'text-green' : 'text-red'">
                                                 {{ order.product_service_owner?.state }}
                                             </p>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2"  v-if="status == 'decline'">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500"  v-if="status == 'decline'">
                                             <p  class="text-[12px] text-left">
                                                 {{ order.reason }}
                                             </p>
                                         </td>
-                                        <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2">
+                                        <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order.package_reviewer?.name }}
                                         </td>
                                         <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2">
