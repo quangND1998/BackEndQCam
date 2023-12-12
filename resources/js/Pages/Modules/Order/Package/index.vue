@@ -529,6 +529,7 @@ const deleteOrder = (order) => {
                                         <th scope="col" class="px-3 py-2 text-left">Trạng thái</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT duyệt</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT gói</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Người tạo</th>
                                         <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Người duyệt cuối</th>
                                         <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Tài liệu</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hành động</th>
@@ -572,6 +573,9 @@ const deleteOrder = (order) => {
                                                 :class="order.product_service_owner?.state == 'active' ? 'text-green' : 'text-red'">
                                                 {{ order.product_service_owner?.state }}
                                             </p>
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order.saler?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500"  v-if="status == 'decline'">
                                             <p  class="text-[12px] text-left">
