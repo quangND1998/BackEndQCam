@@ -595,6 +595,8 @@ const deleteOrder = (order) => {
 
 }
 td{
+    font-size: 12px;
+    color: rgb(107 114 128 / var(--tw-text-opacity));
     font-family:    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
