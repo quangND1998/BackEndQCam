@@ -554,13 +554,13 @@ const deleteOrder = (order) => {
                                                     class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700" size="20">
                                                 </BaseIcon>
                                             </a>
-                                            <a v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`"
-                                                target="_blank">
+                                            <Link v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`"
+                                              >
                                                 <BaseIcon :path="mdiSquareEditOutline"
                                                     class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700"
                                                     v-tooltip.top="'Chỉnh sửa'" size="20">
                                                 </BaseIcon>
-                                            </a>
+                                            </Link>
                                             <BaseIcon :path="mdiDeleteOutline"
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
                                                 v-tooltip.top="'Hủy gói'" data-toggle="modal"
