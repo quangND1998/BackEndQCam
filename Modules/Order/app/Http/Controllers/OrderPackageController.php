@@ -259,7 +259,7 @@ class OrderPackageController extends Controller
                 'time_reservations' => 'required|gt:0',
                 'price_percent' => 'required|gt:-1',
                 'product_selected' => 'required',
-                'time_approve' =>'required',
+                'time_approve' =>'required'
             ]
         );
         $order = OrderPackage::findOrFail($id);
