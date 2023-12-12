@@ -97,7 +97,7 @@ const save = () => {
                                         <InputError class="mt-2" :message="form.errors.date_time" />
                                     </div>
 
-                       
+
 
                         <div class="my-3">
 
@@ -113,7 +113,7 @@ const save = () => {
                                         :max="10000" size="md" color="secondary" style="width: 200px;" />
                                     <InputError class="mt-2" :message="form.errors.number_adult" />
                                 </div>
-                                  
+
                                 </div>
 
 
@@ -154,7 +154,7 @@ const save = () => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>
 
 
 

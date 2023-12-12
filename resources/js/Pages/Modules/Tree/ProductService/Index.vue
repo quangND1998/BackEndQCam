@@ -449,7 +449,7 @@ const Delete = (id) => {
                                     {{ product_service.number_deliveries }}
                                 </td>
                                 <td class="px-6 py-1">
-                                    
+
                                     {{ product_service.life_time }}
                                 </td>
                                 <td class="px-6 py-1">
@@ -511,8 +511,8 @@ const Delete = (id) => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
-<style scope>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>
+<style scoped>
 .ql-toolbar{
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;

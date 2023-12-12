@@ -148,7 +148,7 @@ const selectAll = computed({
                                     Chiết Khấu
                                 </th>
 
-                                
+
 
                             </tr>
                         </thead>
@@ -487,4 +487,4 @@ const selectAll = computed({
 
         </SectionMain>
 </LayoutAuthenticated></template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>

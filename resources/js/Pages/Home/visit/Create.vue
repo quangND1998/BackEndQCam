@@ -140,14 +140,14 @@ const save = () => {
     form.post(route('visit.saveShedule'), {
             onError: () => {
 
-               
+
             },
             onSuccess: () => {
                 form.reset()
-       
+
             }
         });
-    
+
 }
 
 
@@ -166,7 +166,7 @@ const save = () => {
                     <div class="col-span-2">
 
                         <div class="my-3">
-                          
+
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <div class="my-3">
@@ -194,7 +194,7 @@ const save = () => {
                                     <div class="my-3">
                                         <label for="number_adult" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Số người lớn *</label>
-                                       
+
 
                                         <MazInputNumber v-model="form.number_adult" placeholder="Enter number" :min="1"
                                             :max="10000" size="md" color="secondary" style="width: 200px;" />
@@ -228,7 +228,7 @@ const save = () => {
                                         <label for="number_children"
                                             class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Số trẻ em *</label>
-                                       
+
                                             <MazInputNumber v-model="form.number_children" placeholder="Enter number" :min="0"
                                             :max="10000" size="md" color="secondary" style="width: 200px;" />
                                         <InputError class="mt-2" :message="form.errors.number_children" />
@@ -247,7 +247,7 @@ const save = () => {
                                         service.product.name }} ({{ service.trees.length > 0 ? service.trees[0].name : null }})
                                 </option>
 
-                              
+
                             </select>
                             <InputError class="mt-2" :message="form.errors.product_service_owner_id" />
                         </div>
@@ -273,7 +273,7 @@ const save = () => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>
 
 
 

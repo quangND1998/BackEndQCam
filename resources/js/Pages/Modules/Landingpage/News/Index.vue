@@ -268,8 +268,8 @@ const Delete = (id) => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
-<style scope>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>
+<style scoped>
 .string_long {
     width: 200px;
     overflow: hidden;

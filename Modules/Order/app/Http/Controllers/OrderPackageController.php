@@ -67,7 +67,7 @@ class OrderPackageController extends Controller
         // }
         // return $orders;
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listPending(Request $request)
     {
@@ -83,7 +83,7 @@ class OrderPackageController extends Controller
         // }
         // return $orders;
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listOrderCancel(Request $request)
     {
@@ -96,7 +96,7 @@ class OrderPackageController extends Controller
         // $orders =  OrderPackage::with('customer','product_service')->where('status','decline')->get();
         //return $orders;
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderCancel', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listOrderComplete(Request $request)
     {
@@ -107,7 +107,7 @@ class OrderPackageController extends Controller
         // return $orders;
         // $orders =  OrderPackage::with('customer','product_service')->where('status','complete')->orderBy('created_at','desc')->get();
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderComplete', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function partiallyPaid(Request $request)
     {
@@ -122,7 +122,7 @@ class OrderPackageController extends Controller
         )->whereColumn('price_percent', '<', 'grand_total')
         ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(15);
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function drafPaid(Request $request){
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
@@ -136,7 +136,7 @@ class OrderPackageController extends Controller
         )->where('price_percent', '=', 0)
         ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(15);
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function orderPackage(Request $request){
         $user = Auth::user();

@@ -115,7 +115,7 @@ const props = defineProps({
         <p class="text-lg italic mt-2">Cảm ơn quý khách đã sử dụng dịch vụ của cam mặt trời!</p>
     </div>
 </template>
-<style scope>
+<style scoped>
 /* .swiper-button-prev, .swiper-button-next {
     position: absolute;
     position: absolute;

@@ -82,13 +82,13 @@ const limit_tree = computed(() => {
                                 <th scope="col" class="py-3 px-6 text-xs">Sản phẩm</th>
                                 <th scope="col" class="py-3 px-6 text-xs">Thời gian</th>
                                 <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
-                                
+
                             </tr>
                         </thead>
                         <tbody v-if="customer">
                             <tr v-for="(gift, index) in gifts.data" :key="gift.id"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                
+
                                      <th scope="row"
                                     class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ index + 1 }}
@@ -122,4 +122,4 @@ const limit_tree = computed(() => {
         </SectionMain>
     </LayoutProfileDetail>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>

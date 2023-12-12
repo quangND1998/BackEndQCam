@@ -51,9 +51,9 @@ const state = reactive({
     editorOption: {
         placeholder: 'core',
         modules: {
-           
+
         },
-      
+
     },
     disabled: false
 })
@@ -73,9 +73,9 @@ const state = reactive({
                 <p class="text-center">hoanghuyenn2k@gmail.com</p>
 
             </div>
-           
+
          </div>
-         
+
          <div class="  my-5 bg-white  dark:bg-gray-500 rounded-lg"
             style="box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
             <ul class="flex flex-wrap">
@@ -107,7 +107,7 @@ const state = reactive({
                     <Link href="" class="flex">
                     <Icon icon="gallery" class=" mr-2" />Images</Link>
                 </li>
-               
+
 
                 <li class="mx-5 text-base font-medium text-[#6C757D] hover:text-[#FF9B00] flex dark:text-white inline-block my-2"
                     v-tooltip.top="'Brochure'"
@@ -116,11 +116,11 @@ const state = reactive({
                     <Icon icon="clipboard" class=" mr-2" />
                     Brochure</Link>
                 </li>
-               
+
             </ul>
         </div>
-            
+
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>

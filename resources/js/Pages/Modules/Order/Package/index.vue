@@ -588,7 +588,7 @@ const deleteOrder = (order) => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style>
+<style scoped>
 .body_fix {
     overflow: hidden;
 }
@@ -613,5 +613,5 @@ const deleteOrder = (order) => {
     background: #fff;
 }
 </style>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>
 

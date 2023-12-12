@@ -334,4 +334,4 @@ const limit_tree = computed(() => {
         </SectionMain>
     </LayoutProfileDetail>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>

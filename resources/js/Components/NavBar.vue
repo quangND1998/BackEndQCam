@@ -42,7 +42,7 @@ const isMenuNavBarActive = ref(false)
     </div>
   </nav>
 </template>
-<style scope>
+<style scoped>
 .max-h-screen-menu{
     position: fixed;
     top: 0px;

@@ -155,9 +155,9 @@ const props = defineProps({
                                 class="bg-black text-white p-2 my-2 w-3/5 text-center justify-center rounded-lg"
                                 :icon="mdiContentSaveMove" small label="In đơn hàng" />
                         </div>
-                        
+
                     </div>
-                   
+
                 </div>
 
             </div>
@@ -165,4 +165,4 @@ const props = defineProps({
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>

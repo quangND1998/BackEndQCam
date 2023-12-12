@@ -162,7 +162,7 @@ const seachFilter =()=>{
                                     <option value="product">Sản phẩm</option>
                                     <option value="service">Dịch vụ</option>
                                     <option value="farm">Nông trại</option>
-                        
+
                                 </select>
                             </div>
                         </div>
@@ -177,12 +177,12 @@ const seachFilter =()=>{
 
                                     <option :value="1">Kích hoạt</option>
                                     <option :value="0">Không kích hoạt</option>
-                        
+
                                 </select>
                             </div>
                         </div>
                 </div>
-                
+
                 <div class="right">
                     <BaseButton color="info" class="bg-btn_green text-white p-2 " :icon="mdiPlus" small @click="
                         isModalActive = true;
@@ -208,7 +208,7 @@ const seachFilter =()=>{
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option :value="1">Kích hoạt</option>
                     <option :value="0">Không kích hoạt</option>
-                   
+
                 </select>
                 <InputError class="mt-2" :message="form.errors.status" />
 
@@ -281,8 +281,8 @@ const seachFilter =()=>{
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
-<style scope>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>
+<style scoped>
 .string_long {
     width: 200px;
     overflow: hidden;

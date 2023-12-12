@@ -381,13 +381,13 @@ const saveGift =()=> {
             </div>
         </div>
         <div class="mx-5">
-       
+
        <div class="my-3">
            <BaseButton color="info" @click="saveGift()"
                class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center rounded-lg"
                :icon="mdiContentSaveMove" small label="Lưu Giao quà" />
        </div>
-    
+
    </div>
     </div>
 </template>

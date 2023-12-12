@@ -134,7 +134,7 @@ const AddProductVouchers = () => {
         })
         .then((result) => {
             if (result.isConfirmed) {
-               
+
                 router.post(route("admin.voucher.saveItems", props.voucher.id), query,
                     {
                         preserveState: true,
@@ -164,7 +164,7 @@ const RemoveMutipleProduct =()=>{
         })
         .then((result) => {
             if (result.isConfirmed) {
-               
+
                 router.delete(route("admin.voucher.deleteItems",  query),
                     {
                         preserveState: true,
@@ -190,7 +190,7 @@ const RemoveMutipleProduct =()=>{
         })
         .then((result) => {
             if (result.isConfirmed) {
-               
+
                 form.delete(route("admin.voucher.deleteProductVoucher", id),
                     {
                         preserveState: true,
@@ -198,7 +198,7 @@ const RemoveMutipleProduct =()=>{
                     }, {
                     onSuccess: () => {
                         swal.fire("Thành Công!", "Đã xóa sản phẩm.", "success");
-                        
+
                     },
                 });
             }
@@ -236,7 +236,7 @@ const RemoveMutipleProduct =()=>{
                 classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-3/5 xl:w-8/12 z-50 overflow-auto"
                 :title="editMode ? 'Sửa Sản Phẩm' : 'Thêm sản phẩm'">
                 <div class="w-3/12">
-                 
+
                     <form>
                         <label for="default-search"
                             class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -383,7 +383,7 @@ const RemoveMutipleProduct =()=>{
                                 <td class="px-6 py-4">
                                     <BaseButton :icon="mdiTrashCanOutline" @click="RemoveProductVoucher(product_voucher.id)" small class="text-[#D12953] " />
                                 </td>
-                             
+
                             </tr>
                         </tbody>
                     </table>
@@ -394,4 +394,4 @@ const RemoveMutipleProduct =()=>{
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>

@@ -461,7 +461,7 @@ const orderChangePending = () => {
 
 
 
-<style scope>
+<style scoped>
 /* .partiallyPaid {
     background-color: rgb(254 252 232/var(--tw-bg-opacity));
     border-color: rgb(254 240 138/var(--tw-border-opacity));

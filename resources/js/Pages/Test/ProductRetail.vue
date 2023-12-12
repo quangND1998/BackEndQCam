@@ -51,9 +51,9 @@ const state = reactive({
     editorOption: {
         placeholder: 'core',
         modules: {
-           
+
         },
-      
+
     },
     disabled: false
 })
@@ -109,25 +109,25 @@ const state = reactive({
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="multiple_files">Upload Images</label>
                         <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="multiple_files" type="file" multiple>
                         </div>
-                       
+
                     </div>
-                    <div>                 
+                    <div>
                         <div class="">
                             <InputLabel for="name" value="Description" />
                             <label class="input w-full" for="recipient-name">
-                              
+
                                 <quill-editor v-model:value="state.content"></quill-editor>
-                                
+
                             </label>
                             <InputError class="mt-2" :message="form.errors.user_manual" />
                         </div>
                     </div>
                 </div>
-               
 
-               
 
-                
+
+
+
             </CardBoxModal>
             <!-- End Modal -->
             <div class="mt-5">
@@ -136,7 +136,7 @@ const state = reactive({
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3 flex items-center">
-                        <input type="checkbox" 
+                        <input type="checkbox"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                         #
                     </th>
@@ -153,7 +153,7 @@ const state = reactive({
                         description
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        
+
                     </th>
 
                 </tr>
@@ -162,7 +162,7 @@ const state = reactive({
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 " >
                     <th scope="col" class="px-6 py-3 ">
                         <div class="flex items-center ">
-                            <input id="default-checkbox" type="checkbox" 
+                            <input id="default-checkbox" type="checkbox"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                            1
                         </div>
@@ -176,8 +176,8 @@ const state = reactive({
                             <img src="../../../../public/assets/images/new4.png" class="w-16 h-16 object-cover mx-1 inline-block" alt="">
                             <img src="../../../../public/assets/images/new4.png" class="w-16 h-16 object-cover mx-1 inline-block" alt="">
                             <img src="../../../../public/assets/images/new4.png" class="w-16 h-16 object-cover mx-1 inline-block" alt="">
-                           
-                        </div>                      
+
+                        </div>
                     </td>
                     <td class="px-6 py-4">
                        150.000 VND
@@ -188,7 +188,7 @@ const state = reactive({
                     <td class="px-6 py-4 ">
                         <div class="flex ">
                             <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" 
+                                <input type="checkbox"
                                     class="sr-only peer">
                                 <div
                                     class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
@@ -226,11 +226,11 @@ const state = reactive({
 
             </tbody>
         </table>
-     
+
     </div>
             </div>
-            
+
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>

@@ -118,14 +118,14 @@ const downloadItem = (file) => {
 
       <div class="flex-auto sm:w-full">
         <div class="relative mt-3 flex  flex-wrap shadow-md sm:rounded-lg">
-                
+
           <a :href="file.original_url" target="_blank" class="item w-[240px] flex flex-col items-center" v-for="file in images" :key="file.id"
             :title="file.file_name">
             <div  class="flex justify-between">
               <div class="flex">
                 <BaseIcon :path="file.mime_type == 'application/pdf' ? mdiFilePdfBox : mdiImageOutline" class="flex-none "
                   w="w-16" :size="20" />
-        
+
                 <p class="text">{{ file.file_name }}</p>
               </div>
               <Dropdown align="right" width="40" @click.prevent>
@@ -170,7 +170,7 @@ const downloadItem = (file) => {
     </SectionMain>
   </LayoutProfileDetail>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>
 <style scope>
 .text {
   overflow: hidden;

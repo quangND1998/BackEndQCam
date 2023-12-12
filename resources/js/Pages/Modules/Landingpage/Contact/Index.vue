@@ -176,7 +176,7 @@ const save = () => {
     </LayoutAuthenticated>
 </template>
 
-<style scope>
+<style scoped>
 .string_long {
     width: 200px;
     overflow: hidden;
