@@ -23,7 +23,6 @@ import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.
 import BaseButtons from "@/Components/BaseButtons.vue";
 import BaseIcon from '@/Components/BaseIcon.vue'
 import PillTag from "@/Components/PillTag.vue";
-import Multiselect from "@vueform/multiselect";
 import Dropdown from "@/Components/Dropdown.vue";
 import { Link, useForm } from "@inertiajs/vue3";
 import moment from "moment";
@@ -170,7 +169,7 @@ const downloadItem = (file) => {
     </SectionMain>
   </LayoutProfileDetail>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+
 <style scope>
 .text {
   overflow: hidden;

@@ -21,7 +21,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import UploadImage from '@/Components/UploadImage.vue'
-// import Multiselect from '@vueform/multiselect'
+
 
 
 import SearchInput from "vue-search-input";
@@ -268,8 +268,12 @@ const Delete = (id) => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
+<<<<<<< HEAD
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
+=======
+<style scope>
+>>>>>>> origin/quangnd
 .string_long {
     width: 200px;
     overflow: hidden;

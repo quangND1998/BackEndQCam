@@ -103,6 +103,7 @@ Route::middleware(['auth'])->group(
 
         Route::prefix('payoo')->as('payoo.')->group(function () {
             Route::get('payment/{order}', [PaymentController::class, 'payment'])->name('payment');
+
         });
 
         Route::get('otp/token', [OtpTestController::class,'test'])->name('otp.test');

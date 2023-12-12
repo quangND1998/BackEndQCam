@@ -11,7 +11,7 @@ use App\Http\Controllers\API\VoucherController;
 use Illuminate\Http\Request;
 use Modules\Customer\app\Http\Controllers\API\ScheduleVisitController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,6 +31,11 @@ Route::prefix('v1')->as('v1.')->group(function () {
     Route::post('login', [LoginController::class, 'login'])->name('login');
     Route::post('loginOtp', [LoginController::class, 'loginOtp'])->name('loginOtp');
     Route::post('verify', [LoginController::class, 'verify'])->name('verify');
+});
+
+Route::prefix('payoo')->as('payoo.')->group(function () {
+    Route::post('ipn', [PaymentController::class, 'payooIPN'])->name('payooIPN');
+            
 });
 Route::middleware(['auth:sanctum'])->group(function () {
 

@@ -32,7 +32,7 @@ import { initFlowbite } from 'flowbite'
 import axios from "axios";
 import MazSelect from 'maz-ui/components/MazSelect'
 import { useCartStore } from "@/stores/cart";
-import Multiselect from '@vueform/multiselect'
+
 const swal = inject("$swal");
 
 const props = defineProps({
