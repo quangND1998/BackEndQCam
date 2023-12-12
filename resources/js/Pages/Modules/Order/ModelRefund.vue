@@ -5,7 +5,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="flex">
-                        <img src="img/icon_delete.png" alt="">
                         <div class="ml-2">
                             <h3 class="text-black font-bold my-1 text-base">Yêu cầu Hoàn đơn hàng?</h3>
                             <p class="text-gray-500 text-sm">Đơn hàng sẽ được chuyển đến tab "Đơn hoàn"</p>
@@ -94,7 +93,7 @@ const listener =()=> {
 onUnmounted(() => {
     emitter.off('OpenModalRefund', listener)
 })
-  
+
 </script>
 
 <style></style>

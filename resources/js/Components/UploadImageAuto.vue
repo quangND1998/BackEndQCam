@@ -50,7 +50,7 @@ const props = defineProps({
 
     },
     idPayment :  {
-        type: String,
+        type: Number,
         required: true,
     },
 })
@@ -120,6 +120,16 @@ const onFileChange = (e) => {
                 console.log(error);
             // Handle any errors
             });
+
+            // form.post(route("admin.orders.package.saveImagePayment", props.idPayment),
+            //         {
+            //             preserveState: false,
+            //             preserveScroll: true
+            //         }, {
+            //         onSuccess: () => {
+            //             swal.fire("Thành Công!", "Đã làm mới hợp đồng, chuyển sang trạng thái chờ duyệt.", "success");
+            //         },
+            //     });
         }
 
     }

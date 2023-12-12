@@ -184,4 +184,4 @@ const Delete = (img) => {
 </template>
 
 
-<style scoped></style>
+<style></style>
