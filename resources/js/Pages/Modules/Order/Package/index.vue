@@ -588,7 +588,7 @@ const deleteOrder = (order) => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style scope>
+<style>
 .body_fix {
     overflow: hidden;
 }
