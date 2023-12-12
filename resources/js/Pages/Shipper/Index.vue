@@ -22,7 +22,6 @@ import TextInput from "@/Components/TextInput.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 import PillTag from "@/Components/PillTag.vue";
 import BaseButtons from "@/Components/BaseButtons.vue";
-import Multiselect from "@vueform/multiselect";
 import { useHelper } from "@/composable/useHelper";
 import { router, Link } from "@inertiajs/vue3";
 import SearchFilter from "@/Components/SearchFilter.vue";
@@ -156,4 +155,4 @@ const searchShipper = () => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+

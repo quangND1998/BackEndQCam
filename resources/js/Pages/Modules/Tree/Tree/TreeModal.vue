@@ -342,7 +342,7 @@ const onFileChange = (e) => {
 </template>
 
 
-<style scoped>
+<style >
 .input {
     position: relative;
 }

@@ -1,4 +1,4 @@
-mig<script setup>
+<script setup>
 import { computed, ref, inject, reactive } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
@@ -304,4 +304,3 @@ const changeDate = () => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
