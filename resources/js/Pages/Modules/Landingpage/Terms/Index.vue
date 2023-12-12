@@ -104,16 +104,16 @@ const Delete = (id) => {
     <LayoutAuthenticated>
 
         <Head title="Điều khoản " />
-      
+
         <SectionMain>
             <SectionTitleLineWithButton title="Điều khoản" main></SectionTitleLineWithButton>
 
-          
+
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
-                      
-                      
+
+
                     </div>
                 </div>
                 <div class="right">
@@ -130,8 +130,8 @@ const Delete = (id) => {
             </div>
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                 :title="editMode ? 'Sửa điều khoản ' : 'Tạo mới'">
-              
-               
+
+
                 <InputLabel for="name" value="Chi tiết điều khoản" />
                 <label class="input w-full" for="recipient-name">
 
@@ -141,11 +141,11 @@ const Delete = (id) => {
             </CardBoxModal>
 
 
-            
+
 
             <div class="relative overflow-x-auto shadow-md sm:rounded-md" v-if="terms_condition" >
                 <div class="px-4 py-4" v-html="terms_condition.description">
- 
+
                 </div>
             </div>
 
@@ -153,7 +153,7 @@ const Delete = (id) => {
     </LayoutAuthenticated>
 </template>
 
-<style scope>
+<style scoped>
 .string_long {
     width: 200px;
     overflow: hidden;

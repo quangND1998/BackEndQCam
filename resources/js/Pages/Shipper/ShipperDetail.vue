@@ -77,7 +77,7 @@ const saveOrderShipper=()=>{
         })
         .then((result) => {
             if (result.isConfirmed) {
-               
+
                 router.post(route("shippers.saveOrderShipper", props.shipper.id), query,
                     {
                         preserveState: true,
@@ -197,12 +197,12 @@ const Delete=(id)=>{
                 classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-3/5 xl:w-8/12 z-50 overflow-auto"
                 :title="editMode ? 'Sửa Sản Phẩm' : 'Thêm sản phẩm'">
                 <div class="w-3/12">
-                 
+
                     <form>
                         <label for="default-search"
                             class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative">
-                    
+
                             <input type="search" id="default-search" v-model="search" @keyup="searchOrder"
                                 class="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Search" required>

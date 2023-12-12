@@ -15,7 +15,7 @@ export const useDarkModeStore = defineStore('darkMode', () => {
         'dark',
         'dark-scrollbars-compat'
       )
-      localStorage.setItem('dark-mode', isEnabled.value ? '1' : '0')
+    //   localStorage.setItem('dark-mode', isEnabled.value ? '1' : '0')
     }
 
     // You can persist dark mode setting

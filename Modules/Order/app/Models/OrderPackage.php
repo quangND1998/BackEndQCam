@@ -111,7 +111,7 @@ class OrderPackage extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'sale_id');
     }
-    
+
     public function leader()
     {
         return $this->belongsTo(User::class, 'to_id');
@@ -136,17 +136,23 @@ class OrderPackage extends Model implements HasMedia
     }
     public function getPaymentCheckAttribute()
     {
-        $allHistory = $this->historyPayment->every(function ($history) {
-            return $history->status == "complete";
-        });
-        return $allHistory;
+        if(count($this->historyPayment) > 0){
+            $allHistory = $this->historyPayment->every(function ($history) {
+                return $history->status == "complete";
+            });
+            return $allHistory;
+        }
+        return false;
     }
     public function getExistAcceptAttribute()
     {
-        $allHistory = $this->historyPayment->every(function ($history) {
-            return $history->status != "complete";
-        });
-        return $allHistory;
+        if(count($this->historyPayment) > 0){
+            $allHistory = $this->historyPayment->every(function ($history) {
+                return $history->status != "complete";
+            });
+            return $allHistory;
+        }
+        return false;
     }
 
     public function ref()

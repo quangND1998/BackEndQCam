@@ -108,7 +108,7 @@ const date = ref(new Date());
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="Search SĐT" required>
                     </div>
-                   
+
                     <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt-5">
                         <div>
                             <div class="my-3">
@@ -282,7 +282,7 @@ const date = ref(new Date());
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="" required>
                 </div>
-                
+
                 <div class="my-2">
                     <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                         Số tiền thanh toán</label>

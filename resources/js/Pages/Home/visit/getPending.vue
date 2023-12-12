@@ -243,4 +243,3 @@ const cancelState = (visit) => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-

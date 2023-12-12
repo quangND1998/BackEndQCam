@@ -497,43 +497,44 @@ const deleteOrder = (order) => {
                                                 {{ order?.order_number }}
                                             </a>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{
-                                            formatTimeDayMonthyear(order?.created_at) }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{ order?.idPackage }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{ order?.product_service?.name }}
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <p>{{formatTimeDayMonthyear(order?.created_at) }}</p>
+                                            </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.idPackage }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.product_service?.name }}
                                         </td>
 
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{ order?.time_approve }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{ formatPrice(order?.grand_total)
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.time_approve }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ formatPrice(order?.grand_total)
                                         }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
                                         </td>
 
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{ order?.customer?.name }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.customer?.name }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="btn_label "
                                                 :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
                                                 {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' :
                                                     order?.price_percent == 0 ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="btn_label " :class="order.payment_check ? 'paid' : 'partiallyPaid'">
                                                 {{ order.payment_check ? 'đã duyệt' : 'chờ duyệt' }}</p>
                                         </td>
 
-                                        <td class="whitespace-nowrap text-left px-3 py-2">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p
                                                 :class="order.product_service_owner?.state == 'active' ? 'text-green' : 'text-red'">
                                                 {{ order.product_service_owner?.state }}
                                             </p>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2"  v-if="status == 'decline'">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500"  v-if="status == 'decline'">
                                             <p  class="text-[12px] text-left">
                                                 {{ order.reason }}
                                             </p>
                                         </td>
-                                        <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2">
+                                        <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order.package_reviewer?.name }}
                                         </td>
                                         <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2">
@@ -553,13 +554,13 @@ const deleteOrder = (order) => {
                                                     class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700" size="20">
                                                 </BaseIcon>
                                             </a>
-                                            <a v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`"
-                                                target="_blank">
+                                            <Link v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`"
+                                              >
                                                 <BaseIcon :path="mdiSquareEditOutline"
                                                     class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700"
                                                     v-tooltip.top="'Chỉnh sửa'" size="20">
                                                 </BaseIcon>
-                                            </a>
+                                            </Link>
                                             <BaseIcon :path="mdiDeleteOutline"
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
                                                 v-tooltip.top="'Hủy gói'" data-toggle="modal"
@@ -588,9 +589,15 @@ const deleteOrder = (order) => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style>
+<style scoped>
 .body_fix {
     overflow: hidden;
+
+}
+td{
+    font-size: 12px;
+    color: rgb(107 114 128 / var(--tw-text-opacity));
+    font-family:    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .table_stripe tr th:last-child,
@@ -613,4 +620,5 @@ const deleteOrder = (order) => {
     background: #fff;
 }
 </style>
+<style src="@vueform/multiselect/themes/default.css"></style>
 

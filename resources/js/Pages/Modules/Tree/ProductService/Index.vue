@@ -449,7 +449,7 @@ const Delete = (id) => {
                                     {{ product_service.number_deliveries }}
                                 </td>
                                 <td class="px-6 py-1">
-                                    
+
                                     {{ product_service.life_time }}
                                 </td>
                                 <td class="px-6 py-1">

@@ -154,7 +154,7 @@ const props = defineProps({
                                 class="bg-black text-white p-2 mt-3 w-3/5 text-center justify-center rounded-lg"
                                 :icon="mdiContentSaveMove" small label="In đơn hàng" />
                     </div>
-                   
+
                 </div>
 
             </div>

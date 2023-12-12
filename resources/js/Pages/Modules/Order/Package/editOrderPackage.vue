@@ -922,10 +922,6 @@ const date = ref(new Date());
                     </div>
                 </div>
             </div>
-            <!-- <NewOrderPackage :product_services="product_services" :trees="trees" :user="user" :cart="cart" :total_price="total_price"
-                :vat="form.vat" :discount_deal="form.discount_deal" :shipping_fee="form.shipping_fee" :time_reservations="form.time_reservations"
-                :price_percent="form.price_percent" :product_selected ="form.product_selected" :time_approve ="form.time_approve"
-                :payment_method="form.payment_method" :type="form.type" :sub_total="sub_total" @confirm="save" /> -->
             <div class="min-[320x]:block sm:block md:grid grid-cols-3 gap-4">
 
             </div>

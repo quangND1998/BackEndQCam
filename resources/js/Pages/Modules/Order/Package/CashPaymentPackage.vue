@@ -65,7 +65,7 @@ const getNow= ()=> {
                 <div class="min-[320px]:block sm:block md:grid grid-cols-3 gap-4">
                     <div class="col-span-2 mt-6">
                         <InvoiceInformation :order="order" />
-                       
+
                         <div class="mt-5">
                             <h3 class="text-[17px] font-bold">Thông tin liên hệ</h3>
                             <p class="text-[#686868] text-base my-2">Khách hàng: <strong class="ml-3">
@@ -200,13 +200,13 @@ const getNow= ()=> {
                     <div class="text-center ">
                         <h1 class="my-2">Đơn hàng hết hạn trong</h1>
                         <h1 class="text-[30px] font-semibold text-[#686868] my-2">
-                          
+
                         <vue-countdown class="block" v-if="order.time_expried && timestamp != null && (order.time_expried - timestamp) > 0"
-                          :time="(order.time_expried - timestamp) * 1000" 
+                          :time="(order.time_expried - timestamp) * 1000"
                           v-slot="{days, hours, minutes, seconds }">
                           {{ days }}:{{ hours }} : {{ minutes }}: {{ seconds }}
-                        </vue-countdown>  
-                        <span class="font-semibold text-yellow-600 text-center"  v-if="order.time_expried && timestamp != null && (order.time - timestamp) < 0"> Hết hạn </span>                  
+                        </vue-countdown>
+                        <span class="font-semibold text-yellow-600 text-center"  v-if="order.time_expried && timestamp != null && (order.time - timestamp) < 0"> Hết hạn </span>
                         </h1>
                         <p class="font-semibold text-base text-[#FF0000]">Chưa thanh toán</p>
                         <div class="mt-5">

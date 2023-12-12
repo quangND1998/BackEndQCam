@@ -83,7 +83,7 @@ class OrderPackageController extends Controller
         // }
         // return $orders;
         $statusGroup = $this->groupByOrderStatus();
-        return Inertia::render('Modules/Order/Package/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup'));
+        return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listOrderCancel(Request $request)
     {
@@ -259,7 +259,7 @@ class OrderPackageController extends Controller
                 'time_reservations' => 'required|gt:0',
                 'price_percent' => 'required|gt:-1',
                 'product_selected' => 'required',
-                'time_approve' =>'required',
+                'time_approve' =>'required'
             ]
         );
         $order = OrderPackage::findOrFail($id);

@@ -318,7 +318,7 @@ initFlowbite();
                   <tbody>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        
+
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -334,7 +334,7 @@ initFlowbite();
                     <tr d
                       class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        
+
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -349,7 +349,7 @@ initFlowbite();
                     </tr>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        
+
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -364,7 +364,7 @@ initFlowbite();
                     </tr>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        
+
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -507,7 +507,7 @@ initFlowbite();
                   <tbody>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        
+
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -523,7 +523,7 @@ initFlowbite();
                     <tr d
                       class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        
+
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -538,7 +538,7 @@ initFlowbite();
                     </tr>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        
+
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -553,7 +553,7 @@ initFlowbite();
                     </tr>
                     <tr class=" bg-white  bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600">
                       <td class="px-6 flex py-4 font-medium text-gray-900 whitespace-nowrap ">
-                        
+
                         <div class="ml-3">
                           <h4>
                             Hộp carton 3 lớp sóng E | 20x30x15cm | mặt nâu
@@ -626,7 +626,7 @@ initFlowbite();
                   </div>
                 </div>
               </div> -->
-              
+
             </div>
           </div>
         </div>

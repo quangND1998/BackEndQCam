@@ -71,7 +71,7 @@ onMounted(()=>{
         barcode: element.barcode
       });
     });
-    
+
 })
 const selectAllCart = computed({
     get() {
@@ -88,7 +88,7 @@ const selectAllCart = computed({
             }
         }
         cart_selected.value = selected;
-        
+
     }
 });
 const isModalActive = ref(false);
@@ -113,7 +113,7 @@ const addToCart=()=>{
                 cancelButtonColor: "#d33",
                 }).then((result) => {
             if (result.isConfirmed) {
-                  return 
+                  return
                 }
             });
     }
@@ -127,7 +127,7 @@ const addToCart=()=>{
 
         })
     }
- 
+
 }
 const updateCart=(product, value)=>{
       // quantity_cart:,
@@ -161,7 +161,7 @@ const updateCart=(product, value)=>{
     //   }
     }
 const    updateCartInput =(product)=> {
-    
+
       let query = {
         quantity_cart: this.$refs[`quantity${product.id}`][0].value,
         product_id: product.id
@@ -190,12 +190,12 @@ const    updateCartInput =(product)=> {
     }
 </script>
 <template>
- 
+
 
     <div class="min-[320x]:w-full  grid grid-cols-3 gap-4">
-       
+
         <div class=" col-span-2 mt-2 w-full">
-          
+
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-5 mt-4">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -224,7 +224,7 @@ const    updateCartInput =(product)=> {
                                 <span></span>
                             </th>
                             <td class="px-6 py-4 ">
-                                <select id="countries" 
+                                <select id="countries"
                                     @change="changeProduct($event)" v-model="product_selectd"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 ">
                                     <option v-for="(product, index) in products" :key="index" :value="product.id">{{
@@ -233,7 +233,7 @@ const    updateCartInput =(product)=> {
                                 </select>
                             </td>
                             <td class="px-6 py-4">
-                              
+
                                     <MazInputNumber
                                         v-model="quantity"
                                         label="Enter number"
@@ -312,12 +312,12 @@ const    updateCartInput =(product)=> {
                           aria-label="quantity"
                           class="input-qty_create pb-0 border"
                           :ref="`quantity${item.id}`"
-                        
+
                           :value="item.quantity"
                           max="100"
                           min="0"
                           name
-                          type="number" 
+                          type="number"
                         />
                         <input
                           class="plus is-form"
@@ -325,7 +325,7 @@ const    updateCartInput =(product)=> {
                           value="+"
                           @click="updateCart(item, 1)"
                         />
-                        
+
                       </div>
 
                             </div>
