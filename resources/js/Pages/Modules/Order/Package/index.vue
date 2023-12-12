@@ -594,10 +594,6 @@ const deleteOrder = (order) => {
     overflow: hidden;
 
 }
-td{
-    font-family:  Arial;
-}
-
 .table_stripe tr th:last-child,
 .table_stripe td:last-child {
     position: sticky;
@@ -618,5 +614,4 @@ td{
     background: #fff;
 }
 </style>
-<style src="@vueform/multiselect/themes/default.css"></style>
 

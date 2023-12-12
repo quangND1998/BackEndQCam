@@ -1,7 +1,9 @@
 <?php
 namespace App\Service;
 
+use App\Jobs\OtpEndTimeJob;
 use App\Models\OtpVerify;
+use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 
 class OtpService {
@@ -22,13 +24,51 @@ class OtpService {
         }
     }
 
-    public function createOtp($second, $user){
+    public function createToken(){
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post(config('fptsms.API_URL').'oauth2/token', [
+            'client_id' => config('fptsms.client_id'),
+            'client_secret' =>config('fptsms.client_secret'),
+            "scope"=> config('fptsms.scope'),
+            "session_id"=>  config('fptsms.session_id'),
+            "grant_type"=>config('fptsms.grant_type')
+        ]);  
+        $data= $response->json();
+        if($response->ok()){
+            return $data['access_token'];
+        }
+        else{
+            return null;
+        }
+        
+    }
+
+    public function sendSMS($token, $message, $phone){
+   
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post(config('fptsms.API_URL').'api/push-brandname-otp', [
+            'access_token' => $token,
+            "session_id"=>  config('fptsms.session_id'),
+            "BrandName"=>config('fptsms.brand_name'),
+            "Phone"=> $phone,
+            'Message' => base64_encode($message),
+            "RequestId"=>"tranID-Core01-987654321"
+        ]);  
+        return $response;
+        
+    }
+
+
+    public function createOtp($minute, $user){
         $otp = OtpVerify::create([
             'otp_number' => random_int(100000, 999999),
-            'expried_at' => Carbon::now()->addSecond($second),
-            'time_live' => $second,
+            'expried_at' => Carbon::now()->addMinute($minute),
+            'time_live' => $minute*60,
             'user_id' => $user->id
         ]);
+      
         return $otp;
     }
 

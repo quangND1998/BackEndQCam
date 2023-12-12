@@ -11,7 +11,7 @@ import BaseButton from '@/Components/BaseButton.vue';
 import { useHelper } from '@/composable/useHelper';
 import Pagination from "@/Components/Pagination.vue";
 import SearchInput from "vue-search-input";
-import Multiselect from "@vueform/multiselect";
+
 const props = defineProps({
     shipper: Object,
     orders: Object,
@@ -341,8 +341,3 @@ const Delete=(id)=>{
         </SectionMain>
     </LayoutShipper>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
-
-<style>
-
-</style>

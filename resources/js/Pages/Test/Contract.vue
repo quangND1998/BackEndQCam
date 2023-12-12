@@ -24,7 +24,6 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 
-// import Multiselect from '@vueform/multiselect'
 import Dropdown from '@/Components/Dropdown.vue';
 import BaseIcon from '@/Components/BaseIcon.vue'
 import SearchInput from "vue-search-input";
@@ -332,4 +331,4 @@ const date = ref(new Date());
     <!-- </SectionMain>
 </LayoutAuthenticated> -->
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+

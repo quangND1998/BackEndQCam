@@ -216,6 +216,4 @@ const Delete = (img) => {
         </div>
     </div>
 </template>
-
-
-<style></style>
+<style ></style>

@@ -85,7 +85,7 @@ class CustomerController extends Controller
     {
         $user = Auth::user();
         $filters = $request->all('search');
-        $customers = User::with('product_service_owners.product','product_service_owners.trees','product_service_owners.history_gift')->whereHas(
+        $customers = User::with('product_service_owners.product','product_service_owners.trees','product_service_owners.history_gift', 'infor')->whereHas(
             'roles',
             function ($query) {
                 $query->where('name', 'Customer');
@@ -95,7 +95,7 @@ class CustomerController extends Controller
             $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
             $query->orwhere('username', 'LIKE', '%' . $request->search . '%');
             $query->orwhere('phone_number', 'LIKE', '%' . $request->search . '%');
-        })->paginate(20)->appends($request->search);
+        })->accept($request->only('accept'))->paginate(20)->appends($request->search);
 
         // return $customers;
         $product_services = ProductService::where("status", 1)->get();
@@ -257,5 +257,6 @@ class CustomerController extends Controller
         $user->save();
         return back()->with('success', 'Update user successfully');
     }
+  
 
 }

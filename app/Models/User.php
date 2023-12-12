@@ -144,10 +144,14 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(UserInfor::class, 'user_id');
     }
-
-    public function lastInfoChange()
+    public function lastInfo()
     {
-        return $this->hasOne(UserInfor::class)->latest();
+        return $this->hasOne(UserInfor::class, 'user_id')->latest();
+    }
+
+    public function infor()
+    {
+        return $this->hasOne(UserInfor::class,'user_id');
     }
 
     public function salers()
@@ -177,8 +181,13 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(OrderPackage::class, 'sale_id');
     }
 
-    public function otp(){
-        return $this->hasOne(OtpVerify::class, 'user_id');
+
+    public function ref_order_packages(){
+        return $this->hasMany(OrderPackage::class, 'ref_id');
+    }
+
+    public function otps(){
+        return $this->hasMany(OtpVerify::class, 'user_id');
     }
 
     public function scopeSearch($query, array $filters)
@@ -188,6 +197,20 @@ class User extends Authenticatable implements HasMedia
 
             $query->where('name', 'LIKE', '%' .$filters['search'] . '%');
             $query->orwhere('email', 'LIKE', '%' .$filters['search'] . '%');
+            $query->orwhere('phone_number', 'LIKE', '%' .$filters['search'] . '%');
+        }
+       
+    }
+
+    public function scopeAccept($query, array $filters)
+    {
+      
+        if (isset($filters['accept']) && isset($filters['accept'])) {
+
+            $query->whereHas('infor',  function($q) use ($filters){
+                $q->where('status', $filters['accept']);
+            });
+           
         }
        
     }

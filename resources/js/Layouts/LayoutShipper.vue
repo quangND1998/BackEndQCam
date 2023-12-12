@@ -98,4 +98,4 @@ const state = reactive({
         <slot />
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+

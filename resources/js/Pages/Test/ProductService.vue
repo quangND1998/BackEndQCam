@@ -24,7 +24,7 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-// import Multiselect from '@vueform/multiselect'
+
 import Dropdown from '@/Components/Dropdown.vue';
 import BaseIcon from '@/Components/BaseIcon.vue'
 import SearchInput from "vue-search-input";
@@ -340,4 +340,4 @@ const state = reactive({
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+

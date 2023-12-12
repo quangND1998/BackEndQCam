@@ -40,9 +40,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // logout
         Route::post('logout', [LoginController::class, 'logout']);
         Route::post('updatePassword', [LoginController::class, 'updatePassword']);
+        Route::post('verifyChangePassword', [LoginController::class, 'verifyChangePassword'])->name('verifyChangePassword');
         Route::post('getFireBaseToken', [LoginController::class, 'getFireBaseToken']);
-
-
+        Route::post('sendOtp', [LoginController::class, 'sendOtp'])->name('sendOtp');
         // Product-retail
         Route::get('product-retail', [ProductRetailController::class, 'getProducts']);
         Route::get('product-retail/{id}/detail', [ProductRetailController::class, 'productDetail']);

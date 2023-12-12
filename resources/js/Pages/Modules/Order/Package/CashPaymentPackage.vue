@@ -227,4 +227,4 @@ const getNow= ()=> {
 
     </SectionMain>
 </LayoutAuthenticated></template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+
