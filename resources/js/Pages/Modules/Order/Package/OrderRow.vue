@@ -192,7 +192,7 @@ const orderChangePending = () => {
     <div>
         <!-- Modal -->
         <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật"
-        
+
             :hasSave="form?.amount_unpaid > 0 ? true : false" has-cancel @confirm="save"
             :title="`Thanh toán cho ${form.order?.order_number}`">
             <div class="p-6 flex-auto">
@@ -264,13 +264,6 @@ const orderChangePending = () => {
                                     {{ payment?.status != 'complete' ? 'Chờ duyệt' : 'Đã duyệt' }}</p>
                             </td>
                             <td class="border-0 flex m-0 p-0">
-
-                                <!-- <div class="list_image flex mr-1" v-for="image in payment.order_package_payment"
-                                    :key="image.id">
-                                    <img v-fullscreen-img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
-                                </div> -->
-                                <!-- <UploadImage :max_files="4" v-model="form.images" :multiple="true"
-                                    :label="`Chứng từ liên quan`" /> -->
                                 <UploadImageAuto :idPayment="payment?.id" :max_files="1" v-model="form.images" :multiple="false" :old_images="payment?.order_package_payment" class="justify-start" />
                             </td>
                             <td class="border-0">

@@ -29,13 +29,14 @@ class HistoryPaymentController extends Controller
         return redirect()->back()->with('success', "Xóa tài khoản  thành công");
     }
     public function updateImageHistoryPayment(Request $request, $id){
-        // return $request;
+        // dd($request);
+        // dd($request->file('images'));
         $history = HistoryPayment::find($id);
         $history->addMedia($request->images)->toMediaCollection('order_package_payment');
         return $history;
     }
     public function setPaymentComplete($orderpackage,$id){
-        
+
         $history = HistoryPayment::find($id);
         if($history){
             $history->status = "complete";
@@ -53,7 +54,7 @@ class HistoryPaymentController extends Controller
             $order->payment_status = 0;
             $order->save();
         }
-                
+
         return redirect()->back()->with('success', "duyệt  thành công");
     }
 }

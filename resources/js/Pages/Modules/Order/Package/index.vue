@@ -11,7 +11,7 @@ import PackageBar from "@/Pages/Modules/Order/Package/PackageBar.vue";
 import ModalDecline from "./ModalDecline.vue";
 import ModelRefund from "../ModelRefund.vue";
 import {
-    mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll
+    mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll,mdiTrashCanOutline
 } from '@mdi/js'
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -31,8 +31,8 @@ import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 import { vFullscreenImg } from 'maz-ui'
 import UploadImage from '@/Components/UploadImage.vue'
-
-
+import UploadImageAuto from '@/Components/UploadImageAuto.vue'
+import { emitter } from '@/composable/useEmitter';
 const props = defineProps({
     orders: Object,
     status: String,
@@ -205,7 +205,7 @@ const save = () => {
         },
     });
 };
-const orderChangePacking = () => {
+const orderChangePacking = (order) => {
     let query = {
         status: "complete"
     };
@@ -221,7 +221,7 @@ const orderChangePacking = () => {
         })
         .then((result) => {
             if (result.isConfirmed) {
-                router.post(route("admin.orders.package.orderComplete", props.order.id), query,
+                router.post(route("admin.orders.package.orderComplete", order.id), query,
                     {
                         preserveState: true,
                         preserveScroll: true
@@ -263,12 +263,20 @@ const orderChangePending = () => {
             }
         });
 }
+const openDecline = (order) => {
+    emitter.emit('OpenModalDecline', order)
+}
+const deleteOrder = (order) => {
+    emitter.emit('OpenModalDelete', order)
+}
+
 </script>
 <template class="body_fix">
     <LayoutAuthenticated>
 
         <!-- Modal -->
         <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật"
+
             :hasSave="form?.amount_unpaid > 0 ? true : false" has-cancel @confirm="save"
             :title="`Thanh toán cho ${form.order?.order_number}`">
             <div class="p-6 flex-auto">
@@ -339,12 +347,8 @@ const orderChangePending = () => {
                                 <p class="btn_label" :class="payment?.status != 'complete' ? 'partiallyPaid' : 'paid'">
                                     {{ payment?.status != 'complete' ? 'Chờ duyệt' : 'Đã duyệt' }}</p>
                             </td>
-                            <td class="border-0 flex">
-
-                                <div class="list_image flex mr-1" v-for="image in payment.order_package_payment"
-                                    :key="image.id">
-                                    <img v-fullscreen-img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
-                                </div>
+                            <td class="border-0 flex m-0 p-0">
+                                <UploadImageAuto :idPayment="payment?.id" :max_files="1" v-model="form.images" :multiple="false" :old_images="payment?.order_package_payment" class="justify-start" />
                             </td>
                             <td class="border-0">
                                 {{ payment.status == 'complete' ? payment.user?.name : null }}
@@ -378,7 +382,7 @@ const orderChangePending = () => {
                     <div>
                         <Link v-if="hasAnyPermission(['add-new-package'])" :href="route('admin.orders.package.create')"
                             class="px-2 py-2 rounded-2xl text-sm text-white  rounded-lg border mx-1 bg-btn_green hover:bg-[#318f02] hover:bg-[#008000]">
-                        <font-awesome-icon :icon="['fas', 'plus']" />Thêm đơn hàng hợp đồng
+                        Thêm đơn hàng hợp đồng
                         </Link>
                     </div>
                 </div>
@@ -481,6 +485,8 @@ const orderChangePending = () => {
                                         <th scope="col" class="px-3 py-2 text-left">Trạng thái</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT duyệt</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT gói</th>
+                                        <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Người duyệt cuối</th>
+                                        <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Tài liệu</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hành động</th>
                                     </tr>
                                 </thead>
@@ -516,23 +522,26 @@ const orderChangePending = () => {
                                                 {{ order.payment_check ? 'đã duyệt' : 'chờ duyệt' }}</p>
                                         </td>
 
-                                        <td class="whitespace-nowrap text-left px-3 py-2" v-if="status == 'pending'">
+                                        <td class="whitespace-nowrap text-left px-3 py-2">
                                             <p
                                                 :class="order.product_service_owner?.state == 'active' ? 'text-green' : 'text-red'">
                                                 {{ order.product_service_owner?.state }}
                                             </p>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2"
-                                            v-if="status == 'decline' || status == 'complete'">
-                                            <p v-if="status ==
-                                                'decline'" class="text-[12px] text-left">
+                                        <td class="whitespace-nowrap text-left px-3 py-2"  v-if="status == 'decline'">
+                                            <p  class="text-[12px] text-left">
                                                 {{ order.reason }}
                                             </p>
-                                            <p v-if="status == 'complete'">
-                                                {{ order.package_reviewer?.name }}
-                                            </p>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">
+                                        <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2">
+                                            {{ order.package_reviewer?.name }}
+                                        </td>
+                                        <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2">
+                                            <!-- tai lieu -->
+                                        </td>
+
+
+                                        <td class="whitespace-nowrap text-left px-3 py-2 action">
                                             <BaseIcon :path="mdiCashMultiple"
                                                 class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700"
                                                 data-toggle="modal" data-target="#exampleModal" @click="detail(order)"
@@ -564,6 +573,8 @@ const orderChangePending = () => {
                                                 @click="orderChangePacking(order)" size="20">
                                             </BaseIcon>
                                         </td>
+
+
 
                                     </tr>
                                 </tbody>
