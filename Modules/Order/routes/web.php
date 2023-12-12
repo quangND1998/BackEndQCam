@@ -98,7 +98,9 @@ Route::middleware(['auth'])->group(
                     Route::post('historyPayment/{order}', [OrderPackageController::class, 'saveHistoryPaymentOrder'])->name('historyPayment');
                     Route::post('{order}/deleteHistoryPayment/{id}', [HistoryPaymentController::class, 'deleteHistoryPayment'])->name('deleteHistoryPayment');
                     Route::post('{order}/payment/{id}/complete', [HistoryPaymentController::class, 'setPaymentComplete'])->name('setPaymentComplete');
-                    //
+                    
+                    Route::post('/payment/{id}/update', [HistoryPaymentController::class, 'updateImageHistoryPayment'])->name('saveImagePayment');
+
                     // saveHistoryPaymentOrder
                 });
             });

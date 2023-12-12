@@ -12,6 +12,8 @@ import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 import { vFullscreenImg } from 'maz-ui'
 import UploadImage from '@/Components/UploadImage.vue'
+import UploadImageAuto from '@/Components/UploadImageAuto.vue'
+
 import BaseIcon from '@/Components/BaseIcon.vue'
 import {
     mdiSquareEditOutline,mdiDeleteOutline , mdiCashMultiple ,mdiEyeOutline  ,mdiCheckCircle,mdiCheckAll
@@ -190,6 +192,7 @@ const orderChangePending = () => {
     <div>
         <!-- Modal -->
         <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật"
+        
             :hasSave="form?.amount_unpaid > 0 ? true : false" has-cancel @confirm="save"
             :title="`Thanh toán cho ${form.order?.order_number}`">
             <div class="p-6 flex-auto">
@@ -260,12 +263,15 @@ const orderChangePending = () => {
                                 <p class="btn_label" :class="payment?.status != 'complete' ? 'partiallyPaid' : 'paid'">
                                     {{ payment?.status != 'complete' ? 'Chờ duyệt' : 'Đã duyệt' }}</p>
                             </td>
-                            <td class="border-0 flex">
+                            <td class="border-0 flex m-0 p-0">
 
-                                <div class="list_image flex mr-1" v-for="image in payment.order_package_payment"
+                                <!-- <div class="list_image flex mr-1" v-for="image in payment.order_package_payment"
                                     :key="image.id">
                                     <img v-fullscreen-img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
-                                </div>
+                                </div> -->
+                                <!-- <UploadImage :max_files="4" v-model="form.images" :multiple="true"
+                                    :label="`Chứng từ liên quan`" /> -->
+                                <UploadImageAuto :idPayment="payment?.id" :max_files="1" v-model="form.images" :multiple="false" :old_images="payment?.order_package_payment" class="justify-start" />
                             </td>
                             <td class="border-0">
                                 {{ payment.status == 'complete' ? payment.user?.name : null }}
@@ -288,27 +294,27 @@ const orderChangePending = () => {
                 </table>
             </div>
         </CardBoxModal>
-        <div  @mouseover="showButton" @mouseout="hideButton"  class="grid grid-cols-12  text-sm px-3 p-1 text-gray-400 border-b-[1px] border-[#f5f5f5] text-left items-center"
+        <div  @mouseover="showButton" @mouseout="hideButton"  class="grid grid-cols-11  text-sm px-3 p-1 text-gray-400 border-b-[1px] border-[#f5f5f5] text-left items-center"
             >
             <div @click.prevent="toggleContent">
-                <a class="flex items-center text-blue-600 text-[12px]">
+                <a class="flex items-center text-blue-600 text-[10px]">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5 5 1 1 5" />
-                    </svg>{{ order?.order_number }}</a>
+                    </svg>{{ order?.idPackage }}</a>
             </div>
             <div class="text-left">
-                <p>{{ formatTimeDayMonthyear(order?.created_at) }}</p>
+                <p>{{ formatDateOnly(order?.created_at) }}</p>
             </div>
-            <div class="text-left">
+            <!-- <div class="text-left">
                 <p>{{ order?.idPackage }}</p>
-            </div>
+            </div> -->
             <div class="text-left text-[12px]">
                 <p>{{ order?.product_service?.name }}</p>
             </div>
             <div class="text-left text-[12px]">
-                <p>{{ order?.time_approve }}</p>
+                <p>{{ formatDateOnly(order?.time_approve) }}</p>
             </div>
             <div class="text-left ">
                 <p>{{ formatPrice(order?.grand_total) }}</p>
@@ -316,22 +322,22 @@ const orderChangePending = () => {
             <div class="text-left">
                 <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
             </div>
-            <div class="text-left">
+            <div class="text-left text-[12px]">
                 <p>{{ order?.customer?.name }}</p>
             </div>
-            <div class="text-left ">
-                <p class="btn_label "
+            <div class="text-left text-[10px] ">
+                <p class="btn_label text-[10px]"
                     :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
                     {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' : order?.price_percent == 0
                         ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
 
             </div>
             <div class="text-left ">
-                <p class="btn_label " :class="order.payment_check ? 'paid' : 'partiallyPaid'">
+                <p class="btn_label text-[10px] " :class="order.payment_check ? 'paid' : 'partiallyPaid'">
                     {{ order.payment_check ? 'đã duyệt' : 'chờ duyệt' }}</p>
             </div>
 
-            <div v-if="status == 'pending'">
+            <div v-if="status != 'decline' && status != 'complete'">
                 <p :class="order.product_service_owner?.state == 'active' ? 'text-green' : 'text-red'">
                     {{ order.product_service_owner?.state }}
                 </p>
@@ -463,7 +469,7 @@ const orderChangePending = () => {
 
 
 <style scope>
-.partiallyPaid {
+/* .partiallyPaid {
     background-color: rgb(254 252 232/var(--tw-bg-opacity));
     border-color: rgb(254 240 138/var(--tw-border-opacity));
     border-style: solid;
@@ -495,4 +501,5 @@ const orderChangePending = () => {
     font-weight: 500;
     line-height: 1rem;
     padding: 0.25rem 0.625rem;
-}</style>
+} */
+</style>
