@@ -268,12 +268,7 @@ const Delete = (id) => {
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<<<<<<< HEAD
-<style src="@vueform/multiselect/themes/default.css"></style>
-<style scoped>
-=======
 <style scope>
->>>>>>> origin/quangnd
 .string_long {
     width: 200px;
     overflow: hidden;

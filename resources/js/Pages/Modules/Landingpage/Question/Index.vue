@@ -280,12 +280,7 @@ const seachFilter =()=>{
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<<<<<<< HEAD
-<style src="@vueform/multiselect/themes/default.css"></style>
-<style scoped>
-=======
-<style scope>
->>>>>>> origin/quangnd
+<style >
 .string_long {
     width: 200px;
     overflow: hidden;
