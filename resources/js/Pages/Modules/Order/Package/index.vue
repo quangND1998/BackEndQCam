@@ -594,6 +594,10 @@ const deleteOrder = (order) => {
     overflow: hidden;
 
 }
+td{
+    font-family:    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
 .table_stripe tr th:last-child,
 .table_stripe td:last-child {
     position: sticky;
@@ -614,4 +618,5 @@ const deleteOrder = (order) => {
     background: #fff;
 }
 </style>
+<style src="@vueform/multiselect/themes/default.css"></style>
 
