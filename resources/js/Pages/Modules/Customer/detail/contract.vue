@@ -225,4 +225,4 @@ const Delete = (id) => {
         </SectionMain>
     </LayoutProfileDetail>
 </template>
-<style scoped src="@vueform/multiselect/themes/default.css"></style>vv
+<style src="@vueform/multiselect/themes/default.css"></style>vv

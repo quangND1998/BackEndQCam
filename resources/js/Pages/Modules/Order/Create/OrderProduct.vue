@@ -448,7 +448,7 @@ const    updateCartInput =(product)=> {
 
 
 </template>
-<style scoped src="@vueform/multiselect/themes/default.css"></style>
+<style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped >
 .list_icon_crud {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;

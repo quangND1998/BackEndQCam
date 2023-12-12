@@ -371,4 +371,4 @@ const props = defineProps({
         </SectionMain>
     </LayoutAuthenticated>
 </template>
-<style scoped src="@vueform/multiselect/themes/default.css"></style>
+<style src="@vueform/multiselect/themes/default.css"></style>

@@ -170,7 +170,7 @@ const downloadItem = (file) => {
     </SectionMain>
   </LayoutProfileDetail>
 </template>
-<style scoped src="@vueform/multiselect/themes/default.css"></style>
+<style src="@vueform/multiselect/themes/default.css"></style>
 <style scope>
 .text {
   overflow: hidden;

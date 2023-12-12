@@ -497,9 +497,10 @@ const deleteOrder = (order) => {
                                                 {{ order?.order_number }}
                                             </a>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{
-                                            formatTimeDayMonthyear(order?.created_at) }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2">{{ order?.idPackage }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 ">
+                                            <p>{{formatTimeDayMonthyear(order?.created_at) }}</p>
+                                            </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 ">{{ order?.idPackage }}</td>
                                         <td class="whitespace-nowrap text-left px-3 py-2">{{ order?.product_service?.name }}
                                         </td>
 
@@ -591,6 +592,10 @@ const deleteOrder = (order) => {
 <style scoped>
 .body_fix {
     overflow: hidden;
+
+}
+td{
+    font-family:  Arial;
 }
 
 .table_stripe tr th:last-child,
@@ -613,5 +618,5 @@ const deleteOrder = (order) => {
     background: #fff;
 }
 </style>
-<style scoped src="@vueform/multiselect/themes/default.css"></style>
+<style src="@vueform/multiselect/themes/default.css"></style>
 
