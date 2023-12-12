@@ -28,15 +28,17 @@ class DashBoardController extends Controller{
         $week_data_user = $this->packageOrderService->sumbyTimeUser('week', $user);
         $month_data_user = $this->packageOrderService->sumbyTimeUser('month',$user );
         $year_data_user = $this->packageOrderService->sumbyTimeUser('year',$user );
+        $user =User::find(126);
         if($user->team){
             $team_sale_data = $this->packageOrderService->getTopTenSaleTeam('week',$user->team);
         }
         else{
             $team_sale_data =[]; 
         }
-        $user =User::find(126);
-
-        return $this->packageOrderService->getSaleData('month', $user);
+      
+        return $this->packageOrderService->contractInfor($user);
+        return $this->packageOrderService->rankingTeam('week', $user, $user->team);
+        return $this->packageOrderService->getSaleData('month');
 
       
         

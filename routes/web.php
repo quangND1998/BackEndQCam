@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ComissionController;
 use App\Http\Controllers\Home\ScheduleVisitController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NotificationController;
@@ -107,6 +108,14 @@ Route::middleware(['auth'])->group(
         Route::get('otp/token', [OtpTestController::class,'test'])->name('otp.test');
         Route::get('checkOtp/{otp}', [OtpTestController::class,'checkOtp'])->name('otp.checkOtp');
 
+
+        Route::prefix('commission')->as('commission.')->group(function () {
+            Route::get('index', [ComissionController::class, 'index'])->name('index');
+            Route::post('', [ComissionController::class, 'store'])->name('store');
+            Route::post('update/{commission}', [ComissionController::class, 'update'])->name('update');
+            Route::post('changeStatus/{commission}', [ComissionController::class, 'changeStatus'])->name('changeStatus');
+
+        });
     }
 
 );
