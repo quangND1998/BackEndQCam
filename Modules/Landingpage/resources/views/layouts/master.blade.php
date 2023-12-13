@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Landingpage Module - {{ config('app.name', 'Laravel') }}</title>
+    <title>Landingpage Module - {{ config('app.name', 'Cam Mặt Trời') }}</title>
 
     <meta name="description" content="{{ $description ?? '' }}">
     <meta name="keywords" content="{{ $keywords ?? '' }}">

@@ -13,6 +13,8 @@ use Modules\Customer\app\Models\ProductServiceOwner;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Modules\Customer\app\Models\HistoryExtend;
+
 class OrderPackage extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -158,5 +160,9 @@ class OrderPackage extends Model implements HasMedia
     public function ref()
     {
         return $this->belongsTo(User::class, 'ref_id');
+    }
+    public function history_extend()
+    {
+        return $this->hasOne(HistoryExtend::class,'order_id');
     }
 }

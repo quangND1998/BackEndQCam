@@ -12,7 +12,7 @@ import ModalDecline from "./ModalDecline.vue";
 import ModelRefund from "../ModelRefund.vue";
 import {
     mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll,mdiTrashCanOutline
-} from '@mdi/js'
+,mdiOpenInNew} from '@mdi/js'
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -123,6 +123,28 @@ const fillterType = (event) => {
         }
     );
 }
+const loadOrder = async $state => {
+    console.log("loading...");
+    router.get(route(`admin.orders.package.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: page => {
+                if (props.orders.current_page == props.orders.last_page) $state.complete();
+                else {
+                    $state.loaded();
+                }
+                filter.per_page += 10;
+            },
+            onError: errors => {
+                $state.error();
+            },
+        },
+
+    );
+
+};
 const contents = ref([
     { id: 1, text: 'Content 1' },
     { id: 2, text: 'Content 2' },
@@ -302,6 +324,7 @@ const deleteOrder = (order) => {
 
 </script>
 <template class="body_fix">
+    <Head title="Quản lý đơn hợp đồng" />
     <LayoutAuthenticated>
 
         <!-- Modal -->
@@ -587,6 +610,11 @@ const deleteOrder = (order) => {
                                         </td>
                                         <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2">
                                             <!-- tai lieu -->
+                                            <a :href="order?.history_extend?.contract?.lastcontract?.images.length > 0 ? order?.history_extend?.contract?.lastcontract?.images[0].original_url : null" target="_blank">
+                                            <BaseIcon :path="mdiOpenInNew"
+                                                class=" text-blue-400 rounded-lg mr-2 hover:text-blue-700"
+                                                v-tooltip.top="'Chi tiết hợp đồng'" size="20"></BaseIcon>
+                                            </a>
                                         </td>
 
 
@@ -622,12 +650,11 @@ const deleteOrder = (order) => {
                                                 @click="orderChangePacking(order)" size="20">
                                             </BaseIcon>
                                         </td>
-
-
-
                                     </tr>
+                                    <infinite-loading @infinite="loadOrder" />
                                 </tbody>
                             </table>
+
                         </div>
                     </div>
                 </div>

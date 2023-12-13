@@ -8,6 +8,8 @@ use Modules\Customer\Database\factories\HistoryExtendFactory;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Modules\Order\app\Models\OrderPackage;
+
 class HistoryExtend extends Model
 {
     use HasFactory;
@@ -34,6 +36,10 @@ class HistoryExtend extends Model
     }
     public function contract_last()
     {
-        
+
+    }
+    public function order_package()
+    {
+        return $this->belongsTo(OrderPackage::class, 'order_id');
     }
 }
