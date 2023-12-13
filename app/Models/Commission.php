@@ -11,7 +11,8 @@ class Commission extends Model
     protected $table = 'commissions';
     protected $fillable = [
         'name',
-        'spend',
+        'spend_from',
+        'spend_to',
         'commission',
         'type',
         'status',

@@ -38,7 +38,7 @@ class TreeController extends Controller
             $query->where('name', 'LIKE', '%' . $request->search . '%');
             $query->orwhere('qr_code', 'LIKE', '%' . $request->search . '%');
             // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
-        })->paginate(12);
+        })->paginate(5);
 
         // return $trees;
         return Inertia::render('Modules/Tree/Tree/Index', compact('land', 'trees'));

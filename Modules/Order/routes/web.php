@@ -78,10 +78,10 @@ Route::middleware(['auth'])->group(
                 Route::post('{order}/updateOrderRetail/{user}', [OrderController::class, 'updateOrderRetail'])->name('updateOrderRetail');
                 Route::post('{order}/updateOrderGift/{user}', [OrderController::class, 'updateOrderGift'])->name('updateOrderGift');
                 Route::prefix('package')->as('package.')->group(function () {
-                    Route::get('all', [OrderPackageController::class, 'index'])->name('index');
+                    Route::get('all', [OrderPackageController::class, 'index'])->name('all');
                     // cskh
                     Route::get('cskh', [CskhController::class, 'cskh'])->name('cskh');
-                    Route::get('pending', [OrderPackageController::class, 'index'])->name('pending');
+                    Route::get('pending', [OrderPackageController::class, 'listPending'])->name('pending');
                     Route::get('decline', [OrderPackageController::class, 'listOrderCancel'])->name('decline');
                     Route::get('complete', [OrderPackageController::class, 'listOrderComplete'])->name('complete');
                     Route::get('partiallyPaid', [OrderPackageController::class, 'partiallyPaid'])->name('partiallyPaid');
@@ -101,7 +101,7 @@ Route::middleware(['auth'])->group(
                     Route::post('historyPayment/{order}', [OrderPackageController::class, 'saveHistoryPaymentOrder'])->name('historyPayment');
                     Route::post('{order}/deleteHistoryPayment/{id}', [HistoryPaymentController::class, 'deleteHistoryPayment'])->name('deleteHistoryPayment');
                     Route::post('{order}/payment/{id}/complete', [HistoryPaymentController::class, 'setPaymentComplete'])->name('setPaymentComplete');
-                    
+
                     Route::post('/payment/{id}/update', [HistoryPaymentController::class, 'updateImageHistoryPayment'])->name('saveImagePayment');
 
                     // saveHistoryPaymentOrder

@@ -95,7 +95,7 @@ class CustomerController extends Controller
             $query->orwhere('email', 'LIKE', '%' . $request->search . '%');
             $query->orwhere('username', 'LIKE', '%' . $request->search . '%');
             $query->orwhere('phone_number', 'LIKE', '%' . $request->search . '%');
-        })->accept($request->only('accept'))->paginate(20)->appends($request->search);
+        })->accept($request->only('accept'))->paginate(2)->appends($request->search);
 
         // return $customers;
         $product_services = ProductService::where("status", 1)->get();
@@ -257,6 +257,6 @@ class CustomerController extends Controller
         $user->save();
         return back()->with('success', 'Update user successfully');
     }
-  
+
 
 }

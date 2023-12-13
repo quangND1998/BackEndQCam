@@ -12,6 +12,7 @@ import { emitter } from '@/composable/useEmitter';
 import BaseIcon from '@/Components/BaseIcon.vue'
 import { v4 as uuid } from 'uuid'
 import axios from 'axios';
+import { vFullscreenImg } from 'maz-ui'
 
 const swal = inject('$swal')
 const store = useTreeStore();
@@ -190,14 +191,14 @@ const Delete = (img) => {
                         <BaseIcon :path="mdiDelete" class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  " @click="Delete(img)"
                             size="16">
                         </BaseIcon>
-                        <img :src="img.original_url" class="w-16 h-14 object-cover rounded-lg" alt="">
+                        <img v-fullscreen-img :src="img.original_url" class="w-16 h-14 object-cover rounded-lg" alt="">
                     </div>
                     <div class="w-16 h-14 relative m-1 border border-gray-400 rounded-lg" v-for="(img, index) in images "
                         :key="index">
                         <BaseIcon :path="mdiDelete" @click="DeleteImage(index)"
                             class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  " size="17">
                         </BaseIcon>
-                        <img :src="img.image" class="w-16 h-14 object-cover rounded-lg" alt="">
+                        <img v-fullscreen-img :src="img.image" class="w-16 h-14 object-cover rounded-lg" alt="">
                     </div>
 
                     <label :for="id" v-if="((old_images? old_images.length:0)+form.images.length) < max_files"
