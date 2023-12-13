@@ -436,7 +436,7 @@ const deleteOrder = (order) => {
                             </div>
                         </div>
                     <div class="flex mr-2">
-                        
+
                         <div class="mr-4">
                             <div class="w-full  mr-3 text-gray-500">
                                 <label for>Mã đơn hàng</label>
@@ -514,7 +514,7 @@ const deleteOrder = (order) => {
                 </div>
                 <div class="w-full mt-2 ">
                     <div class="flex flex-col">
-                        <div class="overflow-x-auto inline-block min-w-full py-2 sm:px-6 lg:px-8 p-0">
+                        <div class="overflow-x-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[60vh]">
                             <table class="table_stripe min-w-full text-center text-sm font-light overflow-x-auto">
                                 <thead class="font-medium">
                                     <tr>
