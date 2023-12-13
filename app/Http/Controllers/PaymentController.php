@@ -6,18 +6,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Service\PayooService;
+use Illuminate\Support\Facades\File;
 use Modules\Order\app\Models\Order;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use App\Service\Traits\PayooServiceTraits;
 class PaymentController extends Controller
 {
-
+    use PayooServiceTraits;
     //Create perorder
-    public function payment(Request $requet,PayooService $payooService, Order $order){
+    public $payooService;
+    public function __construct(PayooService $payooService  ) {
+        $this->payooService = $payooService;
+    }
+    public function payment(Request $requet, Order $order){
       
-        $response= $payooService->createPreorder($order);
+        $response= $this->payooService->createPreorder($order);
         $data = $response->json();
         if($data['result'] =='fail'){
-            return 'lỗi';
+            return back()->with('warning', $data['message']);
         }
         else{
           
@@ -30,7 +37,37 @@ class PaymentController extends Controller
     }
 
     public function payooIPN(Request $request){
+        $secureHash= $this->createSecureHashIPN($request->ResponseData);
+        $response = json_decode($request->ResponseData, true);
+     
+        if(strtoupper($secureHash) == $request->SecureHash && $response["PaymentStatus"] ==1){
+          $this->payooService->savePaymentOrder($response);
+            $response= [
+                "ReturnCode" =>0,
+                "Description"=>""
+            ];
+            return response()->json($response, 200);
+        }
+        else{
+            $response= [
+                "ReturnCode" =>1,
+                "Description"=>""
+            ];
+            return response()->json($response, 200);
+        }
+        // File::append(public_path('/attempt.txt'),  $request->RequestData);
+    }
 
+    
 
+    public function GetOrderInfo(Order $order){
+        if($order->payment_status ==1 && $order->last_payment){
+            // $data = $this->payooService->GetOrderInfo($order->last_payment);
+            $data = $this->createDataSecureHash($order->last_payment);
+            dd($data);
+        }
+        else{
+            return back()->with('warning','Đơn hàng chưa thanh toán');
+        }
     }
 }

@@ -19,5 +19,8 @@ return [
     'APIUsername' => 'SB_CamMatTroi_BizAPI',
     'APIPassword' => 'NkgKfAk4YhT7jKzR',
     'APISignature' => 'iIqADYP7h8W1vO6BpsPXo/m9R3CXxngdOxdFWJXjqoyML+IXnSaMSU5kmVe0lbzQ',
+    'payoo_ip_sandbox' => '118.69.56.194',
+    'payoo_ip_prod' => '118.69.206.8',
+    'BACKEND_ENDPOINT' =>'https://biz-sb.payoo.vn/BusinessRestAPI.svc'
 
 ];
