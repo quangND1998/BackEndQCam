@@ -594,7 +594,7 @@ const deleteOrder = (order) => {
                                                 order.product_service_owner?.product?.number_deliveries }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <a :href="order?.history_extend?.contract?.lastcontract?.images.length > 0 ? order?.history_extend?.contract?.lastcontract?.images[0].original_url : null" target="_blank">
+                                            <a v-if="order?.history_extend?.contract?.lastcontract?.images.length > 0 " :href="order?.history_extend?.contract?.lastcontract?.images[0].original_url" target="_blank">
                                             <BaseIcon :path="mdiOpenInNew"
                                                 class=" text-blue-400 rounded-lg mr-2 hover:text-blue-700"
                                                 v-tooltip.top="'Chi tiết hợp đồng'" size="20"></BaseIcon>
