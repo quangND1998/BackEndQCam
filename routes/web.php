@@ -101,10 +101,6 @@ Route::middleware(['auth'])->group(
         });
 
 
-        Route::prefix('payoo')->as('payoo.')->group(function () {
-            Route::get('payment/{order}', [PaymentController::class, 'payment'])->name('payment');
-            Route::get('GetOrderInfo/{order}', [PaymentController::class, 'GetOrderInfo'])->name('GetOrderInfo');
-        });
 
         Route::get('otp/token', [OtpTestController::class,'test'])->name('otp.test');
         Route::get('checkOtp/{otp}', [OtpTestController::class,'checkOtp'])->name('otp.checkOtp');
@@ -121,3 +117,4 @@ Route::middleware(['auth'])->group(
 
 );
 require __DIR__ . '/dashboard.php';
+require __DIR__ . '/payment.php';

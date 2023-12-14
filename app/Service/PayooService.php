@@ -78,7 +78,18 @@ class PayooService {
         ])->post(config('payoo.BACKEND_ENDPOINT').'/GetOrderInfo', $request);
         return $response;
     }
-  
+    
+
+    public function getListBank(){
+        $response = Http::get(config('payoo.payoo_api').'api/paynow/get-banks-partner', [
+            'code' => 'Ecommerce',
+            'url' => request()->getSchemeAndHttpHost(),
+            'id' =>  config('payoo.shopID'),
+            'seller' =>  config('payoo.BusinessUsername'),
+            'jsonCallback' => 0,
+        ]);
+        return $response;
+    }
 
 
 }
