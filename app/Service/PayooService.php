@@ -1,8 +1,12 @@
 <?php
 namespace App\Service;
+
+use App\Models\Payment;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use App\Service\Traits\PayooServiceTraits;
+use Modules\Order\app\Models\Order;
+
 class PayooService {
     use PayooServiceTraits;
 
@@ -16,23 +20,65 @@ class PayooService {
             "checksum" => $checksum,
             "refer" => request()->getSchemeAndHttpHost(),
             "data" => $orderXml,
-            "payment_group"=>""
+            "payment_group"=>"Bank-account,QRCode,CC,'Qr-pay",
+        
         ]);
 
         return $response;
     }
-    public function createOderXml($order, $time_expried){
-        $username= config('payoo.BusinessUsername');
-        $shop_id =  config('payoo.shopID');
-        $shop_title =  config('payoo.ShopTitle');
-        $shop_domain = 'http://127.0.0.1:8000';
-        $order_ship_date = Carbon::now()->format('d/m/Y');
-        $time = Carbon::parse(Carbon::now()->addDay($time_expried))->format('Ymdhms');
-        $order_xml= "<shops><shop><username>{$username}</username><shop_id>{$shop_id}</shop_id><shop_title>{$shop_title}</shop_title><shop_domain>{$shop_domain}</shop_domain><shop_back_url></shop_back_url><order_no>{$order->order_number}</order_no><order_cash_amount>{$order->last_price}</order_cash_amount><order_ship_date>{$order_ship_date}</order_ship_date><order_ship_days>{$time}</order_ship_days><order_description></order_description><notify_url></notify_url><validity_time>20231216051231</validity_time><customer><name>{$order->customer->name}</name><phone>{$order->customer->phone_number}</phone><address>{$order->address} ,{$order->district}, {$order->wards}, {$order->city}</address><email>{$order->customer->email}</email></customer><installment><tenors>3,6</tenors></installment><recurring_info><contract_no></contract_no><init_date></init_date><billing_amount></billing_amount><billing_cycle></billing_cycle></recurring_info><customer_identifier></customer_identifier><JsonResponse>TRUE</JsonResponse><count_down></count_down><direct_return_time></direct_return_time></shop></shops>";
-        return $order_xml;
 
-        // return "<shops><shop><username>SB_CamMatTroi</username><shop_id>11931</shop_id><shop_title>CamMatTroi</shop_title><shop_domain>https://qly.cammattroi.com</shop_domain><shop_back_url></shop_back_url><order_no>ORD_38155</order_no><order_cash_amount>10000</order_cash_amount><order_ship_date>06/12/2023</order_ship_date><order_ship_days>1</order_ship_days><order_description></order_description> <notify_url></notify_url><validity_time>20231216051231</validity_time><customer><name>Nguyen Van Hieu</name><phone>0905775888</phone><address>35 Nguyễn Huệ, p. Bến Nghé, Hồ Chí minh</address><email>hieu@gmail.com</email></customer><installment><tenors>3,6</tenors></installment><recurring_info><contract_no></contract_no><init_date></init_date><billing_amount></billing_amount><billing_cycle></billing_cycle></recurring_info><customer_identifier></customer_identifier><JsonResponse>TRUE</JsonResponse><count_down></count_down><direct_return_time></direct_return_time></shop></shops>";
+
+    public function savePaymentOrder($response){
+
+        $order = Order::where('order_number',$response['OrderNo'])->first();
+      
+        if($order){
+            $payment= Payment::updateOrCreate([
+                'orderNo' => $response['OrderNo'],
+                'OrderCash' =>$response['OrderCash'],
+                'PaymentStatus' =>$response['PaymentStatus'],
+                'PaymentMethod' =>$response['PaymentMethod'],
+                'PaymentMethodName' =>$response['PaymentMethodName'],
+                'PurchaseDate' =>$response['PurchaseDate'],
+                'MerchantUsername' =>$response['MerchantUsername'],
+                'ShopId' =>$response['ShopId'],
+                'BankName' => isset($response['BankName']) ? $response['BankName']:null,
+                'CardNumber' => isset($response['CardNumber']) ? $response['CardNumber']:null,
+                'BillingCode' => isset($response['BillingCode']) ? $response['BillingCode']:null,
+                'CardIssuanceType' => isset($response['CardIssuanceType']) ? $response['CardIssuanceType']:null,
+                'Customer_identifier' => isset($response['Customer_identifier']) ? $response['Customer_identifier']:null,
+                'MDD1' => isset($response['MDD1']) ? $response['MDD1']:null,
+                'MDD2' => isset($response['MDD2']) ? $response['MDD2']:null,
+                'Token' => isset($response['Token']) ? $response['Token']:null,
+                'VoucherTotalAmount' => isset($response['VoucherTotalAmount']) ? $response['VoucherTotalAmount']:null,
+                'VoucherDescription' => isset($response['VoucherDescription']) ? $response['VoucherDescription']:null,
+                'IsQRStatic' => isset($response['IsQRStatic']) ? $response['IsQRStatic']:null,
+                'order_id' =>$order->id,
+              
+            ]);
+            if($payment->PaymentStatus ==1){
+                $order->update([
+                    'payment_method'=>'payoo',
+                    'payment_status' => 1
+                ]);
+            }
+        }
+      
     }
+
+    public function GetOrderInfo($data){
+      
+        $request = $this->createDataSecureHash($data);
+       
+        $response = Http::withHeaders([
+            'APIUsername' =>  config('payoo.APIUsername'),
+            'APIPassword' =>  config('payoo.APIPassword'),
+            'APISignature' =>  config('payoo.APISignature'),
+            'Content-Type' => 'application/json'
+        ])->post(config('payoo.BACKEND_ENDPOINT').'/GetOrderInfo', $request);
+        return $response;
+    }
+  
 
 
 }

@@ -2,6 +2,7 @@
 
 namespace Modules\Order\app\Models;
 
+use App\Models\Payment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -159,5 +160,13 @@ class Order extends Model implements HasMedia
                 $query->where('sale_id', $user->id);
             }
         }
+    }
+
+    public function payments(){
+        return $this->hasMay(Payment::class,'order_id');
+    }
+
+    public function last_payment(){
+        return $this->hasOne(Payment::class,'order_id')->latest();
     }
 }
