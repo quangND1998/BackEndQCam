@@ -119,7 +119,7 @@ const props = defineProps({
         <p class="text-lg italic mt-2">Cảm ơn quý khách đã sử dụng dịch vụ của cam mặt trời!</p>
     </div>
 </template>
-<style scoped>
+<style >
 iframe{
     width: 90vw !important;
     height: 300px;

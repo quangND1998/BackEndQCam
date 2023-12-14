@@ -712,5 +712,5 @@ td {
     z-index: 9;
     background: #fff;
 }</style>
-<style src="@vueform/multiselect/themes/default.css"></style>
+
 

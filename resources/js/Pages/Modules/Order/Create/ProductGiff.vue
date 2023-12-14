@@ -392,4 +392,3 @@ const saveGift =()=> {
     </div>
 </template>
 
-<style scoped ></style>

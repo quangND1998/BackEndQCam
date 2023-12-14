@@ -803,14 +803,6 @@ const date = ref(new Date());
     </LayoutAuthenticated>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
-<style scoped>
-/* .height_fix_30{
-    height: 30px;
-}
-.multiselect-placeholder{
-    height: 30px;
-} */
-</style>
 
 
 

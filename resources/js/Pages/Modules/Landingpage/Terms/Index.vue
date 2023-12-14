@@ -153,11 +153,3 @@ const Delete = (id) => {
     </LayoutAuthenticated>
 </template>
 
-<style scoped>
-.string_long {
-    width: 200px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-</style>
