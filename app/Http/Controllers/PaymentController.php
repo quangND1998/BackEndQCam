@@ -24,10 +24,11 @@ class PaymentController extends Controller
         $response= $this->payooService->createPreorder($order);
         $data = $response->json();
         if($data['result'] =='fail'){
+            return $data;
             return back()->with('warning', $data['message']);
         }
         else{
-          
+        
            return redirect()->to($data['order']['payment_url']);
 
         }
@@ -62,9 +63,9 @@ class PaymentController extends Controller
 
     public function GetOrderInfo(Order $order){
         if($order->payment_status ==1 && $order->last_payment){
-            // $data = $this->payooService->GetOrderInfo($order->last_payment);
-            $data = $this->createDataSecureHash($order->last_payment);
-            dd($data);
+            $data = $this->payooService->GetOrderInfo($order->last_payment);
+          return $data;
+
         }
         else{
             return back()->with('warning','Đơn hàng chưa thanh toán');

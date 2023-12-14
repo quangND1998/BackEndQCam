@@ -16,6 +16,7 @@ class Payment extends Model
         'OrderCash',
         'PaymentStatus',
         'PaymentMethod',
+        'PaymentMethodName',
         'PurchaseDate',
         'MerchantUsername',
         'ShopId',

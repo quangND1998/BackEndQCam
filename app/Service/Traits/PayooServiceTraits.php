@@ -31,13 +31,13 @@ trait PayooServiceTraits
         $data = [
             'OrderID' => $payment->OrderNo,
             'ShopID'=> config('payoo.shopID'),
-            'PurchaseDate'=> '20231213'
+            'PurchaseDate'=> Carbon::parse($payment->PurchaseDate)->format('Ymd')
         ];
-        $RequestData= json_encode($data, JSON_HEX_APOS ); 
-        dd($RequestData);
+        $RequestData= json_encode($data);
+
         return [
-            "RequestData" => json_encode($RequestData),
-            "SecureHash" =>hash('sha512',config('payoo.ChecksumKey').$RequestData)
+            "RequestData" => $RequestData,
+            "SecureHash" => hash('sha512',config('payoo.ChecksumKey').$RequestData)
         ];
     }
 

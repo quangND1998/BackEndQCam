@@ -38,6 +38,7 @@ class PayooService {
                 'OrderCash' =>$response['OrderCash'],
                 'PaymentStatus' =>$response['PaymentStatus'],
                 'PaymentMethod' =>$response['PaymentMethod'],
+                'PaymentMethodName' =>$response['PaymentMethodName'],
                 'PurchaseDate' =>$response['PurchaseDate'],
                 'MerchantUsername' =>$response['MerchantUsername'],
                 'ShopId' =>$response['ShopId'],
@@ -67,15 +68,14 @@ class PayooService {
 
     public function GetOrderInfo($data){
       
-        $data = $this->createDataSecureHash($data);
-      
+        $request = $this->createDataSecureHash($data);
+       
         $response = Http::withHeaders([
-            'Charset' => 'UTF-8',
             'APIUsername' =>  config('payoo.APIUsername'),
             'APIPassword' =>  config('payoo.APIPassword'),
             'APISignature' =>  config('payoo.APISignature'),
             'Content-Type' => 'application/json'
-        ])->post(config('payoo.BACKEND_ENDPOINT').'/GetOrderInfo', $data);
+        ])->post(config('payoo.BACKEND_ENDPOINT').'/GetOrderInfo', $request);
         return $response;
     }
   

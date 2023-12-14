@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('OrderCash', 30, 2)->nullable();
             $table->integer('PaymentStatus')->nullable();
             $table->integer('PaymentMethod')->nullable();
+            $table->string('PaymentMethodName')->nullable();
             $table->string('PurchaseDate')->nullable();
             $table->string('MerchantUsername')->nullable();
             $table->string('ShopId')->nullable();
