@@ -32,7 +32,7 @@ const asideLgCloseClick = (event) => {
 
 <template>
   <aside id="aside" class=" w-[260px] fixed flex z-40 top-0 h-screen transition-position overflow-hidden" style="box-shadow: var(0 0 #0000,0 0 #0000),var(0 0 #0000,0 0 #0000),var(-0 0 #0000);">
-    <div class="aside flex-1 flex  items-center flex-col overflow-hidden ">
+    <div class="aside lg:flex-1 md:flex-1  flex  items-center flex-col overflow-hidden ">
       <div class="aside-brand flex flex-row  items-center justify-between bg-white">
         <div class="items-center text-center flex-1 p-2">
             <img class="" src="/assets/images/cammattroi.png" alt="">
