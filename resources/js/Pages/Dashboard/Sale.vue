@@ -25,7 +25,7 @@ import CardBoxClient from '@/Components/CardBoxClient.vue'
 import LayoutAuthenticated from '@/Layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/Components/SectionTitleLineWithButton.vue'
 import SectionBannerStarOnGitHub from '@/Components/SectionBannerStarOnGitHub.vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import BaseIcon from '@/Components/BaseIcon.vue'
 const chartData = ref(null)
 
@@ -49,8 +49,8 @@ const transactionBarItems = computed(() => mainStore.history)
 
         <Head title="Dashboard" />
         <div class="mt-16 bg-gray-100 ">
-            <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3  gap-4 ml-6 mr-6 py-2">
-                <div class="col-span-1  p-3 border border-gray-300 border_round bg-white items-center text-center">
+            <div class="grid grid-cols-3 gap-4 ml-6 mr-6 py-2">
+                <div class="col-span-1   p-3 border border-gray-300 border_round bg-white items-center text-center">
                     <p class="text-sm text-[#000000] mt-6">Doanh thu trong tuần</p>
                     <h3 class="text-[32px] text-[#70A234] font-bold py-1">7000000 đ</h3>
                     <p class="text-sm text-[#000000]">Hoa hồng</p>
@@ -69,7 +69,7 @@ const transactionBarItems = computed(() => mainStore.history)
                     <h5 class="text-[24px] text-[#FF0000] font-semibold">7000000 đ</h5>
                 </div>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 gap-4 mx-6 my-2 ">
+            <div class="grid grid-cols-3 gap-4 mx-6 my-2 ">
                 <div class="col-span-2 ">
                     <div class="col-span-1  p-3 border border-gray-300 border_round bg-white">
                         <p class="text-sm text-[#FF0000] font-bold">Top 10 doanh thu trong tuần toàn hệ thống</p>
@@ -183,37 +183,37 @@ const transactionBarItems = computed(() => mainStore.history)
                     <div class="px-4 mt-3">
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
-                                <path  :d="mdiCartOutline" />
+                                <path :fill="color" :d="mdiCartOutline" />
                             </svg>
                             <p class="text-md  ml-2">Tổng số hợp đồng : 10</p>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
-                                <path  :d="mdiCartOutline" />
+                                <path :fill="color" :d="mdiCartOutline" />
                             </svg>
                             <p class="text-md  ml-2">Đã ký: 7</p>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
-                                <path  :d="mdiCartOutline" />
+                                <path :fill="color" :d="mdiCartOutline" />
                             </svg>
                             <p class="text-md  ml-2">Thanh toán 1 phần: 5</p>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
-                                <path  :d="mdiCartOutline" />
+                                <path :fill="color" :d="mdiCartOutline" />
                             </svg>
                             <p class="text-md  ml-2">Đã hoàn thành: 3</p>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
-                                <path  :d="mdiCartOutline" />
+                                <path :fill="color" :d="mdiCartOutline" />
                             </svg>
                             <p class="text-md  ml-2">Bị huỷ: 1</p>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
-                                <path  :d="mdiCartOutline" />
+                                <path :fill="color" :d="mdiCartOutline" />
                             </svg>
                             <div>
                                 <p class="text-md  ml-2">Doanh thu dự kiến: </p>
@@ -222,7 +222,7 @@ const transactionBarItems = computed(() => mainStore.history)
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
-                                <path  :d="mdiCartOutline" />
+                                <path :fill="color" :d="mdiCartOutline" />
                             </svg>
                             <div>
                                 <p class="text-md  ml-2">Doanh thu thực: </p>
@@ -231,7 +231,7 @@ const transactionBarItems = computed(() => mainStore.history)
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
-                                <path  :d="mdiCartOutline" />
+                                <path :fill="color" :d="mdiCartOutline" />
                             </svg>
                             <div>
                                 <p class="text-md  ml-2">Hoa hồng thực nhận: </p>
@@ -241,48 +241,9 @@ const transactionBarItems = computed(() => mainStore.history)
                     </div>
                 </div>
             </div>
-            <p class="text-xl ml-6 font-bold mt-10 pl-2">Đơn hàng của bạn (DVT 1000đ)</p>
-            <div class="mx-6 my-2 p-3 border border-gray-300 border_round bg-white">
-                <div class="my-3">
-                    <div
-                        class="min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
-                        <Link :href="route('admin.orders.package.all')"
-                            class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                            :class="{ 'bg-white  text-blue-500': $page.url.includes('all') }">
-                        Năm
-                        </Link>
-                        <Link :href="route('admin.orders.package.complete')"
-                            class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                            :class="{ 'bg-white  text-blue-500': $page.url.includes('complete') }">
-                        Tháng trước
-                        </Link>
-                        <Link :href="route('admin.orders.package.pending')" @click.prevent
-                            class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mr-1 bg-gray-100 hover:bg-white text-gray-500"
-                            :class="{ 'bg-white  text-blue-500': $page.url.includes('pending') }">
-                        Tháng này
-                        </Link>
-                        <Link :href="route('admin.orders.package.partiallyPaid')"
-                            class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                            :class="{ 'bg-white  text-blue-500': $page.url.includes('partiallyPaid') }">
-                        7 ngày qua
-                        </Link>
-                        <Link :href="route('admin.orders.package.draf')"
-                            class="flex items-center min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                            :class="{ 'bg-white  text-blue-500': $page.url.includes('draf') }">
-                            Tùy chỉnh
-                            <div class="ml-2 relative">
-                                <VueDatePicker time-picker-inline />
-                            </div>
-                            <span class="mx-1 text-gray-500">đến</span>
-                            <div class="relative">
-                                <VueDatePicker time-picker-inline />
-                            </div>
-                        </Link>
-                    </div>
-                    <div>
-
-                    </div>
-                </div>
+            <p class="text-sm m-6 font-bold">Đơn hàng của bạn (DVT 1000đ)</p>
+            <div class="m-6 p-3 border border-gray-300 border_round bg-white">
+                <p class="text-sm text-[#FF0000] font-bold">Top 10 doanh thu trong tuần toàn hệ thống</p>
                 <div class="w-full mt-2">
                     <div class="flex flex-col">
                         <div class="overflow-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[40vh]">
@@ -300,8 +261,8 @@ const transactionBarItems = computed(() => mainStore.history)
                                             Thời gian</th>
                                         <th scope="col" class="px-3 py-2 text-center text-sm text-[#000000] font-normal">Hợp
                                             Tổng giá trị</th>
-                                        <th scope="col" class="px-3 py-2 text-center text-sm text-[#000000] font-normal ">Họ
-                                            Đã thu
+                                            <th scope="col" class="px-3 py-2 text-center text-sm text-[#000000] font-normal ">Họ
+                                                Đã thu
                                         </th>
                                         <th scope="col" class="px-3 py-2 text-center text-sm text-[#000000] font-normal">
                                             Còn lại
@@ -310,46 +271,46 @@ const transactionBarItems = computed(() => mainStore.history)
                                             Ghi nhận HH</th>
                                         <th scope="col" class="px-3 py-2 text-center text-sm text-[#000000] font-normal">Hợp
                                             Hoa Hồng Đã thanh toán</th>
-                                        <th scope="col" class=" px-3 py-2 text-center text-sm text-[#000000] font-normal">
-                                            Hoa Hồng Chưa thanh toán</th>
-                                        <th scope="col"
-                                            class="whitespace-nowrap px-3 py-2 text-center text-sm text-[#000000] font-normal">
-                                            Hợp
+                                            <th scope="col" class=" px-3 py-2 text-center text-sm text-[#000000] font-normal">
+                                                Hoa Hồng Chưa thanh toán</th>
+                                        <th scope="col" class="whitespace-nowrap px-3 py-2 text-center text-sm text-[#000000] font-normal">Hợp
                                             Trạng thái</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td class="whitespace-nowrap text-center px-3 py-2 font-medium">
-                                            127636
+                                            Nguyễn Văn B
                                         </td>
                                         <td class="whitespace-nowrap text-center px-3 py-2 font-medium">
                                             Bùi Đình Dũng
                                         </td>
-                                        <td class="whitespace-nowrap text-center px-3 py-2 text-[#00AB55] font-medium">
-                                            <p>12/8/2024</p>
+                                        <td class="whitespace-nowrap text-center px-3 py-2 text-[#ED5B00] font-bold">
+                                            <p>100.000.000đ</p>
                                         </td>
-                                        <td class="whitespace-nowrap text-center px-3 py-2  font-medium">
-                                            100.000đ
-                                        </td>
-                                        <td class="whitespace-nowrap text-center px-3 py-2 font-medium">
-                                            50.000đ
+                                        <td class="whitespace-nowrap text-center px-3 py-2 text-gray-500">
+                                            1
                                         </td>
                                         <td class="whitespace-nowrap text-center px-3 py-2 font-medium">
-                                            50.000đ
-                                        </td>
-                                        <td class="whitespace-nowrap text-center px-3 py-2  font-medium">
-                                            <p>3.000đ</p>
-                                        </td>
-                                        <td class="whitespace-nowrap text-center px-3 py-2 font-medium">
-                                            2.000đ
-                                        </td>
-                                        <td class="whitespace-nowrap text-center px-3 py-2 font-medium">
-                                            1.000đ
-                                        </td>
-                                        <td class="whitespace-nowrap text-center px-3 py-2 font-medium">
-                                            Processing
-                                        </td>
+                                                    Nguyễn Văn B
+                                                </td>
+                                                <td class="whitespace-nowrap text-center px-3 py-2 font-medium">
+                                                    Bùi Đình Dũng
+                                                </td>
+                                                <td
+                                                    class="whitespace-nowrap text-center px-3 py-2 text-[#ED5B00] font-bold">
+                                                    <p>100.000.000đ</p>
+                                                </td>
+                                                <td class="whitespace-nowrap text-center px-3 py-2 text-gray-500">
+                                                    1
+                                                </td>
+                                                <td class="whitespace-nowrap text-center px-3 py-2 font-medium">
+                                                    Nguyễn Văn B
+                                                </td>
+                                                <td class="whitespace-nowrap text-center px-3 py-2 font-medium">
+                                                    Bùi Đình Dũng
+                                                </td>
+
                                     </tr>
                                 </tbody>
                             </table>
