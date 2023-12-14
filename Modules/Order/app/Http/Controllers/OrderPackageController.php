@@ -55,46 +55,29 @@ class OrderPackageController extends Controller
     }
     public function index(Request $request)
     {
-        // $order = Order::with('discount')->find(1);
-        // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = 'pending';
-        // $orders =  OrderPackage::with('customer','product_service')->where('status','pending')->get();
-        $orders  = $this->getOrder($request,$status);
-        // foreach($orders as $order){
-        //     dd($order->checkPaymentComplete());
-        // }
-        // return $orders;
+        $status = 'all';
+        $orders  = $this->getOrderAll($request,$status);
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
+
     public function listPending(Request $request)
     {
-        // $order = Order::with('discount')->find(1);
-        // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
-        // $orders =  OrderPackage::with('customer','product_service')->where('status','pending')->get();
         $orders  = $this->getOrder($request,$status);
-        // foreach($orders as $order){
-        //     dd($order->checkPaymentComplete());
-        // }
-        // return $orders;
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
     public function listOrderCancel(Request $request)
     {
-        // $order = Order::with('discount')->find(1);
-        // return $order;
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'decline';
         $orders  = $this->getOrder($request,$status);
-        // $orders =  OrderPackage::with('customer','product_service')->where('status','decline')->get();
-        //return $orders;
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
@@ -104,8 +87,6 @@ class OrderPackageController extends Controller
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'complete';
         $orders  = $this->getOrder($request,$status);
-        // return $orders;
-        // $orders =  OrderPackage::with('customer','product_service')->where('status','complete')->orderBy('created_at','desc')->get();
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
@@ -120,7 +101,7 @@ class OrderPackageController extends Controller
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
             }
         )->whereColumn('price_percent', '<', 'grand_total')
-        ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(15);
+        ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
@@ -134,7 +115,7 @@ class OrderPackageController extends Controller
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
             }
         )->where('price_percent', '=', 0)
-        ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(15);
+        ->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
@@ -477,6 +458,7 @@ class OrderPackageController extends Controller
             $history_extend->date_from = $order->time_approve;
             $history_extend->date_to = $order->time_end;
             $history_extend->description = "tạo mới";
+            $history_extend->order_id = $order->id;
             $new_product_owner->history_extend()->save($history_extend);
         }else{
             $order->product_service_owner->state = "active";
@@ -552,7 +534,6 @@ class OrderPackageController extends Controller
                 $newCollections[] = array(
                     'status' => $status,
                     'total' => $filtered->total,
-
                 );
 
             }
@@ -565,6 +546,10 @@ class OrderPackageController extends Controller
             'status' => 'draf',
             'total' => $this->groupByPaymentDraf(),
         );
+        $newCollections[] = array(
+            'status' => 'all',
+            'total' => $this->groupAllOrder(),
+        );
         return $newCollections;
     }
     public function groupByPayment(){
@@ -575,14 +560,27 @@ class OrderPackageController extends Controller
         $paymentGroup = OrderPackage::role()->where('price_percent','=',0)->count();
         return $paymentGroup;
     }
+    public function groupAllOrder(){
+        $paymentGroup = OrderPackage::role()->count();
+        return $paymentGroup;
+    }
     public function getOrder($request, $status)
     {
-        return OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner'])->role()->whereHas(
+        return OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
             }
-        )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate(20);
+        )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 5);
+    }
+    public function getOrderAll($request, $status)
+    {
+        return OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
+            'customer',
+            function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->customer . '%');
+            }
+        )->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 5);
     }
 
 }

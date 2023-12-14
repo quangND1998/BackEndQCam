@@ -328,12 +328,12 @@ const date = ref(new Date());
 <template>
     <LayoutAuthenticated>
 
-        <Head title="Quản lý đơn hàng" />
-        <SectionMain class="p-3 mt-8">
-            <div class="lg:container m-auto mt-10">
+        <Head title="Tạo mới hợp đồng" />
+        <SectionMain class="p-3 main_create_package">
+            <div class="lg:container m-auto mt-5">
                 <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10 p-2">
                     <div class="col-span-2">
-                        <div class="min-[320px]:block md:flex border-b border-gray-200 pb-4">
+                        <div class="min-[320px]:block md:flex border-b border-gray-200 ">
                             <div class="min-[320px]:w-full md:w-1/2 px-0">
                             <div class="pb-3 ">
                                 <img src="/assets/images/cammattroi.png" alt="">
@@ -349,58 +349,57 @@ const date = ref(new Date());
                                     <div class="flex items-center w-full">
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Đơn hàng #</p>
                                         <input type="text" id="first_name" disabled v-model="form.order_number"
-                                            class="  bg-gray-50 border-0 border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            class="height_fix_30  bg-gray-50 border-0 border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             :placeholder="form.order_number" >
                                     </div>
-                                    <div class="flex items-center w-full my-2">
+                                    <div class="flex items-center w-full my-1">
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Số phiếu #</p>
                                         <div class="w-full">
                                             <input type="text" id="first_name" v-model="form.idPackage"
-                                            class="  bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            class=" height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                             <InputError class="mt-2" :message="form.errors.idPackage" />
                                         </div>
                                     </div>
 
-                                    <div class="flex items-center w-full my-2">
+                                    <div class="flex items-center w-full my-1">
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Ngày</p>
                                         <div class="relative w-full">
-                                            <VueDatePicker class="rounded-lg" v-model="date" time-picker-inline />
+                                            <VueDatePicker class="rounded-lg height_fix_30" v-model="date" time-picker-inline />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="my-3">
+                        <div class="my-1">
                             <div class="flex  items-center">
                                 <h3 class="text-[17px] font-bold mr-[20px]">Thông tin liên hệ</h3>
-
                             </div>
 
-                            <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt-2">
+                            <div class="min-[320px]:block md:grid grid-cols-2 gap-4 ">
                                 <div>
-                                    <div class="my-3">
-                                        <label for="name" class="block mb-2 text-sm  text-gray-900 dark:text-white">Tên
+                                    <div class="my-1">
+                                        <label for="name" class="block mb-1 text-sm  text-gray-900 dark:text-white">Tên
                                             Khách
                                             Hàng
                                             *</label>
                                         <input type="text" id="name"  v-model="search" @keyup="onSearchUser()" autocomplete="search"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            class="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" >
                                         <div class="text-red-500" v-if="flash"> {{ flash }}</div>
                                     </div>
                                     <InputError class="mt-2" :message="form.errors.name" />
-                                    <div class="my-3">
-                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                    <div class="my-1">
+                                        <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                             Số điện thoại *</label>
                                         <input type="text" id="first_name"
                                             v-model="searchPhone" @keyup="onSearchUserPhone()"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            class="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" >
                                     </div>
                                     <InputError class="mt-2" :message="form.errors.phone_number" />
-                                    <div class="my-3">
-                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                    <div class="my-1">
+                                        <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                             Giới tính</label>
                                         <div class="flex">
                                             <div class="flex items-center ">
@@ -423,20 +422,20 @@ const date = ref(new Date());
 
                                 </div>
                                 <div class="min-[320px]:ml-0 md:ml-3">
-                                    <div class="my-3">
-                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                    <div class="my-1">
+                                        <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                             Địa chỉ *</label>
                                         <input type="text" id="first_name" v-model="form.address" :disabled="findUser && user?.address != null"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            class="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                     </div>
 
-                                    <div class="my-3">
-                                        <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                    <div class="my-1">
+                                        <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                             Thành phố *</label>
                                         <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name" :disabled="findUser && user?.city != null"
                                             @change="onChangeCity($event)" optionValue="Name" placeholder="Chọn tỉnh thành"
-                                            class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
+                                            class="w-full height_fix_30 md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
                                             <template #value="slotProps">
 
                                                 <div v-if="slotProps.value" class="flex align-items-center">
@@ -456,16 +455,16 @@ const date = ref(new Date());
                                         </Dropdown>
                                         <InputError class="mt-2" :message="form.errors.city" />
                                     </div>
-                                    <div class="my-3 min-[320px]:block md:flex">
+                                    <div class="my-1 min-[320px]:block md:flex">
                                         <div class="min-[320px]:w-full md:w-1/2 mr-2">
                                             <label for="first_name"
-                                                class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                                class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
 
                                             <Dropdown v-model="form.district" :options="districts.Districts" filter :disabled="findUser && user?.district != null"
                                                 @change="onChangeDistrict($event)" optionLabel="Name" optionValue="Name"
                                                 placeholder="Chọn Quận/huyện"
-                                                class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
+                                                class="w-full height_fix_30 md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
                                                 <template #value="slotProps">
 
                                                     <div v-if="slotProps.value" class="flex align-items-center">
@@ -487,13 +486,13 @@ const date = ref(new Date());
                                         </div>
                                         <div class="min-[320px]:w-full md:w-1/2 ">
                                             <label for="first_name"
-                                                class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                                class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                                 Phường xã*</label>
 
 
                                             <Dropdown v-model="form.wards" :options="wards.Wards" filter optionLabel="Name" :disabled="findUser && user?.wards != null"
                                                 optionValue="Name" placeholder="Chọn Phường xã"
-                                                class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
+                                                class="w-full height_fix_30 md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
                                                 <template #value="slotProps">
 
                                                     <div v-if="slotProps.value" class="flex align-items-center">
@@ -517,7 +516,7 @@ const date = ref(new Date());
                                 </div>
                             </div>
                                             <div class="overflow-x-auto col-span-2 mt-2 w-full">
-                    <div class="relative shadow-md sm:border_round mb-5 mt-4">
+                    <div class="relative shadow-md sm:border_round mb-2 mt-4">
                         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
@@ -557,34 +556,34 @@ const date = ref(new Date());
                     </div>
                     <div class="bg-white border_round p-3">
                         <div class="flex justify-between">
-                            <div class="mb-2">
+                            <div class="mb-1">
                                 <!-- <font-awesome-icon :icon="['fas', 'cart-shopping']" class="mt-1" /> -->
                                 <span class="text-xl font-semibold ml-2">Quyền lợi nhận nuôi {{ product?.name }}</span>
                             </div>
 
                         </div>
                         <hr />
-                        <div class="my-3">
-                            <div class="block ml-2 w-4/5 mb-2">
+                        <div class="my-1">
+                            <div class="block ml-2 w-4/5 mb-1">
                                 <h3 class="text-base font-semibold">1. Thăm vườn không giới hạn</h3>
                                 <p class="text-xs font-normal">Nhận {{ product?.free_visit }} lần tham quan miễn phí</p>
                             </div>
-                            <div class="block ml-2 w-4/5 mb-2">
+                            <div class="block ml-2 w-4/5 mb-1">
                                 <h3 class="text-base font-semibold">2. Thu hoạch {{ product?.amount_products_received }} kg
                                     cam</h3>
                                 <p class="text-xs font-normal">{{ product?.number_deliveries }} lần ship hàng về tận nhà</p>
                             </div>
-                            <div class="block ml-2 w-4/5 mb-2">
+                            <div class="block ml-2 w-4/5 mb-1">
                                 <h3 class="text-base font-semibold">3. Tặng thẻ Membership</h3>
                                 <p class="text-xs font-normal">Hưởng đặc quyền riêng từ trang trại</p>
                             </div>
-                            <div class="block ml-2 w-4/5 mb-2">
+                            <div class="block ml-2 w-4/5 mb-1">
                                 <h3 class="text-base font-semibold">4. Nhận nông sản sạch
                                     {{ product?.number_receive_product/product?.life_time }} lần/năm</h3>
                                 <p class="text-xs font-normal">Các sản phẩm nông sản như thanh long
                                     sầu riêng là quà tặng đến cho bạn</p>
                             </div>
-                            <div class="block ml-2 w-4/5 mb-2">
+                            <div class="block ml-2 w-4/5 mb-1">
                                 <h3 class="text-base font-semibold">5. Quà tặng thêm</h3>
                                 <p class="text-xs font-normal">Nhiều phần quà nông sản hấp dẫn trị tổng
                                     trị giá xx triệu</p>
@@ -601,15 +600,15 @@ const date = ref(new Date());
 
                         <div class="w-full mb-3 flex">
                             <div class="w-1/4 mr-3">
-                                <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                     VAT(%)</label>
                                 <!-- <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber  v-model="form.vat"  :min="0"  :max="100"  inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                                <InputNumber  v-model="form.vat"  :min="0"  :max="100"  inputClass="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
                             </div>
                             <div class="w-1/4 mr-3">
-                                <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                     Ưu đãi (%)</label>
                                 <!-- <input type="number" id="first_name" v-model="form.discount_deal" min="0" max="100"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -617,7 +616,7 @@ const date = ref(new Date());
                                     <InputNumber  v-model="form.discount_deal"  :min="0"  :max="100" inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
                             </div>
                             <div class="w-1/2">
-                                <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                     Thời gian giữ chỗ (ngày)</label>
                                 <!-- <input type="number" id="first_name" v-model="form.time_reservations"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -628,14 +627,14 @@ const date = ref(new Date());
                         </div>
                         <div class="w-full flex">
                             <div class="w-1/2 mr-3">
-                                <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                     Số tiền</label>
                                 <!-- <MazInputPrice v-model="form.price_percent"  locale="vi-VN" :min="0"
                                     :max="maxPrice" @formatted="formattedPrice = $event" /> -->
                                 <InputNumber  v-model="form.price_percent"  :min="0"  :max="maxPrice"  inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
                             </div>
                             <div class="w-1/2">
-                                <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                                <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                     Thanh toán</label>
                                 <select id="countries" v-model="form.payment_method"
                                     class="bg-gray-50 border border_round border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -646,8 +645,8 @@ const date = ref(new Date());
                             </div>
                         </div>
 
-                        <div class="my-2">
-                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                        <div class="my-1">
+                            <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                 NV tư vấn bán hàng(Ref)</label>
                             <!-- <Multiselect v-model="form.ref_id"  :appendNewTag="false" :createTag="false"
                             :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="None"
@@ -668,8 +667,8 @@ const date = ref(new Date());
                                 </template>
                             </Multiselect>
                         </div>
-                        <div class="my-2">
-                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                        <div class="my-1">
+                            <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                 Chọn TO(Người chốt đơn)</label>
                             <!-- <Multiselect v-model="form.leader_sale_id" :appendNewTag="false" :createTag="false"
                                 :searchable="true" label="name" valueProp="id" trackBy="name" :options="leaders"
@@ -689,10 +688,10 @@ const date = ref(new Date());
                                 </template>
                             </Multiselect>
                         </div>
-                        <div class="my-2">
-                            <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                        <div class="my-1">
+                            <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                 Nguồn khách hàng</label>
-                            <div class="flex items-center justify-center mb-2">
+                            <div class="flex items-center justify-center mb-1">
 
                                 <input class=" mr-2" type="radio" id="one" value="telesale"
                                     v-model="form.type_customer_resource" />
@@ -705,7 +704,7 @@ const date = ref(new Date());
                             </div>
 
 
-                            <div class="flex items-center justify-center mb-2">
+                            <div class="flex items-center justify-center mb-1">
 
                                 <input class=" mr-2" type="radio" id="one" value="ctv"
                                     v-model="form.type_customer_resource" />
@@ -729,13 +728,13 @@ const date = ref(new Date());
                                         </template>
                                     </Multiselect>
                             </div>
-                            <div class=" mb-2">
+                            <div class=" mb-1">
 
                                 <input class=" mr-2" type="radio" id="one" value="private"
                                     v-model="form.type_customer_resource" />
                                 <label for="one" class="w-[80px] mr-2">Private</label>
                             </div>
-                            <div class="my-3">
+                            <div class="my-1">
                                 <UploadImage :max_files="4" v-model="form.images" :multiple="true"
                                     :label="`Chứng từ liên quan`" />
                                 <InputError class="mt-2" :message="form.errors.images" />
@@ -744,35 +743,35 @@ const date = ref(new Date());
                                 </div>
                             </div>
                 <div class="p-2 bg-gray-100">
-                    <div class="flex justify-between my-2">
+                    <div class="flex justify-between my-1">
                         <p class="text-sm text-[#686868] font-bold">Tổng</p>
                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice(product?.price) }} VND</p>
                     </div>
-                    <div class="flex justify-between my-2">
+                    <div class="flex justify-between my-1">
                         <p class="text-sm text-[#686868] font-bold">VAT({{ form.vat }}%)</p>
                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.vat * (product?.price +
                             ((form.discount_deal * product?.price) / 100)) / 100) }} vnd
                         </p>
                     </div>
-                    <div class="flex justify-between my-2">
+                    <div class="flex justify-between my-1">
                         <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
                         <p class="text-sm text-[#686868] font-bold">Miễn phí</p>
                     </div>
-                    <div class="flex justify-between my-2">
+                    <div class="flex justify-between my-1">
                         <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.discount_deal * product?.price) /
                             100) }} VND
                         </p>
                     </div>
-                    <div class="flex justify-between my-2">
+                    <div class="flex justify-between my-1">
                         <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
                         <p class="text-sm text-[#686868]">{{ formatPrice(maxPrice) }} vnd</p>
                     </div>
-                    <div class="flex justify-between my-2">
+                    <div class="flex justify-between my-1">
                         <p class="text-sm text-[#686868]">Đã thanh toán</p>
                         <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.price_percent) }} VND</p>
                     </div>
-                    <div class="flex justify-between my-2">
+                    <div class="flex justify-between my-1">
                         <p class="text-sm text-[#686868] font-bold" v-if="((product?.price +
                             ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
                             form.price_percent) > 0">Còn thiếu</p>
@@ -780,7 +779,7 @@ const date = ref(new Date());
                         <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice(maxPrice -
                             form.price_percent) }} VND</p>
                     </div>
-                    <div class="my-3">
+                    <div class="my-1">
                         <BaseButton color="info" @click="save()"
                             class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center border_round"
                             :icon="mdiContentSaveMove" small label="Lưu hợp đồng" />
@@ -804,7 +803,14 @@ const date = ref(new Date());
     </LayoutAuthenticated>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>
-
+<style scoped>
+/* .height_fix_30{
+    height: 30px;
+}
+.multiselect-placeholder{
+    height: 30px;
+} */
+</style>
 
 
 

@@ -381,14 +381,14 @@ const date = ref(new Date());
 <template>
     <LayoutAuthenticated>
 
-        <Head title="Quản lý đơn hàng" />
-        <SectionMain class="p-3 mt-8">
+        <Head title="Chỉnh sửa hợp đồng" />
+        <SectionMain class="p-3 ">
             <div class="lg:container m-auto mt-10">
                 <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10 p-2">
                     <div class="col-span-2">
-                        <div class="min-[320px]:block md:flex border-b border-gray-200 pb-4">
+                        <div class="min-[320px]:block md:flex border-b border-gray-200 pb-1">
                             <div class="min-[320px]:w-full md:w-1/2 px-0">
-                                <div class="pb-3 ">
+                                <div class="pb">
                                     <img src="/assets/images/cammattroi.png" alt="">
                                     <h1 class="text-base font-semibold uppercase">CÔNG TY CỔ PHẦN {{
                                         $page.props.company_infor?.name }}</h1>
@@ -426,11 +426,11 @@ const date = ref(new Date());
                                 </div>
                             </div>
                         </div>
-                        <div class="my-3">
+                        <div class="my-1">
                             <p class="my-3 px-4 py-2 text-white bg-red-500 border border_round max-w-fit w-2/3"
                                 v-if="order.exist_accept == false">Đơn hàng đã có khoản thanh toán được duyệt từ kế
                                 toán, bạn nên lưu ý trước khi sửa. </p>
-                            <div class="flex  items-center">
+                            <div class="flex my-2 items-center">
 
                                 <h3 class="text-[17px] font-bold mr-[20px]">Thông tin liên hệ</h3>
                                 <!-- <input type="string" id="first_name" v-model="search" @keyup="onSearchUser()"
@@ -438,9 +438,9 @@ const date = ref(new Date());
                                     placeholder="Tìm kiếm SĐT" required> -->
                             </div>
 
-                            <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt-2">
+                            <div class="min-[320px]:block md:grid grid-cols-2 gap-4 mt">
                                 <div>
-                                    <div class="my-3">
+                                    <div class="my-1">
                                         <label for="name" class="block mb-2 text-sm  text-gray-900 dark:text-white">Tên
                                             Khách
                                             Hàng
@@ -450,14 +450,14 @@ const date = ref(new Date());
                                             placeholder="" required>
                                         <div class="text-red-500" v-if="flash"> {{ flash }}</div>
                                     </div>
-                                    <div class="my-3">
+                                    <div class="my-1">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Số điện thoại *</label>
                                         <input type="text" id="first_name"   v-model="searchPhone" @keyup="onSearchUserPhone()"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                     </div>
-                                    <div class="my-3">
+                                    <div class="my-1">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Giới tính</label>
                                         <div class="flex">
@@ -480,7 +480,7 @@ const date = ref(new Date());
 
                                 </div>
                                 <div class="min-[320px]:ml-0 md:ml-3">
-                                    <div class="my-3">
+                                    <div class="my-1">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Địa chỉ *</label>
                                         <input type="text" id="first_name" v-model="form.address" :disabled="findUser && user?.address != null"
@@ -488,7 +488,7 @@ const date = ref(new Date());
                                             placeholder="" required>
                                     </div>
 
-                                    <div class="my-3">
+                                    <div class="my-1">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Thành phố *</label>
                                         <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name" :disabled="findUser && user?.city != null"
@@ -513,7 +513,7 @@ const date = ref(new Date());
                                         </Dropdown>
                                         <InputError class="mt-2" :message="form.errors.city" />
                                     </div>
-                                    <div class="my-3 min-[320px]:block md:flex">
+                                    <div class="my-1 min-[320px]:block md:flex">
                                         <div class="min-[320px]:w-full md:w-1/2 mr-2">
                                             <label for="first_name"
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -680,7 +680,7 @@ const date = ref(new Date());
 
                                     </div>
                                     <hr />
-                                    <div class="my-3">
+                                    <div class="my-1">
                                         <div class="block ml-2 w-4/5 mb-2">
                                             <h3 class="text-base font-semibold">1. Thăm vườn không giới hạn</h3>
                                             <p class="text-xs font-normal">Nhận {{ product?.free_visit }} lần tham quan miễn
@@ -769,7 +769,7 @@ const date = ref(new Date());
                                 </select>
                             </div>
                         </div>
-                        <p class="my-3 px-2 py-2 text-white bg-red-500 border border_round max-w-fit text-[12px] "
+                        <p class="my-1 px-2 py-2 text-white bg-red-500 border border_round max-w-fit text-[12px] "
                                 v-if="order?.history_payment.length > 0">Muốn sửa khoản thanh toán cần xóa hết thanh toán đã có.</p>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -863,7 +863,7 @@ const date = ref(new Date());
                                     v-model="form.type_customer_resource" />
                                 <label for="one" class="w-[80px] mr-2">Private</label>
                             </div>
-                            <div class="my-3" v-if="order?.history_payment.length == 0">
+                            <div class="my-1" v-if="order?.history_payment.length == 0">
                                 <UploadImage :max_files="4" v-model="form.images" :multiple="true"
                                     :label="`Chứng từ liên quan`" />
                                 <InputError class="mt-2" :message="form.errors.images" />
@@ -910,7 +910,7 @@ const date = ref(new Date());
                                     <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice(maxPrice - form.total_paymented -
                                         form.price_percent) }} VND</p>
                                 </div>
-                                <div class="my-3">
+                                <div class="my-1">
                                     <BaseButton color="info" @click="save()"
                                         class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center border_round"
                                         :icon="mdiContentSaveMove" small label="Lưu hợp đồng" />

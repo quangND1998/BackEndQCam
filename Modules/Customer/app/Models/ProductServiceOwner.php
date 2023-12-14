@@ -10,6 +10,7 @@ use Modules\Tree\app\Models\ProductService;
 use Modules\Tree\app\Models\Tree;
 use Modules\Customer\app\Models\Contract;
 use Modules\Order\app\Models\Order;
+use Modules\Order\app\Models\OrderPackage;
 
 class ProductServiceOwner extends Model
 {
@@ -27,7 +28,10 @@ class ProductServiceOwner extends Model
         //return ProductServiceOwnerFactory::new();
     }
 
-
+    public function order_package()
+    {
+        return $this->belongsTo(OrderPackage::class, 'order_id');
+    }
     public function product()
     {
         return $this->belongsTo(ProductService::class, 'product_service_id');

@@ -67,6 +67,12 @@ export default [{
                 label: 'Users',
                 permissions: ['view-user'],
                 route_list: null
+            },
+            {
+                route: 'commission.index',
+                label: 'Cài đặt hoa hồng',
+                permissions: ['view-user'],
+                route_list: null
             }
         ]
     },
@@ -87,9 +93,15 @@ export default [{
                 route_list: null
             },
             {
-                route: 'admin.orders.package.index',
+                route: 'admin.orders.package.all',
                 label: 'Hợp đồng',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.cskh',
+                label: 'CSKH',
+                permissions: ['super-admin','viewer-custommer', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
             {
@@ -155,12 +167,14 @@ export default [{
         icon: mdiFileTreeOutline,
         permissions: ['view-user', 'viewer-custommer', 'leader-shipper'],
         route_list: ['customer.index', 'shippers.index'],
-        menu: [{
-            route: 'customer.index',
-            label: 'Customer',
-            permissions: ['super-admin', 'viewer-custommer'],
-            route_list: null
-        }, ]
+        menu: [
+            {
+                route: 'customer.index',
+                label: 'Customer',
+                permissions: ['super-admin', 'viewer-custommer']
+            },
+
+    ]
     },
     {
         label: 'Quản lý Shipper',

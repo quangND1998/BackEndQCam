@@ -254,13 +254,13 @@ const limit_tree = computed(() =>{
                                 </select>
                             </div>
                         </div>
-                       
+
                     </div>
                     <div class="flex">
-                     
-                     
 
-                      
+
+
+
                     </div>
 
                 </div>
@@ -470,10 +470,10 @@ const limit_tree = computed(() =>{
 
                                 </td>
                         </tr>
-                        <pagination :links="customers.links" />
+
                     </tbody>
                 </table>
-
+                <pagination :links="customers.links" />
             </div>
 
         </SectionMain>
