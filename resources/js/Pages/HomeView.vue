@@ -69,7 +69,7 @@ const transactionBarItems = computed(() => mainStore.history)
                     <h5 class="text-[24px] text-[#FF0000] font-semibold">7000000 đ</h5>
                 </div>
             </div>
-            <div class="grid grid-cols-3 gap-4 mx-6 my- ">
+            <div class="grid grid-cols-3 gap-4 mx-6 my-2 ">
                 <div class="col-span-2 ">
                     <div class="col-span-1  p-3 border border-gray-300 border_round bg-white">
                         <p class="text-sm text-[#FF0000] font-bold">Top 10 doanh thu trong tuần toàn hệ thống</p>
