@@ -11,7 +11,9 @@ Route::middleware([
 
 
     Route::get('dashboard', [DashBoardController::class, 'index'])->name('dashboard');
-    Route::prefix('sale')->as('sale.')->group(function () {
-
+    Route::prefix('dashboard')->as('dashboard.')->group(function () {
+        Route::prefix('leader-sale')->as('leader-sale.')->group(function () {
+            Route::get('', [DashBoardController::class, 'leaderSale'])->name('leade-sale');
+        });
     });
 });

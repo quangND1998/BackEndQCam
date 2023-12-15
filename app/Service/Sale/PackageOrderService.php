@@ -181,7 +181,7 @@ class PackageOrderService
 
       DB::raw("CAST((SUM(grand_total))  AS INTEGER) as  grand_total_sum"),
       DB::raw("CAST((SUM(price_percent))  AS INTEGER) as  price_percent_sum"),
-      DB::raw('DATE_FORMAT(created_at, "%m") as month'),
+      DB::raw('DATE_FORMAT(created_at, "%M") as month'),
       DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as time'),
     )->filtertime($filters)
       ->where('ref_id', $user->id);
@@ -264,7 +264,7 @@ class PackageOrderService
           'grand_total_sum' => 0,
           'price_percent_sum' => 0,
           'time' => Carbon::parse($date)->format('Y-m-d'),
-          'month' => date("m", strtotime($date))
+          'month' => Carbon::create()->month(date("m", strtotime($date)))->format("M")
         );
       }
     }
