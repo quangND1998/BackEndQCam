@@ -174,19 +174,19 @@ class OrderPackage extends Model implements HasMedia
 
     public function scopeFilterTime($query, array $filters)
     {
-
+       
         if (isset($filters['date'])) {
 
-            if ($filters == 'week') {
+            if ($filters['date'] == 'week') {
                 $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
-            } elseif ($filters == 'beforMonth') {
-
-                $query->whereBetween('created_at', [Carbon::now()->subMonths(1), Carbon::now()]);
-            } elseif ($filters == 'month') {
+            } elseif ($filters['date'] == 'beforMonth') {
+              
+                $query->whereBetween('created_at', [Carbon::now()->subMonth(1)->startOfMonth(), Carbon::now()->subMonth(1)->endOfMonth()]);
+            } elseif ($filters['date'] == 'month') {
 
 
                 $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
-            } elseif ($filters == 'year') {
+            } elseif ($filters['date'] == 'year') {
 
                 $query->whereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
             } else {
