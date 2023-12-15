@@ -317,9 +317,9 @@ class OrderPackageController extends Controller
         $order = OrderPackage::find($id);
         if($order->totalPayment() < $order->grand_total){
             $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->amount_received,$request->payment_date,$request->images);
-            $order->price_percent = $order->totalPayment() + $request->amount_received;
+            // $order->price_percent = $order->totalPayment() + $request->amount_received;
         }else{
-            $order->price_percent = $order->grand_total;
+            // $order->price_percent = $order->grand_total;
         }
         $order->save();
         $order = OrderPackage::find($id);
@@ -594,5 +594,4 @@ class OrderPackageController extends Controller
         ->fillter($request->only( 'from', 'to', 'payment_status', 'payment_method', 'type'))
         ->paginate($request->per_page ? $request->per_page : 5);
     }
-
 }

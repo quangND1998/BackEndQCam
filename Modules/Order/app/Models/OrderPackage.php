@@ -184,13 +184,13 @@ class OrderPackage extends Model implements HasMedia
 
     public function scopeFilterTime($query, array $filters)
     {
-       
+
         if (isset($filters['date'])) {
 
             if ($filters['date'] == 'week') {
                 $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
             } elseif ($filters['date'] == 'beforMonth') {
-              
+
                 $query->whereBetween('created_at', [Carbon::now()->subMonth(1)->startOfMonth(), Carbon::now()->subMonth(1)->endOfMonth()]);
             } elseif ($filters['date'] == 'month') {
 
@@ -213,5 +213,8 @@ class OrderPackage extends Model implements HasMedia
 
             $query->whereBetween('created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
         }
+    }
+    public function commissions_packages(){
+        return $this->hasOne(commissionsPackage::class, 'order_package_id');
     }
 }

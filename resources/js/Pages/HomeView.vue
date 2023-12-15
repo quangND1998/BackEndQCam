@@ -21,7 +21,7 @@ import LineChart from '@/Components/Charts/LineChart.vue'
 import { Head, Link } from '@inertiajs/vue3'
 import BaseIcon from '@/Components/BaseIcon.vue'
 import PaginationDashboard from '@/Components/PaginationDefault.vue'
-import ApexCharts from 'apexcharts'
+
 const chartData = ref(null)
 const props = defineProps({
     top_ten_sale_data:Array,
