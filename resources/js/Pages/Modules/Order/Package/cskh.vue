@@ -50,7 +50,8 @@ const filter = reactive({
     payment_status: null,
     payment_method: null,
     type: null,
-    per_page: 10
+    per_page: 10,
+    status: props.status
 
 })
 const customer = ref()
@@ -89,7 +90,7 @@ const searchCustomer = () => {
 
 const search = () => {
     router.get(route(`admin.orders.package.${props.status}`),
-        { search: filter.search },
+    filter,
         {
             preserveState: true,
             preserveScroll: true

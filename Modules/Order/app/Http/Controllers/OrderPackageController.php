@@ -586,11 +586,12 @@ class OrderPackageController extends Controller
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','%' . $request->search . '%');
             }
-        )->fillter($request->only( 'from', 'to', 'payment_status', 'payment_method', 'type'))
+        )
         ->orwhere('order_number', 'LIKE', '%' . $request->search . '%')
         ->orwhere('idPackage', 'LIKE', '%' . $request->search . '%')
         ->orderBy('created_at', 'desc')
         ->role()
+        ->fillter($request->only( 'from', 'to', 'payment_status', 'payment_method', 'type'))
         ->paginate($request->per_page ? $request->per_page : 5);
     }
 
