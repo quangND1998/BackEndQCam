@@ -89,7 +89,7 @@ const searchCustomer = () => {
 
 const search = () => {
     router.get(route(`admin.orders.package.${props.status}`),
-        { search: filter.search },
+    filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -125,7 +125,8 @@ const fillterType = (event) => {
 }
 const loadOrder = async $state => {
     console.log("loading...");
-    router.get(route(`admin.orders.package.${props.status}`),
+    console.log(filter);
+    router.get(route(`admin.orders.package.all`),
         filter,
         {
             preserveState: true,
@@ -444,7 +445,7 @@ const deleteOrder = (order) => {
                 <PackageBar :statusGroup="statusGroup"></PackageBar>
                 <ModalDecline></ModalDecline>
                 <ModelRefund></ModelRefund>
-                <div class="w-full flex justify-between">
+                <div class="w-full flex justify-between overflow-auto">
                     <div class="mr-4 flex-col flex">
                             <div class=" text-gray-500">
                                 <label for>Loại hình</label>
@@ -462,7 +463,7 @@ const deleteOrder = (order) => {
 
                         <div class="mr-4">
                             <div class="w-full  mr-3 text-gray-500">
-                                <label for>Mã đơn hàng</label>
+                                <label for>Tìm kiếm</label>
                             </div>
                             <div class="min-[320px]:w-full form_search">
                                 <form v-on:submit.prevent>
@@ -479,7 +480,7 @@ const deleteOrder = (order) => {
                                             laceholder="Search Menus" data-list=".menu-category" v-model="filter.search"
                                             @keyup="search"
                                             class="block w-full p-2.5 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Nhập mã đơn hàng" required />
+                                            placeholder="Nhập mã đơn hàng, sđt, tên,..." required />
                                     </div>
                                 </form>
                             </div>
@@ -509,7 +510,7 @@ const deleteOrder = (order) => {
                             <div class=" text-gray-500">
                                 <label for>Phương thức TT</label>
                             </div>
-                            <div class="">
+                            <div class="w-[160px]">
                                 <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null" selected>Tất cả</option>
@@ -523,7 +524,7 @@ const deleteOrder = (order) => {
                             <div class=" text-gray-500">
                                 <label for>Trạng thái TT</label>
                             </div>
-                            <div class="">
+                            <div class="w-[160px]">
                                 <select id="countries" v-model="filter.payment_status" @change="Fillter()"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tình trạng</option>
