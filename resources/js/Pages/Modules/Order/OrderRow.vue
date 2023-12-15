@@ -12,6 +12,7 @@ import {
     mdiFilter,
     mdiMagnify,
     mdiFileDocumentOutline,
+    mdiCashMultiple
 } from "@mdi/js";
 const showContent = ref(false);
 // Hàm để toggle trạng thái của nội dung
@@ -27,7 +28,7 @@ const props = defineProps({
 
 <template>
     <div>
-        <div @click.prevent="toggleContent" class=" grid grid-cols-9 px-3 py-1 mt-2 mb-2 text-sm  text-gray-400">
+        <div @click="toggleContent" class=" grid grid-cols-9 px-3 py-1 mt-2 mb-2 text-sm  text-gray-400">
             <div>
                 <Link class="flex items-center" :href="route('admin.payment.orderCashBankingPayment', order.id)">
                     <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0 mr-2" aria-hidden="true"
@@ -67,14 +68,36 @@ const props = defineProps({
                 <Link
                     :href="route('admin.payment.orderCashBankingPayment', order.id)"
                    >
-                <BaseIcon  :path="mdiEye" :size="16" />
+        
+                <BaseIcon :path="mdiEye " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" data-toggle="modal"
+                        data-target="#exampleModal"  v-tooltip.top="'Chi tiết'"
+                          size="20">
+                    </BaseIcon>
                 </Link>
 
                 <Link  v-if="order.status =='pending'"
                     :href="route('admin.orders.update', [order.id])"
                    >
-                <BaseIcon  :path="mdiPencil" :size="16" />
+                <BaseIcon :path="mdiPencil " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" data-toggle="modal"
+                        data-target="#exampleModal"  v-tooltip.top="'Chỉnh sửa'"
+                          size="20">
+                    </BaseIcon>
                 </Link>
+                <!-- <Link  v-if="order.payment_status ==0 && order.type =='retail'"
+                    :href="route('payoo.paymentOption', [order.id])"
+                   >
+                   <BaseIcon :path="mdiCashMultiple " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" data-toggle="modal"
+                        data-target="#exampleModal"  v-tooltip.top="'Thanh toán'"
+                          size="20">
+                    </BaseIcon>
+                </Link> -->
+                <a v-if="order.payment_status ==0 && order.type =='retail'" target="_blank"  :href="'/payoo/payment/'+order.id" >
+                   <BaseIcon :path="mdiCashMultiple " class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" 
+                         v-tooltip.top="'Thanh toán Payoo'"
+                          size="20">
+                    </BaseIcon>
+                </a>
+             
             </div>
         </div>
 

@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Order\app\Models\Order;
-
+use Illuminate\Database\Eloquent\Casts\Attribute;
 class Payment extends Model
 {
     use HasFactory;
@@ -34,6 +35,7 @@ class Payment extends Model
         'order_id',
     ];
 
+    
     public function order(){
         return $this->belongsTo(Order::class,  'user_id');
     }
