@@ -50,7 +50,8 @@ const filter = reactive({
     payment_status: null,
     payment_method: null,
     type: null,
-    per_page: 10
+    per_page: 10,
+    status: props.status
 
 })
 const customer = ref()
@@ -126,7 +127,7 @@ const fillterType = (event) => {
 const loadOrder = async $state => {
     console.log("loading...");
     console.log(filter);
-    router.get(route(`admin.orders.package.all`),
+    router.get(route(`admin.orders.package.${props.status}`),
         filter,
         {
             preserveState: true,
@@ -554,6 +555,7 @@ const deleteOrder = (order) => {
                                         <th scope="col" class="px-3 py-2 text-left">TT duyệt</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT gói</th>
                                         <th scope="col" class="px-3 py-2 text-left">Người tạo</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Sale</th>
                                         <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Người duyệt cuối</th>
                                         <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Tài liệu</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hành động</th>
@@ -601,7 +603,10 @@ const deleteOrder = (order) => {
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order.saler?.name }}
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500"  v-if="status == 'decline'">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order.ref?.name }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500"  v-if="order.status == 'decline'">
                                             <p  class="text-[12px] text-left">
                                                 {{ order.reason }}
                                             </p>
@@ -631,7 +636,7 @@ const deleteOrder = (order) => {
                                                     class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700" size="20">
                                                 </BaseIcon>
                                             </a>
-                                            <Link v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`"
+                                            <Link v-if="order.status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`"
                                               >
                                                 <BaseIcon :path="mdiSquareEditOutline"
                                                     class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700"
@@ -642,12 +647,12 @@ const deleteOrder = (order) => {
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
                                                 v-tooltip.top="'Hủy gói'" data-toggle="modal"
                                                 data-target="#exampleModalDecline" @click="openDecline(order)"
-                                                v-if="status == 'pending' || status == 'complete'" size="20">
+                                                v-if="order.status == 'pending' || order.status == 'complete'" size="20">
                                             </BaseIcon>
                                             <BaseIcon :path="mdiCheckAll"
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"
                                                 v-tooltip.top="'Duyệt gói'"
-                                                v-if="hasAnyPermission(['create-contract-complete']) && status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
+                                                v-if="hasAnyPermission(['create-contract-complete']) && order.status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
                                                 @click="orderChangePacking(order)" size="20">
                                             </BaseIcon>
                                         </td>
