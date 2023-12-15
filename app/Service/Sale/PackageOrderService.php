@@ -25,7 +25,7 @@ class PackageOrderService
   {
     return $this->model->whereBetween('created_at', [Carbon::now()->subDay($time), Carbon::now()])->sum('price_percent');
   }
-  // Lấy danh sách tổng doanh thu toàn hệ thống theo tuần , tháng,  năm 
+  // Lấy danh sách tổng doanh thu toàn hệ thống theo tuần , tháng,  năm
   public function sumbyTime($filters)
   {
     if ($filters == 'week') {
@@ -39,7 +39,7 @@ class PackageOrderService
     }
     return $query;
   }
-  // Lấy danh sách doanh thu toàn hệ thống theo tuần , tháng năm 
+  // Lấy danh sách doanh thu toàn hệ thống theo tuần , tháng năm
   public function getSaleData($filters)
   {
     return  User::select('id', 'name', 'created_byId')->with('team')->whereHas('ref_order_packages.product_service_owner')->withSum(
@@ -67,7 +67,7 @@ class PackageOrderService
       }
     }])->orderBy('ref_order_packages_sum_price_percent', 'desc')->get();
   }
-  // Lấy danh sách doanh thu top 10 theo tuần , tháng năm 
+  // Lấy danh sách doanh thu top 10 theo tuần , tháng năm
   public function getTopTenSale($filters)
   {
     return $this->getSaleData($filters)->take(10);
@@ -176,7 +176,7 @@ class PackageOrderService
 
   public function analysticData($filters, $user)
   {
-   
+
     $query = $this->model::select(
 
       DB::raw("CAST((SUM(grand_total))  AS INTEGER) as  grand_total_sum"),
@@ -190,9 +190,9 @@ class PackageOrderService
 
   public function formatDataAnalytic($filters, $query)
   {
-    
+
     if (isset($filters) && count($filters) ==0) {
-   
+
       $statMonth = Carbon::now()->firstOfMonth();
       $endOfMonth = Carbon::now()->endOfMonth();
       $ranges = CarbonPeriod::create($statMonth, $endOfMonth);
@@ -200,7 +200,7 @@ class PackageOrderService
       return $this->addDataCollection($ranges, $newCollections, $type='time');
     }
     if (isset($filters['date'])) {
-   
+
       if ($filters['date'] == 'beforMonth') {
         $statMonth = Carbon::now()->subMonth(1)->firstOfMonth();
         $endOfMonth = Carbon::now()->subMonth(1)->endOfMonth();
@@ -216,12 +216,12 @@ class PackageOrderService
 
         return $this->addDataCollection($ranges, $newCollections,'time');
       } elseif ($filters['date'] == 'year') {
-    
+
         $statOfYear = Carbon::now()->startOfYear();
         $endOfyear = Carbon::now()->endOfYear();
         $ranges = CarbonPeriod::create($statOfYear, '1 Month', $endOfyear);
         $newCollections = $query->groupBy('month')->get();
-      
+
         return $this->addDataCollection($ranges, $newCollections, 'month');
       } else {
 
@@ -258,7 +258,7 @@ class PackageOrderService
       else{
         $filtered = $collection->where('time', date("Y-m-d", strtotime($date)));
       }
-     
+
       if (count($filtered) == 0) {
         $newCollections[] = array(
           'grand_total_sum' => 0,
