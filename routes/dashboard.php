@@ -3,10 +3,16 @@
 use App\Http\Controllers\DashBoardController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('dashboard')->as('dashboard.')->group(function () {
-    
+Route::middleware([
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ])->group(function () {
+
+
+    Route::get('dashboard', [DashBoardController::class, 'index'])->name('dashboard');
     Route::prefix('sale')->as('sale.')->group(function () {
-        Route::get('index', [DashBoardController::class, 'index'])->name('index');
+       
         
     });
 });
