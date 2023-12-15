@@ -4,6 +4,7 @@ namespace App\Service\Sale;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Modules\Order\app\Models\OrderPackage;
 
 class PackageOrderService
@@ -144,10 +145,44 @@ class PackageOrderService
         'ref_order_packages AS contract_decline' => function ($query) {
           $query->where('status', 'decline');
         },
-      ])->find($user->id);
+      ])->withSum(
+        'ref_order_packages' ,
+        'price_percent'
+      )->withSum(
+        'ref_order_packages',
+        'grand_total'
+      )->find($user->id);
   }
 
-  public function getOrder(){
-      return $this->model;
+  public function getOrder($filters, $user){
+      return $this->model->with(['customer'])->whereHas(
+        'customer'
+    )->filtertime($filters)->orderBy('created_at', 'desc')->where('ref_id', $user->id);
   }
+
+
+  public function sumGrandTotalOrder($filters, $user){
+    return $this->getOrder($filters, $user)->where('status' ,'!=','decline')->sum('grand_total');
+  }
+
+  public function sumPricePercentOrder($filters, $user){
+    return $this->getOrder($filters, $user)->where('status' ,'!=','decline')->sum('price_percent');
+  }
+
+
+  public function analysticData($filters, $user){
+    return $this->model::select(
+
+      DB::raw("CAST((SUM(grand_total))  AS INTEGER) as  grand_total_sum"),
+      DB::raw("CAST((SUM(price_percent))  AS INTEGER) as  price_percent_sum"),
+      DB::raw('DATE_FORMAT(created_at, "%m") as month'),
+      DB::raw('DATE_FORMAT(created_at, "%d") as day'),
+      DB::raw('DATE_FORMAT(created_at, "%Y") as year'),
+  )->filtertime($filters)
+      ->groupBy('month')
+      ->groupBy('year')
+      ->where('ref_id', $user->id)->get();
+  }
+
+
 }

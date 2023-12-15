@@ -30,15 +30,15 @@ Route::get('/', function () {
     return redirect('/login');
 });
 Route::get('preview/data/{url?}',[PreviewController::class,'previewData']);
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('HomeView');
-    })->name('dashboard');
-});
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified',
+// ])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return Inertia::render('HomeView');
+//     })->name('dashboard');
+// });
 
 Route::get('terms&condition', [TermsConditionController::class, 'previewTerm'])->name('terms&condition');
 Route::middleware(['auth'])->group(

@@ -28,14 +28,19 @@ class OrderPackage extends Model implements HasMedia
         'vat',
         'discount_deal',
         'type',
-        'sale_id','ref_id','to_id','customer_resources','customer_resources_id','package_reviewer',
-        'wards',  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent","time_reservations","time_expried"
+        'sale_id', 'ref_id', 'to_id', 'customer_resources', 'customer_resources_id', 'package_reviewer',
+        'wards',  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent", "time_reservations", "time_expried"
     ];
-    protected $appends = ['payment_check','exist_accept'];
+    protected $appends = ['payment_check', 'exist_accept'];
 
     public function gettimeExpriedAttribute($value)
     {
         return strtotime($value);
+    }
+
+    protected function getUnPaidAttribute()
+    {
+        return $this->grand_total - $this->price_percent;
     }
     /**
      * The attributes that are mass assignable.
@@ -103,7 +108,7 @@ class OrderPackage extends Model implements HasMedia
     {
         $user = Auth::user();
 
-        if ( $user->hasPermissionTo('super-admin') || $user->hasRole('Kế toán') ) {
+        if ($user->hasPermissionTo('super-admin') || $user->hasRole('Kế toán')) {
             $query->get();
         }
          else {
@@ -135,7 +140,8 @@ class OrderPackage extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'customer_resources_id');
     }
-    public function package_reviewer(){
+    public function package_reviewer()
+    {
         return $this->belongsTo(User::class, 'package_reviewer');
     }
     public function product_service_owner()
@@ -151,7 +157,7 @@ class OrderPackage extends Model implements HasMedia
     }
     public function getPaymentCheckAttribute()
     {
-        if(count($this->historyPayment) > 0){
+        if (count($this->historyPayment) > 0) {
             $allHistory = $this->historyPayment->every(function ($history) {
                 return $history->status == "complete";
             });
@@ -161,7 +167,7 @@ class OrderPackage extends Model implements HasMedia
     }
     public function getExistAcceptAttribute()
     {
-        if(count($this->historyPayment) > 0){
+        if (count($this->historyPayment) > 0) {
             $allHistory = $this->historyPayment->every(function ($history) {
                 return $history->status != "complete";
             });
@@ -173,6 +179,39 @@ class OrderPackage extends Model implements HasMedia
 
     public function history_extend()
     {
-        return $this->hasOne(HistoryExtend::class,'order_id');
+        return $this->hasOne(HistoryExtend::class, 'order_id');
+    }
+
+    public function scopeFilterTime($query, array $filters)
+    {
+
+        if (isset($filters['date'])) {
+
+            if ($filters == 'week') {
+                $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            } elseif ($filters == 'beforMonth') {
+
+                $query->whereBetween('created_at', [Carbon::now()->subMonths(1), Carbon::now()]);
+            } elseif ($filters == 'month') {
+
+
+                $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            } elseif ($filters == 'year') {
+
+                $query->whereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+            } else {
+
+                $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            }
+        }
+
+        if (isset($filters['day'])) {
+
+            $query->whereBetween('created_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
+        }
+        if (isset($filters['from']) && isset($filters['to'])) {
+
+            $query->whereBetween('created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+        }
     }
 }
