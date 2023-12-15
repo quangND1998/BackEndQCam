@@ -268,6 +268,14 @@ class PackageOrderService
         );
       }
     }
-    return $newCollections;
+    if($type=='time'){
+      $sorted = collect($newCollections)->sortBy('time');
+    }
+    if($type=='month'){
+      $sorted = collect($newCollections)->sortBy('month');
+    }
+
+    $server_minutes =  $sorted->values();
+    return $server_minutes;
   }
 }
