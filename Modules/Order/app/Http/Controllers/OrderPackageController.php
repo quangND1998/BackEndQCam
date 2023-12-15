@@ -566,21 +566,33 @@ class OrderPackageController extends Controller
     }
     public function getOrder($request, $status)
     {
-        return OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
-            'customer',
-            function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%' . $request->customer . '%');
-            }
-        )->where('status', $status)->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 5);
+        $results  =  OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
+                'customer',
+                function ($q) use ($request) {
+                    $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','%' . $request->search . '%');
+                }
+            )
+            ->role()
+            ->orwhere('order_number', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('idPackage', 'LIKE', '%' . $request->search . '%')
+            ->fillter($request->only('status','from', 'to', 'payment_status', 'payment_method', 'type'))
+            ->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 5);
+            return $results ;
     }
     public function getOrderAll($request, $status)
     {
-        return OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
+        return OrderPackage::with(['customer','ref','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%' . $request->customer . '%');
+                $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','LIKE','%' . $request->search . '%');
             }
-        )->fillter($request->only('search', 'from', 'to', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 5);
+        )
+        ->orwhere('order_number', 'LIKE', '%' . $request->search . '%')
+        ->orwhere('idPackage', 'LIKE', '%' . $request->search . '%')
+        ->orderBy('created_at', 'desc')
+        ->role()
+        ->fillter($request->only( 'from', 'to', 'payment_status', 'payment_method', 'type'))
+        ->paginate($request->per_page ? $request->per_page : 5);
     }
 
 }

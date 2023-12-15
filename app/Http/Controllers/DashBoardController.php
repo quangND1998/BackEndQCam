@@ -20,19 +20,19 @@ class DashBoardController extends Controller{
     public function index(Request $request){
         //allserver
         $user= Auth::user();
-     
+
         $top_ten_sale_data = $this->packageOrderService->getTopTenSale('week');
         $week_data_user = $this->packageOrderService->sumbyTimeUser('week', $user);
         $month_data_user = $this->packageOrderService->sumbyTimeUser('month',$user );
         $year_data_user = $this->packageOrderService->sumbyTimeUser('year',$user );
- 
+
         if($user->team){
             $team_sale_data = $this->packageOrderService->getTopTenSaleTeam('week',$user->team);
         }
         else{
-            $team_sale_data =[]; 
+            $team_sale_data =[];
         }
-      
+
         $contract_infor = $this->packageOrderService->contractInfor($user);
         if(!$contract_infor){
             $contract_infor =null;
@@ -53,8 +53,10 @@ class DashBoardController extends Controller{
         $sumGrandTotalOrder = $this->packageOrderService->sumGrandTotalOrder($request->only('date','from', 'to', 'day'),$user);
         $sumPricePercentOrder = $this->packageOrderService->sumPricePercentOrder($request->only('date','from', 'to', 'day'),$user);
         $analysticData = $this->packageOrderService->analysticData($request->only('date','from', 'to', 'day'),$user);
-        return $analysticData;
+        // return $analysticData;
+
+        // return $order_packages;
         return Inertia::render('HomeView', compact( "top_ten_sale_data", 'week_data_user', 'month_data_user', 'year_data_user','team_sale_data','contract_infor','ranking_team', 'ranking_all_server','order_packages','sumGrandTotalOrder','sumPricePercentOrder'));
-        
+
     }
 }

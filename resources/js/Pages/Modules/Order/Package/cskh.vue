@@ -50,7 +50,8 @@ const filter = reactive({
     payment_status: null,
     payment_method: null,
     type: null,
-    per_page: 10
+    per_page: 10,
+    status: props.status
 
 })
 const customer = ref()
@@ -78,7 +79,7 @@ const state = reactive({
 initFlowbite();
 
 const searchCustomer = () => {
-    router.get(route(`admin.orders.package.${props.status}`),
+    router.get(route(`admin.orders.package.cskh`),
         { customer: filter.customer },
         {
             preserveState: true,
@@ -88,8 +89,8 @@ const searchCustomer = () => {
 }
 
 const search = () => {
-    router.get(route(`admin.orders.package.${props.status}`),
-        { search: filter.search },
+    router.get(route(`admin.orders.package.cskh`),
+    filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -97,7 +98,7 @@ const search = () => {
     );
 }
 const fillterPaymentMethod = (event) => {
-    router.get(route(`admin.orders.package.${props.status}`),
+    router.get(route(`admin.orders.package.cskh`),
         filter,
         {
             preserveState: true,
@@ -106,7 +107,7 @@ const fillterPaymentMethod = (event) => {
     );
 }
 const Fillter = (event) => {
-    router.get(route(`admin.orders.package.${props.status}`),
+    router.get(route(`admin.orders.package.cskh`),
         filter,
         {
             preserveState: true,
@@ -115,7 +116,7 @@ const Fillter = (event) => {
     );
 }
 const fillterType = (event) => {
-    router.get(route(`admin.orders.package.${props.status}`),
+    router.get(route(`admin.orders.package.cskh`),
         filter,
         {
             preserveState: true,
@@ -136,7 +137,7 @@ const changeDate = () => {
         from: filter.fromDate,
         to: filter.toDate
     };
-    router.get(route(`admin.orders.package.${props.status}`), query, {
+    router.get(route(`admin.orders.package.cskh`), query, {
         preserveScroll: true
     });
 }

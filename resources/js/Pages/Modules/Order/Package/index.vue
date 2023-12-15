@@ -50,7 +50,8 @@ const filter = reactive({
     payment_status: null,
     payment_method: null,
     type: null,
-    per_page: 10
+    per_page: 10,
+    status: props.status
 
 })
 const customer = ref()
@@ -89,7 +90,7 @@ const searchCustomer = () => {
 
 const search = () => {
     router.get(route(`admin.orders.package.${props.status}`),
-        { search: filter.search },
+    filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -125,6 +126,7 @@ const fillterType = (event) => {
 }
 const loadOrder = async $state => {
     console.log("loading...");
+    console.log(filter);
     router.get(route(`admin.orders.package.${props.status}`),
         filter,
         {
@@ -444,7 +446,7 @@ const deleteOrder = (order) => {
                 <PackageBar :statusGroup="statusGroup"></PackageBar>
                 <ModalDecline></ModalDecline>
                 <ModelRefund></ModelRefund>
-                <div class="w-full flex justify-between">
+                <div class="w-full flex justify-between overflow-auto">
                     <div class="mr-4 flex-col flex">
                             <div class=" text-gray-500">
                                 <label for>Loại hình</label>
@@ -462,7 +464,7 @@ const deleteOrder = (order) => {
 
                         <div class="mr-4">
                             <div class="w-full  mr-3 text-gray-500">
-                                <label for>Mã đơn hàng</label>
+                                <label for>Tìm kiếm</label>
                             </div>
                             <div class="min-[320px]:w-full form_search">
                                 <form v-on:submit.prevent>
@@ -479,7 +481,7 @@ const deleteOrder = (order) => {
                                             laceholder="Search Menus" data-list=".menu-category" v-model="filter.search"
                                             @keyup="search"
                                             class="block w-full p-2.5 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Nhập mã đơn hàng" required />
+                                            placeholder="Nhập mã đơn hàng, sđt, tên,..." required />
                                     </div>
                                 </form>
                             </div>
@@ -509,7 +511,7 @@ const deleteOrder = (order) => {
                             <div class=" text-gray-500">
                                 <label for>Phương thức TT</label>
                             </div>
-                            <div class="">
+                            <div class="w-[160px]">
                                 <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null" selected>Tất cả</option>
@@ -523,7 +525,7 @@ const deleteOrder = (order) => {
                             <div class=" text-gray-500">
                                 <label for>Trạng thái TT</label>
                             </div>
-                            <div class="">
+                            <div class="w-[160px]">
                                 <select id="countries" v-model="filter.payment_status" @change="Fillter()"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tình trạng</option>
@@ -553,6 +555,7 @@ const deleteOrder = (order) => {
                                         <th scope="col" class="px-3 py-2 text-left">TT duyệt</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT gói</th>
                                         <th scope="col" class="px-3 py-2 text-left">Người tạo</th>
+                                        <th scope="col" class="px-3 py-2 text-left">NV Tư vấn (Ref)</th>
                                         <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Người duyệt cuối</th>
                                         <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Tài liệu</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hành động</th>
@@ -600,7 +603,10 @@ const deleteOrder = (order) => {
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order.saler?.name }}
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500"  v-if="status == 'decline'">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order.ref?.name }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500"  v-if="order.status == 'decline'">
                                             <p  class="text-[12px] text-left">
                                                 {{ order.reason }}
                                             </p>
@@ -630,7 +636,7 @@ const deleteOrder = (order) => {
                                                     class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700" size="20">
                                                 </BaseIcon>
                                             </a>
-                                            <Link v-if="status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`"
+                                            <Link v-if="order.status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`"
                                               >
                                                 <BaseIcon :path="mdiSquareEditOutline"
                                                     class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700"
@@ -641,12 +647,12 @@ const deleteOrder = (order) => {
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
                                                 v-tooltip.top="'Hủy gói'" data-toggle="modal"
                                                 data-target="#exampleModalDecline" @click="openDecline(order)"
-                                                v-if="status == 'pending' || status == 'complete'" size="20">
+                                                v-if="order.status == 'pending' || order.status == 'complete'" size="20">
                                             </BaseIcon>
                                             <BaseIcon :path="mdiCheckAll"
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"
                                                 v-tooltip.top="'Duyệt gói'"
-                                                v-if="hasAnyPermission(['create-contract-complete']) && status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
+                                                v-if="hasAnyPermission(['create-contract-complete']) && order.status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
                                                 @click="orderChangePacking(order)" size="20">
                                             </BaseIcon>
                                         </td>

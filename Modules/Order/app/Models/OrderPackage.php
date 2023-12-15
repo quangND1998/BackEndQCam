@@ -87,6 +87,10 @@ class OrderPackage extends Model implements HasMedia
 
             $query->where('type', $filters['type']);
         }
+        if (isset($filters['status'])) {
+
+            $query->where('status', $filters['status']);
+        }
     }
     public function order_package_images()
     {
@@ -106,11 +110,14 @@ class OrderPackage extends Model implements HasMedia
 
         if ($user->hasPermissionTo('super-admin') || $user->hasRole('Kế toán')) {
             $query->get();
-        } else {
+        }
+         else {
             if ($user->hasRole('leader-sale')) {
-                $query->whereIn('sale_id', $user->salers->pluck('id'));
-            } else {
-                $query->where('sale_id', $user->id)->orwhere('ref_id', $user->id);
+                $query->whereIn('sale_id', $user->salers->pluck('id'))
+                ->orWhereIn('ref_id',$user->salers->pluck('id'));
+            }
+             else {
+                $query->where('sale_id', $user->id)->orwhere('ref_id',$user->id);
             }
         }
     }
@@ -118,11 +125,17 @@ class OrderPackage extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'sale_id');
     }
-
+    // nhan vien tu van
+    public function ref()
+    {
+        return $this->belongsTo(User::class, 'ref_id');
+    }
+    // nguoi chot don
     public function leader()
     {
         return $this->belongsTo(User::class, 'to_id');
     }
+    // nguon khach hang
     public function resources()
     {
         return $this->belongsTo(User::class, 'customer_resources_id');
@@ -163,10 +176,7 @@ class OrderPackage extends Model implements HasMedia
         return false;
     }
 
-    public function ref()
-    {
-        return $this->belongsTo(User::class, 'ref_id');
-    }
+
     public function history_extend()
     {
         return $this->hasOne(HistoryExtend::class, 'order_id');

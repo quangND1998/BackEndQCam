@@ -12,7 +12,6 @@ Route::middleware([
 
     Route::get('dashboard', [DashBoardController::class, 'index'])->name('dashboard');
     Route::prefix('sale')->as('sale.')->group(function () {
-       
-        
+
     });
 });
