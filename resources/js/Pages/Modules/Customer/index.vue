@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, inject, watch, toRef, reactive } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import Pagination from "@/Components/Pagination.vue";
+import Pagination from "@/Components/PaginationDefault.vue";
 import { Link, useForm } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head } from "@inertiajs/vue3";
@@ -40,7 +40,7 @@ const props = defineProps({
     filters: Object,
     customers: Object,
     product_services: Object,
-    trees : Object
+    trees: Object
 });
 const swal = inject("$swal");
 const form = useForm({
@@ -52,7 +52,7 @@ const form = useForm({
     phone_number: null,
     created_byId: null,
     password: null,
-    product_service: props.product_services.length >0 ? props.product_services[0].id:null,
+    product_service: props.product_services.length > 0 ? props.product_services[0].id : null,
     time_approve: null,
     tree: null,
 });
@@ -74,11 +74,11 @@ const edit = (user) => {
     form.created_byId = user.created_byId;
     form.time_approve = user?.product_service_owners?.time_approve
 };
-const filter =reactive({
-    accept:null
+const filter = reactive({
+    accept: null
 })
 
-const fillterAccept=()=>{
+const fillterAccept = () => {
     router.get(route(`customer.index`),
         filter,
         {
@@ -123,21 +123,21 @@ const save = () => {
         });
     } else {
         form
-        .transform((data) => ({
-            ...data,
-            remember: data.remember ? 'on' : '',
-        }))
-        .post(route("customer.store"), {
-            onError: () => {
-                isModalActive.value = true;
-                editMode.value = false;
-            },
-            onSuccess: () => {
-                form_reset();
-                isModalActive.value = false;
-                editMode.value = false;
-            },
-        });
+            .transform((data) => ({
+                ...data,
+                remember: data.remember ? 'on' : '',
+            }))
+            .post(route("customer.store"), {
+                onError: () => {
+                    isModalActive.value = true;
+                    editMode.value = false;
+                },
+                onSuccess: () => {
+                    form_reset();
+                    isModalActive.value = false;
+                    editMode.value = false;
+                },
+            });
     }
 
     // form.id = permission.id;
@@ -204,9 +204,9 @@ const selectAll = computed({
     }
 });
 
-const limit_tree = computed(() =>{
-    console.log('limit_tree',form.product_service)
-    let product_service= props.product_services.find(e=>e.id == form.product_service);
+const limit_tree = computed(() => {
+    console.log('limit_tree', form.product_service)
+    let product_service = props.product_services.find(e => e.id == form.product_service);
 
     return product_service
 }
@@ -230,24 +230,14 @@ const limit_tree = computed(() =>{
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-bg_green_active" :icon="mdiPlus"
-                        small @click="
-                            isModalActive = true;
-                            form.reset();
-                            reset();
-                        " label="Create User" />
-                </div>
-            </div>
-            <div class="w-full flex justify-between">
                     <div class="flex mr-2">
-                        <div class="mr-4 flex-col flex">
-                            <div class=" text-gray-500">
+                        <div class="mr-4  flex items-center">
+                            <div class=" text-gray-500 mr-2">
                                 <label for>Trạng thái Xét duyệt</label>
                             </div>
                             <div class="">
-                                <select id="countries"   v-model="filter.accept" @change="fillterAccept"
-                                    class="bg-gray-50 border  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
-
+                                <select id="countries" v-model="filter.accept" @change="fillterAccept"
+                                    class="bg-gray-50 border  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400">
                                     <option :value="null">Trạng thái</option>
                                     <option :value="1">Đã xét duyệt</option>
                                     <option :value="0">Chờ xét duyệt</option>
@@ -256,14 +246,17 @@ const limit_tree = computed(() =>{
                         </div>
 
                     </div>
-                    <div class="flex">
-
-
-
-
-                    </div>
-
                 </div>
+                <div class="right">
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-bg_green_active"
+                        :icon="mdiPlus" small @click="
+                            isModalActive = true;
+                        form.reset();
+                        reset();
+                        " label="Create User" />
+                </div>
+            </div>
+
             <!-- Modal -->
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                 :title="editMode ? 'Update User' : 'Create User'">
@@ -282,7 +275,6 @@ const limit_tree = computed(() =>{
                                 :class="form.errors.email ? 'border-red-500' : ''" autocomplete="name" />
                             <InputError class="mt-2" :message="form.errors.email" />
                         </div>
-
                     </div>
 
                     <div class="flex flex-wrap -mx-3 mb-6">
@@ -339,9 +331,9 @@ const limit_tree = computed(() =>{
                         </div>
                         <div class="w-full md:w-1/2 px-3">
                             <InputLabel for="owner" value="Cây" />
-                            <Multiselect v-model="form.tree" mode="tags" :appendNewTag="false" :createTag="false" :limit="limit_tree?.number_tree"
-                                :searchable="true" label="name" valueProp="id" trackBy="name" :options="trees"
-                                class="form-control" :classes="{
+                            <Multiselect v-model="form.tree" mode="tags" :appendNewTag="false" :createTag="false"
+                                :limit="limit_tree?.number_tree" :searchable="true" label="name" valueProp="id"
+                                trackBy="name" :options="trees" class="form-control" :classes="{
                                     tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
                                     container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-2xl leading-snug outline-none',
                                     tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2 rtl:pl-0 rtl:pr-2',
@@ -365,7 +357,7 @@ const limit_tree = computed(() =>{
                             isModalActive = true;
                         " label="Create User" />
             </div> -->
-            <div v-if="selected>1 ">
+            <div v-if="selected > 1">
                 <p class="text-red-600 text-end">Xóa (5) Customer</p>
             </div>
             <div class="  relative  sm:rounded-lg mt-5">
@@ -373,10 +365,10 @@ const limit_tree = computed(() =>{
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-3 py-2 flex items-center">
-                        <input type="checkbox" v-model="selectAll"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
-                        #
-                    </th>
+                                <input type="checkbox" v-model="selectAll"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
+                                #
+                            </th>
                             <th scope="col" class="py-2 px-3 text-xs">name</th>
                             <th scope="col" class="py-2 px-3 text-xs">email</th>
                             <th scope="col" class="py-2 px-3 text-xs">phone</th>
@@ -394,8 +386,8 @@ const limit_tree = computed(() =>{
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
 
                             <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <input id="default-checkbox" type="checkbox"  v-model="selected" :value="user.id"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
+                                <input id="default-checkbox" type="checkbox" v-model="selected" :value="user.id"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                                 {{ index + 1 }}
                             </th>
                             <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -405,7 +397,8 @@ const limit_tree = computed(() =>{
                                 {{ user.email }}
                             </th>
                             <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ hasAnyPermission(['super-admin']) ? user.phone_number :  hidePhoneNumber(user.phone_number) }}
+                                {{ hasAnyPermission(['super-admin']) ? user.phone_number :
+                                    hidePhoneNumber(user.phone_number) }}
                             </th>
 
 
@@ -422,53 +415,55 @@ const limit_tree = computed(() =>{
                                 </label>
                             </th>
                             <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <span v-if="user.infor && user.infor.status ==0" class="btn_label partiallyPaid">
-                                   <Link :href="route('customer.viewUpdateInfor', user.id)">Chờ duyệt</Link> </span>
-                                   <span v-if="user.infor && user.infor.status ==1" class="btn_label paid">
-                                   Đã duyệt </span>
+                                <span v-if="user.infor && user.infor.status == 0" class="btn_label partiallyPaid">
+                                    <Link :href="route('customer.viewUpdateInfor', user.id)">Chờ duyệt</Link>
+                                </span>
+                                <span v-if="user.infor && user.infor.status == 1" class="btn_label paid">
+                                    Đã duyệt </span>
                             </th>
                             <th scope="row" class="py-3 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ formatDate(user.created_at) }}
                             </th>
                             <td class="py-3 px-3 flex text-right">
-                                <Link v-if="hasAnyPermission(['super-admin','info-customer'])" :href="route('customer.detail.info', user.id)" type="button"
+                                <Link v-if="hasAnyPermission(['super-admin', 'info-customer'])"
+                                    :href="route('customer.detail.info', user.id)" type="button"
                                     class="inline-block px-6 py-2.5 bg-blue-600 text-white font-black text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
                                 Detail
-                                </Link >
-                                <div class="flex " v-if="hasAnyPermission(['super-admin','update-user','delete-user'])">
-                                        <Dropdown align="right" width="40" class="ml-5">
-                                            <template #trigger>
-                                                <span class="inline-flex rounded-md">
-                                                    <BaseButton class="bg-[#D9D9D9] border-[#D9D9D9]"
-                                                        :icon="mdiDotsVertical" small />
-                                                </span>
-                                            </template>
+                                </Link>
+                                <div class="flex " v-if="hasAnyPermission(['super-admin', 'update-user', 'delete-user'])">
+                                    <Dropdown align="right" width="40" class="ml-5">
+                                        <template #trigger>
+                                            <span class="inline-flex rounded-md">
+                                                <BaseButton class="bg-[#D9D9D9] border-[#D9D9D9]" :icon="mdiDotsVertical"
+                                                    small />
+                                            </span>
+                                        </template>
 
-                                            <template #content>
-                                                <div class="w-40">
-                                                    <div
-                                                        class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
-
-                                                    </div>
-                                                    <div @click="edit(user)" type="button" data-toggle="modal" data-target="#exampleModal"
-                                                        class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
-                                                        <p class="hover:text-blue-700"> Edit</p>
-                                                        <BaseButton :icon="mdiPencil" small class="text-[#2264E5]"
-                                                            type="button" data-toggle="modal" data-target="#exampleModal" />
-                                                    </div>
-                                                    <div type=" button" @click="Delete(user.id)"
-                                                        class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
-                                                        <p class="hover:text-red-700"> Delete</p>
-                                                        <BaseButton :icon="mdiTrashCanOutline" small
-                                                            class="text-[#D12953]" />
-                                                    </div>
+                                        <template #content>
+                                            <div class="w-40">
+                                                <div
+                                                    class=" justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
 
                                                 </div>
-                                            </template>
-                                        </Dropdown>
+                                                <div @click="edit(user)" type="button" data-toggle="modal"
+                                                    data-target="#exampleModal"
+                                                    class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+                                                    <p class="hover:text-blue-700"> Edit</p>
+                                                    <BaseButton :icon="mdiPencil" small class="text-[#2264E5]" type="button"
+                                                        data-toggle="modal" data-target="#exampleModal" />
+                                                </div>
+                                                <div type=" button" @click="Delete(user.id)"
+                                                    class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
+                                                    <p class="hover:text-red-700"> Delete</p>
+                                                    <BaseButton :icon="mdiTrashCanOutline" small class="text-[#D12953]" />
+                                                </div>
+
+                                            </div>
+                                        </template>
+                                    </Dropdown>
                                 </div>
 
-                                </td>
+                            </td>
                         </tr>
 
                     </tbody>

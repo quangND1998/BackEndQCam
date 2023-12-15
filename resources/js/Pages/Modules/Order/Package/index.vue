@@ -555,7 +555,7 @@ const deleteOrder = (order) => {
                                         <th scope="col" class="px-3 py-2 text-left">TT duyệt</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT gói</th>
                                         <th scope="col" class="px-3 py-2 text-left">Người tạo</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Sale</th>
+                                        <th scope="col" class="px-3 py-2 text-left">NV Tư vấn (Ref)</th>
                                         <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Người duyệt cuối</th>
                                         <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Tài liệu</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hành động</th>

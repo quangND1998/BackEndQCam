@@ -572,6 +572,7 @@ class OrderPackageController extends Controller
                     $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','%' . $request->search . '%');
                 }
             )
+            ->role()
             ->orwhere('order_number', 'LIKE', '%' . $request->search . '%')
             ->orwhere('idPackage', 'LIKE', '%' . $request->search . '%')
             ->fillter($request->only('status','from', 'to', 'payment_status', 'payment_method', 'type'))
@@ -589,6 +590,7 @@ class OrderPackageController extends Controller
         ->orwhere('order_number', 'LIKE', '%' . $request->search . '%')
         ->orwhere('idPackage', 'LIKE', '%' . $request->search . '%')
         ->orderBy('created_at', 'desc')
+        ->role()
         ->paginate($request->per_page ? $request->per_page : 5);
     }
 
