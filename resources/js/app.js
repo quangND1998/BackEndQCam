@@ -34,6 +34,8 @@ import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 import VueCountdown from '@chenfengyuan/vue-countdown';
 import "@vueform/multiselect/themes/default.css"
+import VueApexCharts from "vue3-apexcharts";
+
 // import 'vue3-carousel/dist/carousel.css'
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -49,6 +51,7 @@ createInertiaApp({
             .component('VueDatePicker', VueDatePicker)
             .component("infinite-loading", InfiniteLoading)
             .component('vue-countdown', VueCountdown)
+            .use(VueApexCharts)
             .use(VueSweetalert2)
             .directive('tooltip', Tooltip)
             .mixin(helper, base)

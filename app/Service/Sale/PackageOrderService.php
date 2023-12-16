@@ -271,7 +271,7 @@ class PackageOrderService
       $sorted = collect($newCollections)->sortBy('time');
     }
     if ($type == 'month') {
-      $sorted = collect($newCollections)->sortBy('month');
+      $sorted = collect($newCollections)->sortBy('time');
     }
 
     $server_minutes =  $sorted->values();
