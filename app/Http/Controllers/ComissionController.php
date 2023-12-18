@@ -5,14 +5,36 @@ namespace App\Http\Controllers;
 use App\Models\Commission;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use Modules\Order\Repositories\CommissionRepository;
 class ComissionController extends Controller
 {
+    public function new (){
+        $commissions= Commission::paginate(15);
+        return Inertia::render('Commission/Index', compact('commissions'));
+    }
     public function index (){
         $commissions= Commission::paginate(15);
         return Inertia::render('Commission/Index', compact('commissions'));
     }
-
+    public function getLeader(){
+        $commissions = $this->getType('sale_manager');
+        return Inertia::render('Commission/Index', compact('commissions'));
+    }
+    public function getSale(){
+        $commissions = $this->getType('sale');
+        return Inertia::render('Commission/Index', compact('commissions'));
+    }
+    public function getCTV(){
+        $commissions = $this->getType('cvt');
+        return Inertia::render('Commission/Index', compact('commissions'));
+    }
+    public function getTelesale(){
+        $commissions = $this->getType('telesale');
+        return Inertia::render('Commission/Index', compact('commissions'));
+    }
+    public function getType($type){
+        return Commission::where('type',$type)->orderBy('updated_at', 'desc')->paginate(5);
+    }
     public function store(Request $request){
         $this->validate(
             $request,
@@ -29,6 +51,7 @@ class ComissionController extends Controller
             'spend_from'=> $request->spend_from,
             'spend_to'=> $request->spend_to,
             'commission'=> $request->commission,
+            'level_revenue' => $request->level_revenue,
             'type'=> $request->type,
             'greater' =>$request->greater
         ]);
@@ -37,6 +60,7 @@ class ComissionController extends Controller
 
 
     public function update(Request $request, Commission $commission){
+
         $this->validate(
             $request,
             [
@@ -54,7 +78,8 @@ class ComissionController extends Controller
         'spend_to'=> $request->spend_to,
         'commission'=> $request->commission,
         'type'=> $request->type,
-        'greater' =>$request->greater
+        'greater' =>$request->greater,
+        'level_revenue' => $request->level_revenue
         ]);
         return back()->with('success', 'Cập nhật thành công');
     }

@@ -26,6 +26,7 @@ use Modules\Order\app\Http\Requests\SaveOrderpackageRequest;
 class OrderPackageController extends Controller
 {
     protected $orderRepository;
+    
     public function __construct(OrderContract $orderRepository)
     {
 

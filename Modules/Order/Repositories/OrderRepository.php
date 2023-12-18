@@ -90,7 +90,7 @@ class OrderRepository implements OrderContract
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
                 $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
             }
-        
+
         )->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
 
@@ -203,7 +203,7 @@ class OrderRepository implements OrderContract
                 'type' => $paramas['type'],
                 'shipping_fee' => $paramas['shipping_fee'],
                 'amount_paid' => $paramas['amount_paid'],
-              
+
                 'receive_at' => $paramas['receive_at'],
                 'shipper_id' => $paramas['shipper_id']
             ]);
@@ -234,7 +234,6 @@ class OrderRepository implements OrderContract
 
 
     public function createUser($data){
-        
         $user = User::create([
             'name' => $data['name'],
             'phone_number' =>  $data['phone_number'],

@@ -190,17 +190,12 @@ class OrderPackage extends Model implements HasMedia
             if ($filters['date'] == 'week') {
                 $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
             } elseif ($filters['date'] == 'beforMonth') {
-
                 $query->whereBetween('created_at', [Carbon::now()->subMonth(1)->startOfMonth(), Carbon::now()->subMonth(1)->endOfMonth()]);
             } elseif ($filters['date'] == 'month') {
-
-
                 $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
             } elseif ($filters['date'] == 'year') {
-
                 $query->whereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
             } else {
-
                 $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
             }
         }

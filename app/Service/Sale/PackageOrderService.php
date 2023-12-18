@@ -162,7 +162,6 @@ class PackageOrderService
     )->filtertime($filters)->orderBy('created_at', 'desc')->where('ref_id', $user->id);
   }
 
-
   public function sumGrandTotalOrder($filters, $user)
   {
     return $this->getOrder($filters, $user)->where('status', '!=', 'decline')->sum('grand_total');
@@ -172,11 +171,8 @@ class PackageOrderService
   {
     return $this->getOrder($filters, $user)->where('status', '!=', 'decline')->sum('price_percent');
   }
-
-
   public function analysticData($filters, $user)
   {
-
     $query = $this->model::select(
 
       DB::raw("CAST((SUM(grand_total))  AS INTEGER) as  grand_total_sum"),
@@ -347,8 +343,6 @@ class PackageOrderService
     return $data->where('sum', '>=', $sum)->count();
   }
 
-
-
   public function getOrderTeam($filters, $userIds)
   {
     return $this->model->with(['customer'])->whereHas(
@@ -382,8 +376,6 @@ class PackageOrderService
       )->groupBy('ref_id')->groupBy($groupBy);
     }])->whereIn('id', $userIds)->get();
   }
-
-
   public function formatDataAnalyticTeam($filters, $userIds)
   {
 
