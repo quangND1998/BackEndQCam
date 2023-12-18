@@ -15,6 +15,15 @@ return new class extends Migration
             $table->decimal('commission_percentage', 20)->nullable();
             $table->decimal('commission_amount', 20)->nullable();
             $table->decimal('level_revenue', 20)->nullable();
+
+            $table->decimal('commission_paid', 20)->nullable();
+            $table->decimal('commission_unpaid', 20)->nullable();
+
+
+
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
+
         });
     }
 

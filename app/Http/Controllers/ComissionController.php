@@ -25,7 +25,7 @@ class ComissionController extends Controller
         return Inertia::render('Commission/Index', compact('commissions'));
     }
     public function getCTV(){
-        $commissions = $this->getType('cvt');
+        $commissions = $this->getType('ctv');
         return Inertia::render('Commission/Index', compact('commissions'));
     }
     public function getTelesale(){

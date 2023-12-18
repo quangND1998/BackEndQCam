@@ -16,8 +16,11 @@ class CommissionsPackagesController extends Controller
         $this->packageOrderService = $packageOrderService;
     }
     public function index(){
-        $user = User::find(8);
-        $data = $this->commissionRepository->getAllOrderInMonth($this->packageOrderService,$user);
+        // $user = User::find(8);
+        $users = User::select('id', 'name')->get();
+        foreach($users as $user){
+            $data = $this->commissionRepository->getAllOrderInMonth($this->packageOrderService,$user);
+        }
 
         return $data;
     }

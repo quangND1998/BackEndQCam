@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('commissions_packages', function (Blueprint $table) {
             $table->id();
-            $table->decimal('grand_total', 20)->nullable();
-            $table->decimal('value_sale', 20)->nullable();
-            $table->decimal('value_sm', 20)->nullable();
-            $table->decimal('value_telesale', 20)->nullable();
-            $table->decimal('value_ctv', 20)->nullable();
+            // $table->decimal('grand_total', 20)->nullable();
+            // $table->decimal('value_sale', 20)->nullable();
+            // $table->decimal('value_sm', 20)->nullable();
+            // $table->decimal('value_telesale', 20)->nullable();
+            // $table->decimal('value_ctv', 20)->nullable();
             $table->string('status')->nullable();
 
             $table->unsignedBigInteger('order_package_id')->nullable();

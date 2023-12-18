@@ -26,21 +26,22 @@ class CommissionRepository
     // tổng doanh thu của 1 user
     public function getAmountCommission($order,$user,$commision){
         $commission_amount = 0;
-        // if($order->ref_id == $user->id){
-        //     $commission_amount += $order->history_payment_sum_amount_received*$commision->commission;
-        // }
-        // if($order->to_id == $user->id){
-        //     $commission_amount += $order->history_payment_sum_amount_received*$commision->commission;
-        // }
-        if($order->customer_resources != null && $order->customer_resources_id == $user->id){
-            // neu customer_resources == sale thi ++
-            
+        if($order->customer_resources == "ctv" && $order->ref_id == $user->id){
+            $commission_amount = $order->history_payment_sum_amount_received*($commision->commission - $commision->discount_form_sale);
+        }elseif($order->customer_resources == "ctv" && $order->to_id == $user->id){
+            $commission_amount = $order->history_payment_sum_amount_received*($commision->commission - $commision->discount_form_manager_sale);
         }
+        else{
+            $commission_amount = $order->history_payment_sum_amount_received*$commision->commission;
+        }
+        return $commission_amount;
 
     }
     public function getAllOrderInMonth(PackageOrderService $packageOrderService,$user){
+        // check them truong hop price_percent dat bn % tong don hang 
         $orders = $packageOrderService->getOrderInMonth($user);
         $total = $orders->sum('history_payment_sum_amount_received');
+        
 
         $user_role = $user->roles[0]->name;
         $commision = $this->checkCommission($user_role,$total);
@@ -48,17 +49,20 @@ class CommissionRepository
         if($commision){
         // update hoa hong
             foreach($orders as $order){
-                if($order->commissions_packages == null){
-                    // tao moi
-                    $commissionsPackage = new commissionsPackage;
-                }else{
+                if($order->commissions_packages != null && $order->commissions_packages->user_id == $user->id){
                     // update
                     $commissionsPackage = $order->commissions_packages;
+                }else{
+                    // tao moi
+                    $commissionsPackage = new commissionsPackage;
                 }
+                $commissionsPackage->commission_amount = $this->getAmountCommission($order,$user,$commision);
                 $commissionsPackage->commission_percentage = $commision->commission;
                 $commissionsPackage->level_revenue = $commision->level_revenue;
                 $commissionsPackage->order_package_id = $order->id;
                 $commissionsPackage->commissions_id = $commision->id;
+                $commissionsPackage->user_id = $user->id;
+
                 $commissionsPackage->save();
             }
         }
