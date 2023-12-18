@@ -16,7 +16,10 @@ class Commission extends Model
         'commission',
         'type',
         'status',
-        'greater'
+        'greater',
+        'level_revenue',
+        'discount_form_sale',
+        'discount_form_manager_sale'
     ];
 }
 

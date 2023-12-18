@@ -13,6 +13,7 @@ use Modules\Customer\app\Models\Address;
 use Modules\Customer\app\Models\ComplaintManagement;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ReviewManagement;
+use Modules\Order\app\Models\HistoryPayment;
 use Modules\Order\app\Models\Order;
 use Modules\Order\app\Models\OrderPackage;
 use Spatie\Permission\Traits\HasRoles;
@@ -213,6 +214,12 @@ class User extends Authenticatable implements HasMedia
            
         }
        
+    }
+
+
+    public function historyPayments()
+    {
+        return $this->hasManyThrough(HistoryPayment::class, OrderPackage::class, 'ref_id','order_package_id');
     }
 
 }
