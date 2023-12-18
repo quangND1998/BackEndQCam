@@ -103,7 +103,7 @@ const getSeries = computed(() => {
     series[1].data = [];
     if (props.analysticData) {
         props.analysticData.forEach(element => {
-            series[0].data.push(parseInt(element.price_percent_sum, 10))
+            series[0].data.push(parseInt(element.history_payment_sum_amount_received, 10))
             series[1].data.push(parseInt(element.grand_total_sum, 10))
             // for (let i = 0; i < element.length; i++) {
             //     series.push(parseInt(element[i][1], 10))

@@ -20,7 +20,7 @@ class HistoryPayment extends Model implements HasMedia
      */
     protected $table = 'history_payments';
     protected $fillable = [
-        "id", "order_package_id" ,"payment_method", "amount_received", "payment_date", "status" ,"note", 'user_id'
+        "id", "order_package_id" ,"payment_method", "amount_received", "payment_date", "status" ,"note", 'user_id','created_at', 'updated_at'
     ];
 
     protected static function newFactory(): HistoryPaymentFactory

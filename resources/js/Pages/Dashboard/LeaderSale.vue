@@ -49,7 +49,7 @@ const chartOptions = reactive({
     stroke: {
         curve: 'smooth'
     },
-    colors: ['#E91E63', '#00d1b2'],
+   
     xaxis: {
         categories: []
     },
@@ -70,48 +70,52 @@ const filter = reactive({
 
 })
 
-// const getOptions = computed(() => {
-//     chartOptions.xaxis.categories = [];
-//     if (props.analysticData) {
-//         props.analysticData.forEach(element => {
+const getOptions = computed(() => {
+    chartOptions.xaxis.categories = [];
+    if (props.analysticData && props.analysticData.length >0) {
+        console.log(props.analysticData)
+        // props.analysticData[0].forEach(element => {
+            
+        //     if (filter.date == 'year') {
+        //         chartOptions.xaxis.categories.push(element.month)
 
-//             if (filter.date == 'year') {
-//                 chartOptions.xaxis.categories.push(element.month)
+        //     }
+        //     else {
+        //         chartOptions.xaxis.categories.push(element.time)
+        //     }
 
-//             }
-//             else {
-//                 chartOptions.xaxis.categories.push(element.time)
-//             }
+        // });
 
-//         });
+        return chartOptions;
+    }
+    return [];
 
-//         return chartOptions;
-//     }
-//     return [];
-
-// })
+})
 
 const getSeries = computed(() => {
-    series[0].data = [];
-    series[1].data = [];
+
     if (props.analysticData) {
         props.analysticData.forEach(element => {
             series.push({
                 name:element.name,
-                data:[]
+                data:pushDataSeries(element)
             });
 
          
-            for (let i = 0; i < element.ref_order_packages.length; i++) {
-                series.data.push(parseInt(element[i][1], 10))
-            }
+          
         });
         return series;
     }
     return [];
 
 })
-
+const pushDataSeries =(element)=>{
+    let array=[];
+    for (let i = 0; i < element.history_payments.length; i++) {
+        array.push(element.history_payments[i].amount_received_sum)
+    }
+    return array;
+}
 const fillterDashboad = (time) => {
     filter.date = time;
     router.get(route(`dashboard.leader-sale.index`),
@@ -154,7 +158,7 @@ const handleDate = (time) => {
     <LayoutAuthenticated class="bg-gray-100 ">
 
         <Head title="Dashboard" />
-
+      
         <div class="mt-16 ">
             <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3  gap-4 ml-6 mr-6 py-2">
                 <div class="col-span-1  p-3 border border-gray-300 border_round bg-white items-center text-center">
@@ -548,7 +552,7 @@ const handleDate = (time) => {
                         <button>Xuất CSV</button>
                     </div>
                     <div class="w-full flex justify-center items-center">
-                        <div class="w-1/6">
+                        <!-- <div class="w-1/6">
                             <div class="flex text-center items-center px-2 py-1.5">
                                 <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
                                     <path fill="#ff3860" :d="mdiMinus" />
@@ -561,15 +565,15 @@ const handleDate = (time) => {
                                 </svg>
                                 <p class="text-md  ml-2">Số tiền theo hợp đồng</p>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="w-5/6">
                             <CardBox class="mb-6">
 
-<!-- 
+
                                 <div id="chart" v-if="chartOptions">
                                     <apexchart type="area" height="350" :options="getOptions" :series="getSeries">
                                     </apexchart>
-                                </div> -->
+                                </div>
                             </CardBox>
                         </div>
                     </div>
