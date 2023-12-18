@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('commissions', function (Blueprint $table) {
             $table->decimal('level_revenue', 30, 2)->nullable();
+            $table->decimal('discount_form_sale', 30, 2)->nullable();
+            $table->decimal('discount_form_manager_sale', 30, 2)->nullable();
         });
     }
 
@@ -23,6 +25,8 @@ return new class extends Migration
     {
         Schema::table('commissions', function (Blueprint $table) {
             $table->dropColumn('level_revenue');
+            $table->dropColumn('discount_form_sale', 30, 2)->nullable();
+            $table->dropColumn('discount_form_manager_sale', 30, 2)->nullable();
         });
     }
 };

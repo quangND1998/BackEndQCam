@@ -17,11 +17,11 @@ class ComissionController extends Controller
         return Inertia::render('Commission/Index', compact('commissions'));
     }
     public function getLeader(){
-        $commissions = $this->getType('sale_manager');
+        $commissions = $this->getType('leader-sale');
         return Inertia::render('Commission/Index', compact('commissions'));
     }
     public function getSale(){
-        $commissions = $this->getType('sale');
+        $commissions = $this->getType('saler');
         return Inertia::render('Commission/Index', compact('commissions'));
     }
     public function getCTV(){
@@ -43,7 +43,9 @@ class ComissionController extends Controller
                 'spend_to' => 'required|numeric|gt:0',
                 'commission' => 'required|numeric|gt:0',
                 'type' => 'required',
-                'level_revenue' => 'required|numeric|gt:0'
+                'level_revenue' => 'required|numeric|gt:0',
+                'discount_form_sale' => 'required_if:type,==,ctv',
+                'discount_form_manager_sale' => 'required_if:type,==,ctv'
             ]
         );
 
@@ -53,7 +55,9 @@ class ComissionController extends Controller
             'commission'=> $request->commission,
             'level_revenue' => $request->level_revenue,
             'type'=> $request->type,
-            'greater' =>$request->greater
+            'greater' =>$request->greater,
+            'discount_form_sale' => $request->discount_form_sale,
+            'discount_form_manager_sale' => $request->discount_form_manager_sale
         ]);
         return back()->with('success', 'Tạo mới thành công');
     }
@@ -68,7 +72,9 @@ class ComissionController extends Controller
                 'spend_to' => 'required|numeric|gt:0',
                 'commission' => 'required|numeric|gt:0',
                 'type' => 'required',
-                'level_revenue' => 'required|numeric|gt:0'
+                'level_revenue' => 'required|numeric|gt:0',
+                'discount_form_sale' => 'required_if:type,==,ctv',
+                'discount_form_manager_sale' => 'required_if:type,==,ctv'
             ]
         );
 
@@ -79,7 +85,9 @@ class ComissionController extends Controller
         'commission'=> $request->commission,
         'type'=> $request->type,
         'greater' =>$request->greater,
-        'level_revenue' => $request->level_revenue
+        'level_revenue' => $request->level_revenue,
+        'discount_form_sale' => $request->discount_form_sale,
+        'discount_form_manager_sale' => $request->discount_form_manager_sale
         ]);
         return back()->with('success', 'Cập nhật thành công');
     }

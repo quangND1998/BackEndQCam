@@ -3,6 +3,7 @@
 namespace Modules\Order\app\Models;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Order\Database\factories\HistoryPaymentFactory;
@@ -36,5 +37,38 @@ class HistoryPayment extends Model implements HasMedia
     }
     public function user(){
         return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function scopeFilterTime($query, array $filters)
+    {
+       
+        if (isset($filters['date'])) {
+
+            if ($filters['date'] == 'week') {
+                $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            } elseif ($filters['date'] == 'beforMonth') {
+              
+                $query->whereBetween('created_at', [Carbon::now()->subMonth(1)->startOfMonth(), Carbon::now()->subMonth(1)->endOfMonth()]);
+            } elseif ($filters['date'] == 'month') {
+
+
+                $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            } elseif ($filters['date'] == 'year') {
+              
+                $query->whereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+            } else {
+
+                $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            }
+        }
+
+        if (isset($filters['day'])) {
+
+            $query->whereBetween('created_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
+        }
+        if (isset($filters['from']) && isset($filters['to'])) {
+
+            $query->whereBetween('created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+        }
     }
 }

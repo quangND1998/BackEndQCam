@@ -48,6 +48,8 @@ const form = useForm({
     type: 'sale',
     greater: 0,
     level_revenue: 30,
+    discount_form_sale: null,
+    discount_form_manager_sale: null,
 });
 
 
@@ -119,10 +121,10 @@ const edit = (commission) => {
     form.spend_from = commission.spend_from;
     form.spend_to = commission.spend_to;
     form.commission = commission.commission;
-    form.type = commission.type,
+    form.type = commission.type
     form.level_revenue = commission.level_revenue
-
-
+    form.discount_form_sale = commission.discount_form_sale
+    form.discount_form_manager_sale = commission.discount_form_manager_sale
 };
 const isModalActive = ref(false);
 const editMode = ref(false);
@@ -202,9 +204,9 @@ const changeStatus = (data, event) => {
                         <InputLabel for="name" value="Danh cho" />
                         <select id="countries" v-model="form.type"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option value="sale">Sale</option>
+                            <option value="leader-sale">Quản lý sale</option>
+                            <option value="saler">Sale</option>
                             <option value="ctv">Cộng tác viên</option>
-                            <option value="sale_manager">Quản lý sale</option>
                             <option value="telesale">Telesale</option>
                         </select>
                     </div>
@@ -238,6 +240,20 @@ const changeStatus = (data, event) => {
                         <InputNumber v-model="form.level_revenue" :min="0" :max="100" class="w-full"
                             inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         <InputError class="mt-2" :message="form.errors.level_revenue" />
+                    </div>
+                    <div class="my-2 w-1/2  pr-4" v-if="form.type == 'ctv'">
+                        <InputLabel for="name" value="Hoa hồng từ sale (%)" />
+
+                        <InputNumber v-model="form.discount_form_sale" :min="0" :max="100" class="w-full"
+                            inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputError class="mt-2" :message="form.errors.discount_form_sale" />
+                    </div>
+                    <div class="my-2 w-1/2  pr-4" v-if="form.type == 'ctv'">
+                        <InputLabel for="name" value="Hoa hồng từ leader (%)" />
+
+                        <InputNumber v-model="form.discount_form_manager_sale" :min="0" :max="100" class="w-full"
+                            inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputError class="mt-2" :message="form.errors.discount_form_manager_sale" />
                     </div>
                 </div>
             </CardBoxModal>
