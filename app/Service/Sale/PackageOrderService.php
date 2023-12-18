@@ -49,7 +49,7 @@ class PackageOrderService
   // Lấy danh sách doanh thu toàn hệ thống theo tuần , tháng năm 
   public function getSaleData($filters)
   {
-    return  User::select('id', 'name', 'created_byId')->with('team')->whereHas('ref_order_packages.product_service_owner')->withSum(
+    return  User::select('id', 'name', 'created_byId')->whereHas('ref_order_packages.product_service_owner')->withSum(
       ['historyPayments' => function ($q) use ($filters) {
 
         $q->where('history_payments.status', 'complete');
@@ -95,7 +95,7 @@ class PackageOrderService
   public function getSaleTeam($filters, $team)
   {
 
-    return  User::select('id', 'name', 'created_byId')->where('created_byId', $team->id)->with('team')->whereHas('ref_order_packages.product_service_owner')->withSum(
+    return  User::select('id', 'name', 'created_byId')->where('created_byId', $team->id)->whereHas('ref_order_packages.product_service_owner')->withSum(
       ['historyPayments' => function ($q) use ($filters) {
 
         $q->where('history_payments.status', 'complete');
@@ -170,7 +170,7 @@ class PackageOrderService
 
   public function getOrder($filters, $user)
   {
-    return $this->model->with(['customer'])->whereHas(
+    return $this->model->with(['customer','historyPayment'])->whereHas(
       'customer'
     )->whereHas('historyPayment', function ($q) use ($filters) {
 
@@ -191,7 +191,7 @@ class PackageOrderService
 
   public function sumPricePercentOrder($filters, $user)
   {
-    return $this->getOrder($filters, $user)->where('status', '!=', 'decline')->get();
+    return $this->getOrder($filters, $user)->where('status', '!=', 'decline')->sum('price_percent');
   }
 
 
@@ -644,6 +644,5 @@ class PackageOrderService
       return count($item["history_payments"]) > 0;
     });
     return $data;
-    return AnalyticTeamDataResource::collection($collection->sortBy('ref_order_packages.time'));
   }
 }

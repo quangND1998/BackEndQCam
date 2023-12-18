@@ -55,7 +55,8 @@ class DashBoardController extends Controller{
         $sumGrandTotalOrder = $this->packageOrderService->sumGrandTotalOrder($request->only('date','from', 'to', 'day'),$user);
         $sumPricePercentOrder = $this->packageOrderService->sumPricePercentOrder($request->only('date','from', 'to', 'day'),$user);
         $analysticData = $this->packageOrderService->formatDataAnalytic($request->only('date','from', 'to', 'day'),$user);
-      
+            
+        // return Inertia::render('Dashboard/Sale', compact( "top_ten_sale_data", 'week_data_user', 'month_data_user', 'year_data_user','team_sale_data','contract_infor','ranking_team', 'ranking_all_server','order_packages'));
         return Inertia::render('Dashboard/Sale', compact( "top_ten_sale_data", 'week_data_user', 'month_data_user', 'year_data_user','team_sale_data','contract_infor','ranking_team', 'ranking_all_server','order_packages','sumGrandTotalOrder','sumPricePercentOrder','analysticData'));
 
     }
