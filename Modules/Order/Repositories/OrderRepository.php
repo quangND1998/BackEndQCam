@@ -17,7 +17,6 @@ use Modules\Tree\app\Models\ProductRetail;
 class OrderRepository implements OrderContract
 {
 
-
     public function storeOrderDetails($params, $user)
     {
         $order = Order::create([
