@@ -26,8 +26,7 @@ const props = defineProps({
     month_data_user: Number,
     year_data_user: Number,
     team_sale_data: Array,
-    contract_infor: Object,
-    ranking_team: Object,
+    data_contract: Object,
     ranking_all_server: Object,
     order_packages: Object,
     sumGrandTotalOrder: String | Number,
@@ -36,13 +35,7 @@ const props = defineProps({
 })
 
 const series = reactive([
-    {
-        name: 'Số tiền thực thu',
-        data: []
-    }, {
-        name: 'Số tiền theo hợp đồng',
-        data: []
-    }
+   
 ]);
 
 const chartOptions = reactive({
@@ -77,37 +70,41 @@ const filter = reactive({
 
 })
 
-const getOptions = computed(() => {
-    chartOptions.xaxis.categories = [];
-    if (props.analysticData) {
-        props.analysticData.forEach(element => {
+// const getOptions = computed(() => {
+//     chartOptions.xaxis.categories = [];
+//     if (props.analysticData) {
+//         props.analysticData.forEach(element => {
 
-            if (filter.date == 'year') {
-                chartOptions.xaxis.categories.push(element.month)
+//             if (filter.date == 'year') {
+//                 chartOptions.xaxis.categories.push(element.month)
 
-            }
-            else {
-                chartOptions.xaxis.categories.push(element.time)
-            }
+//             }
+//             else {
+//                 chartOptions.xaxis.categories.push(element.time)
+//             }
 
-        });
+//         });
 
-        return chartOptions;
-    }
-    return [];
+//         return chartOptions;
+//     }
+//     return [];
 
-})
+// })
 
 const getSeries = computed(() => {
     series[0].data = [];
     series[1].data = [];
     if (props.analysticData) {
         props.analysticData.forEach(element => {
-            series[0].data.push(parseInt(element.price_percent_sum, 10))
-            series[1].data.push(parseInt(element.grand_total_sum, 10))
-            // for (let i = 0; i < element.length; i++) {
-            //     series.push(parseInt(element[i][1], 10))
-            // }
+            series.push({
+                name:element.name,
+                data:[]
+            });
+
+         
+            for (let i = 0; i < element.ref_order_packages.length; i++) {
+                series.data.push(parseInt(element[i][1], 10))
+            }
         });
         return series;
     }
@@ -117,7 +114,7 @@ const getSeries = computed(() => {
 
 const fillterDashboad = (time) => {
     filter.date = time;
-    router.get(route(`dashboard`),
+    router.get(route(`dashboard.leader-sale.index`),
         { date: filter.date },
         {
             preserveState: false,
@@ -129,7 +126,7 @@ const fillterDashboad = (time) => {
 
 const fillterDashboadDay = (time) => {
     filter.day = time;
-    router.get(route(`dashboard`),
+    router.get(route(`dashboard.leader-sale.index`),
         { day: filter.day },
         {
             preserveState: false,
@@ -142,7 +139,7 @@ const fillterDashboadDay = (time) => {
 
 const handleDate = (time) => {
 
-    router.get(route(`dashboard`),
+    router.get(route(`dashboard.leader-sale.index`),
         { from: filter.from, to: filter.to },
         {
             preserveState: false,
@@ -228,7 +225,7 @@ const handleDate = (time) => {
                         </div>
                     </div>
                     <div class="col-span-1 mt-3  p-3 border border-gray-300 border_round bg-white">
-                        <p class="text-sm text-[#FF0000] font-bold">Top 10 doanh thu tuần nhóm </p>
+                        <p class="text-sm text-[#FF0000] font-bold">Doanh thu tháng nhóm </p>
                         <div class="w-full mt-2">
                             <div class="flex flex-col">
                                 <div class="overflow-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[40vh]">
@@ -277,49 +274,43 @@ const handleDate = (time) => {
 
                 <div class="col-span-1  p-3  border border-gray-300 border_round bg-white text-center">
                     <div class="py-2">
-                        <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng tuần toàn hệ thống</p>
+                        <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng TEAM tuần toàn hệ thống</p>
                         <h3 class="text-[30px] text-[#FF0C0C] font-bold py-1">{{ ranking_all_server.week }}</h3>
-                        <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng tháng toàn hệ thống</p>
+                        <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng TEAM tháng toàn hệ  thống</p>
                         <h3 class="text-[30px] text-[#FF0C0C] font-bold py-1">{{ ranking_all_server.month }}</h3>
-                        <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng năm toàn hệ thống</p>
-                        <h3 class="text-[46px] text-[#FF0C0C] font-bold py-1">{{ ranking_team.year }}</h3>
-                        <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng tuần trong team</p>
-                        <h3 class="text-[24px] text-[#FF0C0C] font-bold py-1">{{ ranking_team.week }}</h3>
-                        <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng tháng trong team</p>
-                        <h3 class="text-[24px] text-[#FF0C0C] font-bold py-1">{{ ranking_team.month }}</h3>
-                        <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng năm trong team</p>
-                        <h3 class="text-[40px] text-[#FF0C0C] font-bold py-1">{{ ranking_team.year }}</h3>
+                        <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng TEAM năm toàn hệ  thống</p>
+                        <h3 class="text-[46px] text-[#FF0C0C] font-bold py-1">{{ ranking_all_server.year }}</h3>
                     </div>
-                    <div class="px-4 mt-3" v-if="contract_infor">
+                    <div class="px-4 mt-3" v-if="data_contract">
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
                                 <path :d="mdiCartOutline" />
                             </svg>
-                            <p class="text-md  ml-2">Tổng số hợp đồng : {{ contract_infor.ref_order_packages_count }}</p>
+                            <p class="text-md  ml-2">Tổng số hợp đồng : {{ data_contract.ref_order_packages_count }}</p>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
                                 <path :d="mdiCartOutline" />
                             </svg>
-                            <p class="text-md  ml-2">Đã ký: {{ contract_infor.contract_completed }}</p>
+                            <p class="text-md  ml-2">Đã ký: {{ data_contract.contract_completed }}</p>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
                                 <path :d="mdiCartOutline" />
                             </svg>
-                            <p class="text-md  ml-2">Thanh toán 1 phần: {{ contract_infor.contract_partiallyPaid }}</p>
+                            <p class="text-md  ml-2">Thanh toán 1 phần: {{ data_contract.contract_partiallyPaid }}</p>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
                                 <path :d="mdiCartOutline" />
                             </svg>
-                            <p class="text-md  ml-2">Đã hoàn thành: {{ contract_infor.contract_paid }}</p>
+                            <p class="text-md  ml-2">Đã hoàn thành: {{ data_contract.contract_paid }}</p>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
                                 <path :d="mdiCartOutline" />
                             </svg>
-                            <p class="text-md  ml-2">Bị huỷ: {{ contract_infor.contract_decline }}</p>
+                            <p class="text-md  ml-2">Bị huỷ: {{ data_contract.contract_decline }}</p>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
                             <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
@@ -328,7 +319,7 @@ const handleDate = (time) => {
                             <div>
                                 <p class="text-md  ml-2">Doanh thu dự kiến: </p>
                                 <p class="text-md text-[#4F8D06]">
-                                    {{ formatPrice(contract_infor.ref_order_packages_sum_grand_total) }}đ</p>
+                                    {{ formatPrice(data_contract.ref_order_packages_sum_grand_total) }}đ</p>
                             </div>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
@@ -338,7 +329,7 @@ const handleDate = (time) => {
                             <div>
                                 <p class="text-md  ml-2">Doanh thu thực: </p>
                                 <p class="text-md text-[#2E67A9]">
-                                    {{ formatPrice(contract_infor.ref_order_packages_sum_price_percent) }}đ</p>
+                                    {{ formatPrice(data_contract.ref_order_packages_sum_price_percent) }}đ</p>
                             </div>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
@@ -574,11 +565,11 @@ const handleDate = (time) => {
                         <div class="w-5/6">
                             <CardBox class="mb-6">
 
-
+<!-- 
                                 <div id="chart" v-if="chartOptions">
                                     <apexchart type="area" height="350" :options="getOptions" :series="getSeries">
                                     </apexchart>
-                                </div>
+                                </div> -->
                             </CardBox>
                         </div>
                     </div>
