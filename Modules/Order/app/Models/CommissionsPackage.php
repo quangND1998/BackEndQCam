@@ -3,6 +3,7 @@
 namespace Modules\Order\app\Models;
 
 use App\Models\Commission;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Order\Database\factories\CommissionsPackageFactory;
@@ -33,5 +34,9 @@ class commissionsPackage extends Model
     public function commissionsHistory()
     {
         return $this->hasMany(commissionsHistory::class,'commissions_packages_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id');
     }
 }

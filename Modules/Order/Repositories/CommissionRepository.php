@@ -38,21 +38,17 @@ class CommissionRepository
 
     }
     public function getAllOrderInMonth(PackageOrderService $packageOrderService,$user){
-        // check them truong hop price_percent dat bn % tong don hang 
+        // check them truong hop price_percent dat bn % tong don hang
         $orders = $packageOrderService->getOrderInMonth($user);
         $total = $orders->sum('history_payment_sum_amount_received');
-        
-
         $user_role = $user->roles[0]->name;
         $commision = $this->checkCommission($user_role,$total);
 
         if($commision){
         // update hoa hong
             foreach($orders as $order){
-                if($order->commissions_packages != null && $order->commissions_packages->user_id == $user->id){
-                    // update
-                    $commissionsPackage = $order->commissions_packages;
-                }else{
+                $commissionsPackage = $user->commission()->where('order_package_id',$order->id)->first();
+                if($commissionsPackage == null){
                     // tao moi
                     $commissionsPackage = new commissionsPackage;
                 }
@@ -67,7 +63,7 @@ class CommissionRepository
             }
         }
 
-        return $orders;
+
     }
 
 }

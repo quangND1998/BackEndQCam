@@ -73,6 +73,12 @@ export default [{
                 label: 'Cài đặt hoa hồng',
                 permissions: ['view-user'],
                 route_list: null
+            },
+            {
+                route: 'commission.package.index',
+                label: 'Hoa hồng',
+                permissions: ['view-user'],
+                route_list: null
             }
         ]
     },

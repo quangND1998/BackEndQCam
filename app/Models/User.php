@@ -13,6 +13,7 @@ use Modules\Customer\app\Models\Address;
 use Modules\Customer\app\Models\ComplaintManagement;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ReviewManagement;
+use Modules\Order\app\Models\commissionsPackage;
 use Modules\Order\app\Models\HistoryPayment;
 use Modules\Order\app\Models\Order;
 use Modules\Order\app\Models\OrderPackage;
@@ -193,33 +194,36 @@ class User extends Authenticatable implements HasMedia
 
     public function scopeSearch($query, array $filters)
     {
-      
+
         if (isset($filters['search']) && isset($filters['search'])) {
 
             $query->where('name', 'LIKE', '%' .$filters['search'] . '%');
             $query->orwhere('email', 'LIKE', '%' .$filters['search'] . '%');
             $query->orwhere('phone_number', 'LIKE', '%' .$filters['search'] . '%');
         }
-       
+
     }
 
     public function scopeAccept($query, array $filters)
     {
-      
+
         if (isset($filters['accept']) && isset($filters['accept'])) {
 
             $query->whereHas('infor',  function($q) use ($filters){
                 $q->where('status', $filters['accept']);
             });
-           
+
         }
-       
+
     }
 
 
     public function historyPayments()
     {
         return $this->hasManyThrough(HistoryPayment::class, OrderPackage::class, 'ref_id','order_package_id');
+    }
+    public function commission() {
+        return $this->hasMany(commissionsPackage::class,'user_id');
     }
 
 }

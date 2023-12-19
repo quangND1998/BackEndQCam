@@ -210,6 +210,6 @@ class OrderPackage extends Model implements HasMedia
         }
     }
     public function commissions_packages(){
-        return $this->hasOne(commissionsPackage::class, 'order_package_id');
+        return $this->hasMany(commissionsPackage::class, 'order_package_id');
     }
 }
