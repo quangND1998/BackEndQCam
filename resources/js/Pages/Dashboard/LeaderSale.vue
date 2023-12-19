@@ -292,7 +292,7 @@ const exportCSV=()=>{
                 </div>
 
                 <div class="col-span-1  p-3  border border-gray-300 border_round bg-white text-center">
-                    <div class="py-2">
+                    <div class="py-2" v-if="ranking_all_server">
                         <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng TEAM tuần toàn hệ thống</p>
                         <h3 class="text-[30px] text-[#FF0C0C] font-bold py-1">{{ ranking_all_server.week }}</h3>
                         <p class="text-md text-[#FF0C0C] font-bold">Xếp hạng TEAM tháng toàn hệ  thống</p>
