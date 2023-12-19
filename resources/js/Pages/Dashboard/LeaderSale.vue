@@ -483,11 +483,12 @@ const exportCSV=()=>{
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
-                            <PaginationDashboard :links="order_packages.links" />
-                        </div>
-                        <table class="border_round table_grip min-w-full text-center text-sm font-light overflow-x-auto">
-                            <tbody class="relative">
+                                <tr colum="12">
+                                    <th colspan="12">
+                                        <PaginationDashboard  :links="order_packages.links"  class="w-full"/>
+                                    </th>
+                                </tr>
+                                <tfoot>
                                 <tr class="sticky bottom-0 bg-white">
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-bold ">
                                         Tổng
@@ -521,8 +522,11 @@ const exportCSV=()=>{
                                         class="whitespace-nowrap px-3 py-2 text-left text-sm text-[#000000] font-normal">
                                     </th>
                                 </tr>
-                            </tbody>
-                        </table>
+                            </tfoot>
+                            </table>
+                          
+                        </div>
+                   
                     </div>
                     <div>
 
