@@ -233,19 +233,19 @@ const handleDate = (time) => {
                                             {{ user.count_order_decline }}
                                         </td>
                                         <td class=" text-left px-3 py-2  font-normal">
-                                            {{ formatPrice(user.commission_sum_amount_received) }}
+                                            {{ formatPrice(user.commission_sum_amount_received) }}đ
                                         </td>
                                         <td class=" text-center px-3 py-2 font-normal">
                                             {{ formatPrice(user.commission[0].commission_percentage)}} (%)
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
-                                            {{ formatPrice(user.commission_sum_commission_amount)}}
+                                            {{ formatPrice(user.commission_sum_commission_amount)}}đ
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
-                                            {{ formatPrice(user.commission_sum_commission_paid)}}
+                                            {{ formatPrice(user.commission_sum_commission_paid)}}đ
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
-                                            {{ formatPrice(user.commission_sum_commission_amount - user.commission_sum_commission_paid)}}
+                                            {{ formatPrice(user.commission_sum_commission_amount - user.commission_sum_commission_paid)}}đ
                                         </td>
                                         <td class=" text-center px-3 py-2 font-normal">
                                             <a :href="route('commission.dashboard.detail', user?.id)" target="_blank"
@@ -278,19 +278,19 @@ const handleDate = (time) => {
                                         {{ formatPrice(sumCommissionInfo.sum_count_order_decline) }}
                                     </th>
                                     <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        {{ formatPrice(sumCommissionInfo.sum_amount_received) }}
+                                        {{ formatPrice(sumCommissionInfo.sum_amount_received) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
 
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        {{ formatPrice(sumCommissionInfo.sum_commission_amount) }}
+                                        {{ formatPrice(sumCommissionInfo.sum_commission_amount) }}đ
                                     </th>
                                     <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        {{ formatPrice(sumCommissionInfo.sum_commision_paid) }}
+                                        {{ formatPrice(sumCommissionInfo.sum_commision_paid) }}đ
                                     </th>
                                     <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        {{ formatPrice(sumCommissionInfo.sum_commision_unpaid) }}
+                                        {{ formatPrice(sumCommissionInfo.sum_commision_unpaid) }}đ
                                     </th>
                                     <th scope="col"
                                         class="whitespace-nowrap px-3 py-2 text-left text-sm text-[#000000] font-normal">
@@ -310,12 +310,4 @@ const handleDate = (time) => {
         </div>
     </LayoutAuthenticated>
 </template>
-<style scoped>
-.table_grip tr th {
-    width: 120px !important;
-}
 
-.table_grip tr td {
-    width: 120px !important;
-}
-</style>
