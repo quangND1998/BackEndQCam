@@ -22,7 +22,7 @@ class CommissionsPackagesController extends Controller
     }
     public function commissionUser(Request $request){
         $roles = ['saler','leader-sale','ctv','telesale'];
-        $users = User::with(['commission'])
+        $users = User::with(['commission','roles'])
         ->whereHas('commission')
         ->withSum('commission','commission_amount')
         ->withSum('commission','amount_received')

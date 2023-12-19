@@ -195,6 +195,9 @@ const handleDate = (time) => {
                                             User
                                         </th>
                                         <th scope="col" class=" px-3 py-2 text-center text-sm text-[#000000] font-normal">
+                                            Quyền
+                                        </th>
+                                        <th scope="col" class=" px-3 py-2 text-center text-sm text-[#000000] font-normal">
                                             Hợp đồng đã ký
                                         </th>
                                         <th scope="col" class=" px-3 py-2 text-center text-sm text-[#000000] font-normal">
@@ -225,6 +228,9 @@ const handleDate = (time) => {
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
                                             {{ user.name }}
+                                        </td>
+                                        <td class=" text-left px-3 py-2 font-normal">
+                                            {{ user.roles[0]?.name }}
                                         </td>
                                         <td class=" text-center px-3 py-2 text-[#00AB55] font-medium">
                                             {{ user.count_order_notdecline }}

@@ -575,6 +575,7 @@ class OrderPackageController extends Controller
                     $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','%' . $request->search . '%');
                 }
             )
+
             ->orwhere('order_number', 'LIKE', '%' . $request->search . '%')
             ->orwhere('idPackage', 'LIKE', '%' . $request->search . '%')
             ->role()
