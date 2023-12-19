@@ -19,7 +19,8 @@ import { Head, Link } from '@inertiajs/vue3'
 import BaseIcon from '@/Components/BaseIcon.vue'
 import PaginationDashboard from '@/Components/PaginationDefault.vue'
 import CardBox from '@/Components/CardBox.vue'
-
+import { useHelper } from "@/composable/useHelper";
+const { formatDateTime } = useHelper();
 const props = defineProps({
     top_ten_sale_data: Array,
     week_data_user: Number,
@@ -73,9 +74,9 @@ const transactionBarItems = computed(() => mainStore.history)
 
 const filter = reactive({
     date: usePage().props.ziggy.query.date ? usePage().props.ziggy.query.date : '',
-    from: null,
-    to: null,
-    day: null,
+    from:  usePage().props.ziggy.query.from ? usePage().props.ziggy.query.from : '',
+    to:  usePage().props.ziggy.query.to ?  usePage().props.ziggy.query.to : '',
+    day:  usePage().props.ziggy.query.day ? usePage().props.ziggy.query.day : '',
 
 })
 
@@ -160,6 +161,11 @@ const handleDate = (time) => {
         }
     );
 
+}
+
+const exportCSV=()=>{
+    window.open('/dashboard/exportLeaderSale?date='+filter.date +'&from='+formatDateTime(filter.from)+'&to='+formatDateTime(filter.to)+'&day='+filter.day)
+   
 }
 </script>
 
@@ -394,7 +400,7 @@ const handleDate = (time) => {
                             </div>
                         </div>
                         <div  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white" @click="handleDate">Lọc</div>
-                        <div class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</div>
+                        <div @click="exportCSV()" class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</div>
                     </div>
                     <div>
 

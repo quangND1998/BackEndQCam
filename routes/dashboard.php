@@ -17,5 +17,7 @@ Route::middleware([
         });
 
         Route::get('export', [DashBoardController::class, 'export'])->name('export');
+        Route::get('exportLeaderSale', [DashBoardController::class, 'exportLeaderSale'])->name('export.leader-sale');
+      
     });
 });

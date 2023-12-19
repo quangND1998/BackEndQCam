@@ -82,8 +82,8 @@ const transactionBarItems = computed(() => mainStore.history)
 
 const filter = reactive({
     date: usePage().props.ziggy.query.date ? usePage().props.ziggy.query.date : '',
-    from:  usePage().props.ziggy.query.from ? formatDateTime(usePage().props.ziggy.query.from) : '',
-    to:  usePage().props.ziggy.query.to ?  formatDateTime(usePage().props.ziggy.query.to) : '',
+    from:  usePage().props.ziggy.query.from ? usePage().props.ziggy.query.from : '',
+    to:  usePage().props.ziggy.query.to ?  usePage().props.ziggy.query.to : '',
     day:  usePage().props.ziggy.query.day ? usePage().props.ziggy.query.day : '',
 
 })
@@ -163,13 +163,10 @@ const handleDate = (time) => {
 
 }
 
-// const exportCSV=()=>{
-//     router.post(route(`dashboard.export`),filter ,
-//         {
-//             preserveState: false,
-//             preserveScroll: true
-//         })
-// }
+const exportCSV=()=>{
+    window.open('/dashboard/export?date='+filter.date +'&from='+formatDateTime(filter.from)+'&to='+formatDateTime(filter.to)+'&day='+filter.day)
+   
+}
 </script>
 
 <template>
@@ -408,9 +405,9 @@ const handleDate = (time) => {
                                 <VueDatePicker time-picker-inline v-model="filter.to"  />
                             </div>
                         </div>
-                        {{ formatDateTime(filter.from) }}
+                 
                         <div  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white" @click="handleDate">Lọc</div>
-                        <a :href="`/dashboard/export?date=${filter.date}&from=${formatDateTime(filter.from)}&to=${formatDateTime(filter.to)}&day=${filter.day}`"  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</a>
+                        <div  @click="exportCSV()"  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</div>
                     </div>
                     <div>
 
@@ -418,12 +415,12 @@ const handleDate = (time) => {
                 </div>
                 <div class="w-full mt-2">
                     <div class="flex flex-col">
-                        <div class=" overflow-y-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[40vh]">
+                        <div class=" overflow-y-auto inline-block min--full  sm:px-6 lg:px-8 m-0 p-0 h-[40vh]">
                             <table
                                 class="border_round table_grip min-w-full text-center text-sm font-light overflow-y-auto ">
                                 <thead class="bg-[#FFEBC3]  border_round sticky top-0 z-10">
                                     <tr>
-                                        <th scope="col" class=" px-3 py-2 text-center text-sm text-[#000000] font-normal ">
+                                        <th scope="col" class=" px-3 py-2 text-cewnter text-sm text-[#000000] font-normal ">
                                             Đơn hàng
                                         </th>
                                         <th scope="col" class=" px-3 py-2 text-center text-sm text-[#000000] font-normal">
