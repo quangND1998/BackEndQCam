@@ -7,7 +7,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Order\Database\factories\CommissionsPackageFactory;
 
 class commissionsPackage extends Model
 {
@@ -18,10 +17,7 @@ class commissionsPackage extends Model
      */
     protected $fillable = [];
 
-    protected static function newFactory(): CommissionsPackageFactory
-    {
-        //return CommissionsPackageFactory::new();
-    }
+
     public function orderpackage()
     {
         return $this->belongsTo(OrderPackage::class,'order_package_id');
