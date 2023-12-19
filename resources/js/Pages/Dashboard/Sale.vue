@@ -19,7 +19,8 @@ import { Head, Link } from '@inertiajs/vue3'
 import BaseIcon from '@/Components/BaseIcon.vue'
 import PaginationDashboard from '@/Components/PaginationDefault.vue'
 import CardBox from '@/Components/CardBox.vue'
-
+import { useHelper } from "@/composable/useHelper";
+const { formatDateTime } = useHelper();
 const props = defineProps({
     top_ten_sale_data: Array,
     week_data_user: Number,
@@ -32,7 +33,11 @@ const props = defineProps({
     order_packages: Object,
     sumGrandTotalOrder: String | Number,
     sumPricePercentOrder: String | Number,
-    analysticData: Array
+    analysticData: Array,
+    week_commission:Number,
+    month_commission:Number,
+    year_commission:Number,
+    sumCommissionInfo:Object
 })
 
 const series = reactive([
@@ -60,6 +65,12 @@ const chartOptions = reactive({
     xaxis: {
         categories: []
     },
+    legend: {
+        position: 'left',
+      horizontalAlign: 'center', 
+      floating: false,
+            
+    },
     convertedCatToNumeric: false
 
 });
@@ -70,10 +81,10 @@ const clientBarItems = computed(() => mainStore.clients.slice(0, 4))
 const transactionBarItems = computed(() => mainStore.history)
 
 const filter = reactive({
-    date: usePage().props.ziggy.query.date ? usePage().props.ziggy.query.date : 'month',
-    from: null,
-    to: null,
-    day: null,
+    date: usePage().props.ziggy.query.date ? usePage().props.ziggy.query.date : '',
+    from:  usePage().props.ziggy.query.from ? formatDateTime(usePage().props.ziggy.query.from) : '',
+    to:  usePage().props.ziggy.query.to ?  formatDateTime(usePage().props.ziggy.query.to) : '',
+    day:  usePage().props.ziggy.query.day ? usePage().props.ziggy.query.day : '',
 
 })
 
@@ -103,7 +114,7 @@ const getSeries = computed(() => {
     series[1].data = [];
     if (props.analysticData) {
         props.analysticData.forEach(element => {
-            series[0].data.push(parseInt(element.price_percent_sum, 10))
+            series[0].data.push(parseInt(element.history_payment_sum_amount_received, 10))
             series[1].data.push(parseInt(element.grand_total_sum, 10))
             // for (let i = 0; i < element.length; i++) {
             //     series.push(parseInt(element[i][1], 10))
@@ -151,6 +162,14 @@ const handleDate = (time) => {
     );
 
 }
+
+// const exportCSV=()=>{
+//     router.post(route(`dashboard.export`),filter ,
+//         {
+//             preserveState: false,
+//             preserveScroll: true
+//         })
+// }
 </script>
 
 <template>
@@ -170,7 +189,7 @@ const handleDate = (time) => {
                     <p class="text-sm text-[#000000]  mt-6">Doanh thu trong tháng</p>
                     <h3 class="text-[32px] text-[#FF0000] font-bold py-1">{{ formatPrice(month_data_user) }} đ</h3>
                     <p class="text-sm text-[#000000]">Hoa hồng</p>
-                    <!-- <h5 class="text-[24px] text-[#FF0000] font-semibold">7000000 đ</h5> -->
+                    <h5 class="text-[24px] text-[#FF0000] font-semibold">{{ formatPrice(month_commission) }} đ</h5>
                 </div>
                 <div class="col-span-1  p-3 border border-gray-300 border_round bg-white items-center text-center">
                     <p class="text-sm text-[#000000]  mt-6">Doanh thu trong năm</p>
@@ -389,11 +408,9 @@ const handleDate = (time) => {
                                 <VueDatePicker time-picker-inline v-model="filter.to"  />
                             </div>
                         </div>
-                        <div class="flex w-[160px] p-2 justify-between lg:w-[160px] sm:w-full">
-                            <button @click="handleDate">Lọc</button>
-
-                        </div>
-                        <button class="right">Xuất CSV</button>
+                        {{ formatDateTime(filter.from) }}
+                        <div  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white" @click="handleDate">Lọc</div>
+                        <a :href="`/dashboard/export?date=${filter.date}&from=${formatDateTime(filter.from)}&to=${formatDateTime(filter.to)}&day=${filter.day}`"  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</a>
                     </div>
                     <div>
 
@@ -461,13 +478,15 @@ const handleDate = (time) => {
 
                                         </td>
                                         <td class=" text-left px-3 py-2  font-normal">
-                                            <p>3.000đ</p>
+                                           
+                                            {{formatPrice(order.commissions_packages.length >0?order.commissions_packages[0].commission_amount: 0)}}đ
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
-                                            2.000đ
+                                            {{formatPrice(order.commissions_packages.length >0?order.commissions_packages[0].commission_paid: 0)}}đ
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
-                                            1.000đ
+                                            {{formatPrice(order.commissions_packages.length >0?order.commissions_packages[0].commission_unpaid: 0)}}đ
+                                         
                                         </td>
                                         <td class=" text-center px-3 py-2 font-normal">
                                             {{ order.status }}
@@ -489,22 +508,24 @@ const handleDate = (time) => {
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        300.000đ
+                                       {{ formatPrice(sumGrandTotalOrder) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal ">
-                                        170.000đ
+                                        {{ formatPrice(sumPricePercentOrder) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
+                                      
+                                        {{ formatPrice(sumGrandTotalOrder- sumPricePercentOrder) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
+                                        {{ formatPrice(sumCommissionInfo.sum_commision) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
+                                        {{ formatPrice(sumCommissionInfo.sum_commision_paid) }}đ
+                                       
                                     </th>
                                     <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
+                                        {{ formatPrice(sumCommissionInfo.sum_commision_unpaid) }}đ
                                     </th>
                                     <th scope="col"
                                         class="whitespace-nowrap px-3 py-2 text-left text-sm text-[#000000] font-normal">
@@ -550,27 +571,14 @@ const handleDate = (time) => {
                                 <VueDatePicker  time-picker-inline v-model="filter.to" />
                             </div>
                         </div>
-                        <div class="flex w-[160px] p-2 justify-between lg:w-[160px] sm:w-full">
-                            <button @click="handleDate">Lọc</button>
-
-                        </div>
-                        <button>Xuất CSV</button>
+                     
+                      
+                        <div  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white" @click="handleDate">Lọc</div>
+                        <!-- <div class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</div> -->
+                
                     </div>
                     <div class="w-full flex justify-center items-center">
-                        <div class="w-1/6">
-                            <div class="flex text-center items-center px-2 py-1.5">
-                                <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
-                                    <path fill="#ff3860" :d="mdiMinus" />
-                                </svg>
-                                <p class="text-md  ml-2">Số tiền thực thu</p>
-                            </div>
-                            <div class="flex text-center items-center px-2 py-1.5">
-                                <svg viewBox="0 0 24 24" :width="28" :height="28" class="inline-block">
-                                    <path fill="#00d1b2" :d="mdiMinus" />
-                                </svg>
-                                <p class="text-md  ml-2">Số tiền theo hợp đồng</p>
-                            </div>
-                        </div>
+                  
                         <div class="w-5/6">
                             <CardBox class="mb-6">
 

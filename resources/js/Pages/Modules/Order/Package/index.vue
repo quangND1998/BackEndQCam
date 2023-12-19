@@ -556,8 +556,11 @@ const deleteOrder = (order) => {
                                         <th scope="col" class="px-3 py-2 text-left">TT gói</th>
                                         <th scope="col" class="px-3 py-2 text-left">Người tạo</th>
                                         <th scope="col" class="px-3 py-2 text-left">NV Tư vấn (Ref)</th>
-                                        <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Người duyệt cuối</th>
-                                        <th v-if="status == 'complete'" scope="col" class="px-3 py-2 text-left">Tài liệu</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Người chốt đơn (To)</th>
+                                        <!-- <th scope="col" class="px-3 py-2 text-left">Nguồn khách hàng</th> -->
+                                        <th scope="col" class="px-3 py-2 text-left">Lý do</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Người duyệt cuối</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Tài liệu</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hành động</th>
                                     </tr>
                                 </thead>
@@ -606,24 +609,27 @@ const deleteOrder = (order) => {
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order.ref?.name }}
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500"  v-if="order.status == 'decline'">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order.leader?.name }}
+                                        </td>
+                                        <!-- <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order.resources?.name }} ({{ order.customer_resources }})
+                                        </td> -->
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500" >
                                             <p  class="text-[12px] text-left">
                                                 {{ order.reason }}
                                             </p>
                                         </td>
-                                        <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                         <td  class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order.package_reviewer?.name }}
                                         </td>
-                                        <td v-if="status == 'complete'" class="whitespace-nowrap text-left px-3 py-2">
-                                            <!-- tai lieu -->
+                                        <td  class="whitespace-nowrap text-left px-3 py-2">
                                             <a v-if="order?.history_extend?.contract?.lastcontract?.images.length > 0 " :href="order?.history_extend?.contract?.lastcontract?.images[0].original_url" target="_blank">
                                             <BaseIcon :path="mdiOpenInNew"
                                                 class=" text-blue-400 rounded-lg mr-2 hover:text-blue-700"
                                                 v-tooltip.top="'Chi tiết hợp đồng'" size="20"></BaseIcon>
                                             </a>
                                         </td>
-
-
                                         <td class="whitespace-nowrap text-left px-3 py-2 action">
                                             <BaseIcon :path="mdiCashMultiple"
                                                 class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700"
@@ -675,10 +681,11 @@ const deleteOrder = (order) => {
     overflow: hidden;
 
 }
-td{
+
+td {
     font-size: 12px;
     color: rgb(107 114 128 / var(--tw-text-opacity));
-    font-family:    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .table_stripe tr th:last-child,

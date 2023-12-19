@@ -37,6 +37,7 @@ const props = defineProps({
     sumPricePercentOrder: String | Number,
     analysticData: Array,
     users: Array,
+    sumCommissionInfo:Object
 })
 
 const series = reactive([
@@ -182,7 +183,7 @@ const handleDate = (time) => {
 
                 <div class="w-full mt-2">
                     <div class="flex flex-col">
-                        <div class=" overflow-y-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[60vh]">
+                        <div class=" overflow-y-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[75vh]">
                             <table
                                 class="border_round table_grip min-w-full text-center text-sm font-light overflow-y-auto ">
                                 <thead class="bg-[#FFEBC3]  border_round sticky top-0 z-10">
@@ -255,45 +256,51 @@ const handleDate = (time) => {
                                             </a>
                                         </td>
                                     </tr>
+
                                 </tbody>
-                            </table>
-                            <PaginationDashboard :links="users.links" />
-                        </div>
-                        <table class="border_round table_grip min-w-full text-center text-sm font-light overflow-x-auto">
-                            <tbody class="relative">
+                                <tr colum="12">
+                                    <th colspan="12">
+                                        <PaginationDashboard  :links="users.links" class="w-full"/>
+                                    </th>
+                                </tr>
+                            <tfoot>
                                 <tr class="sticky bottom-0 bg-white">
-                                    <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-bold ">
+                                    <th scope="col" class="px-3 py-2 text-center text-sm text-[#000000] font-bold ">
                                         Tổng
+                                    </th>
+                                    <th scope="col" class="text-center px-3 py-2  text-sm text-[#000000] font-normal">
+
+                                    </th>
+                                    <th scope="col" class="text-center px-3 py-2 t text-sm text-[#000000] font-normal">
+                                        {{ formatPrice(sumCommissionInfo.sum_count_order_notdecline) }}
+                                    </th>
+                                    <th scope="col" class="text-center px-3 py-2  text-sm text-[#000000] font-normal ">
+                                        {{ formatPrice(sumCommissionInfo.sum_count_order_decline) }}
+                                    </th>
+                                    <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
+                                        {{ formatPrice(sumCommissionInfo.sum_amount_received) }}
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
 
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                    </th>
-                                    <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        300.000đ
-                                    </th>
-                                    <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal ">
-                                        170.000đ
-                                    </th>
-                                    <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
-                                    </th>
-                                    <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
-                                    </th>
-                                    <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
+                                        {{ formatPrice(sumCommissionInfo.sum_commission_amount) }}
                                     </th>
                                     <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
+                                        {{ formatPrice(sumCommissionInfo.sum_commision_paid) }}
+                                    </th>
+                                    <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
+                                        {{ formatPrice(sumCommissionInfo.sum_commision_unpaid) }}
                                     </th>
                                     <th scope="col"
                                         class="whitespace-nowrap px-3 py-2 text-left text-sm text-[#000000] font-normal">
                                     </th>
                                 </tr>
-                            </tbody>
-                        </table>
+                            </tfoot>
+                            </table>
+
+
+                        </div>
                     </div>
                     <div>
 
@@ -304,11 +311,11 @@ const handleDate = (time) => {
     </LayoutAuthenticated>
 </template>
 <style scoped>
-/* .table_grip tr th {
+.table_grip tr th {
     width: 120px !important;
 }
 
 .table_grip tr td {
     width: 120px !important;
-} */
+}
 </style>

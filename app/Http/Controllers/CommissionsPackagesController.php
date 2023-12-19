@@ -38,10 +38,20 @@ class CommissionsPackagesController extends Controller
         ->whereHas('roles', function ($query) use ($roles) {
             $query->whereIn('name', $roles);
         })
-        ->orderBy('commission_sum_commission_amount', 'desc')
-        ->paginate(20);
-        // return $users;
-        return Inertia::render('Commission/User', compact('users'));
+        ->orderBy('commission_sum_commission_amount', 'desc');
+
+        $total_users = $users->get();
+        $sumCommissionInfo = [
+            'sum_count_order_notdecline' => $total_users->sum('count_order_notdecline'),
+            'sum_count_order_decline' => $total_users->sum('count_order_decline'),
+            'sum_amount_received' => $total_users->sum('commission_sum_amount_received'),
+            'sum_commission_amount' => $total_users->sum('commission_sum_commission_amount'),
+            'sum_commision_paid' => $total_users->sum('commission_sum_commission_paid'),
+            'sum_commision_unpaid' => $total_users->sum('commission_sum_commission_amount'),
+        ];
+        $users = $users->paginate(10);
+        // return  $sumCommissionInfo;
+        return Inertia::render('Commission/User', compact('users','sumCommissionInfo'));
     }
     public function detailCommissionUser(Request $request,User $user){
         $order_packages = $this->packageOrderService->getOrder($request->only('date','from', 'to', 'day'),$user)->paginate(10)->appends(['page' => $request->page, 'date' => $request->date, 'from' => $request->from, 'to' => $request->to,'day' => $request->day]);;

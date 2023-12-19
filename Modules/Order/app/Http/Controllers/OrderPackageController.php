@@ -584,7 +584,7 @@ class OrderPackageController extends Controller
     }
     public function getOrderAll($request, $status)
     {
-        return OrderPackage::with(['customer','ref','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
+        return OrderPackage::with(['customer','ref','leader','resources','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','LIKE','%' . $request->search . '%');
