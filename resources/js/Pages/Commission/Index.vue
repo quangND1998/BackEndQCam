@@ -47,7 +47,9 @@ const form = useForm({
     commission: null,
     type: 'sale',
     greater: 0,
-    level_revenue : 30,
+    level_revenue: 30,
+    discount_form_sale: null,
+    discount_form_manager_sale: null,
 });
 
 
@@ -119,10 +121,10 @@ const edit = (commission) => {
     form.spend_from = commission.spend_from;
     form.spend_to = commission.spend_to;
     form.commission = commission.commission;
-    form.type = commission.type,
+    form.type = commission.type
     form.level_revenue = commission.level_revenue
-
-
+    form.discount_form_sale = commission.discount_form_sale
+    form.discount_form_manager_sale = commission.discount_form_manager_sale
 };
 const isModalActive = ref(false);
 const editMode = ref(false);
@@ -163,57 +165,102 @@ const changeStatus = (data, event) => {
                         " label="Tạo Chính sách Hoa hồng" />
                 </div>
             </div>
+            <div class="my-1">
+                <div
+                    class="min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
+                    <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('commission.index')"
+                        class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white "
+                        :class="$page.url.includes('index') ? 'bg-white  text-blue-500' : 'text-gray-500' ">
+                    All
+                    </Link>
+                    <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('commission.leader')"
+                        class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white "
+                        :class="$page.url.includes('leader') ? 'bg-white  text-blue-500' : 'text-gray-500' ">
+                    Leader Sale
+                    </Link>
+                    <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('commission.sale')"
+                        class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white
+                        "
+                        :class="$page.url.includes('sale') ? 'bg-white  text-blue-500' : 'text-gray-500' ">
+                    Sale
+                    </Link>
+                    <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('commission.ctv')"
+                        class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white "
+                        :class="$page.url.includes('ctv') ? 'bg-white  text-blue-500' : 'text-gray-500' ">
+                    CTV
+                    </Link>
+                    <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('commission.telesale')"
+                        class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white "
+                        :class="$page.url.includes('tele') ? 'bg-white  text-blue-500' : 'text-gray-500' ">
+                    Telesale
+                    </Link>
+                </div>
+            </div>
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                 classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-5/12 z-50 overflow-auto"
                 :title="editMode ? 'Cập nhật Chính sách Hoa hồng' : 'Tạo  Chính sách Hoa hồng'">
                 <div class="flex w-full flex-wrap items-center">
-                        <div class="my-2 w-full">
-                            <InputLabel for="name" value="Danh cho" />
-                            <select id="countries" v-model="form.type"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="sale">Sale</option>
-                                <option value="ctv">Cộng tác viên</option>
-                                <option value="sale_manager">Quản lý sale</option>
-                                <option value="telesale">Telesale</option>
-                            </select>
-                        </div>
-                        <div class="my-2 w-1/2  pr-4">
+                    <div class="my-2 w-full">
+                        <InputLabel for="name" value="Danh cho" />
+                        <select id="countries" v-model="form.type"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="leader-sale">Quản lý sale</option>
+                            <option value="saler">Sale</option>
+                            <option value="ctv">Cộng tác viên</option>
+                            <option value="telesale">Telesale</option>
+                        </select>
+                    </div>
+                    <div class="my-2 w-1/2  pr-4">
 
-                            <InputLabel for="name" value="Doanh thu từ (vnđ)" />
+                        <InputLabel for="name" value="Doanh thu từ (vnđ)" />
 
-                            <InputNumber v-model="form.spend_from" :min="0" class="w-full"
-                                inputClass="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                            <InputError class="mt-2 " :message="form.errors.spend_from" />
-                        </div>
-                        <div class="my-2 w-1/2  pr-4">
+                        <InputNumber v-model="form.spend_from" :min="0" class="w-full"
+                            inputClass="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputError class="mt-2 " :message="form.errors.spend_from" />
+                    </div>
+                    <div class="my-2 w-1/2  pr-4">
 
-                            <InputLabel for="name" value="Doanh thu đến (vnđ)" />
+                        <InputLabel for="name" value="Doanh thu đến (vnđ)" />
 
-                            <InputNumber v-model="form.spend_to" :min="0" class="w-full"
-                                inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                            <InputError class="mt-2" :message="form.errors.spend_to" />
-                        </div>
+                        <InputNumber v-model="form.spend_to" :min="0" class="w-full"
+                            inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputError class="mt-2" :message="form.errors.spend_to" />
+                    </div>
 
-                        <div class="my-2 w-1/2  pr-4">
-                            <InputLabel for="name" value="Hoa hồng (%)" />
+                    <div class="my-2 w-1/2  pr-4">
+                        <InputLabel for="name" value="Hoa hồng (%)" />
 
-                            <InputNumber v-model="form.commission"  :min="0" :max="100" class="w-full"
-                                inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                            <InputError class="mt-2" :message="form.errors.commission" />
-                        </div>
-                        <div class="my-2 w-1/2  pr-4">
-                            <InputLabel for="name" value="Mức thanh toán nhận doanh thu (%)" />
+                        <InputNumber v-model="form.commission" :min="0" :max="100" class="w-full"
+                            inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputError class="mt-2" :message="form.errors.commission" />
+                    </div>
+                    <div class="my-2 w-1/2  pr-4">
+                        <InputLabel for="name" value="Mức thanh toán nhận doanh thu (%)" />
 
-                            <InputNumber v-model="form.level_revenue"  :min="0" :max="100" class="w-full"
-                                inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                            <InputError class="mt-2" :message="form.errors.level_revenue" />
-                        </div>
+                        <InputNumber v-model="form.level_revenue" :min="0" :max="100" class="w-full"
+                            inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputError class="mt-2" :message="form.errors.level_revenue" />
+                    </div>
+                    <div class="my-2 w-1/2  pr-4" v-if="form.type == 'ctv'">
+                        <InputLabel for="name" value="Hoa hồng từ sale (%)" />
+
+                        <InputNumber v-model="form.discount_form_sale" :min="0" :max="100" class="w-full"
+                            inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputError class="mt-2" :message="form.errors.discount_form_sale" />
+                    </div>
+                    <div class="my-2 w-1/2  pr-4" v-if="form.type == 'ctv'">
+                        <InputLabel for="name" value="Hoa hồng từ leader (%)" />
+
+                        <InputNumber v-model="form.discount_form_manager_sale" :min="0" :max="100" class="w-full"
+                            inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputError class="mt-2" :message="form.errors.discount_form_manager_sale" />
+                    </div>
                 </div>
             </CardBoxModal>
             <!-- End Modal -->
-            <div class="mt-5">
-                <div class="relative mt-5 overflow-auto">
-                    <table class="overflow-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <div class="mt-2">
+                <div class="relative ">
+                    <table class=" w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3 flex items-center">
@@ -222,23 +269,21 @@ const changeStatus = (data, event) => {
                                     #
                                 </th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                                    Đối tượng
-                                </th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                                   Khoảng doanh thu (VNĐ)
+                                    Khoảng doanh thu (VNĐ)
                                 </th>
 
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
                                     Giá trị hoa hồng
                                 </th>
-
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                                    Đối tượng
+                                </th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
                                     Trạng thái
                                 </th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                                  Điều kiện
+                                    Ngày
                                 </th>
-
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
                                     Hành động
                                 </th>
@@ -256,11 +301,7 @@ const changeStatus = (data, event) => {
                                     </div>
                                 </th>
                                 <td class="px-3 py-2 whitespace-nowrap">
-                                    {{ commission.type }}
-                                </td>
-
-                                <td class="px-3 py-2 whitespace-nowrap">
-                                    {{ formatPrice(commission.spend_from) }} -  {{ formatPrice(commission.spend_to) }}
+                                    {{ formatPrice(commission.spend_from) }} - {{ formatPrice(commission.spend_to) }}
                                 </td>
                                 <td class="px-3 py-2 whitespace-nowrap">
                                     {{ formatPrice(commission.commission) }} %
@@ -280,12 +321,9 @@ const changeStatus = (data, event) => {
                                         hoạt</span>
 
                                 </td>
-                                <td class="px-2 py-4 whitespace-nowrap">
-                                    <p class="btn_label" :class="commission.greater ==0 ? 'partiallyPaid' : 'paid'">
-                                    {{ commission.greater == 0 ? 'Nhỏ hơn doanh thu' : 'Lớn hơn doanh thu' }}</p>
-
+                                <td class="px-3 py-2 whitespace-nowrap">
+                                    {{ formatDate(commission.updated_at) }}
                                 </td>
-
                                 <td class="px-3 py-2 whitespace-nowrap">
                                     <div class="flex ">
                                         <label class="relative inline-flex items-center cursor-pointer">

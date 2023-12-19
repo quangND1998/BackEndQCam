@@ -18,8 +18,8 @@ import LineChart from '@/Components/Charts/LineChart.vue'
 import { Head, Link } from '@inertiajs/vue3'
 import BaseIcon from '@/Components/BaseIcon.vue'
 import PaginationDashboard from '@/Components/PaginationDefault.vue'
+const chartData = ref(null)
 import CardBox from '@/Components/CardBox.vue'
-
 const props = defineProps({
     top_ten_sale_data: Array,
     week_data_user: Number,

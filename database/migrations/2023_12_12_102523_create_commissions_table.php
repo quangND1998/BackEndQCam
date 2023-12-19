@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('spend_from', 30, 2)->nullable();
             $table->decimal('spend_to', 30, 2)->nullable();
             $table->decimal('commission', 30, 2)->nullable();
+            $table->decimal('level_revenue', 30, 2)->nullable();
             $table->string('type')->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('greater')->default(true);

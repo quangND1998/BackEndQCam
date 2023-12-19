@@ -18,9 +18,15 @@ export const useHelper = () => {
 
         });
     }
+    const formatDateTime = (value) => {
+        if (value) {
+            return moment(String(value)).format('d/m/Y')
+        }
+    }
     return {
         multipleSelect,
-        changePageAction
+        changePageAction,
+        formatDateTime
 
 
     }

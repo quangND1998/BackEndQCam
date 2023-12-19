@@ -31,7 +31,11 @@ const props = defineProps({
     order_packages: Object,
     sumGrandTotalOrder: String | Number,
     sumPricePercentOrder: String | Number,
-    analysticData: Array
+    analysticData: Array,
+    week_commission:Number,
+    month_commission:Number,
+    year_commission:Number,
+    sumCommissionInfo:Object
 })
 
 const series = reactive([
@@ -53,6 +57,11 @@ const chartOptions = reactive({
     xaxis: {
         categories: []
     },
+    legend: {
+        position: 'left',
+            
+    },
+
     convertedCatToNumeric: false
 
 });
@@ -63,7 +72,7 @@ const clientBarItems = computed(() => mainStore.clients.slice(0, 4))
 const transactionBarItems = computed(() => mainStore.history)
 
 const filter = reactive({
-    date: usePage().props.ziggy.query.date ? usePage().props.ziggy.query.date : 'month',
+    date: usePage().props.ziggy.query.date ? usePage().props.ziggy.query.date : '',
     from: null,
     to: null,
     day: null,
@@ -384,11 +393,8 @@ const handleDate = (time) => {
                                 <VueDatePicker time-picker-inline v-model="filter.to"  />
                             </div>
                         </div>
-                        <div class="flex w-[160px] p-2 justify-between lg:w-[160px] sm:w-full">
-                            <button @click="handleDate">Lọc</button>
-
-                        </div>
-                        <button class="right">Xuất CSV</button>
+                        <div  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white" @click="handleDate">Lọc</div>
+                        <div class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</div>
                     </div>
                     <div>
 
@@ -456,13 +462,15 @@ const handleDate = (time) => {
 
                                         </td>
                                         <td class=" text-left px-3 py-2  font-normal">
-                                            <p>3.000đ</p>
+                                           
+                                            {{formatPrice(order.commissions_packages.length >0?order.commissions_packages[0].commission_amount: 0)}}đ
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
-                                            2.000đ
+                                            {{formatPrice(order.commissions_packages.length >0?order.commissions_packages[0].commission_paid: 0)}}đ
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
-                                            1.000đ
+                                            {{formatPrice(order.commissions_packages.length >0?order.commissions_packages[0].commission_unpaid: 0)}}đ
+                                         
                                         </td>
                                         <td class=" text-center px-3 py-2 font-normal">
                                             {{ order.status }}
@@ -484,22 +492,24 @@ const handleDate = (time) => {
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        300.000đ
+                                       {{ formatPrice(sumGrandTotalOrder) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal ">
-                                        170.000đ
+                                        {{ formatPrice(sumPricePercentOrder) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
+                                      
+                                        {{ formatPrice(sumGrandTotalOrder- sumPricePercentOrder) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
+                                        {{ formatPrice(sumCommissionInfo.sum_commision) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
+                                        {{ formatPrice(sumCommissionInfo.sum_commision_paid) }}đ
+                                       
                                     </th>
                                     <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        170.000đ
+                                        {{ formatPrice(sumCommissionInfo.sum_commision_unpaid) }}đ
                                     </th>
                                     <th scope="col"
                                         class="whitespace-nowrap px-3 py-2 text-left text-sm text-[#000000] font-normal">
@@ -545,11 +555,8 @@ const handleDate = (time) => {
                                 <VueDatePicker  time-picker-inline v-model="filter.to" />
                             </div>
                         </div>
-                        <div class="flex w-[160px] p-2 justify-between lg:w-[160px] sm:w-full">
-                            <button @click="handleDate">Lọc</button>
-
-                        </div>
-                        <button>Xuất CSV</button>
+                        <div  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white" @click="handleDate">Lọc</div>
+                        <!-- <div class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</div> -->
                     </div>
                     <div class="w-full flex justify-center items-center">
                         <!-- <div class="w-1/6">

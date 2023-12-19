@@ -26,10 +26,9 @@ class PackageOrderService
   {
     return $this->model->whereBetween('created_at', [Carbon::now()->subDay($time), Carbon::now()])->sum('price_percent');
   }
-  // Lấy danh sách tổng doanh thu toàn hệ thống theo tuần , tháng,  năm 
+  // Lấy danh sách tổng doanh thu toàn hệ thống theo tuần , tháng,  năm
   public function sumbyTime($filters)
   {
-
     return  $this->model->withSum(
       ['historyPayment' => function ($q) use ($filters) {
         $q->where('status', 'complete');
@@ -46,7 +45,7 @@ class PackageOrderService
       'amount_received'
     );
   }
-  // Lấy danh sách doanh thu toàn hệ thống theo tuần , tháng năm 
+  // Lấy danh sách doanh thu toàn hệ thống theo tuần , tháng năm
   public function getSaleData($filters)
   {
     return  User::select('id', 'name', 'created_byId')->whereHas('ref_order_packages.product_service_owner')->withSum(
@@ -76,7 +75,7 @@ class PackageOrderService
       }
     }])->orderBy('history_payments_sum_amount_received', 'desc')->get();
   }
-  // Lấy danh sách doanh thu top 10 theo tuần , tháng năm 
+  // Lấy danh sách doanh thu top 10 theo tuần , tháng năm
   public function getTopTenSale($filters)
   {
     return $this->getSaleData($filters)->take(10);
@@ -170,31 +169,61 @@ class PackageOrderService
 
   public function getOrder($filters, $user)
   {
-    return $this->model->with(['customer','historyPayment'])->whereHas(
-      'customer'
-    )->whereHas('historyPayment', function ($q) use ($filters) {
-
+    return $this->model->with(['customer','historyPayment' =>function($q)use($filters){
       $q->filterTime($filters);
-    })->withSum(
-      ['historyPayment' => function ($q) use ($filters) {
+
+    },'commissions_packages'=>function($q) use($filters,$user){
+      $q->filterTime($filters);
+      $q->where('user_id',$user->id);
+    }])->whereHas(
+      'customer'
+    )->whereHas('historyPayment', function ($q) use ($filters,$user) {
         $q->filterTime($filters);
-      }],
+    })->withSum(
+      'historyPayment',
       'amount_received'
+    )->withSum(
+      'commissions_packages',
+      'commission_amount'
+    )->withSum(
+      'commissions_packages',
+      'commission_paid'
+    )->withSum(
+      'commissions_packages',
+      'commission_unpaid'
     )->orderBy('created_at', 'desc')->where('ref_id', $user->id);
   }
-
+  public function getOrderInMonth($user){
+    return $this->sumbyTime('month')->where('ref_id', $user->id)->get();
+  }
+  public function getOrderNotDecline($filters, $user)
+  {
+    return $this->getOrder($filters, $user)->where('status', '!=', 'decline');
+  }
 
   public function sumGrandTotalOrder($filters, $user)
   {
     return $this->getOrder($filters, $user)->where('status', '!=', 'decline')->sum('grand_total');
   }
-
   public function sumPricePercentOrder($filters, $user)
   {
     return $this->getOrder($filters, $user)->where('status', '!=', 'decline')->sum('price_percent');
   }
 
+  public function sumCommission($filters, $user)
+  {
+    return $this->getOrder($filters, $user)->get();
+  }
+  // public function sumCommissionPaid($filters, $user)
+  // {
+  //   return $this->getOrder($filters, $user)->get()->sum('commissions_packages_sum_commission_paid');
+  // }
+  // public function sumCommissionUnPaid($filters, $user)
+  // {
+  //   return $this->getOrder($filters, $user)->get()->sum('commissions_packages_sum_commission_unpaid');
+  // }
 
+  
   public function analysticData($filters, $user,  $groupBy)
   {
     // $query = $this->model::with(['historyPayment' => function ($q) use ($filters) {
@@ -434,21 +463,30 @@ class PackageOrderService
     return $data->where('sum', '>=', $sum)->count();
   }
 
-
-
   public function getOrderTeam($filters, $userIds)
   {
-    return $this->model->with(['customer'])->whereHas(
-      'customer'
-    )->whereHas('historyPayment', function ($q) use ($filters) {
+    return $this->model->with(['customer','historyPayment' =>function($q)use($filters){
+      $q->filterTime($filters);
+
+    },'commissions_packages'=>function($q) use($filters){
+      $q->filterTime($filters);
+ 
+    }])->whereHas('historyPayment', function ($q) use ($filters) {
 
       $q->filterTime($filters);
     })->withSum(
-      ['historyPayment' => function ($q) use ($filters) {
-        $q->filterTime($filters);
-      }],
-      'amount_received'
-    )->orderBy('created_at', 'desc')->whereIn('ref_id', $userIds);
+    'historyPayment',
+    'amount_received'
+  )->withSum(
+    'commissions_packages',
+    'commission_amount'
+  )->withSum(
+    'commissions_packages',
+    'commission_paid'
+  )->withSum(
+    'commissions_packages',
+    'commission_unpaid'
+  )->orderBy('created_at', 'desc')->whereIn('ref_id', $userIds);
   }
 
 
@@ -461,7 +499,10 @@ class PackageOrderService
   {
     return $this->getOrderTeam($filters, $userIds)->where('status', '!=', 'decline')->sum('price_percent');
   }
-
+  public function getOrderTeamNotDecline($filters, $userIds)
+  {
+    return $this->getOrderTeam($filters, $userIds)->where('status', '!=', 'decline');
+  }
 
   public function getUserData($filters, $userIds, $groupBy)
   {
@@ -504,8 +545,6 @@ class PackageOrderService
         )->groupBy('ref_id')->groupBy($groupBy);
       }])->whereIn('id', $userIds)->get();
   }
-
-
   public function formatDataAnalyticTeam($filters, $userIds)
   {
 

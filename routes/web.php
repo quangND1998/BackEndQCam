@@ -15,6 +15,7 @@ use Modules\Landingpage\app\Http\Controllers\TermsConditionController;
 use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OtpTestController;
+use App\Http\Controllers\CommissionsPackagesController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -88,7 +89,7 @@ Route::middleware(['auth'])->group(
             Route::get('edit/{schedule}', [ScheduleVisitController::class, 'edit'])->name('edit');
             Route::post('saveShedule', [ScheduleVisitController::class, 'saveShedule'])->name('saveShedule');
             Route::post('updateShedule/{schedule}', [ScheduleVisitController::class, 'updateShedule'])->name('updateShedule');
-            
+
         });
 
 
@@ -108,11 +109,20 @@ Route::middleware(['auth'])->group(
 
         Route::prefix('commission')->as('commission.')->group(function () {
             Route::get('index', [ComissionController::class, 'index'])->name('index');
+            Route::get('leader', [ComissionController::class, 'getLeader'])->name('leader');
+            Route::get('sale', [ComissionController::class, 'getSale'])->name('sale');
+            Route::get('ctv', [ComissionController::class, 'getCTV'])->name('ctv');
+            Route::get('telesale', [ComissionController::class, 'getTelesale'])->name('telesale');
+
             Route::post('', [ComissionController::class, 'store'])->name('store');
             Route::post('update/{commission}', [ComissionController::class, 'update'])->name('update');
             Route::post('changeStatus/{commission}', [ComissionController::class, 'changeStatus'])->name('changeStatus');
 
+            Route::prefix('package')->as('package.')->group(function () {
+                Route::get('index', [CommissionsPackagesController::class, 'index'])->name('index');
+            });
         });
+
     }
 
 );

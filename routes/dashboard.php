@@ -15,5 +15,7 @@ Route::middleware([
         Route::prefix('leader-sale')->as('leader-sale.')->group(function () {
             Route::get('', [DashBoardController::class, 'leaderSale'])->name('index');
         });
+
+        Route::get('export', [DashBoardController::class, 'export'])->name('export');
     });
 });

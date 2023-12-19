@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface OrderContract
+interface OrderPackageContract
 {
     public function storeOrderDetails($params, $customer);
 
