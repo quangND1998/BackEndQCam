@@ -193,6 +193,20 @@ class PackageOrderService
       'commission_unpaid'
     )->orderBy('created_at', 'desc')->where('ref_id', $user->id);
   }
+  public function getOrderAll($filters)
+  {
+    return $this->model->with(['customer','commissions_packages'])->whereHas(
+      'customer'
+    )->whereHas('historyPayment', function ($q) use ($filters) {
+
+      $q->filterTime($filters);
+    })->withSum(
+      ['historyPayment' => function ($q) use ($filters) {
+        $q->filterTime($filters);
+      }],
+      'amount_received'
+    )->orderBy('created_at', 'desc');
+  }
   public function getOrderInMonth($user){
     return $this->sumbyTime('month')->where('ref_id', $user->id)->get();
   }

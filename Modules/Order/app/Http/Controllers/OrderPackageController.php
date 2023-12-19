@@ -23,10 +23,11 @@ use Modules\Order\app\Models\HistoryPayment;
 use App\Jobs\OrderPackageCreatedJob;
 use App\Jobs\OrderPackageEndTimeJob;
 use Modules\Order\app\Http\Requests\SaveOrderpackageRequest;
+use App\Jobs\UpdateCommissionUser;
 class OrderPackageController extends Controller
 {
     protected $orderRepository;
-    
+
     public function __construct(OrderContract $orderRepository)
     {
 
@@ -207,7 +208,7 @@ class OrderPackageController extends Controller
                 //     $order->addMedia($image)->toMediaCollection('order_package_images');
                 // }
                 $payment_date = Carbon::now();
-                $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
+                $historypayment = $this->storeHistoryPayment($order,$request->payment_method,$request->price_percent,$payment_date,$request->images);
                 $this->storeOrderPackage($order);
                 if($order->status =='pending'){
                     $order->time_expried = Carbon::now()->addDay($order->time_reservations);
@@ -300,7 +301,7 @@ class OrderPackageController extends Controller
         if (count($order->historyPayment) == 0){
             $order->historyPayment()->delete();
             $payment_date = Carbon::now();
-            $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->price_percent,$payment_date,$request->images);
+            $historypayment = $this->storeHistoryPayment($order,$request->payment_method,$request->price_percent,$payment_date,$request->images);
         }
         if($order->status =='pending'){
             $order->time_expried = Carbon::now()->addDay($order->time_reservations);
@@ -317,7 +318,7 @@ class OrderPackageController extends Controller
         ]);
         $order = OrderPackage::find($id);
         if($order->totalPayment() < $order->grand_total){
-            $historypayment = $this->storeHistoryPayment($order->id,$request->payment_method,$request->amount_received,$request->payment_date,$request->images);
+            $historypayment = $this->storeHistoryPayment($order,$request->payment_method,$request->amount_received,$request->payment_date,$request->images);
             // $order->price_percent = $order->totalPayment() + $request->amount_received;
         }else{
             // $order->price_percent = $order->grand_total;
@@ -337,9 +338,9 @@ class OrderPackageController extends Controller
 
         return back()->with('success', 'Lưu payment thành công');
     }
-    public function storeHistoryPayment($order_package_id,$payment_method,$amount_received,$payment_date,$images){
+    public function storeHistoryPayment($order,$payment_method,$amount_received,$payment_date,$images){
         $history_payment = new HistoryPayment;
-        $history_payment->order_package_id = $order_package_id;
+        $history_payment->order_package_id = $order->id;
         $history_payment->payment_method = $payment_method;
         $history_payment->amount_received = $amount_received;
         $history_payment->payment_date = $payment_date;
@@ -349,6 +350,7 @@ class OrderPackageController extends Controller
         foreach ($images as $image) {
             $history_payment->addMedia($image)->toMediaCollection('order_package_payment');
         }
+        UpdateCommissionUser::dispatch($order);
         return $history_payment;
     }
     public function saveOrderPackage(Request $request){
@@ -582,7 +584,7 @@ class OrderPackageController extends Controller
     }
     public function getOrderAll($request, $status)
     {
-        return OrderPackage::with(['customer','ref','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
+        return OrderPackage::with(['customer','ref','leader','resources','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','LIKE','%' . $request->search . '%');

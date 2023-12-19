@@ -121,6 +121,11 @@ Route::middleware(['auth'])->group(
             Route::prefix('package')->as('package.')->group(function () {
                 Route::get('index', [CommissionsPackagesController::class, 'index'])->name('index');
             });
+            Route::prefix('dashboard')->as('dashboard.')->group(function () {
+                Route::get('fresh', [CommissionsPackagesController::class, 'fresh'])->name('fresh');
+                Route::get('user', [CommissionsPackagesController::class, 'commissionUser'])->name('user');
+                Route::get('detail/{user}', [CommissionsPackagesController::class, 'detailCommissionUser'])->name('detail');
+            });
         });
 
     }

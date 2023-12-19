@@ -168,28 +168,28 @@ const changeStatus = (data, event) => {
             <div class="my-1">
                 <div
                     class="min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
-                    <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('commission.index')"
+                    <Link  :href="route('commission.index')"
                         class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white "
                         :class="$page.url.includes('index') ? 'bg-white  text-blue-500' : 'text-gray-500' ">
                     All
                     </Link>
-                    <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('commission.leader')"
+                    <Link  :href="route('commission.leader')"
                         class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white "
                         :class="$page.url.includes('leader') ? 'bg-white  text-blue-500' : 'text-gray-500' ">
                     Leader Sale
                     </Link>
-                    <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('commission.sale')"
+                    <Link :href="route('commission.sale')"
                         class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white
                         "
                         :class="$page.url.includes('sale') ? 'bg-white  text-blue-500' : 'text-gray-500' ">
                     Sale
                     </Link>
-                    <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('commission.ctv')"
+                    <Link  :href="route('commission.ctv')"
                         class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white "
                         :class="$page.url.includes('ctv') ? 'bg-white  text-blue-500' : 'text-gray-500' ">
                     CTV
                     </Link>
-                    <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('commission.telesale')"
+                    <Link  :href="route('commission.telesale')"
                         class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white "
                         :class="$page.url.includes('tele') ? 'bg-white  text-blue-500' : 'text-gray-500' ">
                     Telesale

@@ -19,7 +19,8 @@ return new class extends Migration
             $table->decimal('commission_paid', 20)->nullable();
             $table->decimal('commission_unpaid', 20)->nullable();
 
-
+            $table->decimal('total_order', 20)->nullable();
+            $table->decimal('amount_received', 20)->nullable();
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');

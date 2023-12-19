@@ -75,7 +75,7 @@ export default [{
                 route_list: null
             },
             {
-                route: 'commission.package.index',
+                route: 'commission.dashboard.user',
                 label: 'Hoa hồng',
                 permissions: ['view-user'],
                 route_list: null

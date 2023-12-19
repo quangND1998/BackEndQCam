@@ -47,11 +47,14 @@ class CommissionRepository
         if($commision){
         // update hoa hong
             foreach($orders as $order){
-                $commissionsPackage = $user->commission()->where('order_package_id',$order->id)->first();
+                $commissionsPackage = $user->commission()->where('order_package_id',$order->id)
+                ->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->first();
                 if($commissionsPackage == null){
                     // tao moi
                     $commissionsPackage = new commissionsPackage;
                 }
+                $commissionsPackage->total_order = $total;
+                $commissionsPackage->amount_received = $order->history_payment_sum_amount_received;
                 $commissionsPackage->commission_amount = $this->getAmountCommission($order,$user,$commision);
                 $commissionsPackage->commission_percentage = $commision->commission;
                 $commissionsPackage->level_revenue = $commision->level_revenue;
@@ -62,7 +65,7 @@ class CommissionRepository
                 $commissionsPackage->save();
             }
         }
-
+        return $orders;
 
     }
 
