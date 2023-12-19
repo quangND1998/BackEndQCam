@@ -23,6 +23,10 @@ class DashBoardController extends Controller
         $this->packageOrderService = $packageOrderService;
         $this->commissionsPackageService = $commissionsPackageService;
     }
+    // public function index(Request $request){
+    //     $user = Auth::user();
+    //     $this->calculation($request,$user);
+    // }
     public function index(Request $request)
     {
         //allserver
@@ -226,7 +230,7 @@ class DashBoardController extends Controller
         if ($user->hasRole('leader-sale')) {
             $userIds = User::where('created_byId', $user->id)->pluck('id');
 
-        
+
             $order_packages = $this->packageOrderService->getOrderTeam($request->only('date', 'from', 'to', 'day'), $userIds)->get();
 
             if (!$request->date) {
