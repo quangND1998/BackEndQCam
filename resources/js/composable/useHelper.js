@@ -20,14 +20,13 @@ export const useHelper = () => {
     }
     const formatDateTime = (value) => {
         if (value) {
-            return moment(String(value)).format('d/m/Y')
+            return moment(String(value)).format('YY-M-D HH:mm:ss');
         }
     }
     return {
         multipleSelect,
         changePageAction,
         formatDateTime
-
 
     }
 
