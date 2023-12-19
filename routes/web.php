@@ -16,6 +16,7 @@ use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OtpTestController;
 use App\Http\Controllers\CommissionsPackagesController;
+use App\Http\Controllers\DashBoardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -124,7 +125,7 @@ Route::middleware(['auth'])->group(
             Route::prefix('dashboard')->as('dashboard.')->group(function () {
                 Route::get('fresh', [CommissionsPackagesController::class, 'fresh'])->name('fresh');
                 Route::get('user', [CommissionsPackagesController::class, 'commissionUser'])->name('user');
-                Route::get('detail/{user}', [CommissionsPackagesController::class, 'detailCommissionUser'])->name('detail');
+                Route::get('detail/{user}', [DashBoardController::class, 'detailSale'])->name('detail');
             });
         });
 
