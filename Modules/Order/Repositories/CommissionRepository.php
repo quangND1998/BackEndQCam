@@ -27,12 +27,12 @@ class CommissionRepository
     public function getAmountCommission($order,$user,$commision){
         $commission_amount = 0;
         if($order->customer_resources == "ctv" && $order->ref_id == $user->id){
-            $commission_amount = $order->history_payment_sum_amount_received*($commision->commission - $commision->discount_form_sale);
+            $commission_amount = $order->history_payment_sum_amount_received*($commision->commission - $commision->discount_form_sale)/100;
         }elseif($order->customer_resources == "ctv" && $order->to_id == $user->id){
-            $commission_amount = $order->history_payment_sum_amount_received*($commision->commission - $commision->discount_form_manager_sale);
+            $commission_amount = $order->history_payment_sum_amount_received*($commision->commission - $commision->discount_form_manager_sale)/100;
         }
         else{
-            $commission_amount = $order->history_payment_sum_amount_received*$commision->commission;
+            $commission_amount = $order->history_payment_sum_amount_received*$commision->commission/100;
         }
         return $commission_amount;
 
@@ -47,11 +47,14 @@ class CommissionRepository
         if($commision){
         // update hoa hong
             foreach($orders as $order){
-                $commissionsPackage = $user->commission()->where('order_package_id',$order->id)->first();
+                $commissionsPackage = $user->commission()->where('order_package_id',$order->id)
+                ->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->first();
                 if($commissionsPackage == null){
                     // tao moi
                     $commissionsPackage = new commissionsPackage;
                 }
+                $commissionsPackage->total_order = $total;
+                $commissionsPackage->amount_received = $order->history_payment_sum_amount_received;
                 $commissionsPackage->commission_amount = $this->getAmountCommission($order,$user,$commision);
                 $commissionsPackage->commission_percentage = $commision->commission;
                 $commissionsPackage->level_revenue = $commision->level_revenue;
@@ -62,7 +65,7 @@ class CommissionRepository
                 $commissionsPackage->save();
             }
         }
-
+        return $orders;
 
     }
 
