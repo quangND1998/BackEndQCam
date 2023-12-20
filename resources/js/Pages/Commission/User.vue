@@ -120,11 +120,20 @@ const getSeries = computed(() => {
     return [];
 
 })
-
+const fillterType = (role) => {
+    filter.role = role;
+    router.get(route(`commission.dashboard.user`),
+        filter,
+        {
+            preserveState: false,
+            preserveScroll: true
+        }
+    );
+}
 const fillterDashboad = (time) => {
     filter.date = time;
     router.get(route(`commission.dashboard.user`),
-        { date: filter.date },
+        filter,
         {
             preserveState: false,
             preserveScroll: true
@@ -136,7 +145,7 @@ const fillterDashboad = (time) => {
 const fillterDashboadDay = (time) => {
     filter.day = time;
     router.get(route(`commission.dashboard.user`),
-        { day: filter.day },
+        filter,
         {
             preserveState: false,
             preserveScroll: true
@@ -181,6 +190,36 @@ const handleDate = (time) => {
                 </div>
             </div>
             <div class="mx-6 my-2 p-3 border border-gray-300 border_round bg-white overflow-auto">
+                <div class="items-center text-center flex ">
+                    <div
+                        class=" min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
+                        <div @click="fillterType('saler')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
+                            :class="$page.url.includes('saler')   ? ' bg-white text-blue-500' : 'text-gray-500'">
+                           Sale
+                        </div>
+                        <div @click="fillterType('leader-sale')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
+                            :class="$page.url.includes('leader-sale') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                          Leader Sale
+                        </div>
+                        <div @click="fillterType('ctv')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
+                            :class="$page.url.includes('ctv') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            CTV
+                        </div>
+
+                        <div @click="fillterType('telesale')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg   hover:bg-white "
+                            :class="$page.url.includes('telesale') ? ' bg-white text-blue-500 border-blue-500' : 'text-gray-500 bg-gray-100'">
+                          Telesale
+                        </div>
+
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
                 <div class="items-center text-center flex ">
                     <div
                         class=" min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
