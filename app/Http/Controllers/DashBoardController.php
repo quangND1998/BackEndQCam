@@ -25,8 +25,12 @@ class DashBoardController extends Controller
     }
     public function index(Request $request)
     {
+        
         //allserver
         $user = Auth::user();
+        if($user->hasRole('leader-sale')){
+            return redirect()->route('dashboard.leader-sale.index');
+        }
 
         $top_ten_sale_data = $this->packageOrderService->getTopTenSale('week');
 
@@ -116,6 +120,7 @@ class DashBoardController extends Controller
 
             $team_sale_data = $this->packageOrderService->getTopTenSaleTeam('month', $user);
             $week_data_user = $this->packageOrderService->sumbyTimeTeam('week', $userIds);
+       
             $month_data_user = $this->packageOrderService->sumbyTimeTeam('month', $userIds);
             $year_data_user = $this->packageOrderService->sumbyTimeTeam('year', $userIds);
 
@@ -153,25 +158,27 @@ class DashBoardController extends Controller
             ];
 
             $analysticData =  $this->packageOrderService->formatDataAnalyticTeam($request->only('date', 'from', 'to', 'day'), $userIds);
+        
+            return Inertia::render('Dashboard/LeaderSale', compact(
+                "top_ten_sale_data",
+                'week_data_user',
+                'month_data_user',
+                'year_data_user',
+                'team_sale_data',
+                'data_contract',
+                'ranking_all_server',
+                'order_packages',
+                'sumGrandTotalOrder',
+                'sumPricePercentOrder',
+                'analysticData',
+                'sumCommissionInfo',
+                'week_commission',
+                'month_commission',
+                'year_commission'
+            ));
         }
         // return $order_packages;
-        return Inertia::render('Dashboard/LeaderSale', compact(
-            "top_ten_sale_data",
-            'week_data_user',
-            'month_data_user',
-            'year_data_user',
-            'team_sale_data',
-            'data_contract',
-            'ranking_all_server',
-            'order_packages',
-            'sumGrandTotalOrder',
-            'sumPricePercentOrder',
-            'analysticData',
-            'sumCommissionInfo',
-            'week_commission',
-            'month_commission',
-            'year_commission'
-        ));
+ 
     }
 
 

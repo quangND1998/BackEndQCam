@@ -230,7 +230,7 @@ const changeStatus = (data, event) => {
                     <div class="my-2 w-1/2  pr-4">
                         <InputLabel for="name" value="Hoa hồng (%)" />
 
-                        <InputNumber v-model="form.commission" :min="0" :max="100" class="w-full"
+                        <InputNumber v-model="form.commission" :min="0" :max="100" class="w-full"  :minFractionDigits="1"
                             inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         <InputError class="mt-2" :message="form.errors.commission" />
                     </div>
