@@ -80,7 +80,7 @@ const mainStore = useMainStore()
 const clientBarItems = computed(() => mainStore.clients.slice(0, 4))
 
 const transactionBarItems = computed(() => mainStore.history)
-
+const query=  usePage().props.ziggy.query
 const filter = reactive({
     date: usePage().props.ziggy.query.date ? usePage().props.ziggy.query.date : '',
     from:  usePage().props.ziggy.query.from ? usePage().props.ziggy.query.from : '',
@@ -391,7 +391,7 @@ const exportCSV=()=>{
                         </div>
                         <div @click="fillterDashboad('month')"
                             class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
-                            :class="$page.url.includes('month') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            :class="($page.url.includes('month') ||query.length ==0 ) ? ' bg-white text-blue-500' : 'text-gray-500'">
                             Tháng này
                         </div>
                         <div @click="fillterDashboadDay(7)"
@@ -403,11 +403,11 @@ const exportCSV=()=>{
                             :class="{ 'bg-white  text-blue-500': $page.url.includes('draf') }">
                             Tùy chỉnh
                             <div class="ml-2 relative">
-                                <VueDatePicker time-picker-inline v-model="filter.from" />
+                                <VueDatePicker time-picker-inline  locale="vi"  v-model="filter.from" />
                             </div>
                             <span class="mx-1 text-gray-500">-</span>
                             <div class="relative">
-                                <VueDatePicker time-picker-inline v-model="filter.to"  />
+                                <VueDatePicker time-picker-inline locale="vi"  v-model="filter.to"  />
                             </div>
                         </div>
 
@@ -558,7 +558,7 @@ const exportCSV=()=>{
                             Tháng trước
                         </div>
                         <div @click="fillterDashboad('month')" class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white text-gray-500"
-                        :class="$page.url.includes('month') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                        :class="($page.url.includes('month') ||query.length ==0 ) ? ' bg-white text-blue-500' : 'text-gray-500'">
                             Tháng này
                         </div>
                         <div  @click="fillterDashboadDay(7)" class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white text-gray-500"
@@ -569,11 +569,11 @@ const exportCSV=()=>{
                             :class="{ 'bg-white  text-blue-500': $page.url.includes('draf') }">
                             Tùy chỉnh
                             <div class="ml-2 relative">
-                                <VueDatePicker time-picker-inline v-model="filter.from" />
+                                <VueDatePicker time-picker-inline  locale="vi" v-model="filter.from" />
                             </div>
                             <span class="mx-1 text-gray-500">-</span>
                             <div class="relative">
-                                <VueDatePicker  time-picker-inline v-model="filter.to" />
+                                <VueDatePicker  time-picker-inline  locale="vi" v-model="filter.to" />
                             </div>
                         </div>
 

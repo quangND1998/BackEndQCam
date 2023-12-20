@@ -33,13 +33,13 @@ class PackageOrderService
       ['historyPayment' => function ($q) use ($filters) {
         $q->where('status', 'complete');
         if ($filters == 'week') {
-          $q->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+          $q->whereBetween('updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
         } elseif ($filters == 'month') {
-          $q->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+          $q->whereBetween('updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
         } elseif ($filters == 'year') {
-          $q->whereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+          $q->whereBetween('updated_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
         } else {
-          $q->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+          $q->whereBetween('updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
         }
       }],
       'amount_received'
@@ -53,13 +53,13 @@ class PackageOrderService
 
         $q->where('history_payments.status', 'complete');
         if ($filters == 'week') {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
         } elseif ($filters == 'month') {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
         } elseif ($filters == 'year') {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
         } else {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
         }
       }],
       'amount_received'
@@ -99,13 +99,13 @@ class PackageOrderService
 
         $q->where('history_payments.status', 'complete');
         if ($filters == 'week') {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
         } elseif ($filters == 'month') {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
         } elseif ($filters == 'year') {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
         } else {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
         }
       }],
       'amount_received'
@@ -258,36 +258,37 @@ class PackageOrderService
         if (isset($filters['date'])) {
 
           if ($filters['date'] == 'week') {
-            $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
           } elseif ($filters['date'] == 'beforMonth') {
 
-            $q->whereBetween('history_payments.created_at', [Carbon::now()->subMonth(1)->startOfMonth(), Carbon::now()->subMonth(1)->endOfMonth()]);
+            $q->whereBetween('history_payments.updated_at', [Carbon::now()->subMonth(1)->startOfMonth(), Carbon::now()->subMonth(1)->endOfMonth()]);
           } elseif ($filters['date'] == 'month') {
 
 
-            $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
           } elseif ($filters['date'] == 'year') {
 
-            $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+            $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
           } else {
 
-            $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
           }
         }
 
         if (isset($filters['day'])) {
 
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
         }
         if (isset($filters['from']) && isset($filters['to'])) {
-
-          $q->whereBetween('history_payments.created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+            $to= Carbon::parse($filters['to'])->format('Y-m-d H:i:s');
+            $from= Carbon::parse($filters['from'])->format('Y-m-d H:i:s');
+            $q->whereBetween('history_payments.updated_at', [ Carbon::createFromFormat('Y-m-d H:i:s', $from, 'UTC')->setTimezone('+7'), Carbon::createFromFormat('Y-m-d H:i:s', $to, 'UTC')->setTimezone('+7')]);
         }
         $q->select(
           'history_payments.id', 'history_payments.order_package_id',
           DB::raw("CAST((SUM(amount_received))  AS INTEGER) as  amount_received_sum"),
-          DB::raw('DATE_FORMAT(history_payments.created_at, "%m") as month'),
-          DB::raw('DATE_FORMAT(history_payments.created_at, "%Y-%m-%d") as time'),
+          DB::raw('DATE_FORMAT(history_payments.updated_at, "%m") as month'),
+          DB::raw('DATE_FORMAT(history_payments.updated_at, "%Y-%m-%d") as time'),
         )->groupBy('ref_id')->groupBy($groupBy);
       },
     ]
@@ -360,14 +361,17 @@ class PackageOrderService
       return $this->addDataCollection($ranges, $newCollections, 'time');
     }
     if (isset($filters['from']) && isset($filters['to'])) {
+    
       $ranges = CarbonPeriod::create(Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), '1 day', Carbon::parse($filters['to'])->format('Y-m-d H:i:s'));
       $newCollections = $this->analysticData($filters, $user, 'time');
+
       return $this->addDataCollection($ranges, $newCollections, 'time');
     }
   }
 
   public function addDataCollection($ranges, $collection, $type)
   {
+   
     $newCollections = [];
     foreach ($ranges as $date) {
       if ($type == 'month') {
@@ -446,13 +450,13 @@ class PackageOrderService
 
         $q->where('history_payments.status', 'complete');
         if ($filters == 'week') {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
         } elseif ($filters == 'month') {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
         } elseif ($filters == 'year') {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
         } else {
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
         }
       }],
       'amount_received'
@@ -528,36 +532,38 @@ class PackageOrderService
         if (isset($filters['date'])) {
 
           if ($filters['date'] == 'week') {
-            $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
           } elseif ($filters['date'] == 'beforMonth') {
 
-            $q->whereBetween('history_payments.created_at', [Carbon::now()->subMonth(1)->startOfMonth(), Carbon::now()->subMonth(1)->endOfMonth()]);
+            $q->whereBetween('history_payments.updated_at', [Carbon::now()->subMonth(1)->startOfMonth(), Carbon::now()->subMonth(1)->endOfMonth()]);
           } elseif ($filters['date'] == 'month') {
 
 
-            $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
           } elseif ($filters['date'] == 'year') {
 
-            $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+            $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
           } else {
 
-            $q->whereBetween('history_payments.created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            $q->whereBetween('history_payments.updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
           }
         }
 
         if (isset($filters['day'])) {
 
-          $q->whereBetween('history_payments.created_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
+          $q->whereBetween('history_payments.updated_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
         }
         if (isset($filters['from']) && isset($filters['to'])) {
 
-          $q->whereBetween('history_payments.created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+          $to= Carbon::parse($filters['to'])->format('Y-m-d H:i:s');
+          $from= Carbon::parse($filters['from'])->format('Y-m-d H:i:s');
+          $q->whereBetween('history_payments.created_at', [ Carbon::createFromFormat('Y-m-d H:i:s', $from, 'UTC')->setTimezone('+7'), Carbon::createFromFormat('Y-m-d H:i:s', $to, 'UTC')->setTimezone('+7')]);
         }
         $q->select(
           'history_payments.id',
           DB::raw("CAST((SUM(amount_received))  AS INTEGER) as  amount_received_sum"),
-          DB::raw('DATE_FORMAT(history_payments.created_at, "%m") as month'),
-          DB::raw('DATE_FORMAT(history_payments.created_at, "%Y-%m-%d") as time'),
+          DB::raw('DATE_FORMAT(history_payments.updated_at, "%m") as month'),
+          DB::raw('DATE_FORMAT(history_payments.updated_at, "%Y-%m-%d") as time'),
         )->groupBy('ref_id')->groupBy($groupBy);
       }])->whereIn('id', $userIds)->get();
   }

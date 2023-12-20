@@ -54,7 +54,6 @@ class HistoryPayment extends Model implements HasMedia
 
                 $query->whereBetween('updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
             } elseif ($filters['date'] == 'year') {
-
                 $query->whereBetween('updated_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
             } else {
 
@@ -67,8 +66,9 @@ class HistoryPayment extends Model implements HasMedia
             $query->whereBetween('updated_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
         }
         if (isset($filters['from']) && isset($filters['to'])) {
-
-            $query->whereBetween('updated_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+            $to= Carbon::parse($filters['to'])->format('Y-m-d H:i:s');
+            $from= Carbon::parse($filters['from'])->format('Y-m-d H:i:s');
+            $query->whereBetween('updated_at', [ Carbon::createFromFormat('Y-m-d H:i:s', $from, 'UTC')->setTimezone('+7'), Carbon::createFromFormat('Y-m-d H:i:s', $to, 'UTC')->setTimezone('+7')]);
         }
     }
 }

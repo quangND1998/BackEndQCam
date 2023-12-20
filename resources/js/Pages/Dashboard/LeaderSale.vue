@@ -83,20 +83,26 @@ const filter = reactive({
 const getOptions = computed(() => {
     chartOptions.xaxis.categories = [];
     if (props.analysticData && props.analysticData.length >0) {
-        console.log(props.analysticData)
-        // props.analysticData[0].forEach(element => {
-            
-        //     if (filter.date == 'year') {
-        //         chartOptions.xaxis.categories.push(element.month)
+        // console.log(props.analysticData[0].history_payments)
+            if(props.analysticData[0].history_payments.length >0){
+                props.analysticData[0].history_payments.forEach(element => {
+                
+                if (filter.date == 'year') {
+                    chartOptions.xaxis.categories.push(element.month)
 
-        //     }
-        //     else {
-        //         chartOptions.xaxis.categories.push(element.time)
-        //     }
+                }
+                else {
+                    chartOptions.xaxis.categories.push(element.time)
+                }
 
-        // });
+            });
 
-        return chartOptions;
+            return chartOptions;
+        }
+        else{
+            return []
+        }
+       
     }
     return [];
 
