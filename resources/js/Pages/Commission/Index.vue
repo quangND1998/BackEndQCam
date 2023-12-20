@@ -295,12 +295,12 @@ const changeStatus = (data, event) => {
                         <tbody>
                             <tr v-for="(commission, index) in commissions.data" :key="index"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 ">
-                                <th scope="col" class="px-2 py-2 ">
+                                <th scope="col" class="px-6 py-2 ">
                                     <div class="flex items-center whitespace-nowrap ">
                                         <input id="default-checkbox" type="checkbox" v-model="selected"
                                             :value="commission.id"
                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
-                                        {{ index + 1 }}
+                                        {{ index + commissions.from }}
                                     </div>
                                 </th>
                                 <td class="px-3 py-2 whitespace-nowrap">

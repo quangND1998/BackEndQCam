@@ -28,19 +28,22 @@ class CommissionsPackagesController extends Controller
         }
     }
     public function commissionUser(Request $request){
+        $filters = $request->only('date', 'from', 'to', 'day');
         $roles = ['saler','leader-sale','ctv','telesale'];
         $users = User::with(['commission','roles'])
-        ->whereHas('commission')
+        ->whereHas('commission', function ($query) use ($filters){
+            $query->filterTime($filters);
+        })
         ->withSum('commission','commission_amount')
         ->withSum('commission','amount_received')
         ->withSum('commission','commission_paid')
-        ->withCount(['ref_order_packages as count_order_notdecline' => function ($query) {
+        ->withCount(['ref_order_packages as count_order_notdecline' => function ($query) use ($filters) {
             $query->where('status','!=','decline');
-            $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            $query->filterTime($filters);
         }])
-        ->withCount(['ref_order_packages as count_order_decline' => function ($query) {
+        ->withCount(['ref_order_packages as count_order_decline' => function ($query) use ($filters) {
             $query->where('status','==','decline');
-            $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            $query->filterTime($filters);
         }])
         ->whereHas('roles', function ($query) use ($roles) {
             $query->whereIn('name', $roles);
@@ -56,7 +59,7 @@ class CommissionsPackagesController extends Controller
             'sum_commision_paid' => $total_users->sum('commission_sum_commission_paid'),
             'sum_commision_unpaid' => $total_users->sum('commission_sum_commission_amount'),
         ];
-        $users = $users->paginate(10);
+        $users = $users->paginate(10)->appends(['page' => $request->page, 'date' => $request->date, 'from' => $request->from, 'to' => $request->to, 'day' => $request->day]);
         // return  $sumCommissionInfo;
         return Inertia::render('Commission/User', compact('users','sumCommissionInfo'));
     }

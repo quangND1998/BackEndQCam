@@ -165,7 +165,7 @@ const Delete = (id) => {
                         <tr v-for="(role, index) in roles.data" :key="index"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                                index + 1 }}</th>
+                                index + roles.from }}</th>
                             <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                 role.name }}</th>
                             <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">

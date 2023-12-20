@@ -160,7 +160,7 @@ const Delete = (id) => {
                         <tr v-for="(permission, index) in permissions.data" :key="index"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" class="py-2 px-6 text-md text-gray-500 whitespace-nowrap dark:text-white">
-                                {{ index + 1 }}
+                                {{ index + permissions.from }}
                             </th>
                             <th scope="row" class="py-2 px-6 text-md text-gray-500 whitespace-nowrap dark:text-white">
                                 {{ permission.name }}

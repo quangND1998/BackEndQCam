@@ -300,7 +300,7 @@ const Delete = (id) => {
                         <tr v-for="(user, index) in users.data" :key="index"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ index + 1 }}
+                                {{ index  + users.from  }}
                             </th>
                             <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.name }}

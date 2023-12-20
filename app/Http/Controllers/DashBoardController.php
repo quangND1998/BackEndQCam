@@ -33,7 +33,9 @@ class DashBoardController extends Controller
     public function calculationSale(Request $request,$user)
     {
         //allserver
-        // $user = Auth::user();
+        if($user->hasRole('leader-sale')){
+            return redirect()->route('dashboard.leader-sale.index');
+        }
 
         $top_ten_sale_data = $this->packageOrderService->getTopTenSale('week');
 
@@ -110,7 +112,7 @@ class DashBoardController extends Controller
 
     public function leaderSale(Request $request){
         $user = Auth::user();
-        return $this->calculationSale($request,$user);
+        return $this->calculationleader($request,$user);
     }
     public function detailleaderSale(Request $request,User $user){
         return $this->calculationleader($request,$user);
@@ -129,6 +131,7 @@ class DashBoardController extends Controller
 
             $team_sale_data = $this->packageOrderService->getTopTenSaleTeam('month', $user);
             $week_data_user = $this->packageOrderService->sumbyTimeTeam('week', $userIds);
+
             $month_data_user = $this->packageOrderService->sumbyTimeTeam('month', $userIds);
             $year_data_user = $this->packageOrderService->sumbyTimeTeam('year', $userIds);
 
@@ -155,7 +158,8 @@ class DashBoardController extends Controller
                 'year' => $this->packageOrderService->getRankingTeamServe('year', $leaderIds, $userIds),
             ];
 
-            $order_packages = $this->packageOrderService->getOrderTeam($request->only('date', 'from', 'to', 'day'), $userIds)->paginate(10)->appends(['page' => $request->page, 'date' => $request->date, 'from' => $request->from, 'to' => $request->to, 'day' => $request->day]);;
+            $order_packages = $this->packageOrderService->getOrderTeam($request->only('date', 'from', 'to', 'day'), $userIds)->paginate(10)
+            ->appends(['page' => $request->page, 'date' => $request->date, 'from' => $request->from, 'to' => $request->to, 'day' => $request->day]);
             $orderTeamNotDecline = $this->packageOrderService->getOrderTeamNotDecline($request->only('date', 'from', 'to', 'day'), $userIds)->get();
             $sumGrandTotalOrder = $orderTeamNotDecline->sum('grand_total');
             $sumPricePercentOrder =  $orderTeamNotDecline->sum('price_percent');
@@ -166,25 +170,27 @@ class DashBoardController extends Controller
             ];
 
             $analysticData =  $this->packageOrderService->formatDataAnalyticTeam($request->only('date', 'from', 'to', 'day'), $userIds);
+
+            return Inertia::render('Dashboard/LeaderSale', compact(
+                "top_ten_sale_data",
+                'week_data_user',
+                'month_data_user',
+                'year_data_user',
+                'team_sale_data',
+                'data_contract',
+                'ranking_all_server',
+                'order_packages',
+                'sumGrandTotalOrder',
+                'sumPricePercentOrder',
+                'analysticData',
+                'sumCommissionInfo',
+                'week_commission',
+                'month_commission',
+                'year_commission'
+            ));
         }
         // return $order_packages;
-        return Inertia::render('Dashboard/LeaderSale', compact(
-            "top_ten_sale_data",
-            'week_data_user',
-            'month_data_user',
-            'year_data_user',
-            'team_sale_data',
-            'data_contract',
-            'ranking_all_server',
-            'order_packages',
-            'sumGrandTotalOrder',
-            'sumPricePercentOrder',
-            'analysticData',
-            'sumCommissionInfo',
-            'week_commission',
-            'month_commission',
-            'year_commission'
-        ));
+
     }
 
 

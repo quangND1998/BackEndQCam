@@ -196,7 +196,7 @@ const handleDate = (time) => {
                         <div @click="fillterDashboad('month')"
                             class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
                             :class="$page.url.includes('month') || (filter.date == 'month' && filter.day == null )  ? ' bg-white text-blue-500' : 'text-gray-500'">
-                            Tháng này 
+                            Tháng này
                         </div>
                         <div @click="fillterDashboadDay(7)"
                             class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
@@ -265,7 +265,7 @@ const handleDate = (time) => {
                                 <tbody>
                                     <tr v-for="(user, index) in users.data" :key="index">
                                         <td class=" text-center px-3 py-2 font-normal">
-                                            {{ index+1 }}
+                                            {{ index  + users.from  }}
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
                                             {{ user.name }}

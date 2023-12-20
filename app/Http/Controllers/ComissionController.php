@@ -13,7 +13,7 @@ class ComissionController extends Controller
         return Inertia::render('Commission/Index', compact('commissions'));
     }
     public function index (){
-        $commissions= Commission::orderBy('commission','desc')->paginate(15);
+        $commissions= Commission::orderBy('commission','desc')->orderBy('created_at', 'desc')->paginate(10);
         return Inertia::render('Commission/Index', compact('commissions'));
     }
     public function getLeader(){
@@ -33,7 +33,7 @@ class ComissionController extends Controller
         return Inertia::render('Commission/Index', compact('commissions'));
     }
     public function getType($type){
-        return Commission::where('type',$type)->orderBy('spend_from', 'desc')->paginate(5);
+        return Commission::where('type',$type)->orderBy('spend_from', 'desc')->orderBy('created_at', 'desc')->paginate(5);
     }
     public function store(Request $request){
         $this->validate(
