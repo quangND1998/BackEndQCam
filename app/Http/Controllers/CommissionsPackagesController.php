@@ -30,13 +30,30 @@ class CommissionsPackagesController extends Controller
     public function commissionUser(Request $request){
         $filters = $request->only('date', 'from', 'to', 'day','role');
         $roles = ['saler','leader-sale','ctv','telesale'];
-        $users = User::with(['commission','roles'])
+        $users = User::with(['roles','commission.orderpackage.historyPayment'])
+        ->whereHas('commission', function ($query) use ($filters){
+            $query->whereHas('orderpackage.historyPayment', function ($query) use ($filters){
+                $query->filterTime($filters);
+            });
+        })
         ->whereHas('ref_order_packages.historyPayment' , function ($query) use ($filters){
             $query->filterTime($filters);
         })
-        ->withSum('commission','commission_amount')
-        ->withSum('commission','amount_received')
-        ->withSum('commission','commission_paid')
+        ->withSum(['commission' => function ($query) use ($filters){
+            $query->whereHas('orderpackage.historyPayment', function ($query) use ($filters){
+                $query->filterTime($filters);
+            });
+        }],'commission_amount' )
+        ->withSum(['commission' => function ($query) use ($filters){
+            $query->whereHas('orderpackage.historyPayment', function ($query) use ($filters){
+                $query->filterTime($filters);
+            });
+        }],'amount_received')
+        ->withSum(['commission' => function ($query) use ($filters){
+            $query->whereHas('orderpackage.historyPayment', function ($query) use ($filters){
+                $query->filterTime($filters);
+            });
+        }],'commission_paid')
 
         ->withCount(['ref_order_packages as count_order_notdecline' => function ($query) use ($filters) {
             $query->where('status','!=','decline');
@@ -51,6 +68,7 @@ class CommissionsPackagesController extends Controller
         })->orderBy('commission_sum_commission_amount', 'desc');
 
         $total_users = $users->get();
+        // return $total_users;
         $sumCommissionInfo = [
             'sum_count_order_notdecline' => $total_users->sum('count_order_notdecline'),
             'sum_count_order_decline' => $total_users->sum('count_order_decline'),
