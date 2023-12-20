@@ -187,6 +187,12 @@ class User extends Authenticatable implements HasMedia
     public function ref_order_packages(){
         return $this->hasMany(OrderPackage::class, 'ref_id');
     }
+    public function to_order_packages(){
+        return $this->hasMany(OrderPackage::class, 'to_id');
+    }
+    public function resource_order_packages(){
+        return $this->hasMany(OrderPackage::class, 'customer_resources_id');
+    }
 
     public function otps(){
         return $this->hasMany(OtpVerify::class, 'user_id');
@@ -225,5 +231,4 @@ class User extends Authenticatable implements HasMedia
     public function commission() {
         return $this->hasMany(commissionsPackage::class,'user_id');
     }
-
 }

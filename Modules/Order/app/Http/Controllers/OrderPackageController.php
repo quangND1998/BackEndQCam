@@ -123,15 +123,10 @@ class OrderPackageController extends Controller
     }
     public function orderPackage(Request $request){
         $user = Auth::user();
-        $roles = ['saler','leader-sale','ctv','telesale'];
-        $users = User::with('team')->whereHas('roles', function ($query) use ($roles) {
-            $query->whereIn('name', $roles);
-        });
-        $sales = $users->role('saler')->get();
-        $leaders =  $users->role('leader-sale')->get();
-        $telesale = $users->role('telesale')->get();
-        $ctv = $users->role('ctv')->get();
-
+        $sales = User::whereHas('team')->with('team')->role('saler')->get();
+        $leaders = User::role('leader-sale')->get();
+        $telesale = User::role('telesale')->get();
+        $ctv = User::role('ctv')->get();
         $product_services = ProductService::where("status", 1)->get();
 
         return Inertia::render('Modules/Order/Package/CreateOrderPackage', compact('product_services','sales','leaders','telesale','ctv'));

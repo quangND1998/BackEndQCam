@@ -68,5 +68,22 @@ class CommissionRepository
         return $orders;
 
     }
+    public function listCommissionUser($user,$filters){
+        $user_filter = $user->whereHas('commission', function ($query) use ($filters){
+            $query->filterTime($filters);
+        })
+        ->withSum('commission','commission_amount')
+        ->withSum('commission','amount_received')
+        ->withSum('commission','commission_paid')
+        ->withCount(['ref_order_packages as count_order_notdecline' => function ($query) use ($filters) {
+            $query->where('status','!=','decline');
+            $query->filterTime($filters);
+        }])
+        ->withCount(['ref_order_packages as count_order_decline' => function ($query) use ($filters) {
+            $query->where('status','==','decline');
+            $query->filterTime($filters);
+        }])->orderBy('commission_sum_commission_amount', 'desc');
+        return $user_filter;
+    }
 
 }

@@ -38,7 +38,6 @@ class DashBoardController extends Controller
         }
 
         $top_ten_sale_data = $this->packageOrderService->getTopTenSale('week');
-
         $week_data_user = $this->packageOrderService->sumbyTimeUser('week', $user);
 
         $month_data_user = $this->packageOrderService->sumbyTimeUser('month', $user);

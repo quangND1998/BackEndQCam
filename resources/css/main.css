@@ -73,3 +73,7 @@
     width: 120px;
     margin-right: 10px;
 }
+.month-picker__container
+{
+    z-index: 999999;
+}

@@ -11,7 +11,8 @@ import {
     mdiCartOutline,
     mdiMinus,
     mdiOpenInNew,
-    mdiPlus
+    mdiPlus,
+    mdiRefresh
 
 } from '@mdi/js'
 import LayoutAuthenticated from '@/Layouts/LayoutAuthenticated.vue'
@@ -147,7 +148,7 @@ const fillterDashboadDay = (time) => {
 
 const handleDate = (time) => {
 
-    router.get(route(`dashboard`),
+    router.get(route(`commission.dashboard.user`),
         { from: filter.from, to: filter.to },
         {
             preserveState: false,
@@ -173,26 +174,16 @@ const handleDate = (time) => {
 
                     <div>
                         <Link :href="route('commission.dashboard.fresh')">
-                            <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]"
-                        :icon="mdiPlus" small label="Làm mới" />
+                            <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] border rounded-xl text-white p-2 "
+                        :icon="mdiRefresh " small label="Làm mới" />
                         </Link>
                     </div>
                 </div>
             </div>
             <div class="mx-6 my-2 p-3 border border-gray-300 border_round bg-white overflow-auto">
-                <div class="my-2 items-center text-center flex ">
+                <div class="items-center text-center flex ">
                     <div
                         class=" min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
-                        <div @click="fillterDashboad('year')"
-                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg   hover:bg-white "
-                            :class="$page.url.includes('year') ? ' bg-white text-blue-500 border-blue-500' : 'text-gray-500 bg-gray-100'">
-                            Năm
-                        </div>
-                        <div @click="fillterDashboad('beforMonth')"
-                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
-                            :class="$page.url.includes('beforMonth') ? ' bg-white text-blue-500' : 'text-gray-500'">
-                            Tháng trước
-                        </div>
                         <div @click="fillterDashboad('month')"
                             class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
                             :class="$page.url.includes('month') || (filter.date == 'month' && filter.day == null )  ? ' bg-white text-blue-500' : 'text-gray-500'">
@@ -203,7 +194,18 @@ const handleDate = (time) => {
                             :class="$page.url.includes('day') ? ' bg-white text-blue-500' : 'text-gray-500'">
                             7 ngày qua
                         </div>
-                        <div class="flex items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white text-gray-500"
+                        <div @click="fillterDashboad('beforMonth')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
+                            :class="$page.url.includes('beforMonth') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            Tháng trước
+                        </div>
+
+                        <div @click="fillterDashboad('year')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg   hover:bg-white "
+                            :class="$page.url.includes('year') ? ' bg-white text-blue-500 border-blue-500' : 'text-gray-500 bg-gray-100'">
+                            Năm
+                        </div>
+                        <div class="flex px-2 items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white text-gray-500"
                             :class="{ 'bg-white  text-blue-500': $page.url.includes('draf') }">
                             Tùy chỉnh
                             <div class="ml-2 relative">
@@ -283,7 +285,7 @@ const handleDate = (time) => {
                                             {{ formatPrice(user.commission_sum_amount_received) }}đ
                                         </td>
                                         <td class=" text-center px-3 py-2 font-normal">
-                                            {{ formatPrice(user.commission[0].commission_percentage)}} (%)
+                                            {{ user.commission.length >0 ? formatPrice(user.commission[0].commission_percentage) : 0}} (%)
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
                                             {{ formatPrice(user.commission_sum_commission_amount)}}đ

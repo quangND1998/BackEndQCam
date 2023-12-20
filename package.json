@@ -61,6 +61,7 @@
         "vue-carousel-3d": "^1.0.1",
         "vue-json-excel3": "^1.0.19",
         "vue-media-upload": "^2.1.2",
+        "vue-month-picker": "^1.7.2",
         "vue-multiselect": "^3.0.0-beta.3",
         "vue-pdf": "^4.3.0",
         "vue-qrcode": "^2.2.0",

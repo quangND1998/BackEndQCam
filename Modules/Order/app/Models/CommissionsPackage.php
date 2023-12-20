@@ -27,6 +27,9 @@ class commissionsPackage extends Model
     {
         return $this->belongsTo(Commission::class,'commissions_id');
     }
+    public function historyPayment(){
+        return $this->belongsTo(HistoryPayment::class,'history_payment_id');
+    }
     // lịch su thanh toan hoa hồng
     public function commissionsHistory()
     {
