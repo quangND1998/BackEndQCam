@@ -304,7 +304,7 @@ const changeStatus = (data, event) => {
                                     {{ formatPrice(commission.spend_from) }} - {{ formatPrice(commission.spend_to) }}
                                 </td>
                                 <td class="px-3 py-2 whitespace-nowrap">
-                                    {{ formatPrice(commission.commission) }} %
+                                    {{ commission.commission }} %
                                 </td>
 
                                 <td class="px-3 py-2 whitespace-nowrap">
