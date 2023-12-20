@@ -214,16 +214,16 @@ const changeStatus = (data, event) => {
 
                         <InputLabel for="name" value="Doanh thu từ (vnđ)" />
 
-                        <input type="number" v-model="form.spend_from" :min="0"
-                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputNumber  v-model="form.spend_from" :min="0" class="w-full"
+                            inputClass="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         <InputError class="mt-2 " :message="form.errors.spend_from" />
                     </div>
                     <div class="my-2 w-1/2  pr-4">
 
                         <InputLabel for="name" value="Doanh thu đến (vnđ)" />
 
-                        <input v-model="form.spend_to" :min="0"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputNumber v-model="form.spend_to" :min="0" class="w-full"
+                        inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         <InputError class="mt-2" :message="form.errors.spend_to" />
                     </div>
 
@@ -237,8 +237,8 @@ const changeStatus = (data, event) => {
                     <div class="my-2 w-1/2  pr-4">
                         <InputLabel  for="name" value="Mức thanh toán nhận doanh thu (%)" />
 
-                        <input type="number" v-model="form.level_revenue" :min="0" :max="100"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputNumber  v-model="form.level_revenue" :min="0" :max="100" class="w-full"
+                        inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         <InputError class="mt-2" :message="form.errors.level_revenue" />
                     </div>
                     <div class="my-2 w-1/2  pr-4" v-if="form.type == 'ctv'">
