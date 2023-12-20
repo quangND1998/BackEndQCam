@@ -283,6 +283,9 @@ const handleDate = (time) => {
                                     <th scope="col" class="text-center px-3 py-2  text-sm text-[#000000] font-normal">
 
                                     </th>
+                                    <th scope="col" class="text-center px-3 py-2  text-sm text-[#000000] font-normal">
+
+                                    </th>
                                     <th scope="col" class="text-center px-3 py-2 t text-sm text-[#000000] font-normal">
                                         {{ formatPrice(sumCommissionInfo.sum_count_order_notdecline) }}
                                     </th>
