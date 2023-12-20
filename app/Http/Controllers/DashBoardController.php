@@ -112,9 +112,8 @@ class DashBoardController extends Controller
         $user = Auth::user();
         return $this->calculationSale($request,$user);
     }
-    public function detailleaderSale(Request $request){
-        $user = Auth::user();
-        return $this->calculationSale($request,$user);
+    public function detailleaderSale(Request $request,User $user){
+        return $this->calculationleader($request,$user);
     }
     public function calculationleader(Request $request,$user)
     {
