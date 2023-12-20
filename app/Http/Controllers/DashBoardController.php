@@ -25,12 +25,12 @@ class DashBoardController extends Controller
     }
     public function index(Request $request){
         $user = Auth::user();
-        return $this->calculation($request,$user);
+        return $this->calculationSale($request,$user);
     }
     public function detailSale(Request $request,User $user){
-        return $this->calculation($request,$user);
+        return $this->calculationSale($request,$user);
     }
-    public function calculation(Request $request,$user)
+    public function calculationSale(Request $request,$user)
     {
         //allserver
         // $user = Auth::user();
@@ -108,11 +108,18 @@ class DashBoardController extends Controller
         ));
     }
 
-
-    public function leaderSale(Request $request)
+    public function leaderSale(Request $request){
+        $user = Auth::user();
+        return $this->calculationSale($request,$user);
+    }
+    public function detailleaderSale(Request $request){
+        $user = Auth::user();
+        return $this->calculationSale($request,$user);
+    }
+    public function calculationleader(Request $request,$user)
     {
         //allserver
-        $user = Auth::user();
+        // $user = Auth::user();
 
         $top_ten_sale_data = $this->packageOrderService->getTopTenSale('week');
 

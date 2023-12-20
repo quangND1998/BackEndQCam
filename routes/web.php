@@ -126,6 +126,7 @@ Route::middleware(['auth'])->group(
                 Route::get('fresh', [CommissionsPackagesController::class, 'fresh'])->name('fresh');
                 Route::get('user', [CommissionsPackagesController::class, 'commissionUser'])->name('user');
                 Route::get('detail/{user}', [DashBoardController::class, 'detailSale'])->name('detail');
+                Route::get('detailLeader/{user}', [DashBoardController::class, 'detailleaderSale'])->name('detailleaderSale');
             });
         });
 
