@@ -23,11 +23,17 @@ class DashBoardController extends Controller
         $this->packageOrderService = $packageOrderService;
         $this->commissionsPackageService = $commissionsPackageService;
     }
-    public function index(Request $request)
+    public function index(Request $request){
+        $user = Auth::user();
+        return $this->calculationSale($request,$user);
+    }
+    public function detailSale(Request $request,User $user){
+        return $this->calculationSale($request,$user);
+    }
+    public function calculationSale(Request $request,$user)
     {
         
         //allserver
-        $user = Auth::user();
         if($user->hasRole('leader-sale')){
             return redirect()->route('dashboard.leader-sale.index');
         }
@@ -83,9 +89,9 @@ class DashBoardController extends Controller
         // $sumCommissionUnPaid = $this->packageOrderService->sumCommissionUnPaid($request->only('date','from', 'to', 'day'),$user);
 
         $analysticData = $this->packageOrderService->formatDataAnalytic($request->only('date', 'from', 'to', 'day'), $user);
-
+      
         // return Inertia::render('Dashboard/Sale', compact( "top_ten_sale_data", 'week_data_user', 'month_data_user', 'year_data_user','team_sale_data','contract_infor','ranking_team', 'ranking_all_server','order_packages'));
-        return Inertia::render('Dashboard/Sale', compact(
+        return Inertia::render('Dashboard/Sale', compact("user",
             "top_ten_sale_data",
             'week_data_user',
             'month_data_user',
@@ -105,11 +111,17 @@ class DashBoardController extends Controller
         ));
     }
 
-
-    public function leaderSale(Request $request)
+    public function leaderSale(Request $request){
+        $user = Auth::user();
+        return $this->calculationleader($request,$user);
+    }
+    public function detailleaderSale(Request $request,User $user){
+        return $this->calculationleader($request,$user);
+    }
+    public function calculationleader(Request $request,$user)
     {
         //allserver
-        $user = Auth::user();
+        // $user = Auth::user();
 
         $top_ten_sale_data = $this->packageOrderService->getTopTenSale('week');
 
@@ -158,7 +170,7 @@ class DashBoardController extends Controller
             ];
 
             $analysticData =  $this->packageOrderService->formatDataAnalyticTeam($request->only('date', 'from', 'to', 'day'), $userIds);
-        
+           
             return Inertia::render('Dashboard/LeaderSale', compact(
                 "top_ten_sale_data",
                 'week_data_user',
@@ -233,7 +245,7 @@ class DashBoardController extends Controller
         if ($user->hasRole('leader-sale')) {
             $userIds = User::where('created_byId', $user->id)->pluck('id');
 
-        
+
             $order_packages = $this->packageOrderService->getOrderTeam($request->only('date', 'from', 'to', 'day'), $userIds)->get();
 
             if (!$request->date) {

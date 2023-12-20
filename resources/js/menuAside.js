@@ -71,13 +71,13 @@ export default [{
             {
                 route: 'commission.index',
                 label: 'Cài đặt hoa hồng',
-                permissions: ['view-user'],
+                permissions: ['setting-commersion','super-admin'],
                 route_list: null
             },
             {
                 route: 'commission.dashboard.user',
                 label: 'Hoa hồng',
-                permissions: ['view-user'],
+                permissions: ['view-commersion','super-admin'],
                 route_list: null
             }
         ]

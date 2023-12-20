@@ -93,5 +93,8 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'view-notification']);
         Permission::create(['name' => 'view-setting-privacy']);
         Permission::create(['name' => 'view-setting-contact']);
+
+        Permission::create(['name' => 'setting-commersion']);
+        Permission::create(['name' => 'view-commersion']);
     }
 }

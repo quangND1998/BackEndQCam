@@ -18,11 +18,18 @@ class CommissionsPackagesController extends Controller
         $this->packageOrderService = $packageOrderService;
     }
     public function fresh(Request $request){
-        UpdateCommissionJob::dispatch($this->commissionRepository,$this->packageOrderService);
+        // UpdateCommissionJob::dispatch($this->commissionRepository,$this->packageOrderService);
+        $roles = ['saler','leader-sale','ctv','telesale'];
+        $users = User::select('id', 'name')->whereHas('roles', function ($query) use ($roles) {
+            $query->whereIn('name', $roles);
+        })->get();
+        foreach($users as $user){
+            $this->commissionRepository->getAllOrderInMonth($this->packageOrderService,$user);
+        }
     }
     public function commissionUser(Request $request){
         $roles = ['saler','leader-sale','ctv','telesale'];
-        $users = User::with(['commission'])
+        $users = User::with(['commission','roles'])
         ->whereHas('commission')
         ->withSum('commission','commission_amount')
         ->withSum('commission','amount_received')

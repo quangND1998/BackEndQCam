@@ -22,6 +22,7 @@ import CardBox from '@/Components/CardBox.vue'
 import { useHelper } from "@/composable/useHelper";
 const { formatDateTime } = useHelper();
 const props = defineProps({
+    user: Array,
     top_ten_sale_data: Array,
     week_data_user: Number,
     month_data_user: Number,
@@ -67,9 +68,9 @@ const chartOptions = reactive({
     },
     legend: {
         position: 'left',
-      horizontalAlign: 'center', 
+      horizontalAlign: 'center',
       floating: false,
-            
+
     },
     convertedCatToNumeric: false
 
@@ -79,7 +80,7 @@ const mainStore = useMainStore()
 const clientBarItems = computed(() => mainStore.clients.slice(0, 4))
 
 const transactionBarItems = computed(() => mainStore.history)
-
+const query=  usePage().props.ziggy.query
 const filter = reactive({
     date: usePage().props.ziggy.query.date ? usePage().props.ziggy.query.date : '',
     from:  usePage().props.ziggy.query.from ? usePage().props.ziggy.query.from : '',
@@ -165,7 +166,7 @@ const handleDate = (time) => {
 
 const exportCSV=()=>{
     window.open('/dashboard/export?date='+filter.date +'&from='+formatDateTime(filter.from)+'&to='+formatDateTime(filter.to)+'&day='+filter.day)
-   
+
 }
 </script>
 
@@ -174,7 +175,11 @@ const exportCSV=()=>{
 
         <Head title="Dashboard" />
 
+
         <div class="mt-16 ">
+            <div class="gap-4 ml-6 mr-6 py-2 font-bold">
+                {{ user?.name }}
+            </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3  gap-4 ml-6 mr-6 py-2">
                 <div class="col-span-1  p-3 border border-gray-300 border_round bg-white items-center text-center">
                     <p class="text-sm text-[#000000] mt-6">Doanh thu trong tuần</p>
@@ -386,7 +391,7 @@ const exportCSV=()=>{
                         </div>
                         <div @click="fillterDashboad('month')"
                             class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
-                            :class="$page.url.includes('month') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            :class="($page.url.includes('month') ||query.length ==0 ) ? ' bg-white text-blue-500' : 'text-gray-500'">
                             Tháng này
                         </div>
                         <div @click="fillterDashboadDay(7)"
@@ -398,14 +403,14 @@ const exportCSV=()=>{
                             :class="{ 'bg-white  text-blue-500': $page.url.includes('draf') }">
                             Tùy chỉnh
                             <div class="ml-2 relative">
-                                <VueDatePicker time-picker-inline v-model="filter.from" />
+                                <VueDatePicker time-picker-inline  locale="vi"  v-model="filter.from" />
                             </div>
                             <span class="mx-1 text-gray-500">-</span>
                             <div class="relative">
-                                <VueDatePicker time-picker-inline v-model="filter.to"  />
+                                <VueDatePicker time-picker-inline locale="vi"  v-model="filter.to"  />
                             </div>
                         </div>
-                 
+
                         <div  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white" @click="handleDate">Lọc</div>
                         <div  @click="exportCSV()"  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</div>
                     </div>
@@ -475,7 +480,7 @@ const exportCSV=()=>{
 
                                         </td>
                                         <td class=" text-left px-3 py-2  font-normal">
-                                           
+
                                             {{formatPrice(order.commissions_packages.length >0?order.commissions_packages[0].commission_amount: 0)}}đ
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
@@ -483,7 +488,7 @@ const exportCSV=()=>{
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
                                             {{formatPrice(order.commissions_packages.length >0?order.commissions_packages[0].commission_unpaid: 0)}}đ
-                                         
+
                                         </td>
                                         <td class=" text-center px-3 py-2 font-normal">
                                             {{ order.status }}
@@ -512,7 +517,7 @@ const exportCSV=()=>{
                                         {{ formatPrice(sumPricePercentOrder) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                      
+
                                         {{ formatPrice(sumGrandTotalOrder- sumPricePercentOrder) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
@@ -520,7 +525,7 @@ const exportCSV=()=>{
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
                                         {{ formatPrice(sumCommissionInfo.sum_commision_paid) }}đ
-                                       
+
                                     </th>
                                     <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
                                         {{ formatPrice(sumCommissionInfo.sum_commision_unpaid) }}đ
@@ -532,7 +537,7 @@ const exportCSV=()=>{
                             </tfoot>
                             </table>
                         </div>
-                      
+
                     </div>
                     <div>
 
@@ -553,7 +558,7 @@ const exportCSV=()=>{
                             Tháng trước
                         </div>
                         <div @click="fillterDashboad('month')" class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white text-gray-500"
-                        :class="$page.url.includes('month') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                        :class="($page.url.includes('month') ||query.length ==0 ) ? ' bg-white text-blue-500' : 'text-gray-500'">
                             Tháng này
                         </div>
                         <div  @click="fillterDashboadDay(7)" class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white text-gray-500"
@@ -564,21 +569,21 @@ const exportCSV=()=>{
                             :class="{ 'bg-white  text-blue-500': $page.url.includes('draf') }">
                             Tùy chỉnh
                             <div class="ml-2 relative">
-                                <VueDatePicker time-picker-inline v-model="filter.from" />
+                                <VueDatePicker time-picker-inline  locale="vi" v-model="filter.from" />
                             </div>
                             <span class="mx-1 text-gray-500">-</span>
                             <div class="relative">
-                                <VueDatePicker  time-picker-inline v-model="filter.to" />
+                                <VueDatePicker  time-picker-inline  locale="vi" v-model="filter.to" />
                             </div>
                         </div>
-                     
-                      
+
+
                         <div  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white" @click="handleDate">Lọc</div>
                         <!-- <div class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</div> -->
-                
+
                     </div>
                     <div class="w-full flex justify-center items-center">
-                  
+
                         <div class="w-5/6">
                             <CardBox class="mb-6">
 

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->decimal('amount_received', 20)->nullable();
 
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
         });
     }

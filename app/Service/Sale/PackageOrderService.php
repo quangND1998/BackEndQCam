@@ -208,7 +208,9 @@ class PackageOrderService
     )->orderBy('created_at', 'desc');
   }
   public function getOrderInMonth($user){
-    return $this->sumbyTime('month')->where('ref_id', $user->id)->get();
+    return $this->sumbyTime('month')->where('ref_id', $user->id)
+    ->orwhere('to_id',$user->id)->orwhere('customer_resources_id',$user->id)
+    ->get();
   }
   public function getOrderNotDecline($filters, $user)
   {
@@ -237,7 +239,7 @@ class PackageOrderService
   //   return $this->getOrder($filters, $user)->get()->sum('commissions_packages_sum_commission_unpaid');
   // }
 
-  
+
   public function analysticData($filters, $user,  $groupBy)
   {
     // $query = $this->model::with(['historyPayment' => function ($q) use ($filters) {
@@ -250,7 +252,7 @@ class PackageOrderService
     // )->where('ref_id', $user->id);
     // return $query->get();
     // return $this->formatDataAnalytic($filters, $query);
-    
+
     return User::select('id', 'name')->with(['historyPayments' => function ($q) use ($filters,$groupBy) {
         $q->where('history_payments.status', 'complete');
         if (isset($filters['date'])) {
@@ -278,8 +280,9 @@ class PackageOrderService
           $q->whereBetween('history_payments.created_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
         }
         if (isset($filters['from']) && isset($filters['to'])) {
-
-          $q->whereBetween('history_payments.created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+            $to= Carbon::parse($filters['to'])->format('Y-m-d H:i:s');
+            $from= Carbon::parse($filters['from'])->format('Y-m-d H:i:s');
+            $q->whereBetween('history_payments.created_at', [ Carbon::createFromFormat('Y-m-d H:i:s', $from, 'UTC')->setTimezone('+7'), Carbon::createFromFormat('Y-m-d H:i:s', $to, 'UTC')->setTimezone('+7')]);
         }
         $q->select(
           'history_payments.id', 'history_payments.order_package_id',
@@ -289,7 +292,7 @@ class PackageOrderService
         )->groupBy('ref_id')->groupBy($groupBy);
       },
     ]
-    
+
     )->with(['ref_order_packages' => function ($q) use ($filters, $groupBy) {
       $q->filtertime($filters);
       $q->select(
@@ -301,7 +304,7 @@ class PackageOrderService
         DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as time'),
       )->groupBy('ref_id')->groupBy($groupBy);
     }])->find($user->id);
-   
+
   }
 
   public function formatDataAnalytic($filters, $user)
@@ -358,14 +361,17 @@ class PackageOrderService
       return $this->addDataCollection($ranges, $newCollections, 'time');
     }
     if (isset($filters['from']) && isset($filters['to'])) {
+    
       $ranges = CarbonPeriod::create(Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), '1 day', Carbon::parse($filters['to'])->format('Y-m-d H:i:s'));
       $newCollections = $this->analysticData($filters, $user, 'time');
+
       return $this->addDataCollection($ranges, $newCollections, 'time');
     }
   }
 
   public function addDataCollection($ranges, $collection, $type)
   {
+   
     $newCollections = [];
     foreach ($ranges as $date) {
       if ($type == 'month') {
@@ -382,7 +388,7 @@ class PackageOrderService
           'month' => Carbon::create()->month(date("m", strtotime($date)))->format("M")
         );
       } else {
-       
+
         $order_package=$collection->ref_order_packages->find($filtered->order_package_id);
         if(!$order_package){
           $order=$this->model->find($filtered->order_package_id);
@@ -484,7 +490,7 @@ class PackageOrderService
 
     },'commissions_packages'=>function($q) use($filters){
       $q->filterTime($filters);
- 
+
     }])->whereHas('historyPayment', function ($q) use ($filters) {
 
       $q->filterTime($filters);
@@ -549,7 +555,9 @@ class PackageOrderService
         }
         if (isset($filters['from']) && isset($filters['to'])) {
 
-          $q->whereBetween('history_payments.created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+          $to= Carbon::parse($filters['to'])->format('Y-m-d H:i:s');
+          $from= Carbon::parse($filters['from'])->format('Y-m-d H:i:s');
+          $q->whereBetween('history_payments.created_at', [ Carbon::createFromFormat('Y-m-d H:i:s', $from, 'UTC')->setTimezone('+7'), Carbon::createFromFormat('Y-m-d H:i:s', $to, 'UTC')->setTimezone('+7')]);
         }
         $q->select(
           'history_payments.id',
@@ -584,7 +592,7 @@ class PackageOrderService
         $endOfMonth = Carbon::now()->endOfMonth();
         $ranges = CarbonPeriod::create($statMonth, $endOfMonth);
         $newCollections = $this->getUserData($filters, $userIds, 'time');
-      
+
 
         return $this->addDataCollectionTeam($ranges, $newCollections, 'time');
       } elseif ($filters['date'] == 'year') {
@@ -631,9 +639,9 @@ class PackageOrderService
           'name' => $item->name,
           'history_payments' => []
         );
-  
+
         if (count($item->historyPayments) == 0) {
-        
+
           // $item->ref_order_packages[] = array(
           //   'ref_id' => $item->id,
           //   'price_percent_sum' => 0,
@@ -655,7 +663,7 @@ class PackageOrderService
             );
           }
         } else {
-       
+
           if ($type == 'month') {
             $filtered = $item->historyPayments->where('month', date("m", strtotime($date)));
           } else {

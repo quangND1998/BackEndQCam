@@ -481,10 +481,10 @@ class OrderController extends Controller
         }
         Cart::clear();
         Cart::clearCartConditions();
-        if ($order->payment_method == 'cash' || $order->payment_method == 'banking') {
+        // if ($order->payment_method == 'cash' || $order->payment_method == 'banking') {
 
             return  redirect()->route('admin.payment.orderCashBankingPayment', [$order]);
-        }
+        // }
     }
 
     public function addConditionToCart($request)

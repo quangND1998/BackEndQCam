@@ -11,7 +11,7 @@ class PayooService {
     use PayooServiceTraits;
 
     public function createPreorder($order,$method="",$bank="", $payment_group=""){
-        $orderXml = $this->createOderXml($order,1);
+        $orderXml = $this->createOderXml($order,3);
         $checksum = $this->checkSumConvert($orderXml);
   
         $response = Http::withHeaders([
@@ -20,7 +20,7 @@ class PayooService {
             "checksum" => $checksum,
             "refer" => request()->getSchemeAndHttpHost(),
             "data" => $orderXml,
-            "payment_group"=>"Bank-account,QRCode,CC,'Qr-pay",
+            "payment_group"=>"Bank-account,QRCode,CC,Qr-pay",
         
         ]);
 

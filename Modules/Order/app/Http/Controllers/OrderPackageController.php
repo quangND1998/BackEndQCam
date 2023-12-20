@@ -123,15 +123,18 @@ class OrderPackageController extends Controller
     }
     public function orderPackage(Request $request){
         $user = Auth::user();
-        $sales = User::whereHas('team')->with('team')->role('saler')->get();
-        $leaders = User::role('leader-sale')->get();
-        $telesale = User::role('telesale')->get();
-        $ctv = User::role('ctv')->get();
+        $roles = ['saler','leader-sale','ctv','telesale'];
+        $users = User::with('team')->whereHas('roles', function ($query) use ($roles) {
+            $query->whereIn('name', $roles);
+        });
+        $sales = $users->role('saler')->get();
+        $leaders =  $users->role('leader-sale')->get();
+        $telesale = $users->role('telesale')->get();
+        $ctv = $users->role('ctv')->get();
 
         $product_services = ProductService::where("status", 1)->get();
-        $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();
 
-        return Inertia::render('Modules/Order/Package/CreateOrderPackage', compact('product_services','trees','sales','leaders','telesale','ctv'));
+        return Inertia::render('Modules/Order/Package/CreateOrderPackage', compact('product_services','sales','leaders','telesale','ctv'));
     }
     public function editOrderPackage(Request $request,$id){
         $order = OrderPackage::with('customer','product_service','saler','leader','resources','order_package_images','historyPayment.order_package_payment','historyPayment.user')->findOrFail($id);
@@ -141,10 +144,9 @@ class OrderPackageController extends Controller
         $sales = User::whereHas('team')->with('team')->role('saler')->get();
         $leaders = User::role('leader-sale')->get();
         $product_services = ProductService::where("status", 1)->get();
-        $trees = Tree::where('state','public')->where('product_service_owner_id',null)->get();
         $telesale = User::role('telesale')->get();
         $ctv = User::role('ctv')->get();
-        return Inertia::render('Modules/Order/Package/editOrderPackage', compact('order','product_services','trees','sales','leaders','telesale','ctv'));
+        return Inertia::render('Modules/Order/Package/editOrderPackage', compact('order','product_services','sales','leaders','telesale','ctv'));
         }else{
             return redirect()->route('admin.orders.package.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
         }
@@ -569,15 +571,16 @@ class OrderPackageController extends Controller
     }
     public function getOrder($request, $status)
     {
-        $results  =  OrderPackage::with(['customer','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
+        $results  =  OrderPackage::with(['customer','ref','leader','resources','package_reviewer', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
                 'customer',
                 function ($q) use ($request) {
                     $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','%' . $request->search . '%');
                 }
             )
-            ->role()
+
             ->orwhere('order_number', 'LIKE', '%' . $request->search . '%')
             ->orwhere('idPackage', 'LIKE', '%' . $request->search . '%')
+            ->role()
             ->fillter($request->only('status','from', 'to', 'payment_status', 'payment_method', 'type'))
             ->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 5);
             return $results ;

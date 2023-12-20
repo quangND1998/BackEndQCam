@@ -21,20 +21,19 @@ class UpdateCommissionJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(CommissionRepository $commissionRepository,PackageOrderService $packageOrderService)
+    public function __construct()
     {
-        $this->commissionRepository = $commissionRepository;
-        $this->packageOrderService = $packageOrderService;
+
     }
 
-    public function handle(): void
+    public function handle(CommissionRepository $commissionRepository,PackageOrderService $packageOrderService): void
     {
         $roles = ['saler','leader-sale','ctv','telesale'];
         $users = User::select('id', 'name')->whereHas('roles', function ($query) use ($roles) {
             $query->whereIn('name', $roles);
         })->get();
         foreach($users as $user){
-            $this->commissionRepository->getAllOrderInMonth($this->packageOrderService,$user);
+            $commissionRepository->getAllOrderInMonth($packageOrderService,$user);
         }
     }
 }

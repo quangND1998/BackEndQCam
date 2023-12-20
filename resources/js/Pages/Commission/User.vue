@@ -122,7 +122,7 @@ const getSeries = computed(() => {
 
 const fillterDashboad = (time) => {
     filter.date = time;
-    router.get(route(`dashboard`),
+    router.get(route(`commission.dashboard.user`),
         { date: filter.date },
         {
             preserveState: false,
@@ -134,7 +134,7 @@ const fillterDashboad = (time) => {
 
 const fillterDashboadDay = (time) => {
     filter.day = time;
-    router.get(route(`dashboard`),
+    router.get(route(`commission.dashboard.user`),
         { day: filter.day },
         {
             preserveState: false,
@@ -180,7 +180,48 @@ const handleDate = (time) => {
                 </div>
             </div>
             <div class="mx-6 my-2 p-3 border border-gray-300 border_round bg-white overflow-auto">
+                <div class="my-2 items-center text-center flex ">
+                    <div
+                        class=" min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
+                        <div @click="fillterDashboad('year')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg   hover:bg-white "
+                            :class="$page.url.includes('year') ? ' bg-white text-blue-500 border-blue-500' : 'text-gray-500 bg-gray-100'">
+                            Năm
+                        </div>
+                        <div @click="fillterDashboad('beforMonth')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
+                            :class="$page.url.includes('beforMonth') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            Tháng trước
+                        </div>
+                        <div @click="fillterDashboad('month')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
+                            :class="$page.url.includes('month') || (filter.date == 'month' && filter.day == null )  ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            Tháng này 
+                        </div>
+                        <div @click="fillterDashboadDay(7)"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
+                            :class="$page.url.includes('day') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            7 ngày qua
+                        </div>
+                        <div class="flex items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white text-gray-500"
+                            :class="{ 'bg-white  text-blue-500': $page.url.includes('draf') }">
+                            Tùy chỉnh
+                            <div class="ml-2 relative">
+                                <VueDatePicker time-picker-inline v-model="filter.from" />
+                            </div>
+                            <span class="mx-1 text-gray-500">-</span>
+                            <div class="relative">
+                                <VueDatePicker time-picker-inline v-model="filter.to"  />
+                            </div>
+                        </div>
 
+                        <div  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white" @click="handleDate">Lọc</div>
+                        <div  @click="exportCSV()"  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</div>
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
                 <div class="w-full mt-2">
                     <div class="flex flex-col">
                         <div class=" overflow-y-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[75vh]">
@@ -193,6 +234,9 @@ const handleDate = (time) => {
                                         </th>
                                         <th scope="col" class=" px-3 py-2 text-center text-sm text-[#000000] font-normal">
                                             User
+                                        </th>
+                                        <th scope="col" class=" px-3 py-2 text-center text-sm text-[#000000] font-normal">
+                                            Quyền
                                         </th>
                                         <th scope="col" class=" px-3 py-2 text-center text-sm text-[#000000] font-normal">
                                             Hợp đồng đã ký
@@ -226,6 +270,9 @@ const handleDate = (time) => {
                                         <td class=" text-left px-3 py-2 font-normal">
                                             {{ user.name }}
                                         </td>
+                                        <td class=" text-left px-3 py-2 font-normal">
+                                            {{ user.roles[0]?.name }}
+                                        </td>
                                         <td class=" text-center px-3 py-2 text-[#00AB55] font-medium">
                                             {{ user.count_order_notdecline }}
                                         </td>
@@ -233,27 +280,33 @@ const handleDate = (time) => {
                                             {{ user.count_order_decline }}
                                         </td>
                                         <td class=" text-left px-3 py-2  font-normal">
-                                            {{ formatPrice(user.commission_sum_amount_received) }}
+                                            {{ formatPrice(user.commission_sum_amount_received) }}đ
                                         </td>
                                         <td class=" text-center px-3 py-2 font-normal">
                                             {{ formatPrice(user.commission[0].commission_percentage)}} (%)
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
-                                            {{ formatPrice(user.commission_sum_commission_amount)}}
+                                            {{ formatPrice(user.commission_sum_commission_amount)}}đ
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
-                                            {{ formatPrice(user.commission_sum_commission_paid)}}
+                                            {{ formatPrice(user.commission_sum_commission_paid)}}đ
                                         </td>
                                         <td class=" text-left px-3 py-2 font-normal">
-                                            {{ formatPrice(user.commission_sum_commission_amount - user.commission_sum_commission_paid)}}
+                                            {{ formatPrice(user.commission_sum_commission_amount - user.commission_sum_commission_paid)}}đ
                                         </td>
                                         <td class=" text-center px-3 py-2 font-normal">
-                                            <a :href="route('commission.dashboard.detail', user?.id)" target="_blank"
+                                            <Link v-if="user.roles[0]?.name != 'leader-sale'" :href="route('commission.dashboard.detail', user?.id)" target="_blank"
                                                 v-tooltip.top="'Chi tiết gói'">
                                                 <BaseIcon :path="mdiOpenInNew"
                                                     class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700" size="20">
                                                 </BaseIcon>
-                                            </a>
+                                            </Link>
+                                            <Link v-else :href="route('commission.dashboard.detailleaderSale', user?.id)" target="_blank"
+                                                v-tooltip.top="'Chi tiết gói'">
+                                                <BaseIcon :path="mdiOpenInNew"
+                                                    class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700" size="20">
+                                                </BaseIcon>
+                                            </Link>
                                         </td>
                                     </tr>
 
@@ -271,6 +324,9 @@ const handleDate = (time) => {
                                     <th scope="col" class="text-center px-3 py-2  text-sm text-[#000000] font-normal">
 
                                     </th>
+                                    <th scope="col" class="text-center px-3 py-2  text-sm text-[#000000] font-normal">
+
+                                    </th>
                                     <th scope="col" class="text-center px-3 py-2 t text-sm text-[#000000] font-normal">
                                         {{ formatPrice(sumCommissionInfo.sum_count_order_notdecline) }}
                                     </th>
@@ -278,19 +334,19 @@ const handleDate = (time) => {
                                         {{ formatPrice(sumCommissionInfo.sum_count_order_decline) }}
                                     </th>
                                     <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        {{ formatPrice(sumCommissionInfo.sum_amount_received) }}
+                                        {{ formatPrice(sumCommissionInfo.sum_amount_received) }}đ
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
 
                                     </th>
                                     <th scope="col" class="px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        {{ formatPrice(sumCommissionInfo.sum_commission_amount) }}
+                                        {{ formatPrice(sumCommissionInfo.sum_commission_amount) }}đ
                                     </th>
                                     <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        {{ formatPrice(sumCommissionInfo.sum_commision_paid) }}
+                                        {{ formatPrice(sumCommissionInfo.sum_commision_paid) }}đ
                                     </th>
                                     <th scope="col" class=" px-3 py-2 text-left text-sm text-[#000000] font-normal">
-                                        {{ formatPrice(sumCommissionInfo.sum_commision_unpaid) }}
+                                        {{ formatPrice(sumCommissionInfo.sum_commision_unpaid) }}đ
                                     </th>
                                     <th scope="col"
                                         class="whitespace-nowrap px-3 py-2 text-left text-sm text-[#000000] font-normal">
@@ -310,12 +366,4 @@ const handleDate = (time) => {
         </div>
     </LayoutAuthenticated>
 </template>
-<style scoped>
-.table_grip tr th {
-    width: 120px !important;
-}
 
-.table_grip tr td {
-    width: 120px !important;
-}
-</style>
