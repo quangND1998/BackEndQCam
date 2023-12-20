@@ -254,7 +254,7 @@ const handleDate = (time) => {
                                             {{ formatPrice(user.commission_sum_commission_amount - user.commission_sum_commission_paid)}}đ
                                         </td>
                                         <td class=" text-center px-3 py-2 font-normal">
-                                            <Link v-if="user.roles[0]?.name == 'leader-sale'" :href="route('commission.dashboard.detail', user?.id)" target="_blank"
+                                            <Link v-if="user.roles[0]?.name != 'leader-sale'" :href="route('commission.dashboard.detail', user?.id)" target="_blank"
                                                 v-tooltip.top="'Chi tiết gói'">
                                                 <BaseIcon :path="mdiOpenInNew"
                                                     class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700" size="20">
