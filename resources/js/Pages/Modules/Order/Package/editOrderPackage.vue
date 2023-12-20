@@ -37,7 +37,6 @@ const swal = inject("$swal");
 const props = defineProps({
     order: Object,
     product_services: Array,
-    trees: Array,
     sales: Array,
     leaders: Array,
     telesale: Array,

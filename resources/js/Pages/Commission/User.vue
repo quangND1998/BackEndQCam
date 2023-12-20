@@ -122,7 +122,7 @@ const getSeries = computed(() => {
 
 const fillterDashboad = (time) => {
     filter.date = time;
-    router.get(route(`dashboard`),
+    router.get(route(`commission.dashboard.user`),
         { date: filter.date },
         {
             preserveState: false,
@@ -134,7 +134,7 @@ const fillterDashboad = (time) => {
 
 const fillterDashboadDay = (time) => {
     filter.day = time;
-    router.get(route(`dashboard`),
+    router.get(route(`commission.dashboard.user`),
         { day: filter.day },
         {
             preserveState: false,
@@ -180,7 +180,48 @@ const handleDate = (time) => {
                 </div>
             </div>
             <div class="mx-6 my-2 p-3 border border-gray-300 border_round bg-white overflow-auto">
+                <div class="my-2 items-center text-center flex ">
+                    <div
+                        class=" min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
+                        <div @click="fillterDashboad('year')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg   hover:bg-white "
+                            :class="$page.url.includes('year') ? ' bg-white text-blue-500 border-blue-500' : 'text-gray-500 bg-gray-100'">
+                            Năm
+                        </div>
+                        <div @click="fillterDashboad('beforMonth')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
+                            :class="$page.url.includes('beforMonth') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            Tháng trước
+                        </div>
+                        <div @click="fillterDashboad('month')"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
+                            :class="$page.url.includes('month') || (filter.date == 'month' && filter.day == null )  ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            Tháng này 
+                        </div>
+                        <div @click="fillterDashboadDay(7)"
+                            class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
+                            :class="$page.url.includes('day') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            7 ngày qua
+                        </div>
+                        <div class="flex items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white text-gray-500"
+                            :class="{ 'bg-white  text-blue-500': $page.url.includes('draf') }">
+                            Tùy chỉnh
+                            <div class="ml-2 relative">
+                                <VueDatePicker time-picker-inline v-model="filter.from" />
+                            </div>
+                            <span class="mx-1 text-gray-500">-</span>
+                            <div class="relative">
+                                <VueDatePicker time-picker-inline v-model="filter.to"  />
+                            </div>
+                        </div>
 
+                        <div  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white" @click="handleDate">Lọc</div>
+                        <div  @click="exportCSV()"  class="inline-flex justify-start items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded   dark:ring-blue-700 ring-blue-300  p-0 p-2 mr-2 my-2 bg-white">Xuất CSV</div>
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
                 <div class="w-full mt-2">
                     <div class="flex flex-col">
                         <div class=" overflow-y-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[75vh]">
