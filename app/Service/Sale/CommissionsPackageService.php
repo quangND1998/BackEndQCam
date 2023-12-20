@@ -24,13 +24,13 @@ class CommissionsPackageService
     return  User::withSum(
         ['commission' => function ($q) use ($filters) {
           if ($filters == 'week') {
-            $q->whereBetween('updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            $q->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
           } elseif ($filters == 'month') {
-            $q->whereBetween('updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            $q->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
           } elseif ($filters == 'year') {
-            $q->whereBetween('updated_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
+            $q->whereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]);
           } else {
-            $q->whereBetween('updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            $q->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
           }
         }],
         'commission_amount'

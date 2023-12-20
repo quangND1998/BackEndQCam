@@ -185,7 +185,7 @@ const exportCSV=()=>{
                     <p class="text-sm text-[#000000] mt-6">Doanh thu trong tuần</p>
                     <h3 class="text-[32px] text-[#70A234] font-bold py-1">{{ formatPrice(week_data_user) }} đ</h3>
                     <p class="text-sm text-[#000000]">Hoa hồng</p>
-                    <!-- <h5 class="text-[24px] text-[#FF0000] font-semibold">7000000 đ</h5> -->
+                    <h5 class="text-[24px] text-[#FF0000] font-semibold">{{ formatPrice(week_commission) }} đ</h5>
                 </div>
                 <div class="col-span-1   p-3 border border-gray-300 border_round bg-white items-center text-center">
                     <p class="text-sm text-[#000000]  mt-6">Doanh thu trong tháng</p>
@@ -197,7 +197,7 @@ const exportCSV=()=>{
                     <p class="text-sm text-[#000000]  mt-6">Doanh thu trong năm</p>
                     <h3 class="text-[32px] text-[#00AB55] font-bold py-1">{{ formatPrice(year_data_user) }} đ</h3>
                     <p class="text-sm text-[#000000]">Hoa hồng</p>
-                    <!-- <h5 class="text-[24px] text-[#FF0000] font-semibold">7000000 đ</h5> -->
+                    <h5 class="text-[24px] text-[#FF0000] font-semibold">{{ formatPrice(year_commission) }} đ</h5>
                 </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 gap-4 mx-6 my-2 ">
@@ -359,7 +359,7 @@ const exportCSV=()=>{
                             <div>
                                 <p class="text-md  ml-2">Doanh thu thực: </p>
                                 <p class="text-md text-[#2E67A9]">
-                                    {{ formatPrice(contract_infor.ref_order_packages_sum_price_percent) }}đ</p>
+                                    {{  formatPrice(year_data_user) }}đ</p>
                             </div>
                         </div>
                         <div class="flex text-center items-center px-2 py-1.5">
@@ -368,7 +368,7 @@ const exportCSV=()=>{
                             </svg>
                             <div>
                                 <p class="text-md  ml-2">Hoa hồng thực nhận: </p>
-                                <!-- <p class="text-md text-[#2E67A9]">300.000.000đ</p> -->
+                                <p class="text-md text-[#2E67A9]">{{ formatPrice(year_commission) }}đ</p>
                             </div>
                         </div>
                     </div>

@@ -133,9 +133,9 @@ class DashBoardController extends Controller
             $year_data_user = $this->packageOrderService->sumbyTimeTeam('year', $userIds);
 
 
-            $week_commissions = $this->commissionsPackageService->sumbyTimeTeam('week', $userIds);
-            $month_commissions = $this->commissionsPackageService->sumbyTimeTeam('month', $userIds);
-            $year_commissions = $this->commissionsPackageService->sumbyTimeTeam('year', $userIds);
+            $week_commission = $this->commissionsPackageService->sumbyTimeTeam('week', $userIds);
+            $month_commission = $this->commissionsPackageService->sumbyTimeTeam('month', $userIds);
+            $year_commission = $this->commissionsPackageService->sumbyTimeTeam('year', $userIds);
 
 
             $contract_infor = $this->packageOrderService->contractInforTeam($user);
@@ -181,9 +181,9 @@ class DashBoardController extends Controller
             'sumPricePercentOrder',
             'analysticData',
             'sumCommissionInfo',
-            'week_commissions',
-            'month_commissions',
-            'year_commissions'
+            'week_commission',
+            'month_commission',
+            'year_commission'
         ));
     }
 

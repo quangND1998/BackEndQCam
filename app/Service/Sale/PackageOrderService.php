@@ -419,7 +419,7 @@ class PackageOrderService
   {
     return  User::select('id', 'name')->whereHas('ref_order_packages')->withCount([
       'ref_order_packages', 'ref_order_packages AS contract_completed' => function ($query) {
-        $query->where('status', 'completed');
+        $query->where('status', 'complete');
       }, 'ref_order_packages AS contract_partiallyPaid' => function ($query) {
         $query->whereColumn('price_percent', '<', 'grand_total');
       },
