@@ -230,9 +230,12 @@ const changeStatus = (data, event) => {
                     <div class="my-2 w-1/2  pr-4">
                         <InputLabel for="name" value="Hoa hồng (%)" />
 
-                        <input type="number" v-model="form.commission" :min="0" :max="100"
+                        <input type="number" v-model="form.commission" :min="0" :max="100" step="0.01"
                             class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         <InputError class="mt-2" :message="form.errors.commission" />
+                        <!-- <InputNumber v-model="form.commission" :min="0" :max="100" class="w-full"  :minFractionDigits="1"
+                            inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <InputError class="mt-2" :message="form.errors.commission" /> -->
                     </div>
                     <div class="my-2 w-1/2  pr-4">
                         <InputLabel  for="name" value="Mức thanh toán nhận doanh thu (%)" />
@@ -244,14 +247,14 @@ const changeStatus = (data, event) => {
                     <div class="my-2 w-1/2  pr-4" v-if="form.type == 'ctv'">
                         <InputLabel for="name" value="Hoa hồng từ sale (%)" />
 
-                        <input type="number" v-model="form.discount_form_sale" :min="0" :max="100"
+                        <input type="number" v-model="form.discount_form_sale" :min="0" :max="100" step="0.01"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         <InputError class="mt-2" :message="form.errors.discount_form_sale" />
                     </div>
                     <div class="my-2 w-1/2  pr-4" v-if="form.type == 'ctv'">
                         <InputLabel for="name" value="Hoa hồng từ leader (%)" />
 
-                        <input type="number" v-model="form.discount_form_manager_sale" :min="0" :max="100"
+                        <input type="number" v-model="form.discount_form_manager_sale" :min="0" :max="100" step="0.01"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         <InputError class="mt-2" :message="form.errors.discount_form_manager_sale" />
                     </div>
