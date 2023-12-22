@@ -16,6 +16,7 @@ import {
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
+import InputNumber from 'primevue/inputnumber';
 import TextInput from "@/Components/TextInput.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 
@@ -330,49 +331,44 @@ const deleteOrder = (order) => {
     <LayoutAuthenticated>
 
         <!-- Modal -->
-        <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật"
-
-            :hasSave="form?.amount_unpaid > 0 ? true : false" has-cancel @confirm="save"
+        <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật" has-cancel @confirm="save"
             :title="`Thanh toán cho ${form.order?.order_number}`">
             <div class="p-6 flex-auto">
                 <div v-if="form?.amount_unpaid > 0" class="flex flex-wrap -mx-3 mb-6">
-                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                    <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                         <InputLabel for="amount_received" value="Số tiền" />
                         <MazInputPrice v-model="form.amount_received" currency="VND" locale="vi-VN" :min="0"
                             :max="(form?.order?.grand_total - form?.order?.price_percent)"
                             @formatted="formattedPrice = $event" />
+
                         <InputError class="mt-2" :message="form.errors.amount_received" />
                     </div>
-                    <div class="w-full md:w-1/2 px-3">
+                    <div class="w-full md:w-1/3 px-3">
                         <InputLabel for="payment_method" value="Hình thức thanh toán" />
                         <select id="payment" v-model="form.payment_method"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="bg-gray-50 border_round border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option selected value="cash">Tiền mặt</option>
                             <option value="banking">Chuyển khoản</option>
                             <option value="payoo">Payoo</option>
                         </select>
                     </div>
-                    <div class="w-full md:w-1/2 px-3">
+                    <div class="w-full md:w-1/3 px-3">
                         <InputLabel for="owner" value="Ngày thanh toán" />
                         <div date-rangepicker class="flex items-center">
-                            <div class="relative w-full">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <div class="relative w-full border_round">
+                                <div class="absolute border_round inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 </div>
-                                <VueDatePicker v-model="form.payment_date" placeholder="date" />
+                                <VueDatePicker class="border_round" v-model="form.payment_date" placeholder="date" />
                             </div>
                         </div>
                     </div>
-                    <div class="w-full md:w-1/2 px-3">
-                        <InputLabel for="note" value="Ghi chú" />
-                        <TextInput id="note" v-model="form.note" type="text" class="mt-1 block w-full"
-                            :class="form.errors.note ? 'border-red-500' : ''" autocomplete="name" />
-                        <InputError class="mt-2" :message="form.errors.note" />
-                    </div>
-                    <div class="w-full px-3">
+                    <!-- <div class="w-full px-3">
                         <UploadImage :max_files="4" v-model="form.images" :multiple="true" :label="`Chứng từ liên quan`" />
-                    </div>
+                    </div> -->
                 </div>
-
+                <div class="flex justify-end" v-if="form?.amount_unpaid > 0">
+                    <BaseButton label="Thêm và cập nhật"  color="confirm" @click="save" />
+                </div>
                 <p class="my-2 mt-5 font-semibold">Lịch sử thanh toán</p>
                 <table class="table table-striped w-full text-sm text-left text-gray-500 bg-white rounded-lg">
                     <thead class="text-xs justify-between text-gray-700 uppercase">

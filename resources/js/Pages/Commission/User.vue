@@ -225,12 +225,12 @@ const handleDate = (time) => {
                         class=" min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
                         <div @click="fillterDashboad('month')"
                             class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
-                            :class="$page.url.includes('month') || (filter.date == 'month' && filter.day == null )  ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            :class="filter.date == 'month' && filter.day == null ? ' bg-white text-blue-500' : 'text-gray-500'">
                             Tháng này
                         </div>
                         <div @click="fillterDashboadDay(7)"
                             class="flex w-[160px] items-center justify-center text-center min-[320px]:my-2 text-sm m-1 border rounded-lg  bg-gray-100 hover:bg-white "
-                            :class="$page.url.includes('day') ? ' bg-white text-blue-500' : 'text-gray-500'">
+                            :class="filter.date == 'month' && filter.day == null  ? ' bg-white text-blue-500' : 'text-gray-500'">
                             7 ngày qua
                         </div>
                         <div @click="fillterDashboad('beforMonth')"
