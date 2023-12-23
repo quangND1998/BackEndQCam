@@ -11,7 +11,7 @@ import PackageBar from "@/Pages/Modules/Order/Package/PackageBar.vue";
 import ModalDecline from "./ModalDecline.vue";
 import ModelRefund from "../ModelRefund.vue";
 import {
-    mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll,mdiTrashCanOutline
+    mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll,mdiTrashCanOutline, mdiCheck
 ,mdiOpenInNew} from '@mdi/js'
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -245,6 +245,32 @@ const openAcceptPayment = (id) => {
             }
         });
 }
+const openAcceptDocument = (id) => {
+    let query = {
+        status: "complete"
+    };
+    swal
+        .fire({
+            title: "Bạn có muốn?",
+            text: `Duyệt tài liệu thanh toán này không`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Có",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                form.post(route("admin.orders.package.setPaymentCompleteDocument", [form.order?.id, id]), { preserveState: false }, {
+                    onSuccess: () => {
+                        swal.fire("Thành Công!", "Đã thêm hợp đồng với khách hàng.", "success");
+                    },
+                });
+
+            }
+        });
+}
+
 
 const save = () => {
     console.log(form);
@@ -332,7 +358,7 @@ const deleteOrder = (order) => {
 
         <!-- Modal -->
         <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật" has-cancel @confirm="save"
-            :title="`Thanh toán cho ${form.order?.order_number}`">
+            :title="`Thanh toán cho ${form.order?.idPackage} (${form.order?.order_number})`">
             <div class="p-6 flex-auto">
                 <div v-if="form?.amount_unpaid > 0" class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -367,7 +393,7 @@ const deleteOrder = (order) => {
                     </div> -->
                 </div>
                 <div class="flex justify-end" v-if="form?.amount_unpaid > 0">
-                    <BaseButton label="Thêm và cập nhật"  color="confirm" @click="save" />
+                    <BaseButton label="Thêm và cập nhật"  class="ring-blue-500" @click="save" />
                 </div>
                 <p class="my-2 mt-5 font-semibold">Lịch sử thanh toán</p>
                 <table class="table table-striped w-full text-sm text-left text-gray-500 bg-white rounded-lg">
@@ -379,7 +405,9 @@ const deleteOrder = (order) => {
                             <th>Số tiền</th>
                             <th>Trạng thái duyệt</th>
                             <th>Proof</th>
-                            <th>Người duyệt</th>
+                            <th class="text-center">Duyệt TT</th>
+                            <th class="text-center">Duyệt HS</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -399,18 +427,45 @@ const deleteOrder = (order) => {
                                     {{ payment?.status != 'complete' ? 'Chờ duyệt' : 'Đã duyệt' }}</p>
                             </td>
                             <td class="border-0 flex m-0 p-0">
-                                <UploadImageAuto :idPayment="payment?.id" :max_files="1" v-model="form.images" :multiple="false" :old_images="payment?.order_package_payment" class="justify-start" />
+                                <UploadImageAuto :hasDelete="payment.state_document == 1 ? false : true"  :idPayment="payment?.id" :max_files="2" v-model="form.images" :multiple="false" :old_images="payment?.order_package_payment" class="justify-start" />
                             </td>
-                            <td class="border-0">
-                                {{ payment.status == 'complete' ? payment.user?.name : null }}
-                                <button
+                            <td class="border-0 text-center">
+                                <div v-if="payment.status == 'complete'" class="flex wrap items-center flex-col">
+                                    <svg viewBox="0 0 24 24" :width="28" :height="28" fill="#00AB55" class="inline-block">
+                                        <path :d="mdiCheck " />
+                                    </svg>
+                                   ({{payment.user?.name }})
+                                </div>
+
+                                <div v-else>
+                                    <button
                                     v-if="payment.status != 'complete' && hasAnyPermission(['create-contract-complete'])"
                                     class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary"
                                     @click="openAcceptPayment(payment.id)">Duyệt </button>
-                                <button v-else-if="payment.status != 'complete'"
-                                    class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg" disable>Duyệt
-                                </button>
+                                    <button v-else-if="payment.status != 'complete'"
+                                        class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg" disable>Duyệt
+                                    </button>
+                                </div>
+
                             </td>
+                            <td class="border-0 text-left ">
+                                <div v-if="payment.state_document == 1" class="flex wrap flex-col">
+                                    <svg viewBox="0 0 24 24" :width="28" :height="28" fill="#00AB55" class="inline-block">
+                                        <path :d="mdiCheck " />
+                                    </svg>
+                                    ({{  payment.user?.name }})
+                               </div>
+                               <div v-else>
+                                    <button
+                                        v-if="payment.state_document == 0 && hasAnyPermission(['create-contract-complete'])"
+                                        class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary"
+                                        @click="openAcceptDocument(payment.id)">Duyệt </button>
+                                    <button v-else-if="payment.state_document == 1 "
+                                        class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg" disable>Duyệt
+                                    </button>
+                                </div>
+                            </td>
+
                             <td class="border-0">
                                 <BaseButton v-if="payment.status != 'complete'" color="gray"
                                     class="border-0 text=gray=300 hover:text-black" :icon="mdiTrashCanOutline" small
@@ -419,6 +474,34 @@ const deleteOrder = (order) => {
                         </tr>
 
                     </tbody>
+                    <tfoot>
+                            <tr class="justify-between border-0 bg-gray-100 info">
+                                <td class="border-0 font-bold">
+                                    Tổng
+                                </td>
+                                <td class="border-0 font-bold">
+                                   {{ form.order?.grand_total }}
+                                </td>
+                                <td class="border-0 font-bold text-[#00AB55]">
+                                    Đã thanh toán
+                                </td>
+                                <td class="border-0 font-bold text-[#00AB55]">
+                                    {{ form.order?.price_percent }}
+                                </td>
+                                <td class="border-0 font-bold text-[#F26322]">
+                                    Còn lại
+                                </td>
+                                <td class="border-0 font-bold text-[#F26322]">
+                                    {{ form.order?.grand_total - form.order?.price_percent }}
+                                </td>
+                                <td class="border-0 font-bold">
+                                </td>
+                                <td class="border-0 font-bold">
+                                </td>
+                                <td class="border-0 font-bold">
+                                </td>
+                            </tr>
+                        </tfoot>
                 </table>
             </div>
         </CardBoxModal>
@@ -678,9 +761,9 @@ const deleteOrder = (order) => {
 
 }
 
-td {
+ td {
     font-size: 12px;
-    color: rgb(107 114 128 / var(--tw-text-opacity));
+    /* color: rgb(107 114 128 / var(--tw-text-opacity)); */
     font-family: sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 

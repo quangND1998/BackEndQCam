@@ -20,7 +20,8 @@ class HistoryPayment extends Model implements HasMedia
      */
     protected $table = 'history_payments';
     protected $fillable = [
-        "id", "order_package_id" ,"payment_method", "amount_received", "payment_date", "status" ,"note", 'user_id','created_at', 'updated_at'
+        "id", "order_package_id" ,"payment_method", "amount_received", "payment_date",
+         "status" ,"note","state_document", 'user_id','user_reviewer_id','created_at', 'updated_at'
     ];
 
     protected static function newFactory(): HistoryPaymentFactory
@@ -38,7 +39,9 @@ class HistoryPayment extends Model implements HasMedia
     public function user(){
         return $this->belongsTo(User::class,'user_id');
     }
-
+    public function user_reviewer(){
+        return $this->belongsTo(User::class,'user_reviewer_id');
+    }
     public function scopeFilterTime($query, array $filters)
     {
 

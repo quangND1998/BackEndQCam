@@ -58,4 +58,11 @@ class HistoryPaymentController extends Controller
 
         return redirect()->back()->with('success', "duyệt  thành công");
     }
+    public function setPaymentCompleteDocument($orderpackage,$id){
+        $history = HistoryPayment::find($id);
+        if($history){
+            $history->state_document = 1;
+            $history->save();
+        }
+    }
 }
