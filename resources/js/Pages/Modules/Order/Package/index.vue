@@ -726,8 +726,8 @@ const deleteOrder = (order) => {
                                             order?.customer?.name }}</td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="btn_label "
-                                                :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
-                                                {{ order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' :
+                                                :class="order?.status == 'decline' ? 'huy' : order?.price_percent == 0 ? 'nhap' : order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
+                                                {{ order?.status == 'decline' ? 'Đã hủy' :  order?.price_percent == 0 ? 'Nháp' : order?.price_percent < order?.grand_total ? 'Thanh toán 1 phần' :
                                                     order?.price_percent == 0 ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
