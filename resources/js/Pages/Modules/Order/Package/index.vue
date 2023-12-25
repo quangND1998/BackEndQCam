@@ -11,8 +11,9 @@ import PackageBar from "@/Pages/Modules/Order/Package/PackageBar.vue";
 import ModalDecline from "./ModalDecline.vue";
 import ModelRefund from "../ModelRefund.vue";
 import {
-    mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll,mdiTrashCanOutline, mdiCheck
-,mdiOpenInNew} from '@mdi/js'
+    mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll, mdiTrashCanOutline, mdiCheck
+    , mdiOpenInNew, mdiRefresh, mdiBellRingOutline
+} from '@mdi/js'
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -52,7 +53,8 @@ const filter = reactive({
     payment_method: null,
     type: null,
     per_page: 10,
-    status: props.status
+    status: props.status,
+    document_status: null
 
 })
 const customer = ref()
@@ -78,7 +80,14 @@ const state = reactive({
     disabled: false
 })
 initFlowbite();
-
+const totalOrder = (status) => {
+    var findStatus = props.statusGroup.find(e => e.status == status);
+    if (findStatus) {
+        return findStatus.total;
+    } else {
+        return 0;
+    }
+}
 const searchCustomer = () => {
     router.get(route(`admin.orders.package.${props.status}`),
         { customer: filter.customer },
@@ -91,7 +100,7 @@ const searchCustomer = () => {
 
 const search = () => {
     router.get(route(`admin.orders.package.${props.status}`),
-    filter,
+        filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -382,7 +391,8 @@ const deleteOrder = (order) => {
                         <InputLabel for="owner" value="Ngày thanh toán" />
                         <div date-rangepicker class="flex items-center">
                             <div class="relative w-full border_round">
-                                <div class="absolute border_round inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <div
+                                    class="absolute border_round inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 </div>
                                 <VueDatePicker class="border_round" v-model="form.payment_date" placeholder="date" />
                             </div>
@@ -393,7 +403,7 @@ const deleteOrder = (order) => {
                     </div> -->
                 </div>
                 <div class="flex justify-end" v-if="form?.amount_unpaid > 0">
-                    <BaseButton label="Thêm và cập nhật"  class="ring-blue-500" @click="save" />
+                    <BaseButton label="Thêm và cập nhật" color="blue" class="hover:ring-blue-500" @click="save" />
                 </div>
                 <p class="my-2 mt-5 font-semibold">Lịch sử thanh toán</p>
                 <table class="table table-striped w-full text-sm text-left text-gray-500 bg-white rounded-lg">
@@ -403,7 +413,7 @@ const deleteOrder = (order) => {
                             <th>Loại</th>
                             <th>Ngày</th>
                             <th>Số tiền</th>
-                            <th>Trạng thái duyệt</th>
+                            <!-- <th>Trạng thái duyệt</th> -->
                             <th>Proof</th>
                             <th class="text-center">Duyệt TT</th>
                             <th class="text-center">Duyệt HS</th>
@@ -422,28 +432,31 @@ const deleteOrder = (order) => {
                             </td>
                             <td class="border-0">{{ payment?.payment_date }}</td>
                             <td class="border-0">{{ formatPrice(payment?.amount_received) }}₫</td>
-                            <td class="border-0">
+                            <!-- <td class="border-0">
                                 <p class="btn_label" :class="payment?.status != 'complete' ? 'partiallyPaid' : 'paid'">
                                     {{ payment?.status != 'complete' ? 'Chờ duyệt' : 'Đã duyệt' }}</p>
-                            </td>
+                            </td> -->
                             <td class="border-0 flex m-0 p-0">
-                                <UploadImageAuto :hasDelete="payment.state_document == 1 ? false : true"  :idPayment="payment?.id" :max_files="2" v-model="form.images" :multiple="false" :old_images="payment?.order_package_payment" class="justify-start" />
+                                <UploadImageAuto :hasDelete="payment.state_document == 1 ? false : true"
+                                    :idPayment="payment?.id" :max_files="1" v-model="form.images" :multiple="false"
+                                    :old_images="payment?.order_package_payment" class="justify-start" />
                             </td>
                             <td class="border-0 text-center">
                                 <div v-if="payment.status == 'complete'" class="flex wrap items-center flex-col">
                                     <svg viewBox="0 0 24 24" :width="28" :height="28" fill="#00AB55" class="inline-block">
-                                        <path :d="mdiCheck " />
+                                        <path :d="mdiCheck" />
                                     </svg>
-                                   ({{payment.user?.name }})
+                                    ({{ payment.user?.name }})
                                 </div>
 
                                 <div v-else>
                                     <button
-                                    v-if="payment.status != 'complete' && hasAnyPermission(['create-contract-complete'])"
-                                    class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary"
-                                    @click="openAcceptPayment(payment.id)">Duyệt </button>
+                                        v-if="payment.status != 'complete' && hasAnyPermission(['create-contract-complete'])"
+                                        class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary"
+                                        @click="openAcceptPayment(payment.id)">Duyệt </button>
                                     <button v-else-if="payment.status != 'complete'"
-                                        class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg" disable>Duyệt
+                                        class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg"
+                                        disable>Duyệt
                                     </button>
                                 </div>
 
@@ -451,17 +464,18 @@ const deleteOrder = (order) => {
                             <td class="border-0 text-left ">
                                 <div v-if="payment.state_document == 1" class="flex wrap flex-col">
                                     <svg viewBox="0 0 24 24" :width="28" :height="28" fill="#00AB55" class="inline-block">
-                                        <path :d="mdiCheck " />
+                                        <path :d="mdiCheck" />
                                     </svg>
-                                    ({{  payment.user?.name }})
-                               </div>
-                               <div v-else>
+                                    ({{ payment.user?.name }})
+                                </div>
+                                <div v-else>
                                     <button
-                                        v-if="payment.state_document == 0 && hasAnyPermission(['create-contract-complete'])"
+                                        v-if="payment.state_document == 0 && payment?.order_package_payment.length > 0 && hasAnyPermission(['create-contract-complete'])"
                                         class="px-3 py-2 ml-3 text-white border rounded-lg bg-primary"
                                         @click="openAcceptDocument(payment.id)">Duyệt </button>
-                                    <button v-else-if="payment.state_document == 1 "
-                                        class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg" disable>Duyệt
+                                    <button v-else-if="payment.state_document == 1 || payment?.order_package_payment.length == 0"
+                                        class="px-3 py-2 ml-3 border-gray-black text-gray-400 border rounded-lg"
+                                        disable>Duyệt
                                     </button>
                                 </div>
                             </td>
@@ -475,33 +489,33 @@ const deleteOrder = (order) => {
 
                     </tbody>
                     <tfoot>
-                            <tr class="justify-between border-0 bg-gray-100 info">
-                                <td class="border-0 font-bold">
-                                    Tổng
-                                </td>
-                                <td class="border-0 font-bold">
-                                   {{ form.order?.grand_total }}
-                                </td>
-                                <td class="border-0 font-bold text-[#00AB55]">
-                                    Đã thanh toán
-                                </td>
-                                <td class="border-0 font-bold text-[#00AB55]">
-                                    {{ form.order?.price_percent }}
-                                </td>
-                                <td class="border-0 font-bold text-[#F26322]">
-                                    Còn lại
-                                </td>
-                                <td class="border-0 font-bold text-[#F26322]">
-                                    {{ form.order?.grand_total - form.order?.price_percent }}
-                                </td>
-                                <td class="border-0 font-bold">
-                                </td>
-                                <td class="border-0 font-bold">
-                                </td>
-                                <td class="border-0 font-bold">
-                                </td>
-                            </tr>
-                        </tfoot>
+                        <tr class="justify-between border-0 bg-gray-100 info">
+                            <td class="border-0 font-bold">
+                                Tổng
+                            </td>
+                            <td class="border-0 font-bold">
+                                {{ form.order?.grand_total }}
+                            </td>
+                            <td class="border-0 font-bold text-[#00AB55]">
+                                Đã thanh toán
+                            </td>
+                            <td class="border-0 font-bold text-[#00AB55]">
+                                {{ form.order?.price_percent }}
+                            </td>
+                            <td class="border-0 font-bold text-[#F26322]">
+                                Còn lại
+                            </td>
+                            <td class="border-0 font-bold text-[#F26322]">
+                                {{ form.order?.grand_total - form.order?.price_percent }}
+                            </td>
+                            <td class="border-0 font-bold">
+                            </td>
+                            <td class="border-0 font-bold">
+                            </td>
+                            <td class="border-0 font-bold">
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </CardBoxModal>
@@ -527,18 +541,32 @@ const deleteOrder = (order) => {
                 <ModelRefund></ModelRefund>
                 <div class="w-full flex justify-between overflow-auto">
                     <div class="mr-4 flex-col flex">
-                            <div class=" text-gray-500">
-                                <label for>Loại hình</label>
-                            </div>
-                            <div class="w-[160px]">
-                                <select id="countries" v-model="filter.type" @change="fillterType"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
-                                    <option :value="null" selected>Tất cả</option>
-                                    <option value="new">Lần đầu</option>
-                                    <option value="upgrade">Gia hạn</option>
-                                </select>
-                            </div>
+                        <div class=" text-gray-500">
+                            <label for>Loại hình</label>
                         </div>
+                        <div class="w-[160px]">
+                            <select id="countries" v-model="filter.type" @change="fillterType"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                <option :value="null" selected>Tất cả</option>
+                                <option value="new">Lần đầu</option>
+                                <option value="upgrade">Gia hạn</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mr-4 flex-col flex">
+                        <div class=" text-gray-500">
+                            <label for>Hồ sơ</label>
+                        </div>
+                        <div class="w-[160px]">
+                            <select id="document" v-model="filter.document_status" @change="fillterType"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                <option :value="null" selected>Tất cả</option>
+                                <option value="OK">OK</option>
+                                <option value="BS">BS</option>
+                                <option value="Check">Check</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="flex mr-2">
 
                         <div class="mr-4">
@@ -591,7 +619,7 @@ const deleteOrder = (order) => {
                                 <label for>Phương thức TT</label>
                             </div>
                             <div class="w-[160px]">
-                                <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
+                                <select id="payment" v-model="filter.payment_method" @change="fillterPaymentMethod"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null" selected>Tất cả</option>
                                     <option value="cash">Tiền mặt</option>
@@ -605,7 +633,7 @@ const deleteOrder = (order) => {
                                 <label for>Trạng thái TT</label>
                             </div>
                             <div class="w-[160px]">
-                                <select id="countries" v-model="filter.payment_status" @change="Fillter()"
+                                <select id="State_payment" v-model="filter.payment_status" @change="Fillter()"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tình trạng</option>
                                     <option :value="1">Đã thanh toán</option>
@@ -616,22 +644,37 @@ const deleteOrder = (order) => {
                     </div>
 
                 </div>
+                <div class="w-full my-3">
+                    <div class="w-full flex items-center">
+                        <BaseIcon  :path="mdiBellRingOutline " class=" text-[#ff0000] rounded-lg mr-2 " size="20"></BaseIcon>
+                        <p class="text-[#ff0000]">Có {{ totalOrder('BS') }} hợp đồng chờ bổ sung HS thanh toán</p>
+                    </div>
+                    <div class="w-full flex items-center">
+                        <BaseIcon  :path="mdiBellRingOutline " class=" text-[#ff0000] rounded-lg mr-2 " size="20"></BaseIcon>
+                        <p class="text-[#ff0000]">Có {{ totalOrder('Check') }} hợp đồng chờ kiểm duyệt HS thanh toán</p>
+                    </div>
+
+                </div>
                 <div class="w-full mt-2 ">
                     <div class="flex flex-col">
                         <div class="overflow-x-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[60vh]">
                             <table class="table_stripe min-w-full text-center text-sm font-light overflow-x-auto">
                                 <thead class="font-medium">
                                     <tr>
-                                        <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">#</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã HĐ</th>
                                         <th scope="col" class="px-3 py-2 text-left">Ngày lập phiếu</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Mã phiếu</th>
                                         <th scope="col" class="px-3 py-2 text-left">Sản phẩm</th>
                                         <th scope="col" class="px-3 py-2 text-left">Ngày áp dụng (Của gói)</th>
                                         <th scope="col" class="px-3 py-2 text-left">Số tiền</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Loại</th>
+                                        <th scope="col" class="px-3 py-2 text-left">TT</th>
+                                        <th scope="col" class="px-3 py-2 text-left">CL</th>
+                                        <!-- <th scope="col" class="px-3 py-2 text-left">Loại</th> -->
+                                        <th scope="col" class="px-3 py-2 text-left">SĐT</th>
                                         <th scope="col" class="px-3 py-2 text-left">Khách hàng</th>
                                         <th scope="col" class="px-3 py-2 text-left">Trạng thái</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT duyệt</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Hồ sơ</th>
                                         <th scope="col" class="px-3 py-2 text-left">TT gói</th>
                                         <th scope="col" class="px-3 py-2 text-left">Người tạo</th>
                                         <th scope="col" class="px-3 py-2 text-left">NV Tư vấn (Ref)</th>
@@ -640,31 +683,47 @@ const deleteOrder = (order) => {
                                         <th scope="col" class="px-3 py-2 text-left">Lý do</th>
                                         <th scope="col" class="px-3 py-2 text-left">Người duyệt cuối</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tài liệu</th>
+
+                                        <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(order, index) in orders?.data" :key="index">
-                                        <td   class="whitespace-nowrap text-left px-3 py-2 font-medium">
-                                            <a class="flex items-center text-blue-600 text-[12px]">
-                                                {{ order?.order_number }}
-                                            </a>
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p>{{formatTimeDayMonthyear(order?.created_at) }}</p>
-                                            </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.idPackage }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.product_service?.name }}
-                                        </td>
-
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.time_approve }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ formatPrice(order?.grand_total)
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ index + 1 }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.idPackage
                                         }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 flex items-center text-gray-500">
+                                            <p>{{ formatTimeDayMonthyear(order?.created_at) }}
+                                            </p>
+                                            <BaseIcon v-if="order.type == 'upgrade'" :path="mdiRefresh"
+                                                    class=" text-[#F26322] rounded-lg mr-2 "
+                                                    v-tooltip.top="'Hợp đồng gia hạn'" size="20"></BaseIcon>
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                            order?.product_service?.name }}
                                         </td>
 
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.customer?.name }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                            order?.time_approve }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                            formatPrice(order?.grand_total)
+                                        }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                            formatPrice(order?.price_percent)
+                                        }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                            formatPrice(order?.grand_total - order?.price_percent)
+                                        }}</td>
+                                        <!-- <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <p>{{ order?.type == "new" || 0 ? "tạo mới" : order?.type }}</p>
+                                        </td> -->
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ hasAnyPermission(['super-admin']) ? order?.customer?.phone_number :
+                                                hidePhoneNumber(order?.customer?.phone_number) }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                            order?.customer?.name }}</td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="btn_label "
                                                 :class="order?.price_percent < order?.grand_total ? 'partiallyPaid' : order?.price_percent == 0 ? 'unpaid' : 'paid'">
@@ -672,10 +731,15 @@ const deleteOrder = (order) => {
                                                     order?.price_percent == 0 ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p class="btn_label " :class="order.payment_check ? 'paid' : 'partiallyPaid'">
-                                                {{ order.payment_check ? 'đã duyệt' : 'chờ duyệt' }}</p>
+                                            <p class="btn_label " :class="(order?.price_percent == order?.grand_total) && order.payment_check ? 'paid' : 'partiallyPaid'">
+                                                {{ (order?.price_percent == order?.grand_total ) && order.payment_check ? 'đã duyệt' : (order?.price_percent < order?.grand_total && order.payment_check) ? ' duyệt 1 phần ' :  'chờ duyệt' }}</p>
                                         </td>
-
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <p class="btn_label " :class="order.document_check && order.document_add ? 'paid' :  order.document_add && order.document_check == false? 'unpaid' : 'partiallyPaid'">
+                                                <!-- {{ order.document_add }}, {{ order.document_check }} -->
+                                                {{ order.document_check && order.document_add ? 'OK' :  order.document_add && order.document_check == false ? 'Check' : 'BS'}}
+                                                </p>
+                                        </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p
                                                 :class="order.product_service_owner?.state == 'active' ? 'text-green' : 'text-red'">
@@ -694,19 +758,26 @@ const deleteOrder = (order) => {
                                         <!-- <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order.resources?.name }} ({{ order.customer_resources }})
                                         </td> -->
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500" >
-                                            <p  class="text-[12px] text-left">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <p class="text-[12px] text-left">
                                                 {{ order.reason }}
                                             </p>
                                         </td>
-                                         <td  class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order.package_reviewer?.name }}
                                         </td>
-                                        <td  class="whitespace-nowrap text-left px-3 py-2">
-                                            <a v-if="order?.history_extend?.contract?.lastcontract?.images.length > 0 " :href="order?.history_extend?.contract?.lastcontract?.images[0].original_url" target="_blank">
-                                            <BaseIcon :path="mdiOpenInNew"
-                                                class=" text-blue-400 rounded-lg mr-2 hover:text-blue-700"
-                                                v-tooltip.top="'Chi tiết hợp đồng'" size="20"></BaseIcon>
+                                        <td class="whitespace-nowrap text-left px-3 py-2">
+                                            <a v-if="order?.history_extend?.contract?.lastcontract?.images.length > 0"
+                                                :href="order?.history_extend?.contract?.lastcontract?.images[0].original_url"
+                                                target="_blank">
+                                                <BaseIcon :path="mdiOpenInNew"
+                                                    class=" text-blue-400 rounded-lg mr-2 hover:text-blue-700"
+                                                    v-tooltip.top="'Chi tiết hợp đồng'" size="20"></BaseIcon>
+                                            </a>
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 font-medium">
+                                            <a class="flex items-center text-blue-600 text-[12px]">
+                                                {{ order?.order_number }}
                                             </a>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 action">
@@ -721,12 +792,12 @@ const deleteOrder = (order) => {
                                                     class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700" size="20">
                                                 </BaseIcon>
                                             </a>
-                                            <Link v-if="order.status == 'pending'" :href="`/admin/orders/package/edit/${order.id}`"
-                                              >
-                                                <BaseIcon :path="mdiSquareEditOutline"
-                                                    class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700"
-                                                    v-tooltip.top="'Chỉnh sửa'" size="20">
-                                                </BaseIcon>
+                                            <Link v-if="order.status == 'pending'"
+                                                :href="`/admin/orders/package/edit/${order.id}`">
+                                            <BaseIcon :path="mdiSquareEditOutline"
+                                                class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700"
+                                                v-tooltip.top="'Chỉnh sửa'" size="20">
+                                            </BaseIcon>
                                             </Link>
                                             <BaseIcon :path="mdiDeleteOutline"
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
@@ -761,7 +832,7 @@ const deleteOrder = (order) => {
 
 }
 
- td {
+td {
     font-size: 12px;
     /* color: rgb(107 114 128 / var(--tw-text-opacity)); */
     font-family: sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -785,7 +856,6 @@ const deleteOrder = (order) => {
     top: 0;
     z-index: 9;
     background: #fff;
-}
-</style>
+}</style>
 
 

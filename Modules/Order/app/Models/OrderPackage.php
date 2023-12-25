@@ -29,9 +29,9 @@ class OrderPackage extends Model implements HasMedia
         'discount_deal',
         'type',
         'sale_id', 'ref_id', 'to_id', 'customer_resources', 'customer_resources_id', 'package_reviewer',
-        'wards',  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent", "time_reservations", "time_expried"
+        'wards',"state_document",  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent", "time_reservations", "time_expried"
     ];
-    protected $appends = ['payment_check', 'exist_accept'];
+    protected $appends = ['payment_check', 'exist_accept', 'document_check', 'document_add'];
 
     public function gettimeExpriedAttribute($value)
     {
@@ -91,7 +91,33 @@ class OrderPackage extends Model implements HasMedia
 
             $query->where('status', $filters['status']);
         }
+        if (isset($filters['document_status'])) {
+            $query->where('state_document', $filters['document_status']);
+        }
     }
+    // check tất cả các hồ sơ đã duyệt
+    public function getDocumentCheckAttribute()
+    {
+        if (count($this->historyPayment) > 0) {
+            $allHistory = $this->historyPayment->every(function ($history) {
+                return $history->state_document == 1;
+            });
+            return $allHistory;
+        }
+        return false;
+    }
+    // check tất cả các thanh toán đã được thêm hồ sơ
+    public function getDocumentAddAttribute()
+    {
+        if (count($this->historyPayment) > 0) {
+            $allHistory = $this->historyPayment->every(function ($history) {
+                return count($history->order_package_payment) > 0;
+            });
+            return $allHistory;
+        }
+        return false;
+    }
+
     public function order_package_images()
     {
         return $this->media()->where('collection_name', 'order_package_images');
@@ -99,6 +125,10 @@ class OrderPackage extends Model implements HasMedia
     public function historyPayment()
     {
         return $this->hasMany(HistoryPayment::class, 'order_package_id');
+    }
+    public function complete_historyPayment()
+    {
+        return $this->historyPayment()->where('status', 'complete');
     }
     public function totalPayment()
     {
@@ -110,14 +140,12 @@ class OrderPackage extends Model implements HasMedia
 
         if ($user->hasPermissionTo('super-admin') || $user->hasRole('Kế toán')) {
             $query->get();
-        }
-         else {
+        } else {
             if ($user->hasRole('leader-sale')) {
                 $query->whereIn('sale_id', $user->salers->pluck('id'))
-                ->orWhereIn('ref_id',$user->salers->pluck('id'));
-            }
-             else {
-                $query->where('sale_id', $user->id)->orwhere('ref_id',$user->id);
+                    ->orWhereIn('ref_id', $user->salers->pluck('id'));
+            } else {
+                $query->where('sale_id', $user->id)->orwhere('ref_id', $user->id);
             }
         }
     }
@@ -205,12 +233,13 @@ class OrderPackage extends Model implements HasMedia
             $query->whereBetween('created_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
         }
         if (isset($filters['from']) && isset($filters['to'])) {
-            $to= Carbon::parse($filters['to'])->format('Y-m-d H:i:s');
-            $from= Carbon::parse($filters['from'])->format('Y-m-d H:i:s');
-            $query->whereBetween('created_at', [ Carbon::createFromFormat('Y-m-d H:i:s', $from, 'UTC')->setTimezone('+7'), Carbon::createFromFormat('Y-m-d H:i:s', $to, 'UTC')->setTimezone('+7')]);
+            $to = Carbon::parse($filters['to'])->format('Y-m-d H:i:s');
+            $from = Carbon::parse($filters['from'])->format('Y-m-d H:i:s');
+            $query->whereBetween('created_at', [Carbon::createFromFormat('Y-m-d H:i:s', $from, 'UTC')->setTimezone('+7'), Carbon::createFromFormat('Y-m-d H:i:s', $to, 'UTC')->setTimezone('+7')]);
         }
     }
-    public function commissions_packages(){
+    public function commissions_packages()
+    {
         return $this->hasMany(commissionsPackage::class, 'order_package_id');
     }
 }
