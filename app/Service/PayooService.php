@@ -37,7 +37,7 @@ class PayooService
 
         if ($order) {
             $payment = Payment::updateOrCreate([
-                'orderNo' => $response['OrderNo'],
+                'OrderNo' => $response['OrderNo'],
                 'OrderCash' => $response['OrderCash'],
                 'PaymentStatus' => $response['PaymentStatus'],
                 'PaymentMethod' => $response['PaymentMethod'],
