@@ -54,6 +54,7 @@ const props = defineProps({
         type: Number,
         required: true,
     },
+    hasDelete: Boolean,
 })
 
 const emit = defineEmits(['update:modelValue']);
@@ -70,8 +71,6 @@ onMounted(() => {
     emitter.on('editTree', async (data) => {
 
     });
-
-
 })
 onUnmounted(() => {
     emitter.off('editTree', listener)
@@ -79,11 +78,6 @@ onUnmounted(() => {
 const listener = (data) => {
 
 }
-
-
-
-
-
 
 const onFileChange = (e) => {
     const files = e.target.files;
@@ -188,17 +182,18 @@ const Delete = (img) => {
                 <div class="flex flex-wrap">
                     <div class="w-16 h-14 relative m-1 border border-gray-400 rounded-lg"
                         v-for="(img, index) in old_images " :key="index">
-                        <BaseIcon :path="mdiDelete" class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  " @click="Delete(img)"
+                        <BaseIcon v-if="hasDelete" :path="mdiDelete" class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  " @click="Delete(img)"
                             size="16">
                         </BaseIcon>
                         <img v-fullscreen-img :src="img.original_url" class="w-16 h-14 object-cover rounded-lg" alt="">
                     </div>
                     <div class="w-16 h-14 relative m-1 border border-gray-400 rounded-lg" v-for="(img, index) in images "
                         :key="index">
-                        <BaseIcon :path="mdiDelete" @click="DeleteImage(index)"
+                        <BaseIcon v-if="hasDelete" :path="mdiDelete" @click="DeleteImage(index)"
                             class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  " size="17">
                         </BaseIcon>
                         <img v-fullscreen-img :src="img.image" class="w-16 h-14 object-cover rounded-lg" alt="">
+                       
                     </div>
 
                     <label :for="id" v-if="((old_images? old_images.length:0)+form.images.length) < max_files"

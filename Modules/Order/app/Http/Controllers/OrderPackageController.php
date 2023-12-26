@@ -61,6 +61,7 @@ class OrderPackageController extends Controller
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'all';
         $orders  = $this->getOrderAll($request,$status);
+
         $statusGroup = $this->groupByOrderStatus();
         return Inertia::render('Modules/Order/Package/index', compact('orders', 'status', 'from', 'to', 'statusGroup'));
     }
@@ -348,8 +349,10 @@ class OrderPackageController extends Controller
             $history_payment->addMedia($image)->toMediaCollection('order_package_payment');
         }
         UpdateCommissionUser::dispatch($order);
+
         return $history_payment;
     }
+
     public function saveOrderPackage(Request $request){
         $order = OrderPackage::create($request->all());
     }
@@ -515,10 +518,19 @@ class OrderPackageController extends Controller
     }
     public function groupByOrderStatus()
     {
-        $array_status = ['pending','complete', 'decline'];
-        $statusGroup = OrderPackage::role()->select('status', DB::raw('count(*) as total'))
-            ->groupBy('status')
-            ->get();
+        $array_status = ['complete', 'decline'];
+        $datas = OrderPackage::role();
+
+        $statusGroup = $datas->select('status', DB::raw('count(*) as total'))->groupBy('status')->get();
+
+        $statusGroupDocument = OrderPackage::role()->select('state_document', DB::raw('count(*) as total'))->groupBy('state_document')->get();
+
+
+        //pending
+        $pending = $datas->where('status','pending')->with('historyPayment', function($q){
+            $q->where('status',"complete");
+        })->whereColumn('price_percent','grand_total')->count();
+
         foreach ($array_status as $status) {
 
             $filtered = $statusGroup->where('status', $status)->first();
@@ -539,6 +551,10 @@ class OrderPackageController extends Controller
             }
         }
         $newCollections[] = array(
+            'status' => 'pending',
+            'total' => $pending,
+        );
+        $newCollections[] = array(
             'status' => 'partiallyPaid',
             'total' => $this->groupByPayment(),
         );
@@ -550,6 +566,13 @@ class OrderPackageController extends Controller
             'status' => 'all',
             'total' => $this->groupAllOrder(),
         );
+        foreach ($statusGroupDocument as $document) {
+                $newCollections[] = array(
+                    'status' => $document['state_document'],
+                    'total' => $document['total'],
+                );
+        }
+
         return $newCollections;
     }
     public function groupByPayment(){
@@ -576,9 +599,15 @@ class OrderPackageController extends Controller
             ->orwhere('order_number', 'LIKE', '%' . $request->search . '%')
             ->orwhere('idPackage', 'LIKE', '%' . $request->search . '%')
             ->role()
-            ->fillter($request->only('status','from', 'to', 'payment_status', 'payment_method', 'type'))
-            ->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 5);
-            return $results ;
+            ->fillter($request->only('status','from', 'to', 'payment_status', 'payment_method', 'type','document_status'));
+        if($request->status == "pending"){
+            $results = $results->with('historyPayment', function($q){
+                $q->where('status',"complete");
+            })->whereColumn('price_percent','grand_total');
+        }
+        $data = $results->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 5);
+        return $data ;
+        // dd($data);
     }
     public function getOrderAll($request, $status)
     {
@@ -592,7 +621,7 @@ class OrderPackageController extends Controller
         ->orwhere('idPackage', 'LIKE', '%' . $request->search . '%')
         ->orderBy('created_at', 'desc')
         ->role()
-        ->fillter($request->only( 'from', 'to', 'payment_status', 'payment_method', 'type'))
+        ->fillter($request->only( 'from', 'to', 'payment_status', 'payment_method', 'type','document_status'))
         ->paginate($request->per_page ? $request->per_page : 5);
     }
 }

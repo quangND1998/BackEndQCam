@@ -32,7 +32,20 @@
     border-width: 1px;
     color: rgb(220 38 38/var(--tw-text-opacity));
 }
-
+.nhap{
+    background-color: #008cef;
+    border-color: #008cef;
+    border-style: solid;
+    border-width: 1px;
+    color: white;
+}
+.huy{
+    background-color: #ef0000;
+    border-color: #ef0000;
+    border-style: solid;
+    border-width: 1px;
+    color: white;
+}
 .btn_label {
     align-items: center;
     border-radius: 0.5rem;

@@ -56,6 +56,28 @@ class HistoryPaymentController extends Controller
             $order->save();
         }
 
+        $this->updateStateDocument($order);
         return redirect()->back()->with('success', "duyệt  thành công");
+    }
+    public function setPaymentCompleteDocument(OrderPackage $order,$id){
+        $history = HistoryPayment::find($id);
+        if($history){
+            $history->state_document = 1;
+            $history->save();
+        }
+        $this->updateStateDocument($order);
+        return redirect()->back()->with('success', "duyệt  thành công");
+    }
+    public function updateStateDocument($order){
+        if($order->document_add && $order->document_check){
+            $order->state_document = "OK";
+        }
+        elseif($order->document_add && $order->document_check == false){
+            $order->state_document = "Check";
+        }
+        else{
+            $order->state_document = "BS";
+        }
+        $order->save();
     }
 }
