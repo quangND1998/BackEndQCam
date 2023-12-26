@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive } from "vue";
+import { computed, ref, inject, reactive, onMounted } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
@@ -11,7 +11,8 @@ import PackageBar from "@/Pages/Modules/Order/Package/PackageBar.vue";
 import ModalDecline from "./ModalDecline.vue";
 import ModelRefund from "../ModelRefund.vue";
 import {
-    mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll, mdiTrashCanOutline, mdiOpenInNew
+    mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll,
+    mdiTrashCanOutline, mdiOpenInNew, mdiPhone
 } from '@mdi/js'
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -63,7 +64,7 @@ const showAction = ref(false);
 const images = ref([]);
 const editMode = ref(false);
 const isModalDangerActive = ref(false);
-
+let pitelSDK = null;
 const state = reactive({
     content: '<p>2333</p>',
     _content: '',
@@ -90,7 +91,7 @@ const searchCustomer = () => {
 
 const search = () => {
     router.get(route(`admin.orders.package.cskh`),
-    filter,
+        filter,
         {
             preserveState: true,
             preserveScroll: true
@@ -322,7 +323,46 @@ const openDecline = (order) => {
 const deleteOrder = (order) => {
     emitter.emit('OpenModalDelete', order)
 }
+const callPhone = (order) => {
 
+    pitelSDK.call('0968967624', {
+        extraHeaders: ["CALL-FROM: PitelSDK"]
+    })
+    // pitelSDK.call(order?.customer?.phone_number, {
+    //     extraHeaders: ["CALL-FROM: PitelSDK"]
+    // })
+}
+onMounted(() => {
+    (function (a, b) {
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.async = true;
+        s.onload = () => { PitelSDK.k = a; b() };
+        s.src = '/assets/js/sdk-1.1.test.min.js';
+        // s.src = 'https://portal.tel4vn.com/pitelsdk/sdk-1.1.test.min.js';
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(s, x);
+    })('d1ca84ac-2d98-4faa-92d4-699a6ce14eb7', () => {
+        console.log('Pitel SDK Loaded');
+    });
+
+    setTimeout(function () {
+        let sdkOptions = {
+            enableWidget: true,
+            sipOnly: true,
+            sipDomain: 'demo.cgvtelecom.vn:5060',
+            wsServer: "wss://cgvcall.mobilesip.vn:7444",
+            sipPassword: "Cgv@@2023##"
+        }
+        pitelSDK = new PitelSDK('xxx', 'xxx', '102', {}, sdkOptions)
+        // setTimeout(function () {
+        //     pitelSDK.call('0968967624', {
+        //       extraHeaders: ["CALL-FROM: PitelSDK"]
+        //     })
+        // }, 100)
+
+    }, 500);
+})
 </script>
 <template class="body_fix">
     <Head title="Quản lý chăm sóc kh" />
@@ -595,10 +635,12 @@ const deleteOrder = (order) => {
                                                 order.product_service_owner?.product?.number_deliveries }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <a v-if="order?.history_extend?.contract?.lastcontract?.images.length > 0 " :href="order?.history_extend?.contract?.lastcontract?.images[0].original_url" target="_blank">
-                                            <BaseIcon :path="mdiOpenInNew"
-                                                class=" text-blue-400 rounded-lg mr-2 hover:text-blue-700"
-                                                v-tooltip.top="'Chi tiết hợp đồng'" size="20"></BaseIcon>
+                                            <a v-if="order?.history_extend?.contract?.lastcontract?.images.length > 0"
+                                                :href="order?.history_extend?.contract?.lastcontract?.images[0].original_url"
+                                                target="_blank">
+                                                <BaseIcon :path="mdiOpenInNew"
+                                                    class=" text-blue-400 rounded-lg mr-2 hover:text-blue-700"
+                                                    v-tooltip.top="'Chi tiết hợp đồng'" size="20"></BaseIcon>
                                             </a>
 
                                         </td>
@@ -668,6 +710,12 @@ const deleteOrder = (order) => {
                                                 v-if="hasAnyPermission(['create-contract-complete']) && order.status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
                                                 @click="orderChangePacking(order)" size="20">
                                             </BaseIcon>
+                                            <BaseIcon :path="mdiPhone"
+                                                class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"
+                                                v-tooltip.top="'Call'"
+                                                v-if="hasAnyPermission(['create-contract-complete']) && order.status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
+                                                @click="callPhone(order)" size="20">
+                                            </BaseIcon>
                                         </td>
                                     </tr>
 
@@ -714,5 +762,7 @@ td {
     background: #fff;
 }
 </style>
+<script>
 
+</script>
 

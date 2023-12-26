@@ -1,0 +1,483 @@
+#pwWrapper {
+    position: relative
+}
+
+#pwWrapper * {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
+    word-break: normal;
+    word-spacing: normal;
+    white-space: normal;
+    line-break: auto;
+    font-size: 16px
+}
+
+#pwWrapper small {
+    font-size: 80%
+}
+
+#pwWrapper svg {
+    overflow: hidden;
+    vertical-align: middle
+}
+
+#pwBackground {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    border: 1px solid rgba(255, 97, 0, 1);
+    background-color: rgba(255, 97, 0, 1);
+    border-radius: 50%;
+    box-shadow: 2px 2px 2px #999;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    padding: 4px;
+    cursor: pointer;
+    transition-duration: .5s;
+    transition-timing-function: ease;
+    transition-property: background-color, border-color, box-shadow;
+    transition-delay: 0ms;
+    z-index: 99998;
+    animation: zoomIn .8s
+}
+
+#pwBackground:hover {
+    background-color: #e95823;
+    border: 1px solid #e95823
+}
+
+#pwInner {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 50%;
+    text-align: center;
+    overflow: hidden
+}
+
+#pwButton {
+    display: block
+}
+
+#pwButton img {
+    width: 40px;
+    height: 40px;
+    margin-left: var(--margin-left);
+    margin-top: var(--margin-top)
+}
+
+#ppContainer {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    width: 250px;
+    height: 420px;
+    z-index: 99999
+}
+
+#ppContainer.minimized {
+    height: 31px
+}
+
+.pp-panel {
+    width: 100%;
+    height: 100%;
+    border-radius: 7px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: 1px solid #dcdcdc;
+    box-shadow: 2px 2px 5px #999
+}
+
+.pp-panel .pp-panel-heading {
+    padding: 2px 10px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px
+}
+
+.pp-panel .pp-panel-heading .pp-heading-btn {
+    float: right
+}
+
+.pp-panel .pp-panel-body {
+    padding: 0 10px;
+    text-align: center
+}
+
+#ppOnCall {
+    color: #000000;
+    background-color: #FFDFCB;
+    background-image: linear-gradient(320deg, #FFDFCB, #FFDFCB 74%)
+}
+
+#ppOnCall .pp-panel-heading {
+    color: #ffffff;
+    background-color: #EE2736;
+    border-bottom: 1px solid #dcdcdc;
+    padding: 10px;
+}
+
+#ppContainer.minimized #ppOnCall .pp-panel-heading {
+    border-bottom: none
+}
+
+#ppOnCall .pp-avatar {
+    margin-top: 2em
+}
+
+#ppOnCall .pp-phone {
+    margin-top: .8em
+}
+
+#ppOnCall .pp-timer {
+    margin-top: .5em;
+    font-size: 25px
+}
+
+#ppOnCall .pp-actions {
+    position: absolute;
+    bottom: 90px;
+    left: 0;
+    right: 0
+}
+
+#ppOnCall .pp-actions.pp-oncall-actions a {
+    display: inline-block;
+    margin-left: 8px;
+    margin-right: 8px;
+    border: 1px solid transparent;
+    padding: 3px 5px;
+    border-radius: 5px
+}
+
+#ppOnCall .pp-actions.pp-oncall-actions a.active {
+    border: 1px solid #fff;
+    box-shadow: 3px 3px 3px rgb(50 50 50/50%)
+}
+
+#ppOnCall .pp-callee-info {
+    display: inline-block;
+    max-width: 120px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: middle
+}
+
+#ppOnCall .pp-dtmf-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 130px;
+    z-index: 2
+}
+
+#ppOnCall .pp-dtmf-wrapper .pp-digit-row {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+#ppOnCall .pp-dtmf-wrapper a.pp-digit {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #cecece;
+    border-radius: 50%;
+    margin: 0 12px 8px 10px;
+    padding: 7px 5px;
+    cursor: pointer;
+    position: relative;
+    transition: all .25s ease;
+    color: #fff
+}
+
+#ppOnCall .pp-dtmf-wrapper a.pp-digit:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    transition: all .25s ease;
+    border-radius: 50%
+}
+
+#ppOnCall .pp-dtmf-wrapper a.pp-digit:hover {
+    border: 1px solid #fff
+}
+
+#ppOnCall .pp-dtmf-wrapper a.pp-digit:active:before {
+    box-shadow: inset 0 0 0 45px #cecece
+}
+
+#ppOnCall .pp-transfer-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 150px;
+    bottom: 130px
+}
+
+#ppOnCall .pp-transfer-wrapper > div {
+    margin-top: 20px
+}
+
+#ppOnCall .pp-transfer-wrapper > div > a {
+    color: #fff;
+    border: 1px solid #cecece;
+    border-radius: 5px;
+    padding: 5px 10px
+}
+
+#ppOnCall .pp-transfer-wrapper > div > a:hover {
+    border: 1px solid #fff
+}
+
+#ppOnCall .pp-transfer-wrapper .pp-transfer-input {
+    width: 80%;
+    text-align: center;
+    font-size: 1.3em;
+    border: none;
+    background-color: transparent;
+    color: #fff
+}
+
+#ppOnCall .pp-transfer-wrapper .pp-transfer-input::placeholder {
+    color: #fff
+}
+
+#ppOnCall .pp-transfer-wrapper .pp-transfer-input::-ms-input-placeholder {
+    color: #fff;
+    opacity: 1
+}
+
+.pp-main-action {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    text-align: center
+}
+
+.pp-circle-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    padding-top: .5em;
+    box-shadow: 3px 3px 3px rgba(50, 50, 50, .5);
+    border-style: solid;
+    border-width: 1px;
+    transition: all .5s ease
+}
+.pp-circle-button svg{
+    width: 48px;
+    height: 28px;
+}
+
+.pp-circle-button.pp-bg-white {
+    background-color: #fff;
+    border-color: #fff
+}
+
+.pp-circle-button.pp-bg-grey {
+    background-color: #cdcdcd;
+    border-color: #cdcdcd
+}
+
+.pp-circle-button.pp-bg-green {
+    background-color: #2de487;
+    border-color: #2de487
+}
+
+.pp-circle-button.pp-bg-green:hover {
+    border-color: #fff
+}
+
+.pp-circle-button.pp-bg-white:hover {
+    border-color: red
+}
+
+.pp-circle-button.bg-bg-primary {
+    background-color: #2876f9;
+    border-color: #2876f9
+}
+
+#ppDialPad {
+    background-color: #fff
+}
+.pp-panel-heading{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#ppDialPad .pp-panel-heading {
+    background-color: rgba(238, 39, 54, 1);
+    background-image: linear-gradient(320deg, #EE2736, #EE2736 74%);
+    color: #fff;
+    padding: 10px;
+}
+
+#ppDialPad .pp-panel-heading.pp-bg-grey {
+    background-color: #bababa;
+    background-image: linear-gradient(320deg, #646464, #bababa 74%)
+}
+
+#ppDialPad .pp-number-input-wrapper {
+    margin-top: 1em;
+    position: relative;
+    padding-right: 24px
+}
+
+#ppDialPad .pp-number-input-wrapper > a {
+    position: absolute;
+    right: 0;
+    top: 3px
+}
+
+#ppDialPad .pp-number-input-wrapper > a:hover svg > g {
+    stroke: grey
+}
+
+#ppDialPad .pp-number-input-wrapper > a:active svg > g {
+    fill: grey;
+    stroke: #fff
+}
+
+#ppDialPad .pp-number-input-wrapper .pp-number-input {
+    width: 100%;
+    text-align: center;
+    font-size: 1.3em;
+    border: none
+}
+
+#ppDialPad .pp-number-input-wrapper .pp-number-input::-webkit-inner-spin-button,
+#ppDialPad .pp-number-input-wrapper .pp-number-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0
+}
+
+#ppDialPad .pp-number-input-wrapper .pp-number-input[type=number] {
+    -moz-appearance: textfield
+}
+
+#ppDialPad .pp-number-input-wrapper .pp-number-input:focus-visible {
+    outline-offset: 0;
+    border: none;
+    outline: none
+}
+
+#ppDialPad .pp-digit-wrapper {
+    margin-top: 1em
+}
+
+#ppDialPad .pp-digit-wrapper .pp-digit-row {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+#ppDialPad .pp-digit-wrapper a.pp-digit {
+    width: 45px;
+    height: 45px;
+    border: 1px solid #cecece;
+    border-radius: 50%;
+    margin: 0 12px 10px 10px;
+    padding: 7px 5px;
+    cursor: pointer;
+    position: relative;
+    transition: all .25s ease;
+    color: #333
+}
+
+#ppDialPad .pp-digit-wrapper a.pp-digit:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    transition: all .25s ease;
+    border-radius: 50%
+}
+
+#ppDialPad .pp-digit-wrapper a.pp-digit:hover {
+    border: 1px solid #999
+}
+
+#ppDialPad .pp-digit-wrapper a.pp-digit:active:before {
+    box-shadow: inset 0 0 0 45px #cecece
+}
+
+#ppDialPad .precall {
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(.1)
+    }
+
+    to {
+        transform: scale(1)
+    }
+}
+
+.pp-btn {
+    color: #fff;
+    box-shadow: 0 4px 6px rgb(50 50 93/11%), 0 1px 3px rgb(0 0 0/8%);
+    display: block;
+    width: 100%;
+    border: 1px solid transparent;
+    padding: .4rem 1.25rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    letter-spacing: .025em;
+    font-size: .875rem;
+    transition: all .15s ease
+}
+
+.pp-btn:hover {
+    transform: translateY(-1px)
+}
+
+.pp-btn-primary {
+    background-color: #5e72e4;
+    border-color: #5e72e4
+}
+
+.pp-btn-success {
+    background-color: #2dce89;
+    border-color: #2dce89
+}
+
+.pp-btn-warning {
+    background-color: #fb6340;
+    border-color: #fb6340
+}
+
+.pp-btn-danger {
+    background-color: #f5365c;
+    border-color: #f5365c
+}
+
+.pp-btn-info {
+    background-color: #11cdef;
+    border-color: #11cdef
+}
