@@ -83,7 +83,7 @@ class PaymentController extends Controller
                 $response =[
                     "ShopID" =>  config('payoo.shopID'),
                     "OrderInfo" =>  $orderXml,
-                    "CheckSum" => $checksum,
+                    "CheckSum" => strtoupper($checksum),
                 ];
                 return response()->json($response, 200);
             }
