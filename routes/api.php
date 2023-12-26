@@ -106,5 +106,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('updateUserInfor', [LoginController::class, 'updateUserInfor'])->name('updateUserInfor');
             Route::get('getUser', [LoginController::class, 'getUser'])->name('getUser');
         });
+         Route::prefix('payment')->as('payment.')->group(function () {
+
+             Route::get('{id}/order', [PaymentController::class,'getOrderPaymentForApp'])->name('order');
+        });
+     
+
     });
 });
