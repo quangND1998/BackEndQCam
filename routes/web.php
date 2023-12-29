@@ -110,10 +110,13 @@ Route::middleware(['auth'])->group(
 
         Route::prefix('commission')->as('commission.')->group(function () {
             Route::get('index', [ComissionController::class, 'index'])->name('index');
+
             Route::get('leader', [ComissionController::class, 'getLeader'])->name('leader');
             Route::get('sale', [ComissionController::class, 'getSale'])->name('sale');
             Route::get('ctv', [ComissionController::class, 'getCTV'])->name('ctv');
             Route::get('telesale', [ComissionController::class, 'getTelesale'])->name('telesale');
+
+            Route::post('type', [ComissionController::class, 'saveType'])->name('type');
 
             Route::post('', [ComissionController::class, 'store'])->name('store');
             Route::post('update/{commission}', [ComissionController::class, 'update'])->name('update');
