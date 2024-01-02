@@ -17,7 +17,7 @@ class ComissionController extends Controller
     public function index (){
         $commissions= Commission::orderBy('commission','desc')->orderBy('created_at', 'desc')->paginate(10);
         $userType = UserType::get();
-        $commissionType = CommissionType::with('participants')->get();
+        $commissionType = CommissionType::with('participants.commission')->get();
         // return $commissionType;
         return Inertia::render('Commission/Index', compact('commissions','userType','commissionType'));
     }
@@ -49,30 +49,28 @@ class ComissionController extends Controller
         return Commission::where('type',$type)->orderBy('spend_from', 'desc')->orderBy('created_at', 'desc')->paginate(5);
     }
     public function store(Request $request){
-        dd($request);
+        // dd($request);
         $this->validate(
             $request,
             [
-                'spend_from' => 'required|numeric|gt:0',
-                'spend_to' => 'required|numeric|gt:0',
-                'commission' => 'required|numeric|gt:0',
-                'type' => 'required',
-                'level_revenue' => 'required|numeric|gt:0',
-                'discount_form_sale' => 'required_if:type,==,ctv',
-                'discount_form_manager_sale' => 'required_if:type,==,ctv'
+                'commission' => 'required',
             ]
         );
 
-        Commission::create([
-            'spend_from'=> $request->spend_from,
-            'spend_to'=> $request->spend_to,
-            'commission'=> $request->commission,
-            'level_revenue' => $request->level_revenue,
-            'type'=> $request->type,
-            'greater' =>$request->greater,
-            'discount_form_sale' => $request->discount_form_sale,
-            'discount_form_manager_sale' => $request->discount_form_manager_sale
-        ]);
+        foreach($request->commission as $commission){
+            foreach($commission as $com){
+                if($com['commission'] > 0){
+                    Commission::create([
+                        'spend_from'=> $com['spend_from'],
+                        'spend_to'=> $com['spend_to'],
+                        'commission'=> $com['commission'],
+                        'commission_type_id' => $com['commissionType'],
+                        'user_type_id'=> $com['participant'], //ref
+                    ]);
+                }
+            }
+        }
+
         return back()->with('success', 'Tạo mới thành công');
     }
 

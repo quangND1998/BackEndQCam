@@ -19,7 +19,15 @@ class Commission extends Model
         'greater',
         'level_revenue',
         'discount_form_sale',
-        'discount_form_manager_sale'
+        'discount_form_manager_sale',
+        'user_type_id',
+        'commission_type_id',
     ];
+    public function type(){
+        return $this->belongsTo(CommissionType::class,'commission_type_id');
+    }
+    public function user(){
+        return $this->belongsTo(CommissionType::class,'commission_type_id');
+    }
 }
 

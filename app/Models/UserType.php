@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class UserType extends Model
 {
     use HasFactory;
+    protected $table = 'user_types';
+    protected $fillable = [
+        'id',
+        'name'
+    ];
+    public function commission(){
+        return $this->hasMany(Commission::class,'user_type_id');
+    }
 }
