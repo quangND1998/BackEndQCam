@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commission;
+use App\Models\CommissionType;
+use App\Models\UserType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Order\Repositories\CommissionRepository;
@@ -14,7 +16,18 @@ class ComissionController extends Controller
     }
     public function index (){
         $commissions= Commission::orderBy('commission','desc')->orderBy('created_at', 'desc')->paginate(10);
-        return Inertia::render('Commission/Index', compact('commissions'));
+        $userType = UserType::get();
+        $commissionType = CommissionType::with('participants')->get();
+        // return $commissionType;
+        return Inertia::render('Commission/Index', compact('commissions','userType','commissionType'));
+    }
+    public function saveType(Request $request){
+        // dd($request);
+        $commissionType = new CommissionType;
+        $commissionType->description = $request->description;
+        $commissionType->save();
+        $commissionType->participants()->attach($request->participants);
+        return back()->with('success', 'Tạo mới thành công');
     }
     public function getLeader(){
         $commissions = $this->getType('leader-sale');
@@ -36,6 +49,7 @@ class ComissionController extends Controller
         return Commission::where('type',$type)->orderBy('spend_from', 'desc')->orderBy('created_at', 'desc')->paginate(5);
     }
     public function store(Request $request){
+        dd($request);
         $this->validate(
             $request,
             [
