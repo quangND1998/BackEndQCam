@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commission;
+use App\Models\CommissionSetting;
 use App\Models\CommissionType;
 use App\Models\UserType;
 use Illuminate\Http\Request;
@@ -14,12 +15,15 @@ class ComissionController extends Controller
         $commissions= Commission::paginate(15);
         return Inertia::render('Commission/Index', compact('commissions'));
     }
-    public function index (){
-        $commissions= Commission::orderBy('commission','desc')->orderBy('created_at', 'desc')->paginate(10);
+    public function index (Request $request){
+        // dd($request);
         $userType = UserType::get();
         $commissionType = CommissionType::with('participants.commission')->get();
         // return $commissionType;
-        return Inertia::render('Commission/Index', compact('commissions','userType','commissionType'));
+        $commissionSetting = CommissionSetting::where('dateFrom',$request->from)->where('dateTo',$request->to)->first();
+        // return $commissionSetting;
+
+        return Inertia::render('Commission/Index', compact('userType','commissionType','commissionSetting'));
     }
     public function saveType(Request $request){
         // dd($request);
@@ -54,19 +58,33 @@ class ComissionController extends Controller
             $request,
             [
                 'commission' => 'required',
+                'fromDate' => 'required',
+                'toDate' => 'required'
             ]
         );
+        $commissionSetting = CommissionSetting::where('dateFrom',$request->fromDate)->where('dateTo',$request->toDate)->first();
+        if(!$commissionSetting){
+            $commissionSetting = new CommissionSetting;
+        }
+        $commissionSetting->dateFrom = $request->fromDate;
+        $commissionSetting->dateTo = $request->toDate;
+        $commissionSetting->level_revenue = $request->level_revenue;
+        $commissionSetting->save();
+
+        // dd($commissionSetting);
 
         foreach($request->commission as $commission){
             foreach($commission as $com){
                 if($com['commission'] > 0){
-                    Commission::create([
+                  $commission=   Commission::create([
                         'spend_from'=> $com['spend_from'],
                         'spend_to'=> $com['spend_to'],
                         'commission'=> $com['commission'],
                         'commission_type_id' => $com['commissionType'],
                         'user_type_id'=> $com['participant'], //ref
+                        'commissionSetting_id' => $commissionSetting->id
                     ]);
+                    // $commissionSetting->commission()->attach($commission);
                 }
             }
         }

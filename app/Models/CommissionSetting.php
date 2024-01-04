@@ -11,4 +11,7 @@ class CommissionSetting extends Model
     public function CommissionType(){
         return $this->hasMany(CommissionType::class,'commissionSetting_id');
     }
+    public function commission(){
+        return $this->hasMany(Commission::class,'commissionSetting_id');
+    }
 }

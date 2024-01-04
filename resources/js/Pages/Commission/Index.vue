@@ -36,9 +36,9 @@ import MazPicker from 'maz-ui/components/MazPicker'
 import InputNumber from 'primevue/inputnumber';
 import Multiselect from '@vueform/multiselect'
 const props = defineProps({
-    commissions: Object,
     userType: Object,
     commissionType: Array,
+    commissionSetting: Array,
 });
 const searchVal = ref("");
 const swal = inject("$swal");
@@ -53,9 +53,9 @@ const form2 = useForm({
     commission: [],
     commissionType: null,
     participant: null,
-    level_revenue: 30,
-    fromDate: null,
-    toDate: null
+    level_revenue: 0,
+    fromDate: props.commissionSetting?.dateFrom,
+    toDate: props.commissionSetting?.dateTo
 });
 onBeforeMount(() => {
     props.commissionType.forEach((element, index) => {
@@ -158,13 +158,17 @@ const selectAll = computed({
         selected.value = array_selected;
     }
 });
+const filter = reactive({
+    fromDate: null,
+    toDate: null,
+})
 const searchFilter = () => {
     let query = {
-        search: searchVal.value
+        from: form2.fromDate,
+        to: form2.toDate
     };
     router.get(route("commission.index"), query, {
         preserveState: true
-        // only: ["image360s", "errors", 'flash'],
     });
 }
 const edit = (commission) => {
@@ -224,13 +228,13 @@ const changeStatus = (data, event) => {
                         <div class="ml-2 flex flex-wrap">
                             <div class="flex items-center">
                                 <div class="relative">
-                                    <VueDatePicker v-model="form2.fromDate" time-picker-inline />
+                                    <VueDatePicker v-model="form2.fromDate" time-picker-inline  :enable-time-picker="false"/>
                                 </div>
                                 <span class="mx-1 text-gray-500">đến</span>
                                 <div class="relative">
-                                    <VueDatePicker v-model="form2.toDate" time-picker-inline />
+                                    <VueDatePicker v-model="form2.toDate" time-picker-inline :enable-time-picker="false"/>
                                 </div>
-                                <button @click.prevent="changeDate" name="search"
+                                <button @click.prevent="searchFilter" name="search"
                                     class="block p-2 ml-3 text-xs text-gray-900 border border-gray-300 rounded-lg  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-blue-500 text-white">Search</button>
                             </div>
 
@@ -245,7 +249,7 @@ const changeStatus = (data, event) => {
                     </div>
                 </div>
                 <div class="right">
-                    <button type="submit" @click="savefull" color="info"
+                    <button type="submit" @click="save" color="info"
                                     class="bg-[#27AE60] hover:bg-[#318f02] rounded-xl text-white py-2.5 px-10 right  ">Lưu</button>
                 </div>
             </div>
