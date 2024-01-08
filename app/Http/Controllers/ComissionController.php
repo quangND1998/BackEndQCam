@@ -11,16 +11,31 @@ use Inertia\Inertia;
 use Modules\Order\Repositories\CommissionRepository;
 class ComissionController extends Controller
 {
-    public function new (){
-        $commissions= Commission::paginate(15);
-        return Inertia::render('Commission/Index', compact('commissions'));
+    public function create (){
+        $userType = UserType::get();
+        $commissionType = CommissionType::with('participants.commission')->get();
+        return Inertia::render('Commission/Create', compact('userType','commissionType'));
     }
+    public function policy(Request $request){
+        $commissionSettings = CommissionSetting::orderBy('created_at','desc')->paginate(10);
+        return Inertia::render('Commission/Policy', compact('commissionSettings'));
+    }
+    public function policyDetail(Request $request,$id){
+         $userType = UserType::get();
+         $commissionType = CommissionType::with('participants.commission')->get();
+         $commissionSetting = CommissionSetting::with('commission')->findOrFail($id);
+
+         return Inertia::render('Commission/Index', compact('userType','commissionType','commissionSetting'));
+    }
+
     public function index (Request $request){
         // dd($request);
         $userType = UserType::get();
         $commissionType = CommissionType::with('participants.commission')->get();
         // return $commissionType;
-        $commissionSetting = CommissionSetting::where('dateFrom',$request->from)->where('dateTo',$request->to)->first();
+        $commissionSetting = CommissionSetting::with('commission')->orderBy('created_at','desc')
+        ->fillter($request->only( 'from', 'to'))->first();
+
         // return $commissionSetting;
 
         return Inertia::render('Commission/Index', compact('userType','commissionType','commissionSetting'));
@@ -127,6 +142,28 @@ class ComissionController extends Controller
             'status' => $request->status
         ]);
         return back()->with('success', 'Thay đổi trạng thái thành công');
+    }
+    public function changeStatusPolicy(Request $request, $id){
+
+        $commission = CommissionSetting::find($id);
+        if($commission){
+             $commission->update([
+                'status' => $request->status
+            ]);
+
+            return back()->with('success', 'Thay đổi trạng thái thành công');
+        }else{
+            return back()->with('success', 'Không tồn tại');
+        }
+    }
+    public function destroyCommissionSetting(Request $request, $id){
+        $commission = CommissionSetting::find($id);
+        if($commission){
+             $commission->delete();
+            return back()->with('success', 'xóa chính sách thành công');
+        }else{
+            return back()->with('success', 'Không tồn tại');
+        }
     }
 }
 

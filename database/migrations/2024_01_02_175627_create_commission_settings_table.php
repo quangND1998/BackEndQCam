@@ -16,6 +16,7 @@ return new class extends Migration
             $table->decimal('level_revenue', 30, 2)->nullable();
             $table->date('dateFrom')->nullable();
             $table->date('dateTo')->nullable();
+            $table->tinyint('status')->default(1);
             $table->timestamps();
         });
     }

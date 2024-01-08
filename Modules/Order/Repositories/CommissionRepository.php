@@ -61,6 +61,8 @@ class CommissionRepository
 
         }elseif($order->ref_id ==null && $order->ref_id == null && $order->customer_resources == "ctv"){
         }
+
+        
     }
     public function getAllOrderInMonth(PackageOrderService $packageOrderService,$user){
 

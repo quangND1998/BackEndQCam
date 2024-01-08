@@ -134,6 +134,26 @@ const fillterType = (event) => {
         }
     );
 }
+const fillterTypeBS = (event) => {
+    filter.document_status = 'BS';
+    router.get(route(`admin.orders.package.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
+const fillterTypeKT = (event) => {
+    filter.document_status = 'Check';
+    router.get(route(`admin.orders.package.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 const loadOrder = async $state => {
     console.log("loading...");
     console.log(filter);
@@ -438,7 +458,7 @@ const deleteOrder = (order) => {
                             </td> -->
                             <td class="border-0 flex m-0 p-0">
                                 <UploadImageAuto :hasDelete="payment.state_document == 1 ? false : true"
-                                    :idPayment="payment?.id" :max_files="1" v-model="form.images" :multiple="false"
+                                    :idPayment="payment?.id" :max_files="100" v-model="form.images" :multiple="true"
                                     :old_images="payment?.order_package_payment" class="justify-start" />
                             </td>
                             <td class="border-0 text-center">
@@ -647,11 +667,11 @@ const deleteOrder = (order) => {
                 <div class="w-full my-3">
                     <div class="w-full flex items-center">
                         <BaseIcon  :path="mdiBellRingOutline " class=" text-[#ff0000] rounded-lg mr-2 " size="20"></BaseIcon>
-                        <p class="text-[#ff0000]">Có {{ totalOrder('BS') }} hợp đồng chờ bổ sung HS thanh toán</p>
+                        <p class="text-[#ff0000] cursor-pointer" @click="fillterTypeBS">Có {{ totalOrder('BS') }} hợp đồng chờ bổ sung HS thanh toán</p>
                     </div>
                     <div class="w-full flex items-center">
                         <BaseIcon  :path="mdiBellRingOutline " class=" text-[#ff0000] rounded-lg mr-2 " size="20"></BaseIcon>
-                        <p class="text-[#ff0000]">Có {{ totalOrder('Check') }} hợp đồng chờ kiểm duyệt HS thanh toán</p>
+                        <p class="text-[#ff0000] cursor-pointer" @click="fillterTypeKT">Có {{ totalOrder('Check') }} hợp đồng chờ kiểm duyệt HS thanh toán</p>
                     </div>
 
                 </div>

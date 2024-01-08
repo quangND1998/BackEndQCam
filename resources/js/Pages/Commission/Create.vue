@@ -38,7 +38,6 @@ import Multiselect from '@vueform/multiselect'
 const props = defineProps({
     userType: Object,
     commissionType: Array,
-    commissionSetting: Array,
 });
 const searchVal = ref("");
 const swal = inject("$swal");
@@ -293,31 +292,6 @@ const changeStatus = (data, event) => {
                                 </div>
                                 <div class="w-4/5 ml-2 pl-2">
                                     Mốc doanh thu áp dụng(TRIỆU ĐỒNG)
-                                </div>
-                            </div>
-                            <div class="flex w-full" v-for="(com, index3) in commissionSetting.commission" :key="index3">
-                                <!-- {{ com }} -->
-                                <div class="w-full flex"
-                                    v-if="com.commission_type_id == type.id && com.user_type_id == participant.id">
-                                    <div class="flex items-center w-1/5  ">
-                                        <input type="number" v-model="form2.commission[index][index2].commission" :min="0"
-                                            :max="100" step="1"
-                                            class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                        <InputLabel for="name" value=" %" class="ml-1" />
-                                    </div>
-                                    <div class="flex w-4/5 ml-4 items-center ">
-
-                                        <InputLabel for="name" value="Từ" />
-                                        <InputNumber v-model="form2.commission[index][index2].spend_from" :min="0"
-                                            class="p-3 w-[160px]"
-                                            inputClass=" bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-
-
-                                        <InputLabel for="name" value="đến <" class="w-[40px] " />
-                                        <InputNumber v-model="form2.commission[index][index2].spend_to" :min="0"
-                                            class="p-3 w-[160px]"
-                                            inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                    </div>
                                 </div>
                             </div>
                             <div class="flex w-full">

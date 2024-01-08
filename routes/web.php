@@ -110,7 +110,11 @@ Route::middleware(['auth'])->group(
 
         Route::prefix('commission')->as('commission.')->group(function () {
             Route::get('index', [ComissionController::class, 'index'])->name('index');
-
+            Route::get('policy', [ComissionController::class, 'policy'])->name('policy');
+            Route::get('policy/{id}', [ComissionController::class, 'policyDetail'])->name('policyDetail');
+            Route::post('changeStatusPolicy/{id}',[ComissionController::class, 'changeStatusPolicy'])->name('changeStatusPolicy');
+            Route::post('commissionSetting/{id}',[ComissionController::class, 'destroyCommissionSetting'])->name('destroyCommissionSetting');
+            // Route::delete('commissionSetting/{id}',[ComissionController::class, 'destroyCommissionSetting'])->name('destroyCommissionSetting');
             Route::get('leader', [ComissionController::class, 'getLeader'])->name('leader');
             Route::get('sale', [ComissionController::class, 'getSale'])->name('sale');
             Route::get('ctv', [ComissionController::class, 'getCTV'])->name('ctv');
