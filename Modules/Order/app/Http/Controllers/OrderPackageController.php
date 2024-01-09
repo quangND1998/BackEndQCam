@@ -322,18 +322,11 @@ class OrderPackageController extends Controller
             // $order->price_percent = $order->grand_total;
         }
         $order->save();
-        $order = OrderPackage::find($id);
+        $order = OrderPackage::with(['historyPayment.order_package_payment','historyPayment.user','history_extend.contract.lastcontract.images'])->find($id);
         $order->price_percent = $order->totalPayment();
         $order->save();
-        // if($order->totalPayment() >= $order->grand_total){
-        //     $order->payment_status = 1;
-        //     $order->save();
-        // }else{
 
-        //     $order->payment_status = 0;
-        //     $order->save();
-        // }
-
+        return $order;
         return back()->with('success', 'Lưu payment thành công');
     }
     public function storeHistoryPayment($order,$payment_method,$amount_received,$payment_date,$images){
@@ -345,10 +338,10 @@ class OrderPackageController extends Controller
         $history_payment->user_id = Auth::user()->id;
         $history_payment->save();
 
-        foreach ($images as $image) {
-            $history_payment->addMedia($image)->toMediaCollection('order_package_payment');
-        }
-        UpdateCommissionUser::dispatch($order);
+        // foreach ($images as $image) {
+        //     $history_payment->addMedia($image)->toMediaCollection('order_package_payment');
+        // }
+        // UpdateCommissionUser::dispatch($order);
 
         return $history_payment;
     }
