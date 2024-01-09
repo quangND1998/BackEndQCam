@@ -25,6 +25,7 @@ class ComissionController extends Controller
          $commissionType = CommissionType::with('participants.commission')->get();
          $commissionSetting = CommissionSetting::with('commission')->findOrFail($id);
 
+        // return $commissionSetting;
          return Inertia::render('Commission/Index', compact('userType','commissionType','commissionSetting'));
     }
 
@@ -77,7 +78,7 @@ class ComissionController extends Controller
                 'toDate' => 'required'
             ]
         );
-        $commissionSetting = CommissionSetting::where('dateFrom',$request->fromDate)->where('dateTo',$request->toDate)->first();
+        $commissionSetting = CommissionSetting::with('commission')->where('dateFrom',$request->fromDate)->where('dateTo',$request->toDate)->first();
         if(!$commissionSetting){
             $commissionSetting = new CommissionSetting;
         }
@@ -86,24 +87,28 @@ class ComissionController extends Controller
         $commissionSetting->level_revenue = $request->level_revenue;
         $commissionSetting->save();
 
-        // dd($commissionSetting);
+        // dd($request);
+        $commissionSetting->commission()->delete();
 
-        foreach($request->commission as $commission){
-            foreach($commission as $com){
-                if($com['commission'] > 0){
-                  $commission=   Commission::create([
-                        'spend_from'=> $com['spend_from'],
-                        'spend_to'=> $com['spend_to'],
-                        'commission'=> $com['commission'],
-                        'commission_type_id' => $com['commissionType'],
-                        'user_type_id'=> $com['participant'], //ref
-                        'commissionSetting_id' => $commissionSetting->id
-                    ]);
-                    // $commissionSetting->commission()->attach($commission);
+        foreach($request->commission as $commissionType){
+            foreach($commissionType as $commission){
+                foreach($commission as $com){
+                    if($com['commission'] > 0){
+                    $commission=   Commission::create([
+                            'spend_from'=> $com['spend_from'],
+                            'spend_to'=> $com['spend_to'],
+                            'commission'=> $com['commission'],
+                            'commission_type_id' => $com['commissionType'],
+                            'user_type_id'=> $com['participant'], //ref
+                            'commissionSetting_id' => $commissionSetting->id
+                        ]);
+                        // $commissionSetting->commission()->attach($commission);
+                    }
                 }
             }
         }
 
+        // return $commissionSetting;
         return back()->with('success', 'Tạo mới thành công');
     }
 

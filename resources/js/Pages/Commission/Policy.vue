@@ -106,7 +106,7 @@ const Delete = (id) => {
                 <div class="flex">
 
                     <div>
-                        <Link :href="route('commission.dashboard.fresh')">
+                        <Link :href="route('commission.create')">
                         <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] border rounded-xl text-white p-2 "
                             :icon="mdiPlus" small label="Tạo chính sách mới" />
                         </Link>

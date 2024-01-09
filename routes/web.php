@@ -111,6 +111,7 @@ Route::middleware(['auth'])->group(
         Route::prefix('commission')->as('commission.')->group(function () {
             Route::get('index', [ComissionController::class, 'index'])->name('index');
             Route::get('policy', [ComissionController::class, 'policy'])->name('policy');
+            Route::get('create', [ComissionController::class, 'create'])->name('create');
             Route::get('policy/{id}', [ComissionController::class, 'policyDetail'])->name('policyDetail');
             Route::post('changeStatusPolicy/{id}',[ComissionController::class, 'changeStatusPolicy'])->name('changeStatusPolicy');
             Route::post('commissionSetting/{id}',[ComissionController::class, 'destroyCommissionSetting'])->name('destroyCommissionSetting');
