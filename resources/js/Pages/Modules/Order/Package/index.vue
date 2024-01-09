@@ -405,7 +405,7 @@ const deleteOrder = (order) => {
         <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật" has-cancel @confirm="save"
             :title="`Thanh toán cho ${form.order?.idPackage} (${form.order?.order_number})`">
             <div class="p-6 flex-auto">
-                <div :id="`form_create_${form.order.id}`">
+                <div :id="`form_create_${form.order?.id}`">
                     <div v-if="form?.amount_unpaid > 0" class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                             <InputLabel for="amount_received" value="Số tiền" />

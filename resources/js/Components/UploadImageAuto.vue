@@ -109,6 +109,8 @@ const onFileChange = (e) => {
             })
             .then(response => {
                 console.log(response);
+                formData.delete();
+                console.log(formData);
             // Handle the response from the server
             })
             .catch(error => {
