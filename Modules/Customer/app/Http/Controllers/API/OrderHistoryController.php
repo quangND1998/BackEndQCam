@@ -30,6 +30,19 @@ class OrderHistoryController extends Base2Controller
         }
         return response()->json('Chua login', 200);
     }
+    public function getListGiftAll()
+    {
+        $customer = Auth::user();
+        if($customer){
+            $orders = Order::with('orderItems.product','product_service.product')->where('type','gift_delivery')->where('user_id',$customer->id)->get();
+            $response = [
+                'success' => true,
+                'orders' =>$orders,
+            ];
+            return response()->json($response, 200);
+        }
+        return response()->json('Chua login', 200);
+    }
     public function getListGift()
     {
         $customer = Auth::user();
