@@ -309,6 +309,7 @@ class OrderPackageController extends Controller
         return redirect()->route('admin.orders.package.detail',[$order->id]);
     }
     public function saveHistoryPaymentOrder(Request $request,$id){
+        // return $request;
         $this->validate($request, [
             'payment_method' => 'required',
             'amount_received' => 'required|numeric|gt:0',
@@ -334,7 +335,8 @@ class OrderPackageController extends Controller
         //     $order->save();
         // }
 
-        return back()->with('success', 'Lưu payment thành công');
+        return $order;
+      //  return back()->with('success', 'Lưu payment thành công');
     }
     public function storeHistoryPayment($order,$payment_method,$amount_received,$payment_date,$images){
         $history_payment = new HistoryPayment;
