@@ -98,4 +98,14 @@ class ContactController extends Controller
         $contact->delete();
         return back()->with('success', "Xóa thành công");
     }
+
+    public function getContact()
+    {
+        $contact = Contact::first();
+        if ($contact) {
+            return response()->json($contact, 200);
+        } else {
+            return response()->json('Chưa có thông tin contact', 400);
+        }
+    }
 }
