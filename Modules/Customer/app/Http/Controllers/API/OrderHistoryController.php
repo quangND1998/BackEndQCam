@@ -34,7 +34,7 @@ class OrderHistoryController extends Base2Controller
     {
         $customer = Auth::user();
         if($customer){
-            $orders = Order::with('orderItems.product','product_service.product')->where('type','gift_delivery')->where('user_id',$customer->id)->get();
+            $orders = Order::with('orderItems.product','product_service.product')->where('type','gift_delivery')->where('user_id',$customer->id)->paginate(10);
             $response = [
                 'success' => true,
                 'orders' =>$orders,
