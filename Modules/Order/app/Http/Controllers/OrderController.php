@@ -41,14 +41,14 @@ class OrderController extends Controller
         $this->orderRepository = $orderRepository;
         $this->shipperRepository = $shipperRepository;
         // $this->middleware('permission:users-manager', ['only' => ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline']]);
-        $this->middleware('permission:order-pending|order-packing|order-shipping|order-completed|order-refund|order-decline', ['only' => [ 'index']]);
-        $this->middleware('permission:add-new-package', ['only' => [ 'create','update']]);
-        $this->middleware('permission:order-pending', ['only' => [ 'pending']]);
-        $this->middleware('permission:order-packing', ['only' => [ 'packing']]);
-        $this->middleware('permission:order-shipping', ['only' => [ 'shipping']]);
-        $this->middleware('permission:order-completed', ['only' => [ 'completed']]);
+        $this->middleware('permission:order-pending|order-packing|order-shipping|order-completed|order-refund|order-decline', ['only' => ['index']]);
+        $this->middleware('permission:add-new-package', ['only' => ['create', 'update']]);
+        $this->middleware('permission:order-pending', ['only' => ['pending']]);
+        $this->middleware('permission:order-packing', ['only' => ['packing']]);
+        $this->middleware('permission:order-shipping', ['only' => ['shipping']]);
+        $this->middleware('permission:order-completed', ['only' => ['completed']]);
         $this->middleware('permission:order-refund', ['only' => ['refund']]);
-        $this->middleware('permission:order-decline', ['only' => [ 'decline']]);
+        $this->middleware('permission:order-decline', ['only' => ['decline']]);
     }
     /**
      * Display a listing of the resource.
@@ -291,18 +291,18 @@ class OrderController extends Controller
         $sub_total = Cart::getSubTotal();
         $product_retails = ProductRetail::with('images')->get();
         $shippers = $this->shipperRepository->getShipper();
-        return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails', 'cart', 'total_price', 'sub_total','shippers'));
+        return Inertia::render('Modules/Order/Create/CreateOrder', compact('customers', 'product_retails', 'cart', 'total_price', 'sub_total', 'shippers'));
     }
 
     public function searchUser(Request $request)
     {
 
-        if($request->search){
+        if ($request->search) {
             $customer = User::with(['product_service_owners' => function ($q) {
                 $q->where('state', 1);
             }])->role('customer')->where(function ($query) use ($request) {
-                $query->where('phone_number',$request->search );
-                $query->orwhere('cic_number',$request->search );
+                $query->where('phone_number', $request->search);
+                $query->orwhere('cic_number', $request->search);
                 // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
             })->first();
             if ($customer) {
@@ -310,8 +310,7 @@ class OrderController extends Controller
             } else {
                 return response()->json('Không tìm thấy Khách hàng!', 404);
             }
-        }
-        else{
+        } else {
             return response()->json('Không tìm thấy Khách hàng!', 404);
         }
     }
@@ -416,9 +415,9 @@ class OrderController extends Controller
     {
 
         $user = User::where('phone_number', $request->phone_number)->first();
-        if(!$user){
+        if (!$user) {
 
-            $user = $this->orderRepository->createUser($request->only('name', 'phone_number','sex','address', 'city','wards','district'));
+            $user = $this->orderRepository->createUser($request->only('name', 'phone_number', 'sex', 'address', 'city', 'wards', 'district'));
         }
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
@@ -483,7 +482,7 @@ class OrderController extends Controller
         Cart::clearCartConditions();
         // if ($order->payment_method == 'cash' || $order->payment_method == 'banking') {
 
-            return  redirect()->route('admin.payment.orderCashBankingPayment', [$order]);
+        return  redirect()->route('admin.payment.orderCashBankingPayment', [$order]);
         // }
     }
 
@@ -550,9 +549,9 @@ class OrderController extends Controller
     public function saveOrderGift(OrderGiftPostRequest $request)
     {
         $user = User::where('phone_number', $request->phone_number)->first();
-        if(!$user){
+        if (!$user) {
 
-            $user = $this->orderRepository->createUser($request->only('name', 'phone_number','sex','address', 'city','wards','district'));
+            $user = $this->orderRepository->createUser($request->only('name', 'phone_number', 'sex', 'address', 'city', 'wards', 'district'));
         }
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
@@ -572,7 +571,7 @@ class OrderController extends Controller
                 'wards' => $request->wards,
                 'phone_number'        =>  $request->phone_number,
                 'notes'         =>  $request->notes,
-                'grand_total' => 0,
+                'grand_total' => Cart::getSubTotalWithoutConditions(),
                 'last_price' => 0,
                 'item_count' => Cart::getTotalQuantity(),
                 'type' => $request->type,
@@ -632,7 +631,7 @@ class OrderController extends Controller
             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
         }
         if ($order->status == 'pending') {
-            $order->load('orderItems.product', 'customer','order_related_images');
+            $order->load('orderItems.product', 'customer', 'order_related_images');
             if (Cart::isEmpty()) {
                 foreach ($order->orderItems as $item) {
                     Cart::add(array(
@@ -664,21 +663,22 @@ class OrderController extends Controller
     }
 
 
-    public function updateOrderRetail(UpdateOrderReuquest $request , Order $order, User $user){
+    public function updateOrderRetail(UpdateOrderReuquest $request, Order $order, User $user)
+    {
 
 
         if ($order->payment_status == 1) {
             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng Đã thanh toán không thể cập nhật!');
         }
         if ($order->status !== 'pending') {
-             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
+            return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
         }
 
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
         $this->addConditionToCart($request);
-        $order_update =  $this->orderRepository->updateOrderRetail($request->all(),$order, $user);
+        $order_update =  $this->orderRepository->updateOrderRetail($request->all(), $order, $user);
 
         foreach ($request->images as $image) {
             $order_update->addMedia($image)->toMediaCollection('order_related_images');
@@ -693,17 +693,18 @@ class OrderController extends Controller
     }
 
 
-    public function updateOrderGift(OrderGiftUpdateRequest $request , Order $order, User $user){
+    public function updateOrderGift(OrderGiftUpdateRequest $request, Order $order, User $user)
+    {
 
         if ($order->status !== 'pending') {
-             return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
+            return redirect()->route('admin.orders.pending')->with('warning', 'Đơn hàng đã đóng gói hoặc đang vận chuyển không thể cập nhật');
         }
 
         if (Cart::isEmpty() || Cart::getTotalQuantity() == 0) {
             return  back()->with('warning', 'Giỏ hàng trống hoặc có số lượng bằng 0');
         }
         $this->addConditionToCart($request);
-        $order_update =  $this->orderRepository->updateOrderGift($request->all(),$order, $user);
+        $order_update =  $this->orderRepository->updateOrderGift($request->all(), $order, $user);
 
         foreach ($request->images as $image) {
             $order_update->addMedia($image)->toMediaCollection('order_related_images');
@@ -711,6 +712,5 @@ class OrderController extends Controller
         Cart::clear();
         Cart::clearCartConditions();
         return redirect()->route('admin.orders.pending')->with('success', 'Đã cập nhật đơn quà');
-
     }
 }
