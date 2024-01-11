@@ -98,7 +98,7 @@ class OrderHistoryController extends Base2Controller
         return response()->json('Chua login', 200);
     }
     public function orderDetail($id){
-         $order = Order::with('orderItems.product','product_service.product','reviews')->findOrFail($id);
+         $order = Order::with('orderItems.product.images','product_service.product','reviews')->findOrFail($id);
          $response = [
                 'success' => true,
                 'data' =>$order,
