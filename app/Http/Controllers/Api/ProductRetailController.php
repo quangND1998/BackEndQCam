@@ -14,7 +14,7 @@ class ProductRetailController extends Base2Controller
 {
     public function getProducts()
     {
-        $products = ProductRetail::with('images')->where('status', 1)->paginate(15);
+        $products = ProductRetail::with('images')->where('status', 1)->paginate(1);
 
         return new ProductRetailCollection($products);
     }
@@ -26,7 +26,7 @@ class ProductRetailController extends Base2Controller
 
     public function productDetail($id)
     {
-        $product = ProductRetail::with('images')->where('status',true)->find($id);
+        $product = ProductRetail::with('images')->where('status', true)->find($id);
         if ($product) {
             return new ProductRetailResource($product);
         } else {

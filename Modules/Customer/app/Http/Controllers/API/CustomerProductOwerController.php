@@ -82,7 +82,7 @@ class CustomerProductOwerController extends Base2Controller
         if ($product_owner) {
             $response = [
                 'success' => true,
-                'data' => $product_owner
+                'data' => $product_owner->product
             ];
             return response()->json($response, 200);
         }
