@@ -134,6 +134,26 @@ const fillterType = (event) => {
         }
     );
 }
+const fillterTypeBS = (event) => {
+    filter.document_status = 'BS';
+    router.get(route(`admin.orders.package.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
+const fillterTypeKT = (event) => {
+    filter.document_status = 'Check';
+    router.get(route(`admin.orders.package.${props.status}`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 const loadOrder = async $state => {
     console.log("loading...");
     console.log(filter);
@@ -282,18 +302,34 @@ const openAcceptDocument = (id) => {
 
 
 const save = () => {
-    console.log(form);
-    form.post(route("admin.orders.package.historyPayment", form.order?.id), {
-        onError: () => {
-            isModalActive.value = true;
-            editMode.value = false;
-        },
-        onSuccess: () => {
-            form.reset('id', 'payment_method', 'payment_date', 'amount_received', 'note');
-            isModalActive.value = false;
-            editMode.value = false;
-        },
-    });
+    // console.log(form);
+    // form.post(route("admin.orders.package.historyPayment", form.order?.id), {
+    //     onError: () => {
+    //         isModalActive.value = true;
+    //         editMode.value = false;
+    //     },
+    //     onSuccess: () => {
+    //         form.reset('id', 'payment_method', 'payment_date', 'amount_received', 'note');
+    //         isModalActive.value = false;
+    //         editMode.value = false;
+    //     },
+    // });
+    axios.post(`/admin/orders/package/historyPayment/${form.order?.id}`, form, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            })
+            .then(response => {
+                console.log(response);
+                form.order = response.data
+                form.amount_received = form.order.grand_total - form.order.price_percent
+                if(form.amount_received == 0){
+                    $(`#form_create_${form.order.id}`).hide();
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
 };
 const orderChangePacking = (order) => {
     let query = {
@@ -369,41 +405,43 @@ const deleteOrder = (order) => {
         <CardBoxModal class="w-full" v-model="isModalActive" buttonLabel="Thêm và cập nhật" has-cancel @confirm="save"
             :title="`Thanh toán cho ${form.order?.idPackage} (${form.order?.order_number})`">
             <div class="p-6 flex-auto">
-                <div v-if="form?.amount_unpaid > 0" class="flex flex-wrap -mx-3 mb-6">
-                    <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                        <InputLabel for="amount_received" value="Số tiền" />
-                        <MazInputPrice v-model="form.amount_received" currency="VND" locale="vi-VN" :min="0"
-                            :max="(form?.order?.grand_total - form?.order?.price_percent)"
-                            @formatted="formattedPrice = $event" />
+                <div :id="`form_create_${form.order?.id}`">
+                    <div v-if="form?.amount_unpaid > 0" class="flex flex-wrap -mx-3 mb-6">
+                        <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                            <InputLabel for="amount_received" value="Số tiền" />
+                            <MazInputPrice v-model="form.amount_received" currency="VND" locale="vi-VN" :min="0"
+                                :max="(form?.order?.grand_total - form?.order?.price_percent)"
+                                @formatted="formattedPrice = $event" />
 
-                        <InputError class="mt-2" :message="form.errors.amount_received" />
-                    </div>
-                    <div class="w-full md:w-1/3 px-3">
-                        <InputLabel for="payment_method" value="Hình thức thanh toán" />
-                        <select id="payment" v-model="form.payment_method"
-                            class="bg-gray-50 border_round border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected value="cash">Tiền mặt</option>
-                            <option value="banking">Chuyển khoản</option>
-                            <option value="payoo">Payoo</option>
-                        </select>
-                    </div>
-                    <div class="w-full md:w-1/3 px-3">
-                        <InputLabel for="owner" value="Ngày thanh toán" />
-                        <div date-rangepicker class="flex items-center">
-                            <div class="relative w-full border_round">
-                                <div
-                                    class="absolute border_round inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <InputError class="mt-2" :message="form.errors.amount_received" />
+                        </div>
+                        <div class="w-full md:w-1/3 px-3">
+                            <InputLabel for="payment_method" value="Hình thức thanh toán" />
+                            <select id="payment" v-model="form.payment_method"
+                                class="bg-gray-50 border_round border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option selected value="cash">Tiền mặt</option>
+                                <option value="banking">Chuyển khoản</option>
+                                <option value="payoo">Payoo</option>
+                            </select>
+                        </div>
+                        <div class="w-full md:w-1/3 px-3">
+                            <InputLabel for="owner" value="Ngày thanh toán" />
+                            <div date-rangepicker class="flex items-center">
+                                <div class="relative w-full border_round">
+                                    <div
+                                        class="absolute border_round inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    </div>
+                                    <VueDatePicker class="border_round" v-model="form.payment_date" placeholder="date" />
                                 </div>
-                                <VueDatePicker class="border_round" v-model="form.payment_date" placeholder="date" />
                             </div>
                         </div>
+                        <!-- <div class="w-full px-3">
+                            <UploadImage :max_files="4" v-model="form.images" :multiple="true" :label="`Chứng từ liên quan`" />
+                        </div> -->
                     </div>
-                    <!-- <div class="w-full px-3">
-                        <UploadImage :max_files="4" v-model="form.images" :multiple="true" :label="`Chứng từ liên quan`" />
-                    </div> -->
-                </div>
-                <div class="flex justify-end" v-if="form?.amount_unpaid > 0">
-                    <BaseButton label="Thêm và cập nhật" color="blue" class="hover:ring-blue-500" @click="save" />
+                    <div class="flex justify-end" v-if="form?.amount_unpaid > 0">
+                        <BaseButton label="Thêm và cập nhật" color="blue" class="hover:ring-blue-500" @click="save" />
+                    </div>
                 </div>
                 <p class="my-2 mt-5 font-semibold">Lịch sử thanh toán</p>
                 <table class="table table-striped w-full text-sm text-left text-gray-500 bg-white rounded-lg">
@@ -438,7 +476,7 @@ const deleteOrder = (order) => {
                             </td> -->
                             <td class="border-0 flex m-0 p-0">
                                 <UploadImageAuto :hasDelete="payment.state_document == 1 ? false : true"
-                                    :idPayment="payment?.id" :max_files="1" v-model="form.images" :multiple="false"
+                                    :idPayment="payment?.id" :max_files="100" v-model="form.images" :multiple="true"
                                     :old_images="payment?.order_package_payment" class="justify-start" />
                             </td>
                             <td class="border-0 text-center">
@@ -489,6 +527,7 @@ const deleteOrder = (order) => {
 
                     </tbody>
                     <tfoot>
+                        <!-- {{ form.order }} -->
                         <tr class="justify-between border-0 bg-gray-100 info">
                             <td class="border-0 font-bold">
                                 Tổng
@@ -647,11 +686,11 @@ const deleteOrder = (order) => {
                 <div class="w-full my-3">
                     <div class="w-full flex items-center">
                         <BaseIcon  :path="mdiBellRingOutline " class=" text-[#ff0000] rounded-lg mr-2 " size="20"></BaseIcon>
-                        <p class="text-[#ff0000]">Có {{ totalOrder('BS') }} hợp đồng chờ bổ sung HS thanh toán</p>
+                        <p class="text-[#ff0000] cursor-pointer" @click="fillterTypeBS">Có {{ totalOrder('BS') }} hợp đồng chờ bổ sung HS thanh toán</p>
                     </div>
                     <div class="w-full flex items-center">
                         <BaseIcon  :path="mdiBellRingOutline " class=" text-[#ff0000] rounded-lg mr-2 " size="20"></BaseIcon>
-                        <p class="text-[#ff0000]">Có {{ totalOrder('Check') }} hợp đồng chờ kiểm duyệt HS thanh toán</p>
+                        <p class="text-[#ff0000] cursor-pointer" @click="fillterTypeKT">Có {{ totalOrder('Check') }} hợp đồng chờ kiểm duyệt HS thanh toán</p>
                     </div>
 
                 </div>

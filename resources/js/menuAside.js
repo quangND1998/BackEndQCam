@@ -69,6 +69,12 @@ export default [{
                 route_list: null
             },
             {
+                route: 'commission.policy',
+                label: 'Quản lý chính sách',
+                permissions: ['setting-commersion','super-admin'],
+                route_list: null
+            },
+            {
                 route: 'commission.index',
                 label: 'Cài đặt hoa hồng',
                 permissions: ['setting-commersion','super-admin'],

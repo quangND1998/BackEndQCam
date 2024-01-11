@@ -41,6 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('orderRetail', [OrderHistoryController::class, 'getListOrderRetail']);
             Route::get('orderGift', [OrderHistoryController::class, 'getListGift']);
             Route::get('orderGift/{id}', [OrderHistoryController::class, 'getHistoryGift']);
+            Route::get('orderGiftAll', [OrderHistoryController::class, 'getListGiftAll']);
 
             Route::get('checkOrder/{id}', [CustomerProductOwerController::class, 'checkOrder']);
             // getHistoryGift

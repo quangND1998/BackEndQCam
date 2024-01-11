@@ -332,37 +332,32 @@ const callPhone = (order) => {
     //     extraHeaders: ["CALL-FROM: PitelSDK"]
     // })
 }
-onMounted(() => {
-    (function (a, b) {
-        var s = document.createElement('script');
-        s.type = 'text/javascript';
-        s.async = true;
-        s.onload = () => { PitelSDK.k = a; b() };
-        s.src = '/assets/js/sdk-1.1.test.min.js';
-        // s.src = 'https://portal.tel4vn.com/pitelsdk/sdk-1.1.test.min.js';
-        var x = document.getElementsByTagName('script')[0];
-        x.parentNode.insertBefore(s, x);
-    })('d1ca84ac-2d98-4faa-92d4-699a6ce14eb7', () => {
-        console.log('Pitel SDK Loaded');
-    });
+// onMounted(() => {
+//     (function (a, b) {
+//         var s = document.createElement('script');
+//         s.type = 'text/javascript';
+//         s.async = true;
+//         s.onload = () => { PitelSDK.k = a; b() };
+//         s.src = '/assets/js/sdk-1.1.test.min.js';
 
-    setTimeout(function () {
-        let sdkOptions = {
-            enableWidget: true,
-            sipOnly: true,
-            sipDomain: 'demo.cgvtelecom.vn:5060',
-            wsServer: "wss://cgvcall.mobilesip.vn:7444",
-            sipPassword: "Cgv@@2023##"
-        }
-        pitelSDK = new PitelSDK('xxx', 'xxx', '102', {}, sdkOptions)
-        // setTimeout(function () {
-        //     pitelSDK.call('0968967624', {
-        //       extraHeaders: ["CALL-FROM: PitelSDK"]
-        //     })
-        // }, 100)
+//         var x = document.getElementsByTagName('script')[0];
+//         x.parentNode.insertBefore(s, x);
+//     })('d1ca84ac-2d98-4faa-92d4-699a6ce14eb7', () => {
+//         console.log('Pitel SDK Loaded');
+//     });
 
-    }, 500);
-})
+//     setTimeout(function () {
+//         let sdkOptions = {
+//             enableWidget: true,
+//             sipOnly: true,
+//             sipDomain: 'demo.cgvtelecom.vn:5060',
+//             wsServer: "wss://cgvcall.mobilesip.vn:7444",
+//             sipPassword: "Cgv@@2023##"
+//         }
+//         pitelSDK = new PitelSDK('xxx', 'xxx', '102', {}, sdkOptions)
+
+//     }, 500);
+// })
 </script>
 <template class="body_fix">
     <Head title="Quản lý chăm sóc kh" />
@@ -710,12 +705,12 @@ onMounted(() => {
                                                 v-if="hasAnyPermission(['create-contract-complete']) && order.status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
                                                 @click="orderChangePacking(order)" size="20">
                                             </BaseIcon>
-                                            <BaseIcon :path="mdiPhone"
+                                            <!-- <BaseIcon :path="mdiPhone"
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"
                                                 v-tooltip.top="'Call'"
                                                 v-if="hasAnyPermission(['create-contract-complete']) && order.status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
                                                 @click="callPhone(order)" size="20">
-                                            </BaseIcon>
+                                            </BaseIcon> -->
                                         </td>
                                     </tr>
 

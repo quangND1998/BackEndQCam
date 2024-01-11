@@ -109,22 +109,14 @@ const onFileChange = (e) => {
             })
             .then(response => {
                 console.log(response);
+                formData.delete();
+                console.log(formData);
             // Handle the response from the server
             })
             .catch(error => {
                 console.log(error);
             // Handle any errors
             });
-
-            // form.post(route("admin.orders.package.saveImagePayment", props.idPayment),
-            //         {
-            //             preserveState: false,
-            //             preserveScroll: true
-            //         }, {
-            //         onSuccess: () => {
-            //             swal.fire("Thành Công!", "Đã làm mới hợp đồng, chuyển sang trạng thái chờ duyệt.", "success");
-            //         },
-            //     });
         }
 
     }
@@ -132,19 +124,33 @@ const onFileChange = (e) => {
 }
 
 const setFiles = (files) => {
-    for (var i = 0; i < files.length; i++) {
+    const formData = new FormData();
+        for (var i = 0; i < files.length; i++) {
 
-        if (((props.old_images? props.old_images.length:0)+form.images.length) <   props.max_files) {
+            if (((props.old_images? props.old_images.length:0)+form.images.length) <   props.max_files) {
 
-            form.images.push(files[i])
-            emit('update:modelValue', form.images)
-            images.value.push({
-                name: files[i].name,
-                image: URL.createObjectURL(files[i])
-            });
+                form.images.push(files[i])
+                emit('update:modelValue', form.images)
+                images.value.push({
+                    name: files[i].name,
+                    image: URL.createObjectURL(files[i])
+                });
+                formData.append('images[' + i + ']', files[i]);
+            }
+
         }
-
-    }
+        console.log(formData);
+            axios.post(`/admin/orders/package/payment/${props.idPayment}/update`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+            });
 }
 const Delete = (img) => {
     swal
@@ -193,7 +199,7 @@ const Delete = (img) => {
                             class="absolute right-0 top-0 text-red-600 cursor-pointer hover:text-red-700  " size="17">
                         </BaseIcon>
                         <img v-fullscreen-img :src="img.image" class="w-16 h-14 object-cover rounded-lg" alt="">
-                       
+
                     </div>
 
                     <label :for="id" v-if="((old_images? old_images.length:0)+form.images.length) < max_files"

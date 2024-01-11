@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commission;
+use App\Models\CommissionSetting;
 use App\Models\CommissionType;
 use App\Models\UserType;
 use Illuminate\Http\Request;
@@ -10,16 +11,35 @@ use Inertia\Inertia;
 use Modules\Order\Repositories\CommissionRepository;
 class ComissionController extends Controller
 {
-    public function new (){
-        $commissions= Commission::paginate(15);
-        return Inertia::render('Commission/Index', compact('commissions'));
-    }
-    public function index (){
-        $commissions= Commission::orderBy('commission','desc')->orderBy('created_at', 'desc')->paginate(10);
+    public function create (){
         $userType = UserType::get();
-        $commissionType = CommissionType::with('participants')->get();
+        $commissionType = CommissionType::with('participants.commission')->get();
+        return Inertia::render('Commission/Create', compact('userType','commissionType'));
+    }
+    public function policy(Request $request){
+        $commissionSettings = CommissionSetting::orderBy('created_at','desc')->paginate(10);
+        return Inertia::render('Commission/Policy', compact('commissionSettings'));
+    }
+    public function policyDetail(Request $request,$id){
+         $userType = UserType::get();
+         $commissionType = CommissionType::with('participants.commission')->get();
+         $commissionSetting = CommissionSetting::with('commission')->findOrFail($id);
+
+        // return $commissionSetting;
+         return Inertia::render('Commission/Index', compact('userType','commissionType','commissionSetting'));
+    }
+
+    public function index (Request $request){
+        // dd($request);
+        $userType = UserType::get();
+        $commissionType = CommissionType::with('participants.commission')->get();
         // return $commissionType;
-        return Inertia::render('Commission/Index', compact('commissions','userType','commissionType'));
+        $commissionSetting = CommissionSetting::with('commission')->orderBy('created_at','desc')
+        ->fillter($request->only( 'from', 'to'))->first();
+
+        // return $commissionSetting;
+
+        return Inertia::render('Commission/Index', compact('userType','commissionType','commissionSetting'));
     }
     public function saveType(Request $request){
         // dd($request);
@@ -49,30 +69,46 @@ class ComissionController extends Controller
         return Commission::where('type',$type)->orderBy('spend_from', 'desc')->orderBy('created_at', 'desc')->paginate(5);
     }
     public function store(Request $request){
-        dd($request);
+        // dd($request);
         $this->validate(
             $request,
             [
-                'spend_from' => 'required|numeric|gt:0',
-                'spend_to' => 'required|numeric|gt:0',
-                'commission' => 'required|numeric|gt:0',
-                'type' => 'required',
-                'level_revenue' => 'required|numeric|gt:0',
-                'discount_form_sale' => 'required_if:type,==,ctv',
-                'discount_form_manager_sale' => 'required_if:type,==,ctv'
+                'commission' => 'required',
+                'fromDate' => 'required',
+                'toDate' => 'required'
             ]
         );
+        $commissionSetting = CommissionSetting::with('commission')->where('dateFrom',$request->fromDate)->where('dateTo',$request->toDate)->first();
+        if(!$commissionSetting){
+            $commissionSetting = new CommissionSetting;
+        }
+        $commissionSetting->dateFrom = $request->fromDate;
+        $commissionSetting->dateTo = $request->toDate;
+        $commissionSetting->level_revenue = $request->level_revenue;
+        $commissionSetting->save();
 
-        Commission::create([
-            'spend_from'=> $request->spend_from,
-            'spend_to'=> $request->spend_to,
-            'commission'=> $request->commission,
-            'level_revenue' => $request->level_revenue,
-            'type'=> $request->type,
-            'greater' =>$request->greater,
-            'discount_form_sale' => $request->discount_form_sale,
-            'discount_form_manager_sale' => $request->discount_form_manager_sale
-        ]);
+        // dd($request);
+        $commissionSetting->commission()->delete();
+
+        foreach($request->commission as $commissionType){
+            foreach($commissionType as $commission){
+                foreach($commission as $com){
+                    if($com['commission'] > 0){
+                    $commission=   Commission::create([
+                            'spend_from'=> $com['spend_from'],
+                            'spend_to'=> $com['spend_to'],
+                            'commission'=> $com['commission'],
+                            'commission_type_id' => $com['commissionType'],
+                            'user_type_id'=> $com['participant'], //ref
+                            'commissionSetting_id' => $commissionSetting->id
+                        ]);
+                        // $commissionSetting->commission()->attach($commission);
+                    }
+                }
+            }
+        }
+
+        // return $commissionSetting;
         return back()->with('success', 'Tạo mới thành công');
     }
 
@@ -111,6 +147,28 @@ class ComissionController extends Controller
             'status' => $request->status
         ]);
         return back()->with('success', 'Thay đổi trạng thái thành công');
+    }
+    public function changeStatusPolicy(Request $request, $id){
+
+        $commission = CommissionSetting::find($id);
+        if($commission){
+             $commission->update([
+                'status' => $request->status
+            ]);
+
+            return back()->with('success', 'Thay đổi trạng thái thành công');
+        }else{
+            return back()->with('success', 'Không tồn tại');
+        }
+    }
+    public function destroyCommissionSetting(Request $request, $id){
+        $commission = CommissionSetting::find($id);
+        if($commission){
+             $commission->delete();
+            return back()->with('success', 'xóa chính sách thành công');
+        }else{
+            return back()->with('success', 'Không tồn tại');
+        }
     }
 }
 

@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use App\Jobs\UpdateCommissionJob;
+use App\Models\CommissionType;
 
 class CommissionsPackagesController extends Controller
 {
@@ -54,6 +55,10 @@ class CommissionsPackagesController extends Controller
         $filters = $request->only('date', 'from', 'to', 'day', 'role');
         // $roles = ['saler','leader-sale','ctv','telesale'];
         $roles = $role;
+
+        $commisionType = CommissionType::with('participants')->get();
+        return $commisionType;
+
         $users = User::with(['roles', 'commission.orderpackage.historyPayment'])
             ->whereHas('commission', function ($query) use ($filters) {
                 $query->whereHas('orderpackage.historyPayment', function ($query) use ($filters) {
