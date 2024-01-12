@@ -18,8 +18,13 @@ class ComplaintController extends Base2Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'type' => 'required',
-            'description' => 'required|string'
+            'star' => 'required',
+            'data' => 'nullable',
+            'description' => 'nullable|string',
+        ], [
+            'star.required' => 'Vui lòng chọn số sao',
+            'star.required' => 'Vui lòng chọn số sao',
+
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
