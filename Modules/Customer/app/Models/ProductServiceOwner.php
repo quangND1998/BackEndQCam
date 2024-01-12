@@ -75,4 +75,9 @@ class ProductServiceOwner extends Model
     {
         return $this->hasMany(Order::class,'product_service_owner_id');
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class,'product_service_owner_id');
+    }
 }

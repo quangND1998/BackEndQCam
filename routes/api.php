@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\API\FAQsController;
-use App\Http\Controllers\API\LoginController;
+use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\OrderController;
-use App\Http\Controllers\API\ProductRetailController;
+use App\Http\Controllers\Api\ProductRetailController;
 use App\Http\Controllers\API\SettingAndInforController;
 use App\Http\Controllers\API\ShipperController;
 use App\Http\Controllers\API\VoucherController;
@@ -35,7 +35,7 @@ Route::prefix('v1')->as('v1.')->group(function () {
 
 Route::prefix('payoo')->as('payoo.')->group(function () {
     Route::post('ipn', [PaymentController::class, 'payooIPN'])->name('payooIPN');
-            
+
 });
 Route::middleware(['auth:sanctum'])->group(function () {
 
@@ -78,7 +78,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
             Route::put('{id}/orderCompeleted', [OrderController::class, 'orderCompeleted'])->name('orderCompeleted');
             Route::put('{id}/orderCancel', [OrderController::class, 'orderCancel'])->name('orderCancel');
-            
+
         });
 
 
