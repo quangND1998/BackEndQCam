@@ -153,6 +153,13 @@ export default [{
                 route_list: null
             },
             {
+                route: 'admin.activity-care.index',
+                label: 'Hoạt động chăm sóc cây',
+
+                permissions: ['view-care', 'create-care', 'update-care', 'delete-care'],
+                route_list: null
+            },
+            {
                 route: 'admin.product-retail.index',
                 label: 'Sản phẩm bán lẻ',
 

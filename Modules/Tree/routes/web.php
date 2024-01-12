@@ -1,10 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Tree\app\Http\Controllers\ActivityCareController;
+use Modules\Tree\app\Http\Controllers\HistoryCareController;
 use Modules\Tree\app\Http\Controllers\LandController;
 use Modules\Tree\app\Http\Controllers\ProductRetailController;
 use Modules\Tree\app\Http\Controllers\ProductServiceController;
 use Modules\Tree\app\Http\Controllers\TreeController;
+use Modules\Tree\app\Models\ActivityCare;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +57,16 @@ Route::middleware(['auth'])->group(
                 Route::post('/{product_service}/update', [ProductServiceController::class, 'update'])->name('update');
                 Route::delete('/{product_service}/destroy', [ProductServiceController::class, 'destroy'])->name('destroy');
                 Route::post('/changeStatus', [ProductServiceController::class, 'changeStatus'])->name('changeStatus');
+            });
+            Route::prefix('activity-care')->as('activity-care.')->group(function () {
+                Route::get('', [ActivityCareController::class, 'index'])->name('index');
+                Route::post('store', [ActivityCareController::class, 'store'])->name('store');
+                Route::post('/{activity}/update', [ActivityCareController::class, 'update'])->name('update');
+                Route::delete('/{activity}/destroy', [ActivityCareController::class, 'destroy'])->name('destroy');
+            });
+            Route::prefix('historyCare')->as('historyCare.')->group(function () {
+                Route::post('{tree}/store', [HistoryCareController::class, 'store'])->name('store');
+                Route::post('storeLand', [HistoryCareController::class, 'storeLand'])->name('storeLand');
             });
         });
     }
