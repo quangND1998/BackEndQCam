@@ -66,6 +66,8 @@ class ReviewManagerController extends Base2Controller
             'evaluate' => 'nullable',
             'data' => 'nullable',
             'description' => 'nullable|string',
+            'images' => 'nullable',
+            'images.*' => 'mimes:jpeg,png,jpg|max:2048',
 
         ], [
             'star.required' => 'Vui lòng đánh giá'
@@ -80,8 +82,15 @@ class ReviewManagerController extends Base2Controller
                 'star' => $request->star,
                 'data' => $request->data,
             ]);
+
+            if ($request->images) {
+                $order->reviews->clearMediaCollection('review_images');
+                foreach ($request->images as $image) {
+                    $order->reviews->addMedia($image)->toMediaCollection('review_images');
+                }
+            }
         } else {
-            ReviewManagement::create([
+            $review = ReviewManagement::create([
                 'evaluate' => $request->evaluate,
                 'description' => $request->description,
                 'user_id' => Auth::user()->id,
@@ -89,6 +98,12 @@ class ReviewManagerController extends Base2Controller
                 'data' => $request->data,
                 'order_id' => $order->id,
             ]);
+
+            if ($request->images) {
+                foreach ($request->images as $image) {
+                    $review->addMedia($image)->toMediaCollection('review_images');
+                }
+            }
         }
 
         return $this->sendResponse('Cảm ơn bạn Góp ý cho chúng tôi!', 200);
