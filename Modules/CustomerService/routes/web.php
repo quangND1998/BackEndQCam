@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\CustomerService\app\Http\Controllers\Api\CreateNote;
+use Modules\CustomerService\app\Http\Controllers\Api\CreateVisit;
+use Modules\CustomerService\app\Http\Controllers\Api\GetNote;
+use Modules\CustomerService\app\Http\Controllers\Api\UpdateVisit;
 use Modules\CustomerService\app\Http\Controllers\GetCustomerOrderPackage;
 
 /*
@@ -19,6 +23,10 @@ Route::middleware(['auth'])->group(
     function () {
         Route::prefix('/customer-service/customer/{customerId}')->group(function () {
             Route::get('/order-packages', GetCustomerOrderPackage::class);
+            Route::post('/notes', CreateNote::class);
+            Route::get('/notes', GetNote::class);
+            Route::post('/schedule-visits', CreateVisit::class);
+            Route::put('/schedule-visits/{scheduleVisitId}', UpdateVisit::class);
         });
     }
 );

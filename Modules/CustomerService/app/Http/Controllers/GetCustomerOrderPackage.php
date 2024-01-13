@@ -11,7 +11,12 @@ class GetCustomerOrderPackage extends Controller
 {
     public function __invoke(Request $request)
     {
-        $orderPackages = OrderPackage::where('user_id', $request->customerId)
+        $customerId = $request->customerId;
+        $declineOrderPackageCount = OrderPackage::where('user_id', $customerId)
+            ->where('status', 'decline')
+            ->count();
+        $orderPackages = OrderPackage::where('user_id', $customerId)
+            ->where('status', 'complete')
             ->with(['customer', 'product_service'])
             ->with('product_service_owner', function ($query) {
                 $query->with('orders', function ($orderQuery) {
@@ -23,6 +28,10 @@ class GetCustomerOrderPackage extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
-        return Inertia::render('Modules/CustomerService/order-package', compact('orderPackages'));
+        return Inertia::render('Modules/CustomerService/order-package', compact(
+            'orderPackages',
+            'declineOrderPackageCount',
+            'customerId'
+        ));
     }
 }
