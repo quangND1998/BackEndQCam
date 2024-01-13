@@ -107,6 +107,24 @@ const searchTree = () => {
         }
     );
 }
+const selected = ref([])
+const selectAll = computed({
+    get() {
+        return props.trees.data
+            ? selected.value.length == props.trees.data
+            : false;
+    },
+    set(value) {
+        var array_selected = [];
+
+        if (value) {
+            props.trees.data.forEach(function (tree) {
+                array_selected.push(tree.id);
+            });
+        }
+        selected.value = array_selected;
+    }
+});
 </script>
 <template>
     <LayoutAuthenticated>
@@ -121,6 +139,12 @@ const searchTree = () => {
                 <p>This is sample modal</p>
             </CardBoxModal>
             <div class="flex justify-between">
+                <div class="right">
+                    <Button class="bg-[#DBE9FF] rounded border-2 border-[#1D75FA]  text-black p-2  mr-3 hover:bg-[#1D75FA] hover:text-white"  small
+                        @click="createTree()" label="Chăm sóc" >Chăm sóc</Button>
+                        <Button class="bg-[#95F7BE] rounded border-2 border-[#27AE60]  text-black p-2  mr-3 hover:bg-[#27AE60] hover:text-white"  small
+                        @click="createTree()" label="Chăm sóc" >Chăm sóc toàn lô</Button>
+                </div>
                 <div class="left">
                     <div class="flex content-center items-center">
                         <BaseButton color="default" :icon="mdiFilter" small class="p-2 my mr-2 bg-white" :iconSize="20" />
@@ -130,7 +154,7 @@ const searchTree = () => {
                 </div>
                 <div class="right">
                     <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
-                        @click="createTree()" label="Create Tree" />
+                        @click="createTree()" label="Tạo mới cây" />
                 </div>
             </div>
             <TreeModal :land="land" />
@@ -138,6 +162,11 @@ const searchTree = () => {
                 <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700  bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
+                            <th scope="col" class="px-6 py-3 flex items-center">
+                                    <input type="checkbox" v-model="selectAll"
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
+                                    #
+                            </th>
                             <th scope="col" class="py-3 px-6 text-xs">STT</th>
                             <th scope="col" class="py-3 px-6 text-xs">Tên</th>
                             <th scope="col" class="py-3 px-6 text-xs">Vị trí</th>
@@ -148,7 +177,7 @@ const searchTree = () => {
                             <th scope="col" class="py-3 px-6 text-xs">Trang thái</th>
                             <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
                             <th scope="col" class="py-3 px-6 text-xs">Tình Trạng cây</th>
-                            <!-- <th scope="col" class="py-3 px-6 text-xs">Bộ sưu tập</th> -->
+                            <th scope="col" class="py-3 px-6 text-xs">Hành động</th>
                             <th scope="col" class="py-3 px-6 text-xs">
                                 <span class="sr-only">Edit</span>
                             </th>
@@ -157,6 +186,12 @@ const searchTree = () => {
                     <tbody>
                         <tr v-for="(tree, index) in trees.data" :key="index"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <th scope="col" class="px-6 py-3 ">
+                                    <div class="flex items-center ">
+                                        <input id="default-checkbox" type="checkbox" v-model="selected" :value="tree.id"
+                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
+                                    </div>
+                            </th>
                             <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ index  + trees.from  }}
                             </th>
@@ -199,7 +234,9 @@ const searchTree = () => {
                                 <strong>{{ tree.status }}</strong>
                             </th>
 
-
+                            <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                Chăm sóc
+                            </th>
                             <!-- <th scope="row" class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 link</th> -->
                             <td class="py-1 px-6 text-right">

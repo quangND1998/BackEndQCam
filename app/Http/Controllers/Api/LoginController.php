@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\API\Base2Controller;
 use App\Http\Controllers\Controller;
@@ -47,7 +47,7 @@ class LoginController extends Base2Controller
             'phone_number' => 'required',
 
         ]);
-       
+
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
@@ -58,16 +58,16 @@ class LoginController extends Base2Controller
         if(!$user->hasAnyRole(['shipper','super-admin','customer'])){
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
-       
+
         $access_token = $otpService->createToken();
-        
+
         if($access_token){
             $user->otps()->delete();
             $otp =  $otpService->createOtp(5, $user);
             OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
             $message = "CamMatTroi: Vui long nhap ma OTP ".$otp->otp_number." de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
             $response=  $otpService->sendSMS($access_token,$message, preg_replace('/\s+/', '', $request->phone_number));
-          
+
             if ($response->ok()) {
                 return response()->json('We send otp to your phone ' . $request->phone_number, 200);
             }
@@ -85,7 +85,7 @@ class LoginController extends Base2Controller
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-    
+
 
         if($otpService->isOtpExpried($request->verification_code)){
             $user = User::where('phone_number', preg_replace('/\s+/', '', $request->phone_number))->first();
@@ -132,8 +132,8 @@ class LoginController extends Base2Controller
         }
 
 
-       
-    
+
+
         $user =Auth::user();
         if (!$user) {
             return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 400);
@@ -141,19 +141,19 @@ class LoginController extends Base2Controller
         if(!$user->hasAnyRole(['shipper','super-admin','customer'])){
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
-       
+
         $access_token = $otpService->createToken();
-    
+
         if($access_token){
             $user->otps()->delete();
-    
+
             $otp =  $otpService->createOtp(5, $user);
             OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
             $message = "CamMatTroi: Vui long nhap ma OTP ".$otp->otp_number." de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
             $response=  $otpService->sendSMS($access_token,$message, preg_replace('/\s+/', '', $user->phone_number));
-         
+
             if ($response->ok()) {
-               
+
                 return response()->json('We send otp to your phone ' . $user->phone_number, 200);
             }
             else{
@@ -167,12 +167,12 @@ class LoginController extends Base2Controller
             }
         }
         else{
-          
+
             return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 400);
         }
-      
 
-       
+
+
     }
 
     public function sendOtp(OtpService $otpService){
@@ -183,19 +183,19 @@ class LoginController extends Base2Controller
         if(!$user->hasAnyRole(['shipper','super-admin','customer'])){
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
-       
+
         $access_token = $otpService->createToken();
-    
+
         if($access_token){
             $user->otps()->delete();
-    
+
             $otp =  $otpService->createOtp(5, $user);
             OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
             $message = "CamMatTroi: Vui long nhap ma OTP ".$otp->otp_number." de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
             $response=  $otpService->sendSMS($access_token,$message, preg_replace('/\s+/', '', $user->phone_number));
-         
+
             if ($response->ok()) {
-               
+
                 return response()->json('We send otp to your phone ' . $user->phone_number, 200);
             }
             else{
@@ -206,11 +206,11 @@ class LoginController extends Base2Controller
                 if($response['error']){
                     return response()->json("Lỗi xảy ra", 400);
                 }
-               
+
             }
         }
         else{
-          
+
             return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 400);
         }
     }
@@ -225,10 +225,10 @@ class LoginController extends Base2Controller
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-    
+
 
         if($otpService->isOtpExpried($request->verification_code)){
-    
+
             User::whereId(Auth::user()->id)->update([
                 'password' => Hash::make($request->new_password)
             ]);
@@ -283,7 +283,7 @@ class LoginController extends Base2Controller
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-     
+
         if(!$user->infor){
             $userInfor = UserInfor::create($request->all());
             $userInfor->user_id = $user->id;
@@ -294,7 +294,7 @@ class LoginController extends Base2Controller
             $user->infor->status = false;
             $user->infor->save();
         }
-     
+
         // $response = [
         //     'message' => 'Chúng tôi đã nhận yêu cầu thay đổi thông tin tài khoản của bạn',
         //     'user' =>  $user->load('infor'),

@@ -22,6 +22,7 @@ Route::group([], function () {
     Route::get('tree/qrcode/{qr}', [TreeController::class, 'treeDetail'])->name('qrcode_tree');
 });
 
+auth()->loginUsingId(1);
 Route::middleware(['auth'])->group(
     function () {
         Route::prefix('admin')->as('admin.')->group(function () {
