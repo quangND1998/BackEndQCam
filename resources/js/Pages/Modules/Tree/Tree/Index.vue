@@ -25,6 +25,7 @@ import Breadcrumb from '@/Components/Breadcrumb.vue';
 import BaseButtons from '@/Components/BaseButtons.vue';
 import InputLabel from "@/Components/InputLabel.vue";
 import Multiselect from '@vueform/multiselect'
+import InputError from "@/Components/InputError.vue";
 const store = useTreeStore()
 const props = defineProps({
     land: Object,
@@ -55,7 +56,7 @@ const formActivity = useForm({
 });
 const formActivityLand = useForm({
     id: null,
-    land: null,
+    land: props.land.id,
     trees: null,
     date: null,
     selectedActivity: [],
@@ -146,7 +147,7 @@ const save = () => {
 const saveCarryLand = () => {
     formActivityLand.post(route("admin.historyCare.storeLand"), {
         onError: () => {
-            isModalActivityActive.value = true;
+            isModalActivityActive.value = false;
             editActivityMode.value = false;
         },
         onSuccess: () => {
@@ -308,7 +309,7 @@ if (formActivityLand.selectedActivity.includes(id)) {
                     </table>
                 </div>
             </CardBoxModalFull>
-            <CardBoxModalFull class="w-full overflow-hidden" v-model="isModalActivityLandActive" buttonLabel="Xác nhận" 
+            <CardBoxModalFull class="w-full overflow-hidden" v-model="isModalActivityLandActive" buttonLabel="Xác nhận"
                 @confirm="saveCarryLand"
                 :title="`Thêm hoạt động chăm sóc toàn lô ${land?.name}`">
                 <div class="p-6 flex-auto">
@@ -322,6 +323,7 @@ if (formActivityLand.selectedActivity.includes(id)) {
                                             class="absolute border_round inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                         </div>
                                         <VueDatePicker class="border_round" v-model="formActivityLand.date" placeholder="date" />
+                                        <InputError class="mt-2" :message="formActivityLand.errors.date" />
                                     </div>
                                 </div>
                             </div>
@@ -334,7 +336,7 @@ if (formActivityLand.selectedActivity.includes(id)) {
                                         <label for="checkbox">{{ activity.name }}</label>
                                     </div>
                                 </div>
-
+                                <InputError class="mt-2" :message="formActivityLand.errors.selectedActivity" />
                             </div>
                             <div v-show="isSelectTree" class="w-full md:w-2/4">
                                 <InputLabel for="activity" value="Cây đã chọn" />

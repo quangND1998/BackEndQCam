@@ -33,6 +33,13 @@ class HistoryCareController extends Controller
      */
     public function store(Request $request, Tree $tree): RedirectResponse
     {
+        $this->validate(
+            $request,
+            [
+                'date' => 'required',
+                'selectedActivity' => 'required'
+            ]
+        );
         // return "ngaaaa";
         $historyCare = new HistoryCare;
         $historyCare->date = $request->date;
@@ -49,8 +56,15 @@ class HistoryCareController extends Controller
     }
     public function storeLand(Request $request){
 
-        dd($request->trees);
-        if($request->trees){
+        $this->validate(
+            $request,
+            [
+                'land' => 'required',
+                'date' => 'required',
+                'selectedActivity' => 'required'
+            ]
+        );
+        if(count($request->trees) > 0){
             $trees = Tree::find($request->trees);
         }else{
             $land = Land::with('trees')->findOrFail($request->land);
