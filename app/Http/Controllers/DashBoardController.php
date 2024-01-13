@@ -25,6 +25,7 @@ class DashBoardController extends Controller
     }
     public function index(Request $request){
         $user = Auth::user();
+        $user = User::find(1);
         return $this->calculationSale($request,$user);
     }
     public function detailSale(Request $request,User $user){
