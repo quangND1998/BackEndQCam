@@ -1,11 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\CustomerService\app\Http\Controllers\Api\CreateNote;
-use Modules\CustomerService\app\Http\Controllers\Api\CreateVisit;
-use Modules\CustomerService\app\Http\Controllers\Api\GetNote;
-use Modules\CustomerService\app\Http\Controllers\Api\UpdateVisit;
+use Modules\CustomerService\app\Http\Controllers\Api\ExtraServices\CreateExtraService;
+use Modules\CustomerService\app\Http\Controllers\Api\ExtraServices\GetExtraService;
+use Modules\CustomerService\app\Http\Controllers\Api\ExtraServices\UpdateExtraService;
+use Modules\CustomerService\app\Http\Controllers\Api\Notes\CreateNote;
+use Modules\CustomerService\app\Http\Controllers\Api\Reminds\CreateRemind;
+use Modules\CustomerService\app\Http\Controllers\Api\ScheduleVisits\CreateVisit;
+use Modules\CustomerService\app\Http\Controllers\Api\Notes\GetNote;
+use Modules\CustomerService\app\Http\Controllers\Api\ScheduleVisits\UpdateVisit;
 use Modules\CustomerService\app\Http\Controllers\GetCustomerOrderPackage;
+use Modules\CustomerService\app\Http\Controllers\Api\Reminds\GetRemind;
+use Modules\CustomerService\app\Http\Controllers\Api\Reminds\UpdateRemind;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +32,19 @@ Route::middleware(['auth'])->group(
             Route::post('/notes', CreateNote::class);
             Route::get('/notes', GetNote::class);
             Route::post('/schedule-visits', CreateVisit::class);
-            Route::put('/schedule-visits/{scheduleVisitId}', UpdateVisit::class);
+            Route::put('/schedule-visits/{scheduleVisit}', UpdateVisit::class);
+            Route::post('/reminds', CreateRemind::class);
+        });
+
+        Route::prefix('/customer-service')->group(function () {
+            Route::get('/reminds', GetRemind::class);
+            Route::put('/reminds/{remind}', UpdateRemind::class);
+        });
+
+        Route::prefix('/extra-services')->group(function () {
+            Route::get('/', GetExtraService::class);
+            Route::post('/', CreateExtraService::class);
+            Route::put('/{visitExtraService}', UpdateExtraService::class);
         });
     }
 );

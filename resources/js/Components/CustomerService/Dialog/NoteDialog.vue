@@ -1,44 +1,45 @@
 <script setup>
-import { inject, onMounted, ref } from 'vue';
+import { inject, onMounted, reactive, ref } from 'vue';
 import axios from "axios";
 import debounce from 'lodash/debounce'
 
 import SpinnerIcon from "@/Components/CustomerService/SpinnerIcon.vue";
+import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '@/Components/CustomerService/composables/useQuery';
 
-const { customerId } = inject('ORDER_PACAGE_PAGE');
+const { customerId } = inject('ORDER_PACKAGE_PAGE');
 
 const visible = ref(false);
-const note = ref('');
-const isSaving = ref(false);
+const noteForm = reactive({
+  note: ''
+});
 const previouseNote = ref('');
 
-const onChangeNote = debounce(async (e) => {
-  if (previouseNote.value === e.target.value) {
-    return;
-  }
+const onSuccess = () => {
+  previouseNote.value = noteForm.note;
+}
 
-  try {
-    note.value = e.target.value;
-    isSaving.value = true;
-    await axios.post(`/customer-service/customer/${customerId}/notes`, {
-      note: note.value,
-    });
-  } catch (error) {
-    // console.log(error);
-  } finally {
-    previouseNote.value = note.value;
-    isSaving.value = false;
-  }
+const { isLoading, executeQuery } = useQuery(
+  CUSTOMER_SERVICE_API_MAKER.CREATE_NOTE(customerId),
+  noteForm,
+  onSuccess,
+);
+
+const onChangeNote = debounce(async (e) => {
+  if (previouseNote.value === e.target.value) return;
+  noteForm.note = e.target.value;
+  executeQuery();
 }, 500);
 
-onMounted(async () => {
-  try {
-    const { data } = await axios.get(`/customer-service/customer/${customerId}/notes`);
-    note.value = data.note;
+const { executeQuery: queryData } = useQuery(
+  CUSTOMER_SERVICE_API_MAKER.GET_NOTE(customerId),
+  null,
+  (data) => {
+    noteForm.note = data.note;
     previouseNote.value = data.note;
-  } catch (error) {
-    // Do something
   }
+);
+onMounted(async () => {
+  queryData();
 });
 </script>
 
@@ -52,11 +53,11 @@ onMounted(async () => {
         <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="visible = false"/>
       </div>
       <textarea
-        :value="note"
+        :value="noteForm.note"
         @input="onChangeNote"
         class="w-96 resize-none bg-yellow-200 border-none text-sm focus:!outline-none focus:!border-none focus:!shadow-none focus:ring-0" rows="10"></textarea>
       <div class="flex invisible justify-end py-1" :class="{
-        '!visible': isSaving,
+        '!visible': isLoading,
       }">
         <SpinnerIcon class="text-orange-500" />
       </div>

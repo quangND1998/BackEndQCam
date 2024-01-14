@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import moment from 'moment';
 
-import { getCycleYear } from '@/Components/CustomerService/helpers';
+import { getCycleYear } from '@/Components/CustomerService/stuffs/helpers';
 import CycleTime from '@/Components/CustomerService/CycleTime.vue';
 
   const props = defineProps({
@@ -11,8 +11,12 @@ import CycleTime from '@/Components/CustomerService/CycleTime.vue';
   });
 
   const visits = computed(() => {
+    const sortedVisit = props.orderPackage.product_service_owner.visit.sort((a, b) => {
+      return moment(a.date_time, 'YYYY-MM-DD HH:mm:ss').diff(moment(b.date_time, 'YYYY-MM-DD HH:mm:ss'), 'seconds');
+    });
+
     return [
-      ...props.orderPackage.product_service_owner.visit,
+      ...sortedVisit,
       ...(new Array(12 - props.orderPackage.product_service_owner.visit.length).fill(undefined))
     ];
   });
@@ -24,6 +28,13 @@ import CycleTime from '@/Components/CustomerService/CycleTime.vue';
         .subtract(25, 'days')
         .format('YYYY-MM-DD HH:mm:ss')
       : props.orderPackage.product_service_owner.time_approve;
+  });
+
+  const subtractPosition = computed(() => {
+    const scheduleVisits = props.orderPackage.product_service_owner.visit;
+    return scheduleVisits.length > 0
+      ? scheduleVisits.length - 1
+      : 0;
   });
 
   const cycleYear = computed(() => getCycleYear(
@@ -38,7 +49,7 @@ import CycleTime from '@/Components/CustomerService/CycleTime.vue';
       <div class="col-span-2 pl-1">{{ orderPackage.idPackage }}</div>
       <div class="text-center">{{ orderPackage.product_service.life_time }} {{ cycleYear }}</div>
       <div v-for="(visit, index) in visits" class="text-center">
-        <CycleTime :data="visit" :position="index" :startDate="startDate"
+        <CycleTime :data="visit" :position="index - subtractPosition" :startDate="startDate"
           :allowEmpty="true" />
       </div>
       <div class="bg-zinc-700 col-span-2" />

@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/vue3'
-import { provide } from 'vue';
+import { provide, ref } from 'vue';
 
 import Button from 'primevue/button';
 
@@ -12,16 +12,37 @@ import ComplaintDialog from "@/Components/CustomerService/Dialog/ComplaintDialog
 import RecentActivityDialog from "@/Components/CustomerService/Dialog/RecentActivityDialog.vue";
 import BookingDialog from "@/Components/CustomerService/Dialog/BookingDialog.vue";
 import RemindDialog from '@/Components/CustomerService/Dialog/RemindDialog.vue';
+import ExtraServiceDialog from '@/Components/CustomerService/Dialog/ExtraServiceDialog.vue';
 
 const props = defineProps({
   customerId: String,
   orderPackages: Array,
   declineOrderPackageCount: Number,
+  extraServices: Array,
 });
 
-provide('ORDER_PACAGE_PAGE', {
+const orderPackages = ref(props.orderPackages);
+const extraServices = ref(props.extraServices);
+
+const updateScheduleVisits = (orderPackageIndex, scheduleVisit) => {
+  orderPackages.value[orderPackageIndex].product_service_owner.visit.push(scheduleVisit);
+}
+
+const addExtraService = (extraService) => {
+  extraServices.push(extraService);
+}
+
+const updateExtraServiceState = (index, newState) => {
+  extraServices.value[index].is_active = newState;
+}
+
+provide('ORDER_PACKAGE_PAGE', {
   customerId: props.customerId,
-})
+  extraServices: props.extraServices,
+  updateScheduleVisits,
+  addExtraService,
+  updateExtraServiceState,
+});
 </script>
 
 <template>
@@ -33,7 +54,7 @@ provide('ORDER_PACAGE_PAGE', {
     <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] gap-4 mt-3">
       <div class="col-span-4">
         <p class="font-bold mb-3">Giao kế hoạch giao quà cho khách</p>
-        <div v-for="orderPackage in orderPackages" class="bg-white rounded-lg max-w-[300px] border mb-3 text-sm">
+        <div v-for="(orderPackage, index) in orderPackages" class="bg-white rounded-lg max-w-[300px] border mb-3 text-sm">
           <p class="font-semibold text-white bg-red-600 rounded-t-lg leading-8 pl-3">
             Hợp đồng {{ orderPackage.idPackage }}
           </p>
@@ -44,18 +65,21 @@ provide('ORDER_PACAGE_PAGE', {
             <p class="mt-3 mb-2">Khách hàng có nhận quà lần kế tiêp không?</p>
             <div class="flex justify-between">
               <button class="rounded-full bg-emerald-600 text-white font-medium px-2 py-2">Tạo đơn (3)</button>
-              <RemindDialog :packageId="orderPackage.idPackage" />
+              <RemindDialog :packageId="orderPackage.idPackage" :productServiceOwnerId="orderPackage.product_service_owner.id" />
             </div>
             <p class="mt-3 mb-2">Khách hàng muốn booking tham quan?</p>
-            <BookingDialog :packageId="orderPackage.idPackage" :productServiceOwnerId="orderPackage.product_service_owner.id" />
+            <BookingDialog :index="index" :packageId="orderPackage.idPackage" :productServiceOwnerId="orderPackage.product_service_owner.id" />
           </div>
         </div>
       </div>
       <div class="flex justify-center" style="grid-column: span 14 / span 14">
-        <div>
-          <button class="leading-5 rounded-full bg-orange-600 font-semibold text-white px-3 py-1">
-            Tạo đơn bán lẻ sản phẩm
-          </button>
+        <div class="grid gap-4 grid-cols-2">
+          <div>
+            <button class="leading-5 rounded-full bg-orange-600 font-semibold text-white px-3 py-1">
+              Tạo đơn bán lẻ sản phẩm
+            </button>
+          </div>
+          <ExtraServiceDialog />
         </div>
       </div>
     </div>

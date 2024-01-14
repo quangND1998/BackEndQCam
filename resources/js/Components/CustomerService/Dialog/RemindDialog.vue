@@ -1,19 +1,44 @@
 <script setup>
-  import { reactive, ref, computed } from 'vue';
+  import { reactive, ref, computed, inject, watch } from 'vue';
+  import moment from 'moment';
+
+  import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '@/Components/CustomerService/composables/useQuery';
   import DialogLoading from './DialogLoading.vue';
 
   const props = defineProps({
     packageId: String,
-  })
+    productServiceOwnerId: String,
+  });
 
-  const isLoading = ref(false);
+  const { customerId } = inject('ORDER_PACKAGE_PAGE');
+
   const visible = ref(false);
   const remindForm = reactive({
-    date: new Date(new Date().setDate(new Date().getDate() + 1)),
-    reason: '',
-  })
+    remind_at: moment(new Date(new Date().setDate(new Date().getDate() + 1))).format('YYYY-MM-DD HH:mm:ss'),
+    note: '',
+    product_service_owner_id: props.productServiceOwnerId,
+    date: new Date(new Date().setDate(new Date().getDate() + 1))
+  });
 
   const minDate = computed(() => new Date());
+
+  watch(() => remindForm.date, (newVal) => {
+    remindForm.remind_at = moment(newVal).format('YYYY-MM-DD HH:mm:ss');
+  });
+
+  const resetForm = () => {
+    remindForm.remind_at = moment(new Date(new Date().setDate(new Date().getDate() + 1))).format('YYYY-MM-DD HH:mm:ss');
+    remindForm.note = '';
+    remindForm.date = new Date(new Date().setDate(new Date().getDate() + 1));
+    visible.value = false;
+  }
+
+  const { isLoading, executeQuery } = useQuery(
+    CUSTOMER_SERVICE_API_MAKER.CREATE_REMIND(customerId),
+    remindForm,
+    resetForm,
+    'Tạo lịch hẹn thành công',
+  );
 </script>
 
 <template>
@@ -38,10 +63,11 @@
         </div>
         <div class="my-3 flex items-start gap-3 flex-col">
           <p class="w-16 text-sm font-semibold">Lý do</p>
-          <textarea v-model="remindForm.reason" class="w-full flex-1 resize-none rounded bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
+          <textarea :value="remindForm.note" @input="(e) => remindForm.note = e.target.value"
+              class="w-full flex-1 resize-none rounded bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
         </div>
         <div class="mt-3 flex justify-end">
-          <button class="rounded bg-red-600 px-3 py-2 text-sm font-semibold text-white">Tạo lịch</button>
+          <button class="rounded bg-red-600 px-3 py-2 text-sm font-semibold text-white" @click="executeQuery">Tạo lịch</button>
         </div>
         <DialogLoading v-if="isLoading" text="Đang tạo lịch" />
       </div>

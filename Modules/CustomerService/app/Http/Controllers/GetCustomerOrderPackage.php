@@ -5,6 +5,7 @@ namespace Modules\CustomerService\app\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\CustomerService\app\Models\VisitExtraService;
 use Modules\Order\app\Models\OrderPackage;
 
 class GetCustomerOrderPackage extends Controller
@@ -22,16 +23,18 @@ class GetCustomerOrderPackage extends Controller
                 $query->with('orders', function ($orderQuery) {
                     $orderQuery->orderBy('receive_at', 'desc');
                 })->with('visit', function ($visitQuery) {
-                    $visitQuery->orderBy('date_time', 'desc');
+                    $visitQuery->orderBy('date_time', 'asc');
                 });
             })
             ->orderBy('id', 'desc')
             ->get();
+        $extraServices = VisitExtraService::all();
 
         return Inertia::render('Modules/CustomerService/order-package', compact(
+            'customerId',
             'orderPackages',
             'declineOrderPackageCount',
-            'customerId'
+            'extraServices'
         ));
     }
 }

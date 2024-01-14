@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\CustomerService\app\Http\Controllers\Api;
+namespace Modules\CustomerService\app\Http\Controllers\Api\Notes;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
