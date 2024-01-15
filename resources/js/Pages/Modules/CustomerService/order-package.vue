@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/vue3'
-import { provide, ref, computed } from 'vue';
+import { provide, ref, computed, onMounted } from 'vue';
 
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import OrderTableSection from "@/Components/CustomerService/OrderTableSection.vue";
@@ -18,9 +18,11 @@ const props = defineProps({
   orderPackages: Array,
   declineOrderPackageCount: Number,
   extraServices: Array,
+  productRetails: Array,
 });
 
 const tableRef = ref();
+const cities = ref([]);
 const orderPackages = ref(props.orderPackages);
 const extraServices = ref(props.extraServices);
 
@@ -44,11 +46,19 @@ const updateExtraServiceState = (index, newState) => {
 }
 
 provide('ORDER_PACKAGE_PAGE', {
+  productRetails: props.productRetails,
   customerId: props.customerId,
-  extraServices: props.extraServices,
+  extraServices,
+  cities,
   updateScheduleVisits,
   addExtraService,
   updateExtraServiceState,
+});
+
+onMounted(async () => {
+  const response = await fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
+  const jsonData = await response.json();
+  cities.value = jsonData;
 });
 </script>
 

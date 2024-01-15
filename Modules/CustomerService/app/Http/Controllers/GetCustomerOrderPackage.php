@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\CustomerService\app\Models\VisitExtraService;
 use Modules\Order\app\Models\OrderPackage;
+use Modules\Tree\app\Models\ProductRetail;
 
 class GetCustomerOrderPackage extends Controller
 {
@@ -29,12 +30,14 @@ class GetCustomerOrderPackage extends Controller
             ->orderBy('id', 'desc')
             ->get();
         $extraServices = VisitExtraService::all();
+        $productRetails = ProductRetail::where('status', 1)->get();
 
         return Inertia::render('Modules/CustomerService/order-package', compact(
             'customerId',
             'orderPackages',
             'declineOrderPackageCount',
-            'extraServices'
+            'extraServices',
+            'productRetails',
         ));
     }
 }
