@@ -125,6 +125,7 @@ class CustomerDetailController extends Controller
             ]);
             if ($new_info->photo_url) {
                 $path = Storage::disk('public')->putFile('profile-photos', new File('storage/' . $new_info->photo_url));
+                $this->deleteFile($user->profile_photo_path);
                 $user->profile_photo_path = $path;
                 $user->save();
             }
