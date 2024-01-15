@@ -17,6 +17,7 @@ use Modules\Tree\app\Models\ProductService;
 use Modules\Tree\app\Models\ProductRetail;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Support\Facades\DB;
+
 class CustomerDetailController extends Controller
 {
     function __construct()
@@ -40,40 +41,39 @@ class CustomerDetailController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function listDocument($id){
+    public function listDocument($id)
+    {
         $customer = User::find($id);
 
         $images = [];
 
         $product_owners = ProductServiceOwner::with('history_extend.contract.history_contact.images')
-        ->whereHas('history_extend.contract.history_contact.images')
-        ->where('user_id',$customer->id)
-        ->get();
+            ->whereHas('history_extend.contract.history_contact.images')
+            ->where('user_id', $customer->id)
+            ->get();
 
-        foreach($product_owners as $product_owner){
-            foreach($product_owner->history_extend as $extend ){
-                if($extend->contract != null){
-                    foreach($extend->contract->history_contact as $history_contact){
-                        foreach($history_contact->images as $image){
+        foreach ($product_owners as $product_owner) {
+            foreach ($product_owner->history_extend as $extend) {
+                if ($extend->contract != null) {
+                    foreach ($extend->contract->history_contact as $history_contact) {
+                        foreach ($history_contact->images as $image) {
                             $images[] = $image;
                         }
-
                     }
                 }
-
             }
         }
 
-        $order_retail = Order::with('order_related_images')->whereHas('order_related_images')->where('user_id',$customer->id)->get();
-        foreach($order_retail as $order){
-            foreach($order->order_related_images as $image2){
+        $order_retail = Order::with('order_related_images')->whereHas('order_related_images')->where('user_id', $customer->id)->get();
+        foreach ($order_retail as $order) {
+            foreach ($order->order_related_images as $image2) {
                 $images[] = $image2;
             }
         }
 
-        $order_services = OrderPackage::with('order_package_images')->whereHas('order_package_images')->where('user_id',$customer->id)->get();
-        foreach($order_services as $order_services){
-            foreach($order_services->order_package_images as $image3){
+        $order_services = OrderPackage::with('order_package_images')->whereHas('order_package_images')->where('user_id', $customer->id)->get();
+        foreach ($order_services as $order_services) {
+            foreach ($order_services->order_package_images as $image3) {
                 $images[] = $image3;
             }
         }
@@ -88,18 +88,20 @@ class CustomerDetailController extends Controller
         // // hop dong
 
 
-        return Inertia::render('Modules/Customer/detail/document', compact('customer','images'));
+        return Inertia::render('Modules/Customer/detail/document', compact('customer', 'images'));
     }
-    public function viewUpdateInfor(User $customer){
+    public function viewUpdateInfor(User $customer)
+    {
         $info = $customer->infor;
-        if($info && $info->status ==0){
+        if ($info && $info->status == 0) {
             return Inertia::render('Modules/Customer/Infor', compact('customer', 'info'));
         }
         return back()->with('warning', "Thông tin cập nhật không có hoặc đã xét duyệt!");
     }
-    public function approInfo(User $user){
-      
-        if($user->infor && $user->infor->status==0){
+    public function approInfo(User $user)
+    {
+
+        if ($user->infor && $user->infor->status == 0) {
             $new_info = $user->infor;
             $user->update([
                 'name' => $new_info->name,
@@ -114,13 +116,14 @@ class CustomerDetailController extends Controller
                 'phone_number' => $new_info->phone_number,
                 'sex' => $new_info->sex,
                 'wards' => $new_info->wards,
+                'profile_photo_path' => $new_info->photo_url
+
             ]);
             $user->infor->update([
                 'status' => true
             ]);
             return redirect()->route('customer.index')->with('success', "Xét duyệt thông tin khách hàng thành công!");
-        }
-        else{
+        } else {
             return redirect()->route('customer.index')->with('warning', "Thông tin cập nhật không có hoặc đã xét duyệt!");
         }
     }
