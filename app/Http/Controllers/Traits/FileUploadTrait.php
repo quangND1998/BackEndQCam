@@ -19,7 +19,7 @@ trait FileUploadTrait
     public function uploadImage($file, $savePath)
     {
         $path = Storage::disk('public')->putFile($savePath, $file);
-        return   '/storage/' . $path;
+        return  $path;
     }
 
     public function updateImage($file, $savePath, $oldPath)
