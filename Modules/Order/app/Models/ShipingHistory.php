@@ -13,10 +13,15 @@ class ShipingHistory extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
-    
+    protected $table = 'shiping_histories';
+    protected $fillable = ["id","date","date_end","note","state","user_id","order_id","created_at","updated_at"];
+
     protected static function newFactory(): ShipingHistoryFactory
     {
         //return ShipingHistoryFactory::new();
+    }
+    public function order()
+    {
+        return $this->belongsTo(Order::class,'order_id');
     }
 }

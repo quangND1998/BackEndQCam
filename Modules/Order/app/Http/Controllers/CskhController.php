@@ -16,7 +16,7 @@ use Modules\Order\app\Models\OrderPackage;
 class CskhController extends Controller
 {
     public function cskh(Request $request){
-        // getOrderAll
+        // getOrderAll package
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $orders  = $this->getOrderAll($request);

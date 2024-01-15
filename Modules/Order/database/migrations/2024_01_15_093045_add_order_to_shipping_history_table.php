@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            // hen giao
-            $table->string('receive_at')->nullable();
+        Schema::table('shiping_histories', function (Blueprint $table) {
+            $table->unsignedBigInteger('order_id')->nullable();
+            $table->string('state')->nullable();
         });
     }
 
@@ -22,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('receive_at');
+        Schema::table('shiping_histories', function (Blueprint $table) {
+            $table->dropColumn('order_id');
+            $table->dropColumn('state');
         });
     }
 };

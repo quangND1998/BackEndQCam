@@ -140,6 +140,72 @@ export default [{
         ]
     },
     {
+        label: 'Quản lý đơn hàng',
+        icon: mdiFileTreeOutline,
+        permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline', 'contract-pending', 'contract-create', 'contract-cancle', 'contract-complete'],
+        route_list: ['admin.orders.package.index', 'admin.orders.package.decline', 'admin.orders.package.complete',
+            'admin.orders.package.partiallyPaid', 'admin.orders.index', 'admin.orders.create', 'admin.orders.package.create',
+            'admin.orders.pending', 'admin.orders.packing', 'admin.orders.completed', 'admin.orders.addToCart', 'admin.orders.decline', 'admin.orders.shipping',
+            'visit.pending', 'visit.confirm', 'visit.completed', 'admin.review.index', 'admin.orders.refund'
+        ],
+        menu: [{
+                route: 'admin.orders.index',
+                label: 'Tất cả',
+                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.all',
+                label: 'Đang chờ',
+                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.all',
+                label: 'Đóng gói',
+                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.all',
+                label: 'Giao shipper',
+                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.all',
+                label: 'Vận chuyển',
+                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.all',
+                label: 'Đã giao',
+                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.all',
+                label: 'Chờ hoàn',
+                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.all',
+                label: 'Hoàn đơn',
+                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.all',
+                label: 'Hủy',
+                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            }
+
+        ]
+    },
+    {
         label: 'Sản phẩm',
         icon: mdiSale,
         permissions: ['super-admin', 'view-land', 'create-land', 'update-land', 'delete-land', 'view-product', 'create-product', 'update-product', 'delete-product'],
