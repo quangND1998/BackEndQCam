@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\FAQsController;
-use App\Http\Controllers\Api\LoginController;
+use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\Api\ProductRetailController;
@@ -35,7 +35,6 @@ Route::prefix('v1')->as('v1.')->group(function () {
 
 Route::prefix('payoo')->as('payoo.')->group(function () {
     Route::post('ipn', [PaymentController::class, 'payooIPN'])->name('payooIPN');
-
 });
 Route::middleware(['auth:sanctum'])->group(function () {
 
@@ -78,7 +77,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
             Route::put('{id}/orderCompeleted', [OrderController::class, 'orderCompeleted'])->name('orderCompeleted');
             Route::put('{id}/orderCancel', [OrderController::class, 'orderCancel'])->name('orderCancel');
-
         });
 
 
@@ -106,11 +104,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('updateUserInfor', [LoginController::class, 'updateUserInfor'])->name('updateUserInfor');
             Route::get('getUser', [LoginController::class, 'getUser'])->name('getUser');
         });
-         Route::prefix('payment')->as('payment.')->group(function () {
+        Route::prefix('payment')->as('payment.')->group(function () {
 
-             Route::get('{id}/order', [PaymentController::class,'getOrderPaymentForApp'])->name('order');
+            Route::get('{id}/order', [PaymentController::class, 'getOrderPaymentForApp'])->name('order');
         });
-     
-
     });
 });
