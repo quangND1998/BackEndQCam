@@ -3,5 +3,6 @@
     "Customer": true,
     "Order": true,
     "Landingpage": true,
-    "CustomerService": true
+    "CustomerService": true,
+    "Booking": true
 }

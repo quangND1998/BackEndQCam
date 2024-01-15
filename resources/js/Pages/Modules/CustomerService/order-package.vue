@@ -26,7 +26,7 @@ const props = defineProps({
     <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] gap-4 mt-3">
       <div class="col-span-4">
         <p class="font-bold mb-3">Giao kế hoạch giao quà cho khách</p>
-        <div v-for="orderPackage in orderPackages" class="bg-white rounded-lg max-w-[300px] border mb-3 text-sm">
+        <div v-for="orderPackage in orderPackages" :key="orderPackage.id" class="bg-white rounded-lg max-w-[300px] border mb-3 text-sm">
           <p class="font-semibold text-white bg-red-600 rounded-lg leading-8 pl-3">
             Hợp đồng {{ orderPackage.idPackage }}
           </p>

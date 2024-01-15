@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Order\app\Http\Controllers\CSKH\CSKHOrderController;
 use Modules\Order\app\Http\Controllers\CskhController;
 use Modules\Order\app\Http\Controllers\HistoryPaymentController;
 use Modules\Order\app\Http\Controllers\OrderController;
@@ -128,6 +129,9 @@ Route::middleware(['auth'])->group(
             });
             Route::prefix('review')->as('review.')->group(function () {
                 Route::get('index',[ReviewController::class,'index'])->name('index');
+            });
+            Route::prefix('cskh')->as('cskh.')->group(function () {
+                Route::get('all',[CSKHOrderController::class,'index'])->name('all');
             });
         });
     }

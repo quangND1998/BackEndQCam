@@ -57,45 +57,6 @@ const form2 = useForm({
     fromDate: props.commissionSetting?.dateFrom,
     toDate: props.commissionSetting?.dateTo
 });
-// onMounted(() => {
-//     // console.log(props.commissionSetting.commission);
-//     // props.commissionSetting.commission.forEach((commission, index3) => {
-//     //     console.log(commission);
-//     // })
-//     props.commissionType.forEach((element, index) => {
-//         const row = [];
-//         row['description']= element.description;
-//         element.participants.forEach((e2, index2) => {
-//             const colum = [];
-//             colum['name'] = e2.name;
-//             console.log("participants");
-//                 props.commissionSetting.commission.forEach((commission, index3) => {
-//                     if (commission.commission_type_id == element.id && commission.user_type_id == e2.id) {
-//                         const object = {
-//                             commissionType: element.id,
-//                             participant: e2.id,
-//                             commission: commission.commission,
-//                             spend_from: commission.spend_from,
-//                             spend_to: commission.spend_to
-//                         };
-//                         colum.push(object);
-//                     }
-//                 });
-//                 const object = {
-//                     commissionType: element.id,
-//                     participant: e2.id,
-//                     commission: 0,
-//                     spend_from: 0,
-//                     spend_to: 0
-//                 };
-//                 colum.push(object);
-//             row.push(colum);
-//         });
-//         form2.commission.push(row);
-//     });
-//     console.log(form2.commission);
-// });
-
 
 const stated=()=>{
     props.commissionType.forEach((element, index) => {
@@ -176,6 +137,7 @@ const save = () => {
                 form2.reset();
                 isModalActive.value = false;
                 editMode.value = false;
+                stated();
             },
         });
         // axios.post(`/commission`, form2, {

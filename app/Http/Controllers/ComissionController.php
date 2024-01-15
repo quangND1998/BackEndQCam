@@ -70,6 +70,7 @@ class ComissionController extends Controller
     }
     public function store(Request $request){
         // dd($request);
+        // dd($request);
         $this->validate(
             $request,
             [
@@ -78,17 +79,18 @@ class ComissionController extends Controller
                 'toDate' => 'required'
             ]
         );
-        $commissionSetting = CommissionSetting::with('commission')->where('dateFrom',$request->fromDate)->where('dateTo',$request->toDate)->first();
-        if(!$commissionSetting){
-            $commissionSetting = new CommissionSetting;
+        $commissionSettingNew = CommissionSetting::with('commission')->where('dateFrom',$request->fromDate)->where('dateTo',$request->toDate)->first();
+        if(!$commissionSettingNew){
+            $commissionSettingNew = new CommissionSetting;
         }
-        $commissionSetting->dateFrom = $request->fromDate;
-        $commissionSetting->dateTo = $request->toDate;
-        $commissionSetting->level_revenue = $request->level_revenue;
-        $commissionSetting->save();
+        $commissionSettingNew->dateFrom = $request->fromDate;
+        $commissionSettingNew->dateTo = $request->toDate;
+        $commissionSettingNew->level_revenue = $request->level_revenue;
+        $commissionSettingNew->save();
 
         // dd($request);
-        $commissionSetting->commission()->delete();
+        $commissionSettingNew->commission()->delete();
+
 
         foreach($request->commission as $commissionType){
             foreach($commissionType as $commission){
@@ -100,7 +102,7 @@ class ComissionController extends Controller
                             'commission'=> $com['commission'],
                             'commission_type_id' => $com['commissionType'],
                             'user_type_id'=> $com['participant'], //ref
-                            'commissionSetting_id' => $commissionSetting->id
+                            'commissionSetting_id' => $commissionSettingNew->id
                         ]);
                         // $commissionSetting->commission()->attach($commission);
                     }
@@ -108,8 +110,7 @@ class ComissionController extends Controller
             }
         }
 
-        // return $commissionSetting;
-        return back()->with('success', 'Tạo mới thành công');
+        return redirect('/commission/policy/'.$commissionSettingNew->id);
     }
 
 

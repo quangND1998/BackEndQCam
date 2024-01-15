@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
+            // hen giao
             $table->string('receive_at')->nullable();
         });
     }

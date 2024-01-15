@@ -59,31 +59,20 @@ const form2 = useForm({
 onBeforeMount(() => {
     props.commissionType.forEach((element, index) => {
         const row = [];
+        row['description']= element.description;
         element.participants.forEach((e2, index2) => {
-            console.log(e2.commissions);
-            // if (e2.commission?.length > 0) {
-            //     e2.commission.forEach((e3, index3) => {
-            //         if (e3.commission_type_id == element.id && e3.user_type_id == e2.id) {
-            //             const object = {
-            //                 commissionType: element.id,
-            //                 participant: e2.id,
-            //                 commission: e3.commission,
-            //                 spend_from: e3.spend_from,
-            //                 spend_to: e3.spend_to
-            //             };
-            //             row.push(object);
-            //         }
-            //     });
-            // }
-            console.log(index2);
-            const object = {
-                commissionType: element.id,
-                participant: e2.id,
-                commission: 0,
-                spend_from: 0,
-                spend_to: 0
-            };
-            row.push(object);
+            const colum = [];
+            colum['name'] = e2.name;
+            console.log("participants");
+                const object = {
+                    commissionType: element.id,
+                    participant: e2.id,
+                    commission: 0,
+                    spend_from: 0,
+                    spend_to: 0
+                };
+                colum.push(object);
+            row.push(colum);
         });
         form2.commission.push(row);
     });
