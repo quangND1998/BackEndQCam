@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TermsConditionResource;
@@ -9,7 +9,8 @@ use Modules\Landingpage\app\Models\TermsConditions;
 
 class TermsConditionController extends Controller
 {
-    public function get(){
+    public function get()
+    {
         return new TermsConditionResource(TermsConditions::first());
     }
 }

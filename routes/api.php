@@ -4,7 +4,7 @@ use App\Http\Controllers\API\FAQsController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\OrderController;
-use App\Http\Controllers\Api\ProductRetailController;
+use App\Http\Controllers\API\ProductRetailController;
 use App\Http\Controllers\API\SettingAndInforController;
 use App\Http\Controllers\API\ShipperController;
 use App\Http\Controllers\API\VoucherController;
