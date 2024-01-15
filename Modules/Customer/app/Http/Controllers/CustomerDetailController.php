@@ -17,9 +17,11 @@ use Modules\Tree\app\Models\ProductService;
 use Modules\Tree\app\Models\ProductRetail;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Traits\FileUploadTrait;
 
 class CustomerDetailController extends Controller
 {
+    use FileUploadTrait;
     function __construct()
     {
         // $this->middleware('role:super-admin');
@@ -120,6 +122,7 @@ class CustomerDetailController extends Controller
 
             ]);
             if ($new_info->photo_url) {
+                $this->deleteFile($user->profile_photo_path);
                 $user->profile_photo_path = $new_info->photo_url;
                 $user->save();
             }
