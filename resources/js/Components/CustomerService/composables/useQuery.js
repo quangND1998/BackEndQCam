@@ -61,7 +61,6 @@ const useQuery = (setupApi, inputData, successCallback, successMessage) => {
 
     if (urlData) {
       url = updateUrl(url, urlData);
-      console.log(urlData, url);
     }
 
     isLoading.value = true;

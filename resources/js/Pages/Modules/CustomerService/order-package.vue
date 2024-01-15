@@ -1,8 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/vue3'
-import { provide, ref } from 'vue';
-
-import Button from 'primevue/button';
+import { provide, ref, computed } from 'vue';
 
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import OrderTableSection from "@/Components/CustomerService/OrderTableSection.vue";
@@ -13,6 +11,7 @@ import RecentActivityDialog from "@/Components/CustomerService/Dialog/RecentActi
 import BookingDialog from "@/Components/CustomerService/Dialog/BookingDialog.vue";
 import RemindDialog from '@/Components/CustomerService/Dialog/RemindDialog.vue';
 import ExtraServiceDialog from '@/Components/CustomerService/Dialog/ExtraServiceDialog.vue';
+import OrderDialog from '@/Components/CustomerService/Dialog/OrderDialog.vue';
 
 const props = defineProps({
   customerId: String,
@@ -21,8 +20,16 @@ const props = defineProps({
   extraServices: Array,
 });
 
+const tableRef = ref();
 const orderPackages = ref(props.orderPackages);
 const extraServices = ref(props.extraServices);
+
+const tableHeight = computed(() => {
+  if (tableRef.value) {
+    return tableRef.value.clientHeight + 120;
+  }
+  return 0;
+});
 
 const updateScheduleVisits = (orderPackageIndex, scheduleVisit) => {
   orderPackages.value[orderPackageIndex].product_service_owner.visit.push(scheduleVisit);
@@ -48,9 +55,12 @@ provide('ORDER_PACKAGE_PAGE', {
 <template>
   <LayoutAuthenticated>
   <Head title="Customer Order Packages" />
-  <div class="mt-4 mr-4">
-    <OrderTableSection :orderPackages="orderPackages" :declineOrderPackageCount="declineOrderPackageCount" class="mb-3" />
-    <ScheduleVisitSection :orderPackages="orderPackages" />
+  <div class="mt-4 mr-4 mb-16">
+    <div ref="tableRef">
+      <OrderTableSection :orderPackages="orderPackages" :declineOrderPackageCount="declineOrderPackageCount" class="mb-3" />
+      <ScheduleVisitSection :orderPackages="orderPackages" />
+    </div>
+    <OrderDialog :style="`top: ${tableHeight}px`" />
     <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] gap-4 mt-3">
       <div class="col-span-4">
         <p class="font-bold mb-3">Giao kế hoạch giao quà cho khách</p>
@@ -84,7 +94,7 @@ provide('ORDER_PACKAGE_PAGE', {
       </div>
     </div>
   </div>
-  <div class="grid grid-cols-3 gap-8 my-6">
+  <div class="grid grid-cols-3 gap-8 py-6 fixed bottom-0 bg-white border border-t-gray-500 w-[calc(100vw_-_260px)] right-0">
     <div class="flex justify-center">
       <NoteDialog />
     </div>
