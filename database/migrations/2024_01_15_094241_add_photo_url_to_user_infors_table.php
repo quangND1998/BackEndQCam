@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_infors', function (Blueprint $table) {
-            $table->string('photo_url');
+            $table->string('photo_url', 2048);
         });
     }
 

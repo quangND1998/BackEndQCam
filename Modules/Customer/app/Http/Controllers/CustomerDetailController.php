@@ -116,12 +116,18 @@ class CustomerDetailController extends Controller
                 'phone_number' => $new_info->phone_number,
                 'sex' => $new_info->sex,
                 'wards' => $new_info->wards,
-                'profile_photo_path' => $new_info->photo_url
+
 
             ]);
+            if ($new_info->photo_url) {
+                $user->profile_photo_path = $new_info->photo_url;
+                $user->save();
+            }
+
             $user->infor->update([
                 'status' => true
             ]);
+
             return redirect()->route('customer.index')->with('success', "Xét duyệt thông tin khách hàng thành công!");
         } else {
             return redirect()->route('customer.index')->with('warning', "Thông tin cập nhật không có hoặc đã xét duyệt!");
