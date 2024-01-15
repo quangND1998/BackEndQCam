@@ -18,6 +18,8 @@ use Modules\Tree\app\Models\ProductRetail;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Traits\FileUploadTrait;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerDetailController extends Controller
 {
@@ -122,8 +124,8 @@ class CustomerDetailController extends Controller
 
             ]);
             if ($new_info->photo_url) {
-                $this->deleteFile($user->profile_photo_path);
-                $user->profile_photo_path = $new_info->photo_url;
+                $path = Storage::putFile('profile-photos', new File($new_info->photo_url));
+                $user->profile_photo_path = $path;
                 $user->save();
             }
 

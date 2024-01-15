@@ -25,12 +25,15 @@ trait FileUploadTrait
     public function updateImage($file, $savePath, $oldPath)
     {
         $path =  $this->uploadImage($file, $savePath);
+        $this->deleteFile($oldPath);
+
+
         return $path;
     }
 
     public function deleteFile($path)
     {
-        if ($path &&  Storage::disk('public')->exists($path)) {
+        if ($path && Storage::disk('public')->exists($path)) {
 
             Storage::disk('public')->delete($path);
         }
