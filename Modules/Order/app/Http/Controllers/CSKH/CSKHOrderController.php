@@ -33,7 +33,7 @@ class CSKHOrderController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
-        $orders =  $this->orderRepository->getOrder($request, $status);
+        $orders =  $this->orderRepository->getOrderGift($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
         $shippers = $this->shipperRepository->getShipper();
 

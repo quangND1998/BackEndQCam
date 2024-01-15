@@ -92,6 +92,17 @@ class OrderRepository implements OrderContract
 
         )->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
+    public function getOrderGift($request,$status)
+    {
+        return  Order::with(['customer','product_service.order_package','product_service.product','orderItems.product', 'discount', 'shipper', 'saler'])->role()->whereHas(
+            'customer',
+            function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->customer . '%');
+                $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
+            }
+
+        )->where('type','gift_delivery')->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+    }
 
 
     public function groupByOrderStatus()
