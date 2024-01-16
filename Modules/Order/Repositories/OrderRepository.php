@@ -92,16 +92,16 @@ class OrderRepository implements OrderContract
 
         )->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
-    public function getOrderGift($request,$status)
+    public function getOrderGift($request, $status)
     {
-        return  Order::with(['customer','product_service.order_package','product_service.product','orderItems.product','shipping_history', 'discount', 'shipper', 'saler'])->role()->whereHas(
+        return  Order::with(['customer', 'product_service.order_package', 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
                 $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
             }
 
-        )->where('type','gift_delivery')->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+        )->where('type', 'gift_delivery')->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
 
 
@@ -109,6 +109,39 @@ class OrderRepository implements OrderContract
     {
 
         $array_status = ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline'];
+        $statusGroup = Order::role()->whereHas('orderItems')
+            ->select('status', DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->get();
+        foreach ($array_status as $status) {
+
+            $filtered = $statusGroup->where('status', $status)->first();
+
+            if ($filtered == null) {
+
+                $newCollections[] = array(
+                    'status' => $status,
+                    'total' => 0,
+
+
+                );
+            } else {
+
+                $newCollections[] = array(
+                    'status' => $status,
+                    'total' => $filtered->total,
+
+                );
+            }
+        }
+        return $newCollections;
+    }
+
+
+
+    public function groupByOrderByStatus($array_status)
+    {
+
         $statusGroup = Order::role()->whereHas('orderItems')
             ->select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
@@ -243,7 +276,8 @@ class OrderRepository implements OrderContract
     }
 
 
-    public function createUser($data){
+    public function createUser($data)
+    {
         $user = User::create([
             'name' => $data['name'],
             'phone_number' =>  $data['phone_number'],
@@ -258,6 +292,5 @@ class OrderRepository implements OrderContract
         $user->assignRole('customer');
         $user->save();
         return $user;
-
     }
 }

@@ -1,5 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/vue3'
+import { provide, ref } from 'vue';
 
 import Button from 'primevue/button';
 
@@ -10,24 +11,51 @@ import NoteDialog from "@/Components/CustomerService/Dialog/NoteDialog.vue";
 import ComplaintDialog from "@/Components/CustomerService/Dialog/ComplaintDialog.vue";
 import RecentActivityDialog from "@/Components/CustomerService/Dialog/RecentActivityDialog.vue";
 import BookingDialog from "@/Components/CustomerService/Dialog/BookingDialog.vue";
+import RemindDialog from '@/Components/CustomerService/Dialog/RemindDialog.vue';
+import ExtraServiceDialog from '@/Components/CustomerService/Dialog/ExtraServiceDialog.vue';
 
 const props = defineProps({
-  orderPackages: Object,
+  customerId: String,
+  orderPackages: Array,
+  declineOrderPackageCount: Number,
+  extraServices: Array,
 });
 
+const orderPackages = ref(props.orderPackages);
+const extraServices = ref(props.extraServices);
+
+const updateScheduleVisits = (orderPackageIndex, scheduleVisit) => {
+  orderPackages.value[orderPackageIndex].product_service_owner.visit.push(scheduleVisit);
+}
+
+const addExtraService = (extraService) => {
+  extraServices.push(extraService);
+}
+
+const updateExtraServiceState = (index, newState) => {
+  extraServices.value[index].is_active = newState;
+}
+
+provide('ORDER_PACKAGE_PAGE', {
+  customerId: props.customerId,
+  extraServices: props.extraServices,
+  updateScheduleVisits,
+  addExtraService,
+  updateExtraServiceState,
+});
 </script>
 
 <template>
   <LayoutAuthenticated>
   <Head title="Customer Order Packages" />
   <div class="mt-4 mr-4">
-    <OrderTableSection :orderPackages="orderPackages" class="mb-3" />
+    <OrderTableSection :orderPackages="orderPackages" :declineOrderPackageCount="declineOrderPackageCount" class="mb-3" />
     <ScheduleVisitSection :orderPackages="orderPackages" />
     <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] gap-4 mt-3">
       <div class="col-span-4">
         <p class="font-bold mb-3">Giao kế hoạch giao quà cho khách</p>
-        <div v-for="orderPackage in orderPackages" :key="orderPackage.id" class="bg-white rounded-lg max-w-[300px] border mb-3 text-sm">
-          <p class="font-semibold text-white bg-red-600 rounded-lg leading-8 pl-3">
+        <div v-for="(orderPackage, index) in orderPackages" class="bg-white rounded-lg max-w-[300px] border mb-3 text-sm">
+          <p class="font-semibold text-white bg-red-600 rounded-t-lg leading-8 pl-3">
             Hợp đồng {{ orderPackage.idPackage }}
           </p>
           <div class="px-3 py-2">
@@ -37,23 +65,26 @@ const props = defineProps({
             <p class="mt-3 mb-2">Khách hàng có nhận quà lần kế tiêp không?</p>
             <div class="flex justify-between">
               <button class="rounded-full bg-emerald-600 text-white font-medium px-2 py-2">Tạo đơn (3)</button>
-              <button class="rounded-full bg-red-600 text-white font-medium px-2 py-2">Tạo lịch hẹn</button>
+              <RemindDialog :packageId="orderPackage.idPackage" :productServiceOwnerId="orderPackage.product_service_owner.id" />
             </div>
             <p class="mt-3 mb-2">Khách hàng muốn booking tham quan?</p>
-            <BookingDialog :packageId="orderPackage.idPackage " />
+            <BookingDialog :index="index" :packageId="orderPackage.idPackage" :productServiceOwnerId="orderPackage.product_service_owner.id" />
           </div>
         </div>
       </div>
       <div class="flex justify-center" style="grid-column: span 14 / span 14">
-        <div>
-          <button class="leading-5 rounded-full bg-orange-600 font-semibold text-white px-3 py-1">
-            Tạo đơn bán lẻ sản phẩm
-          </button>
+        <div class="grid gap-4 grid-cols-2">
+          <div>
+            <button class="leading-5 rounded-full bg-orange-600 font-semibold text-white px-3 py-1">
+              Tạo đơn bán lẻ sản phẩm
+            </button>
+          </div>
+          <ExtraServiceDialog />
         </div>
       </div>
     </div>
   </div>
-  <div class="grid grid-cols-3 gap-8 mt-6">
+  <div class="grid grid-cols-3 gap-8 my-6">
     <div class="flex justify-center">
       <NoteDialog />
     </div>

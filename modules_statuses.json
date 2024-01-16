@@ -4,5 +4,6 @@
     "Order": true,
     "Landingpage": true,
     "CustomerService": true,
-    "Booking": true
+    "Booking": true,
+    "Shipper": true
 }
