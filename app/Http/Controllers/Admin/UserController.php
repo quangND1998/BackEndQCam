@@ -65,6 +65,35 @@ class UserController extends Controller
         return Inertia::render('Admin/User', compact('filters', 'users', 'roles'));
     }
 
+    public function userRole(Request $request,Role $role){
+
+        $user = Auth::user();
+
+        $filters = $request->all('search');
+        if ($user->hasRole('super-admin')) {
+            $users =  User::with('roles', 'tokens', 'team')->whereHas(
+                'roles',function ($query) use ($role) {
+                    $query->where('name', $role->name);
+                })->search($request->only('search'))->paginate(20)->appends($request->search);
+
+            $roles = Role::get();
+        } elseif ($user->hasRole('leader-sale')) {
+            $users =  User::with('roles', 'tokens', 'team')->whereHas(
+                'roles',function ($query) use ($role) {
+                    $query->where('name', $role->name);
+                })->where('email','!=','admin@admin.com')->search($request->only('search'))->where('created_byId', $user->id)->paginate(20)->appends($request->search);
+            $roles = Role::where('name', 'saler')->get();
+        }elseif ($user->hasRole('leader-shipper')) {
+            $users =  User::with('roles', 'tokens', 'team')->whereHas(
+                'roles',function ($query) use ($role) {
+                    $query->where('name', $role->name);
+                })->where('email','!=','admin@admin.com')->search($request->only('search'))->where('created_byId', $user->id)->paginate(20)->appends($request->search);
+            $roles = Role::where('name', 'saler')->get();
+        } else {
+            return  abort(403);
+        }
+        return Inertia::render('Admin/User', compact('filters', 'users', 'roles'));
+    }
     public function create(Request $request)
     {
         $user = Auth::user();
