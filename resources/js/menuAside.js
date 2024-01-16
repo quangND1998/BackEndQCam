@@ -149,7 +149,7 @@ export default [{
             'visit.pending', 'visit.confirm', 'visit.completed', 'admin.review.index', 'admin.orders.refund'
         ],
         menu: [{
-                route: 'admin.orders.index',
+                route: 'admin.cskh.all',
                 label: 'Tất cả',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null

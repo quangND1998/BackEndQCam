@@ -8,6 +8,9 @@ import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
+import VueDatepickerUi from 'vue-datepicker-ui'
+import 'vue-datepicker-ui/lib/vuedatepickerui.css';
+import ModelShipping from './ModelShipping.vue'
 // import ModalDecline from "./ModalDecline.vue";
 // import ModelRefund from "./ModelRefund.vue";
 // import ModalShipping from "./ModalShipping.vue";
@@ -21,7 +24,11 @@ import {
     mdiTrashCanOutline,
     mdiCodeBlockBrackets,
     mdiPencil,
-    mdiLandFields
+    mdiLandFields,
+    mdiSquareEditOutline,
+    mdiArrowLeftBoldCircleOutline,
+    mdiLayersTripleOutline,
+    mdiPhone
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -37,7 +44,7 @@ import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import OrderHome from "@/Pages/Test/OrderHome.vue"
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
-
+import { emitter } from '@/composable/useEmitter';
 const props = defineProps({
     orders: Object,
     status: String,
@@ -58,7 +65,9 @@ const filter = reactive({
     payment_status: null,
     payment_method: null,
     type: null,
-    per_page: 10
+    per_page: 10,
+    selectedDate: null
+
 
 })
 const customer = ref()
@@ -68,6 +77,10 @@ const form = useForm({
     id: null,
     name: null,
     state: null,
+    selectedDate: [
+        new Date(),
+        new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)]
+    ,
 });
 const isModalActive = ref(false);
 const editMode = ref(false);
@@ -170,6 +183,29 @@ const loadOrder = async $state => {
     // );
 
 };
+const openSHippingDetail = (order) => {
+    console.log("ModelShipping");
+    emitter.emit('ModelShipping', order);
+}
+const selected = ref([])
+const selectAll = computed({
+    get() {
+        return props.orders.data
+            ? selected.value.length == props.orders.data
+            : false;
+    },
+    set(value) {
+        var array_selected = [];
+
+        if (value) {
+            props.orders.data.forEach(function (order) {
+                array_selected.push(order.id);
+            });
+        }
+        selected.value = array_selected;
+
+    }
+});
 
 </script>
 <template>
@@ -185,136 +221,71 @@ const loadOrder = async $state => {
                         <!-- <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p> -->
                     </h2>
                 </div>
-
-                <div>
-
-                    <Link v-if="hasAnyPermission(['add-new-package'])" :href="route('admin.orders.create')"
-                        class="px-2 py-2 text-sm  bg-btn_green hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
-                    Tạo đơn hàng
-                    </Link>
-                </div>
             </div>
-            <div>
-                <!-- <ModalShipping :shippers="shippers" />
-                <ModalDecline></ModalDecline>
-                <ModelRefund></ModelRefund> -->
+            <ModelShipping></ModelShipping>
+            <div class="mt-3">
                 <div class="w-full flex justify-between">
                     <div class="flex mr-2">
                         <div class="mr-4">
-                            <div class="w-full  mr-3 text-gray-500">
-                                <label for>Mã đơn hàng</label>
-                            </div>
                             <div class="min-[320px]:w-full form_search">
                                 <form v-on:submit.prevent>
                                     <div class="relative">
-                                        <div class="absolute inset-y-1 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg aria-hidden="true" class="w-5 h-5 text-sm text-gray-500 text-gray-400"
-                                                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                            </svg>
-                                        </div>
-                                        <input type="search" id="default-search" name="search" data-toggle="hideseek"
-                                            laceholder="Search Menus" data-list=".menu-category" v-model="filter.search"
-                                            @keyup="search"
-                                            class="block w-full p-2.5 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Nhập mã đơn hàng" required />
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="mr-4 w-[320px]">
-                            <div class=" text-gray-500">
-                                <label for>Ngày tạo đơn</label>
-                            </div>
-                            <div class="w-full flex flex-wrap">
-                                <div class="flex ">
-                                    <div class="relative">
-                                        <VueDatePicker v-model="filter.fromDate" time-picker-inline />
-                                    </div>
-                                    <span class="mx-1 text-gray-500">đến</span>
-                                    <div class="relative">
-                                        <VueDatePicker v-model="filter.toDate" time-picker-inline />
-                                    </div>
-                                    <button @click.prevent="changeDate" name="search"
-                                        class="block p-2 ml-3 text-xs text-gray-900 border border-gray-300 rounded-lg  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-blue-500 text-white">Search</button>
-                                </div>
 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="flex flex-col mr-4">
-                            <div class=" text-gray-500">
-                                <label for>Khách hàng</label>
-                            </div>
-                            <div class="form_search">
-                                <form v-on:submit.prevent>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg aria-hidden="true" class="w-5 h-5 text-sm text-gray-500 text-gray-400"
-                                                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        <input type="search" id="default-search" name="search" data-toggle="hideseek"
+                                            data-list=".menu-category" v-model="filter.search" @keyup="search"
+                                            class="block w-[200px] p-2.5  text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Tìm mã đơn hàng, SĐT   " required />
+                                        <div
+                                            class="absolute h-full  inset-y-0 right-0 flex items-center  pointer-events-none bg-[#FF6100] items-center p-1">
+                                            <svg aria-hidden="true" class="w-6 h-6 text-sm text-gray-500 text-gray-400"
+                                                fill="none" stroke="#ffffff" viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                             </svg>
                                         </div>
-                                        <input type="search" id="default-search" name="search" data-toggle="hideseek"
-                                            v-model="filter.customer" @keyup="searchCustomer" laceholder="Search Menus"
-                                            data-list=".menu-category"
-                                            class="block w-full p-2.5 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Tìm khách hàng bằng tên hoặc sđt" required />
                                     </div>
                                 </form>
                             </div>
                         </div>
-                        <div class="mr-4 flex-col flex">
-                            <div class=" text-gray-500">
-                                <label for>Phương thức TT</label>
+                        <div class="w-[320px]">
+                            <VueDatepickerUi range v-model="form.selectedDate" lang="vn"></VueDatepickerUi>
+                        </div>
+                        <div class="mr-4 flex-col flex w-[160px]">
+                            <div class="">
+                                <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                    <option :value="null">Tất cả kho hàng</option>
+                                    <option value="gift_delivery">Giao quà</option>
+                                    <option value="order">Đơn lẻ</option>
+                                </select>
                             </div>
+                        </div>
+                        <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
                                 <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
-                                    <option value="cash">Tiền mặt</option>
-                                    <option value="banking">Chuyển khoản ngân hàng</option>
-                                    <option value="payoo">Payoo</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mr-4 flex-col flex">
-                            <div class=" text-gray-500">
-                                <label for>Trạng thái TT</label>
-                            </div>
-                            <div class="">
-                                <select id="countries"  v-model="filter.payment_status" @change="Fillter()"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
-
-                                    <option :value="null">Tình trạng</option>
-                                    <option :value="1">Đã thanh toán</option>
-                                    <option :value="0">Chưa thanh toán</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mr-4 flex-col flex">
-                            <div class=" text-gray-500">
-                                <label for>Loại đơn</label>
-                            </div>
-                            <div class="">
-                                <select id="countries"  v-model="filter.type" @change="Fillter()"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
-
-                                    <option :value="null">Tất cả</option>
-                                    <option value="retail">Đơn lẻ</option>
                                     <option value="gift_delivery">Giao quà</option>
+                                    <option value="order">Đơn lẻ</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
                 </div>
+                <div class="my-3 w-full flex justify-between ">
+                    <Button
+                        class="px-2 py-2 text-sm  bg-[#FF6100] hover:bg-[#EB5F0A] text-white p-2 rounded-lg border mx-1">
+                        Đẩy đơn hàng loạt
+                    </Button>
+                    <div class="flex">
+                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
+                         label="Tất cả (11)" />
+                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]" label="Pending" />
+                    </div>
+                </div>
+
                 <div class="w-full mt-2 ">
                     <div class="flex flex-col">
                         <div class="overflow-x-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[60vh]">
@@ -341,15 +312,82 @@ const loadOrder = async $state => {
                                 </thead>
                                 <tbody>
                                     <tr v-for="(order, index) in orders?.data" :key="index">
+                                        <th scope="col" class="px-6 py-3 ">
+                                            <div class="flex items-center ">
+                                                <input id="default-checkbox" type="checkbox" v-model="selected"
+                                                    :value="order.id"
+                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
+                                            </div>
+                                        </th>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ index + 1 }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ order?.idPackage
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                            order?.product_service?.order_package?.idPackage
                                         }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 flex items-center text-gray-500">
-                                            <p>{{ formatTimeDayMonthyear(order?.created_at) }}
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                            order?.product_service?.product?.name
+                                        }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                            order?.customer?.name
+                                        }}</td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <p class="flex items-center">
+                                                {{ hasAnyPermission(['super-admin']) ? order?.customer?.phone_number :
+                                                    hidePhoneNumber(order?.customer?.phone_number) }}
+                                                <!-- mdiPhone  -->
+                                                <BaseIcon :path="mdiPhone"
+                                                    class=" rounded-lg mr-2 text-[#4F8D06] hover:text-[#4F8D06]"
+                                                    v-tooltip.top="'gọi điện'" size="22">
+                                                </BaseIcon>
                                             </p>
-                                            <BaseIcon v-if="order.type == 'upgrade'" :path="mdiRefresh"
-                                                    class=" text-[#F26322] rounded-lg mr-2 "
-                                                    v-tooltip.top="'Hợp đồng gia hạn'" size="20"></BaseIcon>
+
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <p v-for="(item, index2) in order.order_items" :key="index2">
+                                                {{ item?.product?.name }}
+                                            </p>
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <p v-for="(item, index2) in order.order_items" :key="index2">
+                                                {{ item?.quantity }}
+                                            </p>
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            hộp
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order?.status_transport == null ? "Chưa đẩy đơn" : order?.status_transport }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <BaseIcon :path="mdiArrowLeftBoldCircleOutline"
+                                                class="rotate-90 text-gray-400 rounded-lg mr-2 text-[#1D75FA] hover:text-blue-700"
+                                                v-tooltip.top="'Đẩy đơn'" size="22">
+                                            </BaseIcon>
+                                            <BaseIcon :path="mdiLayersTripleOutline"
+                                                class=" text-gray-400 rounded-lg  mr-2 text-[#FF6100] hover:text-red-700"
+                                                v-tooltip.top="'Đơn nháp'" size="20">
+                                            </BaseIcon>
+                                            <BaseIcon :path="mdiSquareEditOutline"
+                                                class=" text-gray-400 rounded-lg mr-2 text-[#FF6100] hover:text-blue-700"
+                                                v-tooltip.top="'Chỉnh sửa'" size="20">
+                                            </BaseIcon>
+
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order?.shipper ? order?.shipper?.name : "NA" }}
+                                        </td>
+
+                                        <td class="whitespace-nowrap text-left px-3 py-2  text-gray-500">
+                                            {{ order?.delivery_appointment ?
+                                                formatTimeDayMonthyear(order?.delivery_appointment) : "Chưa cập nhật" }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <button @click="openSHippingDetail(order)"  data-toggle="modal" data-target="#ModelShipping">xem</button>
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            xem
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order?.order_number }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -359,10 +397,8 @@ const loadOrder = async $state => {
                     </div>
                 </div>
 
-                <!-- <Pagination :links="orders.links" /> -->
 
             </div>
-            <infinite-loading @infinite="loadOrder" />
 
         </SectionMain>
     </LayoutAuthenticated>
@@ -401,4 +437,10 @@ const loadOrder = async $state => {
     color: rgb(202 138 4/var(--tw-text-opacity));
 }
 
-</style>
+.v-calendar .input-field input {
+    height: 40px;
+}
+
+.v-calendar .input-field svg.datepicker {
+    fill: #65716b;
+}</style>
