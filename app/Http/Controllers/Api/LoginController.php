@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\Base2Controller;
 use App\Http\Controllers\Controller;
@@ -287,7 +287,7 @@ class LoginController extends Base2Controller
 
         if (!$user->infor) {
             $userInfor = UserInfor::create($request->all());
-            $userInfor->phone_number = str_replace(" ", "", $request->phone_number);
+            $userInfor->phone_number = preg_replace('/\s+/', '', $request->phone_number);
             $userInfor->user_id = $user->id;
             if ($request->image) {
                 $userInfor->photo_url = $this->uploadImage($request->file('image'), $savePath);
@@ -296,7 +296,7 @@ class LoginController extends Base2Controller
         } else {
             $user->infor->update($request->all());
             $user->infor->status = false;
-            $user->infor->phone_number = str_replace(" ", "", $request->phone_number);
+            $user->infor->phone_number = preg_replace('/\s+/', '', $request->phone_number);
             if ($request->image) {
                 $user->infor->photo_url = $request->file('image') ? $this->updateImage($request->file('image'), $savePath, $user->infor->photo_url) : $user->infor->photo_url;
             }
