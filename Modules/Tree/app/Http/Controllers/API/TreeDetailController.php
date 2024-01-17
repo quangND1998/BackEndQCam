@@ -16,11 +16,11 @@ class TreeDetailController extends Controller
      */
     public function detail(Request $request, $id)
     {
-        $tree = Tree::with('history_care.activityCare', 'images')->find($id);
+        $tree = Tree::with('history_care.activityCare', 'images','product_service_owner')->find($id);
         if ($tree) {
             $response = [
                 'tree' => $tree,
-                'history_care' => $tree->history_care()->with('activityCare','product_service_owner')->select('*', DB::raw('DATE(date) as dategroup'))->orderBy('date', 'desc')->get()->groupBy('dategroup')
+                'history_care' => $tree->history_care()->with('activityCare')->select('*', DB::raw('DATE(date) as dategroup'))->orderBy('date', 'desc')->get()->groupBy('dategroup')
             ];
             return response()->json($response, 200);
         }
