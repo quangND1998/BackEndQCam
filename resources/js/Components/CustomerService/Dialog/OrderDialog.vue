@@ -1,21 +1,22 @@
 <script setup>
-import { computed, inject, reactive, ref, watch } from 'vue';
+import { computed, inject, reactive, ref, toRaw, watch } from 'vue';
 
 import FilterableDropdown from '@/Components/CustomerService/FilterableDropdown.vue';
 
-const { productRetails, data, cities, districts, wards } = inject('ORDER_PACKAGE_PAGE');
+const { productRetails, data, cities, districts, customer } = inject('ORDER_PACKAGE_PAGE');
 
-const orderForm = reactive({
-  products: {},
+const props = defineProps({
+  orderPackage: Object,
 });
+
+const emit = defineEmits(['onCloseDialog']);
 
 // Product picker
 const selectedProducts = ref({});
+const showProductError = ref(false);
 const productRows = ref([1]);
 const handleAddRow = () => {
-  console.log(selectedProducts.value);
   productRows.value.push(productRows.value[productRows.value.length - 1] + 1);
-  console.log(selectedProducts.value);
 }
 const handleRemoveRow = (rowNumber) => {
   productRows.value = productRows.value.filter((number) => number !== rowNumber);
@@ -24,9 +25,11 @@ const handleRemoveRow = (rowNumber) => {
 const handleChangeProduct = (productId, rowNumber) => {
   const product = productRetails.find((product) => product.id == productId);
   if (product) {
+    showProductError.value = false;
     selectedProducts.value = {
       ...selectedProducts.value,
       [`product_${rowNumber}`]: {
+        id: product.id,
         name: product.name,
         unit: product.unit,
         quantity: 1,
@@ -35,20 +38,19 @@ const handleChangeProduct = (productId, rowNumber) => {
   }
 }
 const handleUpdateQuantity = (quantity, rowNumber) => {
-  selectedProducts.value[`product_${rowNumber}`].quantity = quantity;
+  selectedProducts.value[`product_${rowNumber}`].quantity = parseInt(quantity, 10) || 1;
 }
 
 // Address picker
 const addressType = ref('default');
+const showAddressError = ref(false);
 const address = reactive({
-  city: null,
-  district: null,
-  ward: null,
+  city: customer.city,
+  district: customer.district,
+  ward: customer.wards,
+  detail: customer.address
 });
-watch(() => address.city, () => {
-  address.district = null;
-  address.ward = null;
-});
+const disabledAdressEdit = computed(() => addressType.value === 'default');
 const districtsOfCity = computed(() => {
   if (address.city && cities.value[encodeURIComponent(address.city).slice(-12)]) {
     return cities.value[encodeURIComponent(address.city).slice(-12)].Districts || [];
@@ -61,16 +63,63 @@ const wardsOfDistrict = computed(() => {
   }
   return [];
 });
-const filterFunction = (value) => value.replace(/Tỉnh |Thành phố |Quận |Huyện |Thị xã |Phường |Xã |Thị trấn /g, '')
+const filterFunction = (value) => value.replace(/Tỉnh |Thành phố |Quận |Huyện |Thị xã |Phường |Xã |Thị trấn /g, '');
+watch(() => address.city, () => {
+  address.district = null;
+  address.ward = null;
+});
+watch(addressType, (newType) => {
+  if (newType === 'default') {
+    address.city = customer.city;
+    address.district = customer.district;
+    address.ward = customer.wards;
+    address.detail = customer.address;
+  }
+});
+
+// Other
+const subPhoneNumber = ref('');
+const note = ref('');
+
+const onCreateOrder = () => {
+  const order = {
+    products: Object.values(selectedProducts.value).map((product) => ({
+      id: product.id,
+      quantity: product.quantity,
+    })),
+    address: toRaw(address),
+    note: note.value,
+    subPhoneNumber: subPhoneNumber.value,
+    productServiceOwnerId: props.orderPackage.product_service_owner.id,
+  }
+
+  const haveError = false;
+  if (order.products.length === 0) {
+    showProductError.value = true
+    haveError = true;
+  }
+  if (!order.address.detail) {
+    showAddressError.value = true;
+    haveError = true;
+  }
+
+  if (haveError) return;
+
+  console.log(order);
+}
 </script>
 
 <template>
   <div class="fixed w-screen h-screen bg-black/40 top-0 left-0 z-50 overflow-hidden flex items-center justify-center">
-    <div class="bg-white shadow-lg w-[calc(100vw_-_318px)] rounded-lg">
-      <div class="grid grid-cols-3 p-3 gap-10">
+    <div class="bg-white shadow-lg w-[calc(100vw_-_318px)] rounded-xl">
+      <div class="flex items-center justify-between rounded-t-lg bg-orange-500 pr-3 pl-4 py-2">
+        <p class="font-semibold text-white">Lên đơn cho hợp đồng {{ orderPackage?.idPackage }}</p>
+        <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="emit('onCloseDialog')"/>
+      </div>
+      <div class="grid grid-cols-3 p-3 pt-4 gap-10">
         <div>
           <div class="flex items-center justify-between border-b border-gray-400 pb-2 mb-3">
-            <p class="font-semibold text-sm">Lên đơn cho hợp đồng</p>
+            <p class="font-semibold text-sm">Lần:</p>
             <button class="rounded-full bg-sky-600 text-white font-medium px-2 py-1 text-sm" @click="handleAddRow">
               Thêm
             </button>
@@ -112,6 +161,7 @@ const filterFunction = (value) => value.replace(/Tỉnh |Thành phố |Quận |H
               </div>
             </div>
           </div>
+          <p v-if="showProductError" class="mt-2 text-red-500 font-semibold">Hãy chọn sản phẩm</p>
         </div>
 
         <div>
@@ -132,7 +182,7 @@ const filterFunction = (value) => value.replace(/Tỉnh |Thành phố |Quận |H
               <FilterableDropdown
                 v-model="address.city"
                 :options="data"
-                :onChange="() => {}"
+                :disabled="disabledAdressEdit"
                 :normalizeValue="filterFunction"
                 placeholder="Tỉnh/TP"
                 optionLabel="Name"
@@ -143,7 +193,7 @@ const filterFunction = (value) => value.replace(/Tỉnh |Thành phố |Quận |H
               <FilterableDropdown
                 v-model="address.district"
                 :options="districtsOfCity"
-                :onChange="() => {}"
+                :disabled="disabledAdressEdit"
                 :normalizeValue="filterFunction"
                 placeholder="Quận/Huyện"
                 optionLabel="Name"
@@ -154,7 +204,7 @@ const filterFunction = (value) => value.replace(/Tỉnh |Thành phố |Quận |H
               <FilterableDropdown
                 v-model="address.ward"
                 :options="wardsOfDistrict"
-                :onChange="() => {}"
+                :disabled="disabledAdressEdit"
                 :normalizeValue="filterFunction"
                 placeholder="Xã/Phường"
                 optionLabel="Name"
@@ -162,25 +212,31 @@ const filterFunction = (value) => value.replace(/Tỉnh |Thành phố |Quận |H
             </div>
           </div>
           <div class="!mt-[18px]">
-            <p class="text-sm font-semibold mb-1">Địa chỉ chi tiết</p>
-            <textarea :disabled="true" class="w-full resize-none rounded bg-white disabled:!bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
+            <p class="text-sm font-semibold mb-1">
+              Địa chỉ chi tiết
+              <span v-if="showAddressError && address.detail === ''" class="text-red-600 pl-2">
+                Hãy nhập địa chỉ chi tiết
+              </span>
+            </p>
+            <textarea v-model="address.detail" :disabled="disabledAdressEdit"
+              class="w-full resize-none rounded bg-white disabled:!bg-gray-200 disabled:text-gray-600 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
           </div>
         </div>
 
         <div>
           <div class="flex items-center gap-4 pb-1 mb-3 border-b border-gray-400">
             <p class="text-sm font-semibold mb-1 w-20">SĐT phụ</p>
-            <input type="text" placeholder="Số điện thoại" class="w-full h-8 rounded-sm border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0" />
+            <input v-model="subPhoneNumber" type="text" placeholder="Số điện thoại" class="w-full h-8 rounded-sm border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0" />
           </div>
           <div class="mt-3">
             <p class="text-sm font-semibold mb-1">Ghi chú đơn hàng (giờ nhận...)</p>
-            <textarea class="w-full resize-none rounded bg-white disabled:!bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="9"></textarea>
+            <textarea v-model="note" class="w-full resize-none rounded bg-white disabled:!bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="9"></textarea>
           </div>
         </div>
       </div>
       <div class="mx-3 border-b border-gray-400"></div>
       <div class="flex justify-end items-center pr-3 py-6">
-        <button class="rounded-md bg-orange-600 text-white font-medium px-3 py-2 mb-2">
+        <button class="rounded-md bg-orange-600 text-white font-medium px-3 py-2" @click="onCreateOrder">
           Tạo đơn
         </button>
       </div>

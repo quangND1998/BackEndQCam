@@ -28,7 +28,7 @@
   const scheduleVisitId = ref();
   const bookingForm = reactive(cloneDeep(initData));
   const minDate = computed(() => new Date());
-  const activeService = computed(() => extraServices.filter((service) => service.is_active));
+  const activeService = computed(() => extraServices.value.filter((service) => service.is_active));
 
   watch(() => bookingForm.date, (newVal) => {
     bookingForm.date_time = moment(newVal).format('YYYY-MM-DD HH:mm:ss');
@@ -47,8 +47,8 @@
 </script>
 
 <template>
-  <div class="relative">
-    <div v-if="visible" class="mt-4 w-[700px] rounded-lg bg-white shadow-lg absolute -top-[272px] left-[300px] z-10">
+  <div v-if="visible" class="fixed w-screen h-screen bg-black/40 top-0 left-0 z-50 overflow-hidden flex items-center justify-center rounded-lg">
+    <div class="mt-4 w-[700px] rounded-xl bg-white shadow-lg z-10">
       <div class="flex items-center justify-between rounded-t-lg bg-yellow-500 pr-3 pl-4 py-2">
         <p class="font-semibold">Booking theo HD {{ packageId }}</p>
         <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="visible = false"/>
@@ -89,6 +89,6 @@
         <DialogLoading v-if="isLoading" text="Booking" />
       </div>
     </div>
-    <button class="rounded-full bg-sky-600 text-white font-medium px-3 py-2 mb-2" @click="visible = !visible">Booking</button>
   </div>
+  <button class="rounded-full bg-sky-600 text-white font-medium px-3 py-2 mb-2" @click="visible = !visible">Booking</button>
 </template>

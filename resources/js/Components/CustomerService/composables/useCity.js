@@ -3,7 +3,6 @@ import { onMounted, ref } from "vue";
 const useCity = () => {
   const cities = ref({});
   const districts = ref({});
-  const wards = ref({});
   const data = ref([]);
 
   onMounted(async () => {
@@ -15,9 +14,6 @@ const useCity = () => {
       cities.value[encodeURIComponent(city.Name).slice(-12)] = city;
       city.Districts.forEach(district => {
         districts.value[encodeURIComponent(district.Name).slice(-12)] = district;
-        district.Wards.forEach(ward => {
-          wards.value[encodeURIComponent(ward.Name).slice(-12)] = ward;
-        });
       });
     });
   });
@@ -26,7 +22,6 @@ const useCity = () => {
     data,
     cities,
     districts,
-    wards,
   }
 }
 
