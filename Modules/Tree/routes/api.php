@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Order\app\Http\Controllers\CartController;
 use Modules\Tree\app\Http\Controllers\API\ProductServiceController;
+use Modules\Tree\app\Http\Controllers\API\TreeDetailController;
 
 /*
     |--------------------------------------------------------------------------
@@ -27,4 +28,9 @@ Route::prefix('v1')->group(function () {
     Route::post('removeItem', [CartController::class,'removeItem']);
     Route::post('clearCart', [CartController::class,'clearCart']);
 
+});
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('v1')->name('api.')->group(function () {
+        Route::get('cart', [TreeDetailController::class,'detail']);
+    });
 });

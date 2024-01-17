@@ -29,7 +29,7 @@ class CustomerProductOwerController extends Base2Controller
                 $product_owner = ProductServiceOwner::with(['product.images','history_gift','tree.history_care.activityCare','tree.images' => function ($query) {
                     $query->take(9);
                 },'tree.history_care' => function ($q){
-                    $q->select('*', DB::raw('DATE(date) as date'))->orderBy('date', 'desc')->get()->groupBy('date');
+                    $q->select('*', DB::raw('DATE(date) as dategroup'))->orderBy('date', 'desc')->get()->groupBy('dategroup');
                 }])->where('user_id',$customer->id)->get();
                 $product_not_owner = ProductService::with('images')->whereDoesntHave('productServiceOwner')->where('status',1)->get();
 
