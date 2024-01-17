@@ -20,7 +20,7 @@ class TreeDetailController extends Controller
         if ($tree) {
             $response = [
                 'tree' => $tree,
-                'history_care' => $tree->history_care()->select('*', DB::raw('DATE(date) as dategroup'))->orderBy('date', 'desc')->get()->groupBy('dategroup')
+                'history_care' => $tree->history_care()->with('activityCare')->select('*', DB::raw('DATE(date) as dategroup'))->orderBy('date', 'desc')->get()->groupBy('dategroup')
             ];
             return response()->json($response, 200);
         }
