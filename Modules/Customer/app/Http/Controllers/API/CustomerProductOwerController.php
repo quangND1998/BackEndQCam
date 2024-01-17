@@ -25,7 +25,8 @@ class CustomerProductOwerController extends Base2Controller
         $customer = Auth::user();
         if ($customer) {
             // $product_owner = $customer->product_service_owners;
-            $product_owner = ProductServiceOwner::with('product.images', 'history_gift', 'tree.images')->where('user_id', $customer->id)->get();
+            // update tree care
+            $product_owner = ProductServiceOwner::with('product.images', 'history_gift', 'tree.images', 'tree.history_care.activityCare')->where('user_id', $customer->id)->get();
             $product_not_owner = ProductService::with('images')->whereDoesntHave('productServiceOwner')->where('status', 1)->get();
 
             $response = [
@@ -41,13 +42,30 @@ class CustomerProductOwerController extends Base2Controller
     {
         $customer = Auth::user();
         if ($customer) {
-            $product_not_owner = ProductService::with('images')->findOrfail($id);
+            // $product_owner = $customer->product_service_owners;
+            $product_owner = ProductServiceOwner::with('product.images', 'history_gift', 'tree.images')->where('user_id', $customer->id)->get();
+            $product_not_owner = ProductService::with('images')->whereDoesntHave('productServiceOwner')->where('status', 1)->get();
+
             $response = [
-                'product_detail' => $product_not_owner
+                'user' => $customer->name,
+                'product_owner' => $product_owner,
+                'not_owner' => $product_not_owner
             ];
             return $this->sendResponse($response, 'Get apartmentDetail successfully');
         }
+        return response()->json('Chua login', 200);
     }
+    // public function getProductServiceDetail($id)
+    // {
+    //     $customer = Auth::user();
+    //     if ($customer) {
+    //         $product_not_owner = ProductService::with('images')->findOrfail($id);
+    //         $response = [
+    //             'product_detail' => $product_not_owner
+    //         ];
+    //         return $this->sendResponse($response, 'Get apartmentDetail successfully');
+    //     }
+    // }
     public function getOneProductActivity($id)
     {
         $customer = Auth::user();

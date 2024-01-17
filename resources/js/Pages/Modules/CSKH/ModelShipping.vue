@@ -1,7 +1,8 @@
 <template>
     <div class="modal fade" id="ModelShipping" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class=" rounded-2xl mx-auto mt-10 shadow-lg max-h-modal w-8/12  md:w-9/12 lg:w-8/12 xl:w-5/12 z-50 overflow-auto"
+
+        <div class="modal-dialog modal-xl rounded-2xl mx-auto mt-10 shadow-lg max-h-modal w-8/12  md:w-9/12 lg:w-8/12 xl:w-5/12 z-50 overflow-auto"
             role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -11,9 +12,9 @@
 
                         </div>
                     </div>
-                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                    </button> -->
+                    </button>
                 </div>
                 <div class="modal-body  mx-5 mb-6">
                     <div class="flex items-center ">
@@ -50,7 +51,8 @@
                     <div class="w-full flex items-center mx-auto ">
                         <img src="/assets/icon/book.png" alt="" class="w-12 h-12 p-2">
                         <p class="text-[#000000] text-base">Đ/c nhận hàng: {{ form.order?.customer.address
-                                + ' ,' + form.order?.customer.wards + ' ,' + form.order?.customer.district  + ' ,' +form.order?.customer.city }}
+                            + ' ,' + form.order?.customer.wards + ' ,' + form.order?.customer.district + ' ,'
+                            + form.order?.customer.city }}
                         </p>
                     </div>
                     <div class="w-full flex items-center mx-auto justify-between ">
@@ -75,9 +77,9 @@
                         </p>
                     </div>
                     <div class="w-full mx-auto border min-h-30 px-3 py-4">
-                            <p v-for="(history,index) in form.order?.shipping_history" :key="index">
-                                {{ formatDate(history.created_at) }} : {{ history.note }}
-                            </p>
+                        <p v-for="(history, index) in form.order?.shipping_history" :key="index">
+                            {{ formatDate(history.created_at) }} : {{ history.note }}
+                        </p>
                     </div>
                 </div>
             </div>

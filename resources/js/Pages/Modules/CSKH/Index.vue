@@ -210,7 +210,7 @@ const selectAll = computed({
 </script>
 <template>
     <LayoutAuthenticated>
-
+        <ModelShipping></ModelShipping>
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -222,7 +222,7 @@ const selectAll = computed({
                     </h2>
                 </div>
             </div>
-            <ModelShipping></ModelShipping>
+
             <div class="mt-3">
                 <div class="w-full flex justify-between">
                     <div class="flex mr-2">
@@ -275,14 +275,15 @@ const selectAll = computed({
 
                 </div>
                 <div class="my-3 w-full flex justify-between ">
-                    <Button
+                    <button
                         class="px-2 py-2 text-sm  bg-[#FF6100] hover:bg-[#EB5F0A] text-white p-2 rounded-lg border mx-1">
                         Đẩy đơn hàng loạt
-                    </Button>
+                    </button>
                     <div class="flex">
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
-                         label="Tất cả (11)" />
-                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]" label="Pending" />
+                            label="Tất cả (11)" />
+                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
+                            label="Pending" />
                     </div>
                 </div>
 
@@ -381,7 +382,8 @@ const selectAll = computed({
                                                 formatTimeDayMonthyear(order?.delivery_appointment) : "Chưa cập nhật" }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @click="openSHippingDetail(order)"  data-toggle="modal" data-target="#ModelShipping">xem</button>
+                                            <button @click="openSHippingDetail(order)" data-toggle="modal"
+                                                data-target="#ModelShipping">xem</button>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             xem

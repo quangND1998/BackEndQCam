@@ -23,5 +23,6 @@ class ShipperController extends Controller
         $array_status = ['pending', 'packing', 'shipping', 'completed', 'wait_refund', 'refund', 'decline'];
         $shippers = $this->shipperRepository->getShipper();
         $statusGroup = $this->orderRepository->groupByOrderStatus();
+        
     }
 }
