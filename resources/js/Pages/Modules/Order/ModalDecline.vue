@@ -83,6 +83,7 @@ const orderCancel = () => {
 const listener = () => {
 }
 onUnmounted(() => {
+    console.log("ngaaa");
     emitter.off('OpenModalDecline', listener)
 })
 </script>

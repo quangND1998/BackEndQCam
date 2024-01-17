@@ -1,8 +1,7 @@
 <template>
     <div class="modal fade" id="ModelShipping" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-
-        <div class="modal-dialog modal-xl rounded-2xl mx-auto mt-10 shadow-lg max-h-modal w-8/12  md:w-9/12 lg:w-8/12 xl:w-5/12 z-50 overflow-auto"
+        <div class="modal-dialog rounded-2xl mx-auto mt-10 shadow-lg max-h-modal w-8/12  md:w-9/12 lg:w-8/12 xl:w-5/12 z-50 overflow-auto"
             role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -16,7 +15,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body  mx-5 mb-6">
+                <div class="modal-body  mx-1 mb-6">
                     <div class="flex items-center ">
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/loading-svgrepo-com.png" alt="" class="w-12 h-12 p-2">
@@ -137,6 +136,8 @@ const orderRefund = () => {
 const listener = () => {
 }
 onUnmounted(() => {
+    console.log("ngaaa");
+    $("#ModelShipping").modal("hide");
     emitter.off('ModelShipping', listener)
 })
 
