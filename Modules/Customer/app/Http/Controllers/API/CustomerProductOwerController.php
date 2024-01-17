@@ -10,6 +10,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Http\Controllers\API\Base2Controller;
+use App\Http\Resources\ProductServiceOwnerResource;
 use Carbon\Carbon;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,7 @@ class CustomerProductOwerController extends Base2Controller
 
             $response = [
                 'user' => $customer->name,
-                'product_owner' => $product_owner,
+                'product_owner' => ProductServiceOwnerResource::collection($product_owner),
                 'not_owner' => $product_not_owner
             ];
             return $this->sendResponse($response, 'Get apartmentDetail successfully');
