@@ -17,31 +17,31 @@ use Modules\Customer\app\Models\HistoryExtend;
 use Modules\Order\app\Models\Order;
 use Modules\Tree\app\Models\ProductService;
 use Illuminate\Support\Facades\DB;
+
 class CustomerProductOwerController extends Base2Controller
 {
-   //all product of user
-   public function getProductService()
-   {
-            $customer = Auth::user();
-            if($customer){
-                // $product_owner = $customer->product_service_owners;
-                // update tree care
-                $product_owner = ProductServiceOwner::with(['product.images','history_gift','tree.history_care.activityCare','tree.images' => function ($query) {
-                    $query->take(9);
-                },'tree.history_care' => function ($q){
-                    $q->select('*', DB::raw('DATE(date) as date'))->orderBy('date', 'desc')->get()->groupBy('date');
-                }])->where('user_id',$customer->id)->get();
-                $product_not_owner = ProductService::with('images')->whereDoesntHave('productServiceOwner')->where('status',1)->get();
+    //all product of user
+    public function getProductService()
+    {
+        $customer = Auth::user();
+        if ($customer) {
+            // $product_owner = $customer->product_service_owners;
+            // update tree care
+            $product_owner = ProductServiceOwner::with(['product.images', 'history_gift', 'tree.history_care.activityCare', 'tree.images' => function ($query) {
+                $query->take(9);
+            }, 'tree.history_care' => function ($q) {
+                $q->select('*', DB::raw('DATE(date) as dategroup'))->orderBy('date', 'desc')->groupBy('dategroup');
+            }])->where('user_id', $customer->id)->get();
+            $product_not_owner = ProductService::with('images')->whereDoesntHave('productServiceOwner')->where('status', 1)->get();
 
-                $response = [
-                    'user' => $customer->name,
-                    'product_owner' =>$product_owner,
-                    'not_owner' => $product_not_owner
-                ];
-                return $this->sendResponse($response, 'Get apartmentDetail successfully');
-            }
-            return response()->json('Chua login', 200);
-
+            $response = [
+                'user' => $customer->name,
+                'product_owner' => $product_owner,
+                'not_owner' => $product_not_owner
+            ];
+            return $this->sendResponse($response, 'Get apartmentDetail successfully');
+        }
+        return response()->json('Chua login', 200);
     }
     public function getProductServiceDetail($id)
     {
