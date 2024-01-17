@@ -1,13 +1,10 @@
 <script setup>
-import CycleTime from '@/Components/CustomerService/CycleTime.vue';
+import OrderTable from '@/Components/CustomerService/Table/OrderTable.vue';
 
 const props = defineProps({
-  orderPackages: Object,
+  orderPackages: Array,
+  declineOrderPackageCount: Number,
 });
-
-const fillMissingOrders = (orders) => {
-  return [...orders, ...(new Array(12 - orders.length).fill(undefined))];
-}
 </script>
 
 <template>
@@ -15,8 +12,8 @@ const fillMissingOrders = (orders) => {
     <div class="grid grid-cols-12 text-sm gap-4 mb-1 items-end">
         <p class="font-bold col-span-2">Lịch phân phối quà</p>
         <div class="col-span-3 flex gap-4">
-          <p>Hoạt động: 2</p>
-          <p>Hợp đồng đã dừng: 3</p>
+          <p>Hoạt động: {{ orderPackages.length || 0 }}</p>
+          <p>Hợp đồng đã dừng: {{ declineOrderPackageCount || 0 }}</p>
         </div>
         <p class="col-span-3">Chú thích: 5(1) chu kỳ 12 lần năm thứ nhất</p>
         <div class="col-span-4 grid grid-cols-3 gap-4 justify-stretch">
@@ -41,19 +38,7 @@ const fillMissingOrders = (orders) => {
         <div v-for="n in 12" class="text-center">L{{n}}</div>
         <div></div>
       </div>
-      <div
-        v-for="(orderPackage, index) in orderPackages"
-        :key="orderPackage.id"
-        class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm"
-      >
-        <div class="text-center">{{ index + 1 }}</div>
-        <div class="col-span-2 pl-1">{{ orderPackage.idPackage }}</div>
-        <div class="text-center">{{ orderPackage.product_service.life_time }}</div>
-        <div v-for="(order, index) in fillMissingOrders(orderPackage.product_service_owner.orders)" class="text-center">
-          <CycleTime :order="order" :position="index" :startDate="orderPackage.product_service_owner.time_approve" />
-        </div>
-        <div class="bg-zinc-700 col-span-2" />
-      </div>
+      <OrderTable v-for="(orderPackage, index) in orderPackages" :key="orderPackage.id" :index="index" :orderPackage="orderPackage" />
       <div class="w-full border-b border-x h-5 !border-gray-400"></div>
   </div>
 </template>

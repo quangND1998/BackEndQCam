@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\Base2Controller;
 use App\Http\Controllers\Controller;
@@ -17,8 +17,11 @@ use Illuminate\Support\Facades\Http;
 use App\Service\OtpService;
 use App\Jobs\OtpEndTimeJob;
 use Carbon\Carbon;
+use App\Http\Controllers\Traits\FileUploadTrait;
+
 class LoginController extends Base2Controller
 {
+    use FileUploadTrait;
     public function login(Request $request)
     {
 
@@ -31,7 +34,7 @@ class LoginController extends Base2Controller
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
             $success['user'] =  $user->load('infor');
             $success['user']['can'] = $user->getRolesArray();
-            if($user->hasAnyRole(['shipper','super-admin','customer'])){
+            if ($user->hasAnyRole(['shipper', 'super-admin', 'customer'])) {
                 return $this->sendResponse($success, 'User login successfully.');
             }
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
@@ -41,7 +44,7 @@ class LoginController extends Base2Controller
     }
 
 
-    protected function loginOtp(OtpService $otpService,Request $request)
+    protected function loginOtp(OtpService $otpService, Request $request)
     {
         $validator = Validator::make($request->all(), [
             'phone_number' => 'required',
@@ -55,18 +58,18 @@ class LoginController extends Base2Controller
         if (!$user) {
             return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 404);
         }
-        if(!$user->hasAnyRole(['shipper','super-admin','customer'])){
+        if (!$user->hasAnyRole(['shipper', 'super-admin', 'customer'])) {
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
 
         $access_token = $otpService->createToken();
 
-        if($access_token){
+        if ($access_token) {
             $user->otps()->delete();
             $otp =  $otpService->createOtp(5, $user);
             OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
-            $message = "CamMatTroi: Vui long nhap ma OTP ".$otp->otp_number." de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
-            $response=  $otpService->sendSMS($access_token,$message, preg_replace('/\s+/', '', $request->phone_number));
+            $message = "CamMatTroi: Vui long nhap ma OTP " . $otp->otp_number . " de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
+            $response =  $otpService->sendSMS($access_token, $message, preg_replace('/\s+/', '', $request->phone_number));
 
             if ($response->ok()) {
                 return response()->json('We send otp to your phone ' . $request->phone_number, 200);
@@ -87,7 +90,7 @@ class LoginController extends Base2Controller
         }
 
 
-        if($otpService->isOtpExpried($request->verification_code)){
+        if ($otpService->isOtpExpried($request->verification_code)) {
             $user = User::where('phone_number', preg_replace('/\s+/', '', $request->phone_number))->first();
             Auth::login($user);
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
@@ -114,7 +117,7 @@ class LoginController extends Base2Controller
     }
 
 
-    public function updatePassword(OtpService $otpService,Request $request)
+    public function updatePassword(OtpService $otpService, Request $request)
     {
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
@@ -128,88 +131,81 @@ class LoginController extends Base2Controller
 
         #Match The Old Password
         if (!Hash::check($request->old_password, auth()->user()->password)) {
-            return $this->sendError('Mật khẩu cũ không chính xác.',null, 400);
+            return $this->sendError('Mật khẩu cũ không chính xác.', null, 400);
         }
 
 
 
 
-        $user =Auth::user();
+        $user = Auth::user();
         if (!$user) {
             return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 400);
         }
-        if(!$user->hasAnyRole(['shipper','super-admin','customer'])){
+        if (!$user->hasAnyRole(['shipper', 'super-admin', 'customer'])) {
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
 
         $access_token = $otpService->createToken();
 
-        if($access_token){
+        if ($access_token) {
             $user->otps()->delete();
 
             $otp =  $otpService->createOtp(5, $user);
             OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
-            $message = "CamMatTroi: Vui long nhap ma OTP ".$otp->otp_number." de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
-            $response=  $otpService->sendSMS($access_token,$message, preg_replace('/\s+/', '', $user->phone_number));
+            $message = "CamMatTroi: Vui long nhap ma OTP " . $otp->otp_number . " de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
+            $response =  $otpService->sendSMS($access_token, $message, preg_replace('/\s+/', '', $user->phone_number));
 
             if ($response->ok()) {
 
                 return response()->json('We send otp to your phone ' . $user->phone_number, 200);
-            }
-            else{
+            } else {
                 $response = $response->json();
-                if($response['error']==1014){
+                if ($response['error'] == 1014) {
                     return response()->json("Số điện thoại không hợp lệ", 400);
                 }
-                if($response['error']){
+                if ($response['error']) {
                     return response()->json("Lỗi xảy ra", 400);
                 }
             }
-        }
-        else{
+        } else {
 
             return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 400);
         }
-
-
-
     }
 
-    public function sendOtp(OtpService $otpService){
-        $user =Auth::user();
+    public function sendOtp(OtpService $otpService)
+    {
+        $user = Auth::user();
         if (!$user) {
             return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 404);
         }
-        if(!$user->hasAnyRole(['shipper','super-admin','customer'])){
+        if (!$user->hasAnyRole(['shipper', 'super-admin', 'customer'])) {
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
 
         $access_token = $otpService->createToken();
 
-        if($access_token){
+        if ($access_token) {
             $user->otps()->delete();
 
             $otp =  $otpService->createOtp(5, $user);
             OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
-            $message = "CamMatTroi: Vui long nhap ma OTP ".$otp->otp_number." de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
-            $response=  $otpService->sendSMS($access_token,$message, preg_replace('/\s+/', '', $user->phone_number));
+            $message = "CamMatTroi: Vui long nhap ma OTP " . $otp->otp_number . " de xac thuc. Ma nay se het han sau 5 phut. Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua CamMatTroi.";
+            $response =  $otpService->sendSMS($access_token, $message, preg_replace('/\s+/', '', $user->phone_number));
 
             if ($response->ok()) {
 
                 return response()->json('We send otp to your phone ' . $user->phone_number, 200);
-            }
-            else{
+            } else {
                 $response = $response->json();
-                if($response['error']==1014){
+                if ($response['error'] == 1014) {
                     return response()->json("Số điện thoại không hợp lệ", 400);
                 }
-                if($response['error']){
+                if ($response['error']) {
                     return response()->json("Lỗi xảy ra", 400);
                 }
-
             }
-        }
-        else{
+        } else {
 
             return response()->json("Số điện thoại chưa được đăng ký với hệ thống", 400);
         }
@@ -227,7 +223,7 @@ class LoginController extends Base2Controller
         }
 
 
-        if($otpService->isOtpExpried($request->verification_code)){
+        if ($otpService->isOtpExpried($request->verification_code)) {
 
             User::whereId(Auth::user()->id)->update([
                 'password' => Hash::make($request->new_password)
@@ -266,6 +262,8 @@ class LoginController extends Base2Controller
 
             'cic_date' => 'nullable|date',
             'cic_date_expried' => 'nullable|date|after:cic_date',
+            'image' => 'nullable',
+            'image' => 'mimes:jpeg,png,jpg|max:4096',
         ], [
             'name.required' => 'Vui lòng nhập Họ và Tên',
             'cic_number.required' => 'Vui lòng nhập số căn cước công dân',
@@ -277,23 +275,34 @@ class LoginController extends Base2Controller
             'district.required' => 'Địa chỉ nơi ở không bỏ trống , chúng tôi sẽ căn cứ vào địa chỉ này để giao hàng',
             'address.required' => 'Địa chỉ nơi ở không bỏ trống , chúng tôi sẽ căn cứ vào địa chỉ này để giao hàng',
             'cic_date_expried.after' => 'Phải là một ngày sau Ngày Cấp trên căn cước',
+            'image.mimes' => 'Ảnh đại diện phải là định dạng:jpeg,png,jpg',
+            'image.max' => 'Ảnh đại diện không được lớn hơn 4MB'
         ]);
-
+        $savePath = 'profile';
+        $this->makeFolder($savePath);
 
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
 
-        if(!$user->infor){
+        if (!$user->infor) {
             $userInfor = UserInfor::create($request->all());
+            $userInfor->phone_number = preg_replace('/\s+/', '', $request->phone_number);
             $userInfor->user_id = $user->id;
+            if ($request->image) {
+                $userInfor->photo_url = $this->uploadImage($request->file('image'), $savePath);
+            }
             $userInfor->save();
-        }
-        else{
+        } else {
             $user->infor->update($request->all());
             $user->infor->status = false;
+            $user->infor->phone_number = preg_replace('/\s+/', '', $request->phone_number);
+            if ($request->image) {
+                $user->infor->photo_url = $request->file('image') ? $this->updateImage($request->file('image'), $savePath, $user->infor->photo_url) : $user->infor->photo_url;
+            }
             $user->infor->save();
         }
+
 
         // $response = [
         //     'message' => 'Chúng tôi đã nhận yêu cầu thay đổi thông tin tài khoản của bạn',

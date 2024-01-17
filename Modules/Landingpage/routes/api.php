@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Landingpage\app\Http\Controllers\API\NewsController;
+use Modules\Landingpage\app\Http\Controllers\ContactController;
 
 /*
     |--------------------------------------------------------------------------
@@ -14,6 +15,7 @@ use Modules\Landingpage\app\Http\Controllers\API\NewsController;
     | is assigned the "api" middleware group. Enjoy building your API!
     |
 */
+
 Route::prefix('landingpage')->as('landingpage.')->group(function () {
     Route::prefix('news')->as('news.')->group(function () {
         Route::get('index', [NewsController::class, 'index'])->name('index');
@@ -21,7 +23,10 @@ Route::prefix('landingpage')->as('landingpage.')->group(function () {
         Route::get('activity', [NewsController::class, 'listActivity'])->name('listActivity');
         Route::get('{id}/detail', [NewsController::class, 'NewsDetail'])->name('detail');
     });
+
+    Route::prefix('contact')->as('contact.')->group(function () {
+        Route::get('', [ContactController::class, 'getContact'])->name('index');
+    });
 });
 Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
-
 });

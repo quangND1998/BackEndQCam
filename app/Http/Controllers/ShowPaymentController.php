@@ -16,7 +16,7 @@ class ShowPaymentController extends Controller
         $this->payooService = $payooService;
     }
     public function listPayment(Request $request){
-        $payments =  PaymentReource::collection(Payment::with('order')->paginate(1));
+        $payments =  PaymentReource::collection(Payment::with('order')->paginate(15));
         return Inertia::render('Payment/ListPayment',compact('payments')); 
     }
 

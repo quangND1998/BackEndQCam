@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Tree\Database\factories\LandFactory;
 
-class Land extends Model 
+class Land extends Model
 {
     use HasFactory;
 

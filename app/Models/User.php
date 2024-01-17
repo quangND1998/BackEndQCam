@@ -40,7 +40,8 @@ class User extends Authenticatable implements HasMedia
         'username',
         'email',
         'password',
-        'phone_number', 'isVerified',  'address', 'date_of_brith', 'cic_number', 'sex', 'adrress', 'date_of_birth', 'city', 'district', 'wards', 'cic_date', 'cic_date_expried', 'phone_number2', 'date_of_birth', 'fcm_token', 'created_byId'
+        'phone_number', 'isVerified',  'address', 'date_of_brith', 'cic_number', 'sex', 'adrress', 'date_of_birth', 'city', 'district', 'wards', 'cic_date', 'cic_date_expried', 'phone_number2', 'date_of_birth', 'fcm_token', 'created_byId',
+        'note'
     ];
 
     /**
