@@ -8,6 +8,7 @@ use Modules\CustomerService\app\Http\Controllers\Api\Notes\CreateNote;
 use Modules\CustomerService\app\Http\Controllers\Api\Reminds\CreateRemind;
 use Modules\CustomerService\app\Http\Controllers\Api\ScheduleVisits\CreateVisit;
 use Modules\CustomerService\app\Http\Controllers\Api\Notes\GetNote;
+use Modules\CustomerService\app\Http\Controllers\Api\Orders\CreateOrder;
 use Modules\CustomerService\app\Http\Controllers\Api\ScheduleVisits\UpdateVisit;
 use Modules\CustomerService\app\Http\Controllers\GetCustomerOrderPackage;
 use Modules\CustomerService\app\Http\Controllers\Api\Reminds\GetRemind;
@@ -34,6 +35,7 @@ Route::middleware(['auth'])->group(
             Route::post('/schedule-visits', CreateVisit::class);
             Route::put('/schedule-visits/{scheduleVisit}', UpdateVisit::class);
             Route::post('/reminds', CreateRemind::class);
+            Route::post('/orders', CreateOrder::class);
         });
 
         Route::prefix('/customer-service')->group(function () {

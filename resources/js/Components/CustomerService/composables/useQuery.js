@@ -37,7 +37,13 @@ export const CUSTOMER_SERVICE_API_MAKER = {
       url: '/extra-services/$extraServiceId',
       method: 'put',
     }
-  }
+  },
+  CREATE_ORDER: (customerId) => {
+    return {
+      url: `/customer-service/customer/${customerId}/orders`,
+      method: 'post',
+    }
+  },
 }
 
 const updateUrl = (url, data) => {

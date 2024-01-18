@@ -34,14 +34,25 @@ const addExtraService = (extraService) => {
 const updateExtraServiceState = (index, newState) => {
   extraServices.value[index].is_active = newState;
 }
+const updateOrder = (order) => {
+  orderPackages.value[orderPackageIndex.value].product_service_owner.orders.push(order);
+  orderDialogVisible.value = false;
+  targetOrderPackage.value = null;
+  deliveryNo.value = 0;
+  orderPackageIndex.value = null;
+}
 
-const { data, cities, districts, wards } = useCity();
+const { data, cities, districts } = useCity();
 
 const orderDialogVisible = ref(false);
 const targetOrderPackage = ref();
-const onOpenOrderDialog = (orderPackage) => {
+const deliveryNo = ref(0);
+const orderPackageIndex = ref();
+const onOpenOrderDialog = (orderPackage, nextDeliveryNo, index) => {
   targetOrderPackage.value = orderPackage;
   orderDialogVisible.value = true;
+  deliveryNo.value = nextDeliveryNo;
+  orderPackageIndex.value = index;
 }
 const onCloseDialog = () => {
   targetOrderPackage.value = null;
@@ -55,6 +66,7 @@ provide('ORDER_PACKAGE_PAGE', {
   updateScheduleVisits,
   addExtraService,
   updateExtraServiceState,
+  updateOrder,
   data,
   cities,
   districts,
@@ -69,7 +81,10 @@ provide('ORDER_PACKAGE_PAGE', {
         <OrderTableSection :orderPackages="orderPackages" :declineOrderPackageCount="declineOrderPackageCount" class="mb-3" />
         <ScheduleVisitSection :orderPackages="orderPackages" />
       </div>
-      <OrderDialog v-if="orderDialogVisible" :orderPackage="targetOrderPackage" @onCloseDialog="onCloseDialog" />
+      <OrderDialog v-if="orderDialogVisible"
+        :orderPackage="targetOrderPackage"
+        :deliveryNo="deliveryNo"
+        @onCloseDialog="onCloseDialog" />
       <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] gap-4 mt-3">
         <div class="col-span-4">
           <p class="font-bold mb-3">Giao kế hoạch giao quà cho khách</p>

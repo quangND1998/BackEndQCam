@@ -2,11 +2,14 @@
 import { computed, inject, reactive, ref, toRaw, watch } from 'vue';
 
 import FilterableDropdown from '@/Components/CustomerService/FilterableDropdown.vue';
+import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '../composables/useQuery';
+import SpinnerIcon from '@/Components/CustomerService/SpinnerIcon.vue';
 
-const { productRetails, data, cities, districts, customer } = inject('ORDER_PACKAGE_PAGE');
+const { productRetails, data, cities, districts, customer, customerId, updateOrder } = inject('ORDER_PACKAGE_PAGE');
 
 const props = defineProps({
   orderPackage: Object,
+  deliveryNo: Number,
 });
 
 const emit = defineEmits(['onCloseDialog']);
@@ -33,6 +36,7 @@ const handleChangeProduct = (productId, rowNumber) => {
         name: product.name,
         unit: product.unit,
         quantity: 1,
+        available: product.available_quantity,
       }
     };
   }
@@ -81,7 +85,16 @@ watch(addressType, (newType) => {
 const subPhoneNumber = ref('');
 const note = ref('');
 
+const { isLoading, executeQuery } = useQuery(
+  CUSTOMER_SERVICE_API_MAKER.CREATE_ORDER(customerId),
+  undefined,
+  (data) => {
+    updateOrder(data.order);
+  },
+  'Tạo đơn hàng thành công'
+);
 const onCreateOrder = () => {
+  if (isLoading.value) return;
   const order = {
     products: Object.values(selectedProducts.value).map((product) => ({
       id: product.id,
@@ -91,6 +104,7 @@ const onCreateOrder = () => {
     note: note.value,
     subPhoneNumber: subPhoneNumber.value,
     productServiceOwnerId: props.orderPackage.product_service_owner.id,
+    deliveryNo: props.deliveryNo
   }
 
   const haveError = false;
@@ -105,7 +119,7 @@ const onCreateOrder = () => {
 
   if (haveError) return;
 
-  console.log(order);
+  executeQuery(undefined, order);
 }
 </script>
 
@@ -119,7 +133,7 @@ const onCreateOrder = () => {
       <div class="grid grid-cols-3 p-3 pt-4 gap-10">
         <div>
           <div class="flex items-center justify-between border-b border-gray-400 pb-2 mb-3">
-            <p class="font-semibold text-sm">Lần:</p>
+            <p class="font-semibold text-sm">Lần: {{ deliveryNo }}</p>
             <button class="rounded-full bg-sky-600 text-white font-medium px-2 py-1 text-sm" @click="handleAddRow">
               Thêm
             </button>
@@ -138,7 +152,7 @@ const onCreateOrder = () => {
                 <div class="p-1">
                   <select @input="(e) => handleChangeProduct(e.target.value, rowNumber)" class="w-full rounded pl-1 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-xs">
                     <option disabled selected value> -- Chọn sản phẩm -- </option>
-                    <option v-for="product in productRetails" :key="product.id" :value="product.id">{{ product.name }}</option>
+                    <option v-for="product in productRetails" :key="product.id" :value="product.id">{{ product.name }} ({{ product.available_quantity }})</option>
                   </select>
                   </div>
               </div>
@@ -148,6 +162,8 @@ const onCreateOrder = () => {
                 <input
                   v-if="selectedProducts[`product_${rowNumber}`]"
                   @input="(e) => handleUpdateQuantity(e.target.value, rowNumber)"
+                  min="1"
+                  :max="selectedProducts[`product_${rowNumber}`] ? selectedProducts[`product_${rowNumber}`].available : 1"
                   :value="selectedProducts[`product_${rowNumber}`] ? selectedProducts[`product_${rowNumber}`].quantity : 1"
                   type="number"
                   class="pl-1 py-1 pr-1 rounded w-full border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0" />
@@ -236,7 +252,15 @@ const onCreateOrder = () => {
       </div>
       <div class="mx-3 border-b border-gray-400"></div>
       <div class="flex justify-end items-center pr-3 py-6">
-        <button class="rounded-md bg-orange-600 text-white font-medium px-3 py-2" @click="onCreateOrder">
+        <button class="rounded-md bg-orange-600 text-white relative font-medium px-3 py-2"
+          :class="{
+            '!cursor-wait': isLoading
+          }"
+          @click="onCreateOrder"
+        >
+          <span v-if="isLoading" class="absolute w-full h-full left-0 top-0 flex items-center justify-center bg-gray-400/40">
+            <SpinnerIcon class="!m-0" />
+          </span>
           Tạo đơn
         </button>
       </div>

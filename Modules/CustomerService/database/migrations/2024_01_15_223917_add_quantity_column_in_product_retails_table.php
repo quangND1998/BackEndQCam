@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('product_retails', function (Blueprint $table) {
-            $table->integer('quantity')->after('price')->default(0);
-            $table->string('unit')->after('quantity')->nullable();
+            $table->integer('available_quantity')->after('price')->default(0);
+            $table->string('unit')->after('available_quantity')->nullable();
         });
     }
 
@@ -23,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('product_retails', function (Blueprint $table) {
-            $table->dropColumn('quantity');
+            $table->dropColumn('available_quantity');
             $table->dropColumn('unit');
         });
     }

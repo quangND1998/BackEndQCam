@@ -13,6 +13,9 @@ const props = defineProps({
 
 const emits = defineEmits(['onOpenOrderDialog']);
 
+const numberOfExistsOrder = computed(() => {
+  return props.orderPackage.product_service_owner.orders.length;
+});
 const delivered = computed(() => {
   return props.orderPackage.product_service_owner.number_deliveries_current || 0;
 });
@@ -24,7 +27,7 @@ const outOfDateCount = computed(() => {
 });
 const nextDeliveryDate = computed(() => {
   return moment(props.orderPackage.product_service_owner.time_approve, 'YYYY-MM-DD HH:mm:ss')
-    .add((numberOfNeededDeliveried.value + 1) * CYCLE_TIME, 'days')
+    .add((numberOfNeededDeliveried.value + numberOfExistsOrder.value + 1) * CYCLE_TIME, 'days')
     .format('DD/MM/YYYY');
 });
 const numberOfDelivery = computed(() => {
@@ -37,9 +40,12 @@ const numberOfActiveOrder = computed(() => {
 const numberOfCreatableOrder = computed(() => {
   return Math.min(...[numberOfDelivery.value - numberOfNeededDeliveried.value, 12, 12 - numberOfActiveOrder.value]);
 });
+const nextDeliveryNo = computed(() => {
+  return numberOfNeededDeliveried.value + numberOfExistsOrder.value + 1;
+});
 
 const onOpenOrderDialog = () => {
-  emits('onOpenOrderDialog', props.orderPackage);
+  emits('onOpenOrderDialog', props.orderPackage, nextDeliveryNo.value, props.index);
 }
 </script>
 
@@ -54,7 +60,7 @@ const onOpenOrderDialog = () => {
         {{ orderPackage.product_service_owner.number_deliveries_current || 0 }}/{{ numberOfDelivery }}
       </p>
       <p class="mb-1"><span class="font-semibold">Quá hạn: </span>{{ outOfDateCount }}</p>
-      <p><span class="font-semibold">Lần kế tiếp: </span>{{ nextDeliveryDate }} (lần {{ numberOfNeededDeliveried + 1 }})</p>
+      <p><span class="font-semibold">Lần kế tiếp: </span>{{ nextDeliveryDate }} (lần {{ nextDeliveryNo }})</p>
       <p class="mt-3 mb-2">Khách hàng có nhận quà lần kế tiêp không?</p>
       <div class="flex justify-between">
         <button

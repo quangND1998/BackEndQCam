@@ -23,7 +23,8 @@ class GetCustomerOrderPackage extends Controller
             ->with(['product_service'])
             ->with('product_service_owner', function ($query) {
                 $query->with('orders', function ($orderQuery) {
-                    $orderQuery->orderBy('receive_at', 'desc');
+                    $orderQuery->orderBy('receive_at', 'desc')
+                        ->with('shipping_history');
                 })->with('visit', function ($visitQuery) {
                     $visitQuery->orderBy('date_time', 'asc');
                 });
