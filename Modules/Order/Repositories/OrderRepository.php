@@ -94,14 +94,25 @@ class OrderRepository implements OrderContract
     }
     public function getOrderGift($request, $status)
     {
-        return  Order::with(['customer', 'product_service.order_package', 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler'])->role()->whereHas(
+        return  Order::with(['customer', 'product_service.order_package', 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler'])->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
                 $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
             }
 
-        )->where('type', 'gift_delivery')->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+        )->where('type', 'gift_delivery')->where('status_transport', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+    }
+    public function getAllOrderGift($request)
+    {
+        return  Order::with(['customer', 'product_service.order_package', 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler'])->whereHas(
+            'customer',
+            function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->customer . '%');
+                $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
+            }
+
+        )->where('type', 'gift_delivery')->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
 
 
@@ -143,17 +154,16 @@ class OrderRepository implements OrderContract
     {
 
         $statusGroup = Order::role()->whereHas('orderItems')
-            ->select('status', DB::raw('count(*) as total'))
-            ->groupBy('status')
+            ->select('status_transport', DB::raw('count(*) as total'))
+            ->groupBy('status_transport')
             ->get();
+
         foreach ($array_status as $status) {
-
-            $filtered = $statusGroup->where('status', $status)->first();
-
+            $filtered = $statusGroup->where('status_transport', $status->value)->first();
             if ($filtered == null) {
 
                 $newCollections[] = array(
-                    'status' => $status,
+                    'status_transport' => $status,
                     'total' => 0,
 
 
@@ -161,7 +171,7 @@ class OrderRepository implements OrderContract
             } else {
 
                 $newCollections[] = array(
-                    'status' => $status,
+                    'status_transport' => $status,
                     'total' => $filtered->total,
 
                 );
@@ -292,5 +302,20 @@ class OrderRepository implements OrderContract
         $user->assignRole('customer');
         $user->save();
         return $user;
+    }
+
+    public function changeTransportStatus($order, $status)
+    {
+        $order->update([
+            'status_transport' => $status
+        ]);
+    }
+
+    public function changeShipperStatus($order, $user, $status)
+    {
+        $order->update([
+            'shipper_status' => $status,
+            'shipper_id' => $user->id
+        ]);
     }
 }

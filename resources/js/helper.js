@@ -1,43 +1,43 @@
 import moment from 'moment';
 export const helper = {
     methods: {
-        hasAnyPermission: function (permissions) {
+        hasAnyPermission: function(permissions) {
             if (permissions == null) {
                 return true
             }
             var allPermissions = this.$page.props.auth.can;
             var hasPermission = false;
-            permissions.forEach(function (item) {
+            permissions.forEach(function(item) {
                 if (allPermissions[item]) hasPermission = true;
             });
             return hasPermission;
         },
-        hasAnyRoles: function (roles) {
+        hasAnyRoles: function(roles) {
 
             var allroles = this.$page.props.auth.can_role;
 
             var hasRole = false;
-            roles.forEach(function (item) {
+            roles.forEach(function(item) {
 
                 if (allroles[item]) hasRole = true;
 
             });
             return hasRole;
         },
-        hasRoles: function (user, roles) {
+        hasRoles: function(user, roles) {
             var hasRole = false;
-            user.roles.forEach(function (item) {
+            user.roles.forEach(function(item) {
                 if (item.name == roles) hasRole = true;
             });
             return hasRole;
         },
 
-        formatDate: function (value) {
+        formatDate: function(value) {
             if (value) {
                 return moment(String(value)).format('DD/MM/YYYY HH:mm:ss')
             }
         },
-        formatDateOnly: function (value) {
+        formatDateOnly: function(value) {
             if (value) {
                 return moment(String(value)).format('DD/MM/YYYY')
             }
@@ -79,25 +79,29 @@ export const helper = {
 
             return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
         },
-        formatTimeDayMonthyear: function (value) {
+        formatTimeDayMonthyear: function(value) {
             if (value) {
                 return moment(String(value)).format('HH:mm DD/MM/YYYY ')
             }
         },
         hidePhoneNumber(phoneNumber) {
-            var visibleDigits = 3; // Số lượng chữ số được hiển thị
-            var hiddenDigits = phoneNumber.length - visibleDigits; // Số lượng chữ số bị ẩn
+            if (phoneNumber) {
+                var visibleDigits = 3; // Số lượng chữ số được hiển thị
+                var hiddenDigits = phoneNumber.length - visibleDigits; // Số lượng chữ số bị ẩn
 
-            // Tạo chuỗi dấu * có độ dài bằng số lượng chữ số bị ẩn
-            var hiddenPart = '*'.repeat(hiddenDigits);
+                // Tạo chuỗi dấu * có độ dài bằng số lượng chữ số bị ẩn
+                var hiddenPart = '*'.repeat(hiddenDigits);
 
-            // Lấy 3 chữ số cuối cùng của số điện thoại
-            var visiblePart = phoneNumber.slice(-visibleDigits);
+                // Lấy 3 chữ số cuối cùng của số điện thoại
+                var visiblePart = phoneNumber.slice(-visibleDigits);
 
-            // Kết hợp chữ số hiển thị và chữ số ẩn để tạo số điện thoại ẩn
-            var hiddenPhoneNumber = hiddenPart + visiblePart;
+                // Kết hợp chữ số hiển thị và chữ số ẩn để tạo số điện thoại ẩn
+                var hiddenPhoneNumber = hiddenPart + visiblePart;
 
-            return hiddenPhoneNumber;
-          }
+                return hiddenPhoneNumber;
+            }
+            return null
+
+        }
     },
 };

@@ -34,6 +34,7 @@ class Order extends Model implements HasMedia
         'sale_id',
         'receive_at',
         'status_transport',
+        'shipper_status',
         'wards',  "created_at", "updated_at"
     ];
 
@@ -149,26 +150,29 @@ class Order extends Model implements HasMedia
         //     $query->get();
         // }
 
-        if ( $user->hasPermissionTo('super-admin') || $user->hasRole('Kế toán') ) {
+        if ($user->hasPermissionTo('super-admin') || $user->hasRole('Kế toán')) {
             $query->get();
         } else {
 
             if ($user->hasRole('leader-sale')) {
-                $query->whereIn('sale_id', $user->salers->pluck('id')->concat([$user->id]) );
+                $query->whereIn('sale_id', $user->salers->pluck('id')->concat([$user->id]));
             } else {
                 $query->where('sale_id', $user->id);
             }
         }
     }
 
-    public function payments(){
-        return $this->hasMay(Payment::class,'order_id');
+    public function payments()
+    {
+        return $this->hasMay(Payment::class, 'order_id');
     }
 
-    public function last_payment(){
-        return $this->hasOne(Payment::class,'order_id')->latest();
+    public function last_payment()
+    {
+        return $this->hasOne(Payment::class, 'order_id')->latest();
     }
-    public function shipping_history(){
-        return $this->hasMany(ShipingHistory::class,'order_id');
+    public function shipping_history()
+    {
+        return $this->hasMany(ShipingHistory::class, 'order_id');
     }
 }
