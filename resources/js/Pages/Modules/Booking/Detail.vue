@@ -441,25 +441,25 @@ const deleteOrder = (order) => {
                 <div class="w-full mt-2 ">
                     <div class="flex flex-col">
                         <div class="overflow-x-auto inline-block min-w-full  sm:px-6 lg:px-8 m-0 p-0 h-[60vh]">
-                            <table class=" min-w-full text-center text-sm font-light overflow-x-auto">
+                            <table class="  min-w-full text-center text-sm font-light overflow-x-auto">
                                 <thead class="font-medium">
                                     <tr>
-                                        <th scope="col" class="px-3 py-2 text-left">STT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Mã booking</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Ref nhận</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Date giao</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Date thu về</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Tình trạng</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Lý do</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Hành động</th>
+                                        <th scope="col" class="px-3 py-2 text-center">STT</th>
+                                        <th scope="col" class="px-3 py-2 text-center">Mã booking</th>
+                                        <th scope="2" class="px-3 py-2 text-center">Ref nhận</th>
+                                        <th scope="col" class="px-3 py-2 text-center">Date giao</th>
+                                        <th scope="col" class="px-3 py-2 text-center">Date thu về</th>
+                                        <th scope="col" class="px-3 py-2 text-center">Tình trạng</th>
+                                        <th scope="col" class="px-3 py-2 text-center">Lý do</th>
+                                        <th scope="col" class="px-3 py-2 text-center">Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(code, index) in booking.history" :key="index">
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ index + 1 }}</td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ code?.ballot_code
+                                       <td scope="col" class=" text-center px-3 py-2 text-gray-500">{{ index + 1 }}</td>
+                                       <td scope="col" class=" text-center px-3 py-2 text-gray-500">{{ code?.ballot_code
                                         }}</td>
-                                        <td>
+                                       <td scope="col" class="w-[220px]">
                                             <Multiselect  v-model="formRef.ref_id[index]"
                                                 :searchable="true" label="name" valueProp="id" trackBy="name"
                                                 placeholder="None" :options="users" :classes="{
@@ -476,23 +476,23 @@ const deleteOrder = (order) => {
                                                     {{ option.name }} (Team: {{ option.team?.name }})
                                                 </template>
                                             </Multiselect>
-                                            <Button @click="ChangeRef(code,index)">Check</Button>
+                                            <!-- <Button @click="ChangeRef(code,index)">Check</Button> -->
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 flex items-center text-gray-500">
+                                       <td scope="col" class=" text-center px-3 py-2 flex items-center text-gray-500">
                                             <p>{{ code.dateStart }}
                                             </p>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 flex items-center text-gray-500">
+                                       <td scope="col" class=" text-center px-3 py-2 flex items-center text-gray-500">
                                             <p>{{ formatTimeDayMonthyear(code?.dateEnd) }}
                                             </p>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                       <td scope="col" class=" text-center px-3 py-2 text-gray-500">{{
                                             code?.status }}
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
+                                       <td scope="col" class=" text-center px-3 py-2 text-gray-500">{{
                                             code?.reason }}
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 action">
+                                       <td scope="col" class=" text-center px-3 py-2 action">
                                             <Button class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700">
                                                 Phát
                                             </Button>
