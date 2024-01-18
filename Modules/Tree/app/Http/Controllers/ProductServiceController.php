@@ -100,7 +100,7 @@ class ProductServiceController extends Controller
         if(count($product_service->productServiceOwner) >0){
             return back()->with('warning', 'Gói dịch vụ đã được gán quyền sử dụng cho khách hàng, bạn cần xoá tất cả đơn hàng trước khi xoá gói dịch vụ');
         }
-     
+
         $product_service->clearMediaCollection('product_service_images');
         $product_service->delete();
         return back()->with('success', 'Delete succesfully');

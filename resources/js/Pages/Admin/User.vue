@@ -174,6 +174,23 @@ const Delete = (id) => {
         <Head title="User" />
         <SectionMain class="p-3 mt-16">
             <SectionTitleLineWithButton title="User" main></SectionTitleLineWithButton>
+            <div class="my-3">
+                <div
+                    class="flex-wrap min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
+                    <Link  :href="`users`" @click.prevent
+                        class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
+                        :class="{ 'bg-white  text-blue-500': $page.url.includes(`users`) }">
+                        All
+                    <span class="text-gray-400 ml-1"></span>
+                    </Link>
+                    <Link v-for="(role,index_role) in roles" :key="index_role" :href="`/users/${role.id}`" @click.prevent
+                        class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
+                        :class="{ 'bg-white  text-blue-500': $page.url.includes(`users/${role.id}`) }">
+                        {{ role.name }}
+                    <span class="text-gray-400 ml-1"></span>
+                    </Link>
+                </div>
+        </div>
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
@@ -184,9 +201,10 @@ const Delete = (id) => {
                         </search-filter> -->
                         <!-- <SearchInput v-model="search"   placeholder="Search..." aria-label="Search" size="24"/> -->
                         <input   id="default-search" name="search" data-toggle="hideseek"
-                             data-list=".menu-category" v-model="filter.search" @keyup="searchUser"
+                             data-list=".menu-category" v-model="filter.search"
                             class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             type="search"  placeholder="Search…"  />
+                        <Button class="bg-blue px-2 py-2 ml-3 rounded-lg" @click="searchUser"> Search</Button>
                     </div>
                 </div>
                 <div class="right">

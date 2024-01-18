@@ -2,5 +2,8 @@
     "Tree": true,
     "Customer": true,
     "Order": true,
-    "Landingpage": true
+    "Landingpage": true,
+    "CustomerService": true,
+    "Booking": true,
+    "Shipper": true
 }

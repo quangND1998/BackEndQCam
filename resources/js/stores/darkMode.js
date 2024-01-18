@@ -7,7 +7,6 @@ export const useDarkModeStore = defineStore('darkMode', () => {
 
   function set(payload = null) {
     isEnabled.value = payload !== null ? payload : !isEnabled.value
-    console.log(isEnabled.value)
     if (typeof document !== 'undefined') {
       document.body.classList[isEnabled.value ? 'add' : 'remove']('dark-scrollbars')
 

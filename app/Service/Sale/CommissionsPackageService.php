@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Modules\Order\app\Models\OrderPackage;
 use Carbon\CarbonPeriod;
-use Modules\Order\app\Models\commissionsPackage;
+use Modules\Order\app\Models\CommissionsPackage;
 
 class CommissionsPackageService
 {
@@ -16,7 +16,7 @@ class CommissionsPackageService
   public $model;
   public function __construct()
   {
-    $this->model = new commissionsPackage();
+    $this->model = new CommissionsPackage();
   }
 
 

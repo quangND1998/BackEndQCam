@@ -13,6 +13,7 @@ use Modules\Tree\app\Models\Land;
 use Modules\Tree\app\Models\Tree;
 use Illuminate\Support\Str;
 use Modules\Landingpage\app\Models\Contact;
+use Modules\Tree\app\Models\ActivityCare;
 
 class TreeController extends Controller
 {
@@ -34,14 +35,18 @@ class TreeController extends Controller
         // })->where('state','public')->where('product_service_owner_id',null)->first();
         // dd($trees);
 
-        $trees = Tree::with('images', 'thumb_image')->where('land_id', $land->id)->where(function ($query) use ($request) {
+        $trees = Tree::with('images', 'thumb_image','history_care.activityCare')->where('land_id', $land->id)->where(function ($query) use ($request) {
             $query->where('name', 'LIKE', '%' . $request->search . '%');
             $query->orwhere('qr_code', 'LIKE', '%' . $request->search . '%');
             // $query->orwhere('phone', 'LIKE', '%' . $request->term . '%');
         })->paginate(5);
 
-        // return $trees;
-        return Inertia::render('Modules/Tree/Tree/Index', compact('land', 'trees'));
+        $treesAll = Tree::get();
+
+        //  return $treesAll;
+
+        $activityCare = ActivityCare::get();
+        return Inertia::render('Modules/Tree/Tree/Index', compact('land', 'trees','activityCare','treesAll'));
     }
 
     /**
@@ -57,7 +62,6 @@ class TreeController extends Controller
      */
     public function store(StoreRequest $request, Land $land): RedirectResponse
     {
-
 
         $tree = Tree::create($request->all());
         if ($tree) {

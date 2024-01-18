@@ -20,7 +20,8 @@ import {
     mdiCodeBlockBrackets,
     mdiPencil,
     mdiContentSaveMove,
-    mdiLandFields
+    mdiLandFields,
+    mdiCreditCardSettingsOutline
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -194,6 +195,12 @@ const priceVat = computed(() => {
                         <BaseButton color="info"
                             class="bg-black text-white p-2 mt-3 w-3/5 text-center justify-center rounded-lg"
                             :icon="mdiContentSaveMove" small label="In đơn hàng" />
+                        <a v-if="order.payment_status == 0 && order.type == 'retail'" target="_blank"
+                            :href="'/payoo/payment/' + order.id">
+                            <BaseButton color="info"
+                            class="bg-black text-white p-2 mt-3 w-3/5 text-center justify-center rounded-lg"
+                            :icon="mdiCreditCardSettingsOutline" small label="Thanh toán Payoo" />
+                        </a>
                     </div>
 
                 </div>

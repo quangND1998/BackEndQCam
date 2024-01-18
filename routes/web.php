@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(
 
         Route::prefix('users')->as('users.')->group(function () {
             Route::get('', [UserController::class, 'index'])->name('index');
+            Route::get('/{role}', [UserController::class, 'userRole'])->name('userRole');
             Route::post('', [UserController::class, 'store'])->name('store');
             Route::get('create-user', [UserController::class, 'create'])->name('create');
             Route::get('edit-user/{user}', [UserController::class, 'edit'])->name('edit');

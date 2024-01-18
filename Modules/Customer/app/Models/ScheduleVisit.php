@@ -2,24 +2,38 @@
 
 namespace Modules\Customer\app\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Customer\Database\factories\ScheduleVisitFactory;
+use Modules\CustomerService\app\Models\VisitExtraService;
 
 class ScheduleVisit extends Model
 {
-    use HasFactory;
     protected $table = 'schedule_visits';
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected $fillable = ['id','date_time','number_adult','number_children','description','state','product_service_owner_id'];
 
-    protected static function newFactory(): ScheduleVisitFactory
+    protected $fillable = [
+        'id',
+        'date_time',
+        'number_adult',
+        'number_children',
+        'state', // pedning - Đặt lịch, cancel - Hủy lịch, Completed - Đã checkin
+        'description',
+        'user_id',
+        'booking_type', // A - App, CS - Customer Service, V - Vườn
+        'product_service_owner_id'
+    ];
+
+    public function product_owner_service()
     {
-        //return ScheduleVisitFactory::new();
-    }
-    public function product_owner_service(){
         return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function extraServices()
+    {
+        return $this->belongsToMany(VisitExtraService::class, 'visit_service', 'schedule_visit_id', 'visit_extra_service_id');
     }
 }

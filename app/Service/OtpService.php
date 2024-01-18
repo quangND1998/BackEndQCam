@@ -53,6 +53,7 @@ class OtpService {
             "session_id"=>  config('fptsms.session_id'),
             "BrandName"=>config('fptsms.brand_name'),
             "Phone"=> $phone,
+            "scope"=> "send_brandname_otp send_brandname",
             'Message' => base64_encode($message),
             "RequestId"=>"tranID-Core01-987654321"
         ]);  

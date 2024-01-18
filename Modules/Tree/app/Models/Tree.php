@@ -8,6 +8,7 @@ use Modules\Tree\Database\factories\TreeFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Modules\Customer\app\Models\ProductServiceOwner;
+use Modules\Tree\app\Models\HistoryCare;
 class Tree extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -38,5 +39,8 @@ class Tree extends Model implements HasMedia
     }
     public function product_service_owner(){
         return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
+    }
+    public function history_care(){
+        return $this->hasMany(HistoryCare::class,'trees_id');
     }
 }

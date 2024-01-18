@@ -33,6 +33,7 @@ class Order extends Model implements HasMedia
         'shipper_id',
         'sale_id',
         'receive_at',
+        'status_transport',
         'wards',  "created_at", "updated_at"
     ];
 
@@ -88,8 +89,6 @@ class Order extends Model implements HasMedia
     {
         return $this->belongsTo(Voucher::class, 'discount');
     }
-
-
     public function reviews()
     {
         return $this->hasOne(ReviewManagement::class, 'order_id');
@@ -153,7 +152,7 @@ class Order extends Model implements HasMedia
         if ( $user->hasPermissionTo('super-admin') || $user->hasRole('Kế toán') ) {
             $query->get();
         } else {
-           
+
             if ($user->hasRole('leader-sale')) {
                 $query->whereIn('sale_id', $user->salers->pluck('id')->concat([$user->id]) );
             } else {
@@ -168,5 +167,8 @@ class Order extends Model implements HasMedia
 
     public function last_payment(){
         return $this->hasOne(Payment::class,'order_id')->latest();
+    }
+    public function shipping_history(){
+        return $this->hasMany(ShipingHistory::class,'order_id');
     }
 }
