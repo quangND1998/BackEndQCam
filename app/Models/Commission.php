@@ -22,6 +22,7 @@ class Commission extends Model
         'discount_form_manager_sale',
         'user_type_id',
         'commission_type_id',
+        'commissionSetting_id'
     ];
     public function type(){
         return $this->belongsTo(CommissionType::class,'commission_type_id');

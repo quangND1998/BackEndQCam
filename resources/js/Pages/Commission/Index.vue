@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive, onBeforeMount } from "vue";
+import { computed, ref, inject, reactive, onBeforeMount, onMounted } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
@@ -38,7 +38,7 @@ import Multiselect from '@vueform/multiselect'
 const props = defineProps({
     userType: Object,
     commissionType: Array,
-    commissionSetting: Array,
+    commissionSetting: Object,
 });
 const searchVal = ref("");
 const swal = inject("$swal");
@@ -57,39 +57,82 @@ const form2 = useForm({
     fromDate: props.commissionSetting?.dateFrom,
     toDate: props.commissionSetting?.dateTo
 });
-onBeforeMount(() => {
+// onMounted(() => {
+//     // console.log(props.commissionSetting.commission);
+//     // props.commissionSetting.commission.forEach((commission, index3) => {
+//     //     console.log(commission);
+//     // })
+//     props.commissionType.forEach((element, index) => {
+//         const row = [];
+//         row['description']= element.description;
+//         element.participants.forEach((e2, index2) => {
+//             const colum = [];
+//             colum['name'] = e2.name;
+//             console.log("participants");
+//                 props.commissionSetting.commission.forEach((commission, index3) => {
+//                     if (commission.commission_type_id == element.id && commission.user_type_id == e2.id) {
+//                         const object = {
+//                             commissionType: element.id,
+//                             participant: e2.id,
+//                             commission: commission.commission,
+//                             spend_from: commission.spend_from,
+//                             spend_to: commission.spend_to
+//                         };
+//                         colum.push(object);
+//                     }
+//                 });
+//                 const object = {
+//                     commissionType: element.id,
+//                     participant: e2.id,
+//                     commission: 0,
+//                     spend_from: 0,
+//                     spend_to: 0
+//                 };
+//                 colum.push(object);
+//             row.push(colum);
+//         });
+//         form2.commission.push(row);
+//     });
+//     console.log(form2.commission);
+// });
+
+
+const stated=()=>{
     props.commissionType.forEach((element, index) => {
         const row = [];
+        row['description']= element.description;
         element.participants.forEach((e2, index2) => {
-            console.log(e2.commissions);
-            // if (e2.commission?.length > 0) {
-            //     e2.commission.forEach((e3, index3) => {
-            //         if (e3.commission_type_id == element.id && e3.user_type_id == e2.id) {
-            //             const object = {
-            //                 commissionType: element.id,
-            //                 participant: e2.id,
-            //                 commission: e3.commission,
-            //                 spend_from: e3.spend_from,
-            //                 spend_to: e3.spend_to
-            //             };
-            //             row.push(object);
-            //         }
-            //     });
-            // }
-            console.log(index2);
-            const object = {
-                commissionType: element.id,
-                participant: e2.id,
-                commission: 0,
-                spend_from: 0,
-                spend_to: 0
-            };
-            row.push(object);
+            const colum = [];
+            colum['name'] = e2.name;
+            console.log("participants");
+                props.commissionSetting.commission.forEach((commission, index3) => {
+                    if (commission.commission_type_id == element.id && commission.user_type_id == e2.id) {
+                        const object = {
+                            commissionType: element.id,
+                            participant: e2.id,
+                            commission: commission.commission,
+                            spend_from: commission.spend_from,
+                            spend_to: commission.spend_to
+                        };
+                        colum.push(object);
+                    }
+                });
+                const object = {
+                    commissionType: element.id,
+                    participant: e2.id,
+                    commission: 0,
+                    spend_from: 0,
+                    spend_to: 0
+                };
+                colum.push(object);
+            row.push(colum);
         });
         form2.commission.push(row);
     });
     console.log(form2.commission);
-});
+}
+
+stated();
 const saveType = () => {
     console.log(form);
     form.post(route("commission.type"), {
@@ -109,6 +152,8 @@ const save = () => {
     console.log(form2);
     if (editMode.value == true) {
         form2.post(route("commission.update", form2.id), {
+            preserveState: true,
+
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = true;
@@ -121,6 +166,8 @@ const save = () => {
         });
     } else {
         form2.post(route("commission.store"), {
+            preserveState: true,
+
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = false;
@@ -131,6 +178,19 @@ const save = () => {
                 editMode.value = false;
             },
         });
+        // axios.post(`/commission`, form2, {
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data',
+        //     },
+        //     })
+        //     .then(response => {
+        //         console.log(response);
+        //         props.commissionSetting = response.data
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     // Handle any errors
+        //     });
     }
 
     // form.id = permission.id;
@@ -282,10 +342,10 @@ const changeStatus = (data, event) => {
             <!-- End Modal -->
             <div class="mt-2">
                 <div class="grid lg:grid-cols-3 md:grip-cols-2 grip-cols-2 mt-3 gap-4">
-                    <div v-for="(type, index) in commissionType" :key="index"
-                        class=" h-[1000px] rounded-3xl  bg-gray-100 p-3">
+                    <div v-for="(type, index) in form2.commission" :key="index"
+                        class=" min:h-[1000px] rounded-3xl  bg-gray-100 p-3">
                         <p class="font-bold my-2">{{ type.description }}</p>
-                        <div v-for="(participant, index2) in type.participants" :key="index2" class="w-full ">
+                        <div v-for="(participant, index2) in type" :key="index2" class="w-full ">
                             <p class="font-bold my-2">{{ participant.name }}</p>
                             <div class="flex w-full">
                                 <div class="w-1/5 ">
@@ -295,50 +355,30 @@ const changeStatus = (data, event) => {
                                     Mốc doanh thu áp dụng(TRIỆU ĐỒNG)
                                 </div>
                             </div>
-                            <div class="flex w-full" v-for="(com, index3) in commissionSetting.commission" :key="index3">
-                                <!-- {{ com }} -->
-                                <div class="w-full flex"
-                                    v-if="com.commission_type_id == type.id && com.user_type_id == participant.id">
-                                    <div class="flex items-center w-1/5  ">
-                                        <input type="number" v-model="form2.commission[index][index2].commission" :min="0"
-                                            :max="100" step="1"
-                                            class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                        <InputLabel for="name" value=" %" class="ml-1" />
+                            <div class="w-full" >
+                                <div  class="flex w-full flex-col" v-for="(com, index3) in participant" :key="index3">
+                                    <div class="w-full flex"
+                                        v-if="com.commission_type_id == type.id && com.user_type_id == participant.id">
+                                        <div class="flex items-center w-1/5  ">
+                                            <input type="number" v-model="form2.commission[index][index2][index3].commission" :min="0"
+                                                :max="100" step="1"
+                                                class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                            <InputLabel for="name" value=" %" class="ml-1" />
+                                        </div>
+                                        <div class="flex w-4/5 ml-4 items-center ">
+
+                                            <InputLabel for="name" value="Từ" />
+                                            <InputNumber v-model="form2.commission[index][index2][index3].spend_from" :min="0"
+                                                class="p-3 w-[160px]"
+                                                inputClass=" bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+
+
+                                            <InputLabel for="name" value="đến <" class="w-[40px] " />
+                                            <InputNumber v-model="form2.commission[index][index2][index3].spend_to" :min="0"
+                                                class="p-3 w-[160px]"
+                                                inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                        </div>
                                     </div>
-                                    <div class="flex w-4/5 ml-4 items-center ">
-
-                                        <InputLabel for="name" value="Từ" />
-                                        <InputNumber v-model="form2.commission[index][index2].spend_from" :min="0"
-                                            class="p-3 w-[160px]"
-                                            inputClass=" bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-
-
-                                        <InputLabel for="name" value="đến <" class="w-[40px] " />
-                                        <InputNumber v-model="form2.commission[index][index2].spend_to" :min="0"
-                                            class="p-3 w-[160px]"
-                                            inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex w-full">
-                                <div class="flex items-center w-1/5  ">
-                                    <input type="number" v-model="form2.commission[index][index2].commission" :min="0"
-                                        :max="100" step="1"
-                                        class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                                    <InputLabel for="name" value=" %" class="ml-1" />
-                                </div>
-                                <div class="flex w-4/5 ml-4 items-center ">
-
-                                    <InputLabel for="name" value="Từ" />
-                                    <InputNumber v-model="form2.commission[index][index2].spend_from" :min="0"
-                                        class="p-3 w-[160px]"
-                                        inputClass=" bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-
-
-                                    <InputLabel for="name" value="đến <" class="w-[40px] " />
-                                    <InputNumber v-model="form2.commission[index][index2].spend_to" :min="0"
-                                        class="p-3 w-[160px]"
-                                        inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                                 </div>
                             </div>
                             <div class="flex justify-end mx-3">
