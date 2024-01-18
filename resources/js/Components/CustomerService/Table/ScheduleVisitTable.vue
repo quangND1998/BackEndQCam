@@ -37,8 +37,12 @@ import CycleTime from '@/Components/CustomerService/CycleTime.vue';
       : 0;
   });
 
+  const lifeTime = computed(() => {
+    return props.orderPackage.product_service.life_time;
+  });
+
   const cycleYear = computed(() => getCycleYear(
-    props.orderPackage.product_service.life_time,
+    lifeTime.value,
     props.orderPackage.product_service_owner.time_approve
   ));
 </script>
@@ -50,7 +54,7 @@ import CycleTime from '@/Components/CustomerService/CycleTime.vue';
       <div class="text-center">{{ orderPackage.product_service.life_time }} {{ cycleYear }}</div>
       <div v-for="(visit, index) in visits" class="text-center">
         <CycleTime :data="visit" :position="index - subtractPosition" :startDate="startDate"
-          :allowEmpty="true" />
+          :allowEmpty="true" :showEmpty="true" />
       </div>
       <div class="bg-zinc-700 col-span-2" />
     </div>

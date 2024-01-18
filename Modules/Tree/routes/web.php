@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(
             Route::prefix('historyCare')->as('historyCare.')->group(function () {
                 Route::post('{tree}/store', [HistoryCareController::class, 'store'])->name('store');
                 Route::post('storeLand', [HistoryCareController::class, 'storeLand'])->name('storeLand');
+                Route::delete('/{historyCare}/destroy', [HistoryCareController::class, 'destroy'])->name('destroy');
             });
         });
     }

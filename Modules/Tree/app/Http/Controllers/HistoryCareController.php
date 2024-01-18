@@ -43,6 +43,7 @@ class HistoryCareController extends Controller
         // return "ngaaaa";
         $historyCare = new HistoryCare;
         $historyCare->date = $request->date;
+        $historyCare->note = $request->note;
         $historyCare->trees_id = $tree->id;
         $historyCare->save();
 
@@ -109,8 +110,11 @@ class HistoryCareController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(HistoryCare $historyCare)
     {
-        //
+        $tree_id = $historyCare->trees_id;
+        $historyCare->delete();
+        $tree = Tree::with('history_care.activityCare')->find($tree_id);
+        return $tree;
     }
 }

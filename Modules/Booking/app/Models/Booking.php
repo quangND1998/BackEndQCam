@@ -15,7 +15,7 @@ class Booking extends Model
      * The attributes that are mass assignable.
      */
     protected $table = 'bookings';
-    protected $fillable = ["id", "ballot_number", "ballot_code","user_id", "created_at", "updated_at"];
+    protected $fillable = ["id", "ballot_number", "ballot_code","user_id","status", "created_at", "updated_at"];
 
     protected static function newFactory(): BookingFactory
     {
@@ -27,5 +27,8 @@ class Booking extends Model
     }
     public function history(){
         return $this->hasMany(BookingHistory::class,'bookings_id');
+    }
+    public function last_history(){
+        return $this->hasOne(BookingHistory::class, 'bookings_id')->orderBy('id','desc')->latest();
     }
 }
