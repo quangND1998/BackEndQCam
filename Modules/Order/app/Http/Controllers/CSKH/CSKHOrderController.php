@@ -52,7 +52,7 @@ class CSKHOrderController extends Controller
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
         $orders =  $this->orderRepository->getAllOrderGift($request);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases());
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
 
         // return $orders;
@@ -65,7 +65,7 @@ class CSKHOrderController extends Controller
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
         $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases());
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
 
         // return $orders;
@@ -79,7 +79,7 @@ class CSKHOrderController extends Controller
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportStatus::pending;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases());
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
 
         // return $orders;
@@ -92,7 +92,7 @@ class CSKHOrderController extends Controller
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportStatus::packing;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases());
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
 
         // return $orders;
@@ -107,7 +107,7 @@ class CSKHOrderController extends Controller
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportStatus::packed;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases());
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
         return Inertia::render('Modules/CSKH/Shipper', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
@@ -150,7 +150,7 @@ class CSKHOrderController extends Controller
                 $orders = Order::find($request->ids);
 
                 foreach ($orders as $order) {
-                  
+
                     $this->orderRepository->changeShipperStatus($order, $shipper, ShipperStatusEnum::pending);
                 }
                 return back()->with('success', "Đã giao shipper thành công công");

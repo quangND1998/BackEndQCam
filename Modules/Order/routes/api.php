@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Order\app\Http\Controllers\API\ApiShipperController;
 
 /*
     |--------------------------------------------------------------------------
@@ -16,4 +17,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
     Route::get('order', fn (Request $request) => $request->user())->name('order');
+});
+
+Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
+    Route::get('orderStatus', [ApiShipperController::class, 'getOrderStatus'])->name('orderStatus');
+    Route::get('fetchOrders', [ApiShipperController::class, 'fetchOrders'])->name('fetchOrders');
 });

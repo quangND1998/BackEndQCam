@@ -2,6 +2,7 @@
 
 namespace Modules\Order\app\Models;
 
+use App\Enums\OrderDocument;
 use App\Models\Payment;
 use App\Models\User;
 use Carbon\Carbon;
@@ -35,6 +36,7 @@ class Order extends Model implements HasMedia
         'receive_at',
         'status_transport',
         'shipper_status',
+        'state_document',
         'wards',  "created_at", "updated_at"
     ];
 
@@ -174,5 +176,65 @@ class Order extends Model implements HasMedia
     public function shipping_history()
     {
         return $this->hasMany(ShipingHistory::class, 'order_id');
+    }
+
+
+    public function scopeFillterApi($query, array $filters)
+    {
+
+        if (isset($filters['search'])) {
+
+            $query->where('order_number', 'like', '%' . $filters['search'] . '%');
+        }
+
+
+        if (isset($filters['shipper_status'])) {
+            if ($filters['shipper_status'] == 'addition_document') {
+                $query->where('shipper_status', 'delivered')->where('state_document', OrderDocument::not_push);
+            } else {
+                $query->where('shipper_status', $filters['shipper_status']);
+            }
+        }
+
+        if (isset($filters['day'])) {
+
+            $query->whereBetween('updated_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
+        }
+        if (isset($filters['date'])) {
+            if ($filters['date'] == 'now') {
+                $query->whereBetween('updated_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
+            } elseif ($filters['date'] == 'yesterday') {
+                $yesterday = date("Y-m-d", strtotime('-1 days'));
+                $query->whereDate('updated_at', $yesterday);
+            } elseif ($filters['date'] == 'month') {
+                $query->whereBetween('updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            } elseif ($filters['date'] == 'beforMonth') {
+                $query->whereBetween('updated_at', [Carbon::now()->subMonth(1)->startOfMonth(), Carbon::now()->subMonth(1)->endOfMonth()]);
+            } else {
+                $query->whereBetween('updated_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
+            }
+        }
+    }
+
+    public function scopeFillterTime($query, array $filters)
+    {
+
+
+        if (isset($filters['day'])) {
+
+            $query->whereBetween('updated_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);
+        }
+        if (isset($filters['date'])) {
+            if ($filters['date'] == 'now') {
+                $query->whereBetween('updated_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
+            } elseif ($filters['date'] == 'yesterday') {
+                $yesterday = date("Y-m-d", strtotime('-1 days'));
+                $query->whereDate('updated_at', $yesterday);
+            } elseif ($filters['date'] == 'month') {
+                $query->whereBetween('updated_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            } elseif ($filters['date'] == 'beforMonth') {
+                $query->whereBetween('updated_at', [Carbon::now()->subMonth(1)->startOfMonth(), Carbon::now()->subMonth(1)->endOfMonth()]);
+            }
+        }
     }
 }

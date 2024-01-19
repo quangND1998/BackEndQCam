@@ -150,20 +150,20 @@ class OrderRepository implements OrderContract
 
 
 
-    public function groupByOrderByStatus($array_status)
+    public function groupByOrderByStatus($array_status, $attribute)
     {
 
         $statusGroup = Order::role()->whereHas('orderItems')
-            ->select('status_transport', DB::raw('count(*) as total'))
-            ->groupBy('status_transport')
+            ->select($attribute, DB::raw('count(*) as total'))
+            ->groupBy($attribute)
             ->get();
 
         foreach ($array_status as $status) {
-            $filtered = $statusGroup->where('status_transport', $status->value)->first();
+            $filtered = $statusGroup->where($attribute, $status->value)->first();
             if ($filtered == null) {
 
                 $newCollections[] = array(
-                    'status_transport' => $status,
+                    $attribute => $status,
                     'total' => 0,
 
 
@@ -171,7 +171,7 @@ class OrderRepository implements OrderContract
             } else {
 
                 $newCollections[] = array(
-                    'status_transport' => $status,
+                    $attribute => $status,
                     'total' => $filtered->total,
 
                 );
