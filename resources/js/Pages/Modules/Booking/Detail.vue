@@ -460,7 +460,7 @@ const deleteOrder = (order) => {
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{ code?.ballot_code
                                         }}</td>
                                         <td>
-                                            <Multiselect  v-model="formRef.ref_id[index]"
+                                            <Multiselect @select="ChangeRef(code,index)"  v-model="formRef.ref_id[index]"
                                                 :searchable="true" label="name" valueProp="id" trackBy="name"
                                                 placeholder="None" :options="users" :classes="{
                                                     tagsSearch: 'absolute text-left fit-content bg-gray-50 inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
@@ -476,7 +476,7 @@ const deleteOrder = (order) => {
                                                     {{ option.name }} (Team: {{ option.team?.name }})
                                                 </template>
                                             </Multiselect>
-                                            <Button @click="ChangeRef(code,index)">Check</Button>
+                                            <!-- <Button @click="ChangeRef(code,index)">Check</Button> -->
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 flex items-center text-gray-500">
                                             <p>{{ code.dateStart }}

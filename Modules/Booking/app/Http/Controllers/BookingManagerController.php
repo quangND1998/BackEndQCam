@@ -50,7 +50,7 @@ class BookingManagerController extends Controller
         return back()->with('success', 'Create successfully');
     }
     public function changeRef(Request $request,BookingHistory $code){
-        //  dd($request);
+        //   dd($request);
         //  dd($request->ref_id[$request->index]);
          $code->ref_id = $request->ref_id[$request->index];
          $code->save();
