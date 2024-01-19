@@ -309,6 +309,7 @@ class OrderPackageController extends Controller
         return redirect()->route('admin.orders.package.detail',[$order->id]);
     }
     public function saveHistoryPaymentOrder(Request $request,$id){
+        // return $request;
         $this->validate($request, [
             'payment_method' => 'required',
             'amount_received' => 'required|numeric|gt:0',

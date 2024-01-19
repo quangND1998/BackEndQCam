@@ -123,7 +123,6 @@ class OrderRepository implements OrderContract
                     'status' => $status,
                     'total' => 0,
 
-
                 );
             } else {
 

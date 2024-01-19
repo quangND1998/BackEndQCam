@@ -24,7 +24,9 @@ Route::middleware(['auth'])->group(
                 Route::get('{booking}/detail', [BookingManagerController::class, 'index'])->name('detail');
                 Route::post('{booking}/generate', [BookingManagerController::class, 'generate'])->name('generate');
                 Route::post('{code}/changeRef', [BookingManagerController::class, 'changeRef'])->name('changeRef');
-
+                Route::post('{code}/changeStatus', [BookingManagerController::class, 'changeStatus'])->name('changeStatus');
+                Route::post('{booking}/changeStatusAll', [BookingManagerController::class, 'changeStatusAll'])->name('changeStatusAll');
+                Route::get('{booking}/print', [BookingManagerController::class, 'printData'])->name('print');
             });
         });
     }
