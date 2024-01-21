@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use Modules\CustomerService\app\Models\VisitExtraService;
 use Modules\Order\app\Models\OrderPackage;
 use Modules\Tree\app\Models\ProductRetail;
+use Spatie\Permission\Models\Role;
 
 class GetCustomerOrderPackage extends Controller
 {
@@ -24,7 +25,8 @@ class GetCustomerOrderPackage extends Controller
             ->with('product_service_owner', function ($query) {
                 $query->with('orders', function ($orderQuery) {
                     $orderQuery->orderBy('receive_at', 'desc')
-                        ->with('shipping_history');
+                        ->whereNotIn('status', ['decline', 'refund'])
+                        ->with(['shipping_history', 'orderItems.product']);
                 })->with('visit', function ($visitQuery) {
                     $visitQuery->orderBy('date_time', 'asc');
                 });
@@ -34,6 +36,7 @@ class GetCustomerOrderPackage extends Controller
         $extraServices = VisitExtraService::all();
         $productRetails = ProductRetail::where('status', 1)->get();
         $customer = $orderPackages->count() ? $orderPackages->first()->customer : User::find($customerId);
+        $roles = Role::all();
 
         return Inertia::render('Modules/CustomerService/order-package', compact(
             'customerId',
@@ -42,6 +45,7 @@ class GetCustomerOrderPackage extends Controller
             'extraServices',
             'productRetails',
             'customer',
+            'roles',
         ));
     }
 }

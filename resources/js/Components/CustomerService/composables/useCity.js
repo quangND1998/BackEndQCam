@@ -11,9 +11,9 @@ const useCity = () => {
 
     data.value = jsonData;
     jsonData.forEach(city => {
-      cities.value[encodeURIComponent(city.Name).slice(-12)] = city;
+      cities.value[encodeURIComponent(city.Name)] = city;
       city.Districts.forEach(district => {
-        districts.value[encodeURIComponent(district.Name).slice(-12)] = district;
+        districts.value[encodeURIComponent(district.Name)] = district;
       });
     });
   });

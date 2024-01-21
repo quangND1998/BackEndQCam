@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Order\app\Models\Order;
+use Modules\Order\app\Models\OrderItem;
 use Modules\Order\app\Models\ShipingHistory;
 use Modules\Tree\app\Models\ProductRetail;
 
@@ -27,7 +28,6 @@ class CreateOrder extends Controller
             'products.*.quantity' => 'required|integer|min:1',
             'subPhoneNumber' => 'nullable|string',
             'productServiceOwnerId' => 'required|integer|exists:product_service_owners,id',
-            'deliveryNo' => 'required|integer|min:1',
         ]);
 
         $this->validateContract($request->productServiceOwnerId, $request->customerId);
@@ -37,6 +37,9 @@ class CreateOrder extends Controller
         try {
             $customer = User::findOrFail($request->customerId);
             DB::beginTransaction();
+            $deliveryNo = Order::where('type', 'gift_delivery')
+                ->where('product_service_owner_id', $request->productServiceOwnerId)
+                ->max('delivery_no') + 1;
             $order = Order::create([
                 'order_number' => 'ORD-' . strtoupper(uniqid()),
                 'user_id' => $customer->id,
@@ -56,29 +59,33 @@ class CreateOrder extends Controller
                 'product_service_owner_id' => $request->productServiceOwnerId,
                 'sale_id' => auth()->id(),
                 'phone_number' => $request->subPhoneNumber,
-                'delivery_no' => $request->deliveryNo,
+                'delivery_no' => $deliveryNo,
             ]);
 
-            foreach ($request->products as $product) {
-                $order->orderItems()->create([
-                    'product_id' => $product['id'],
-                    'quantity' => $product['quantity'],
-                ]);
+
+            $orderItems = [];
+            foreach ($data['map'] as $productId => $quantity) {
+                $orderItems[] = [
+                    'order_id' => $order->id,
+                    'product_id' => $productId,
+                    'quantity' => $quantity,
+                ];
             }
+            OrderItem::insert($orderItems);
+            $data['products']->each(function ($product) use ($data) {
+                $product->available_quantity -= $data['map'][$product->id];
+                $product->save();
+            });
 
             ShipingHistory::create([
                 'order_id' => $order->id,
                 'user_id' => auth()->id(),
                 'note' => 'Tạo đơn hàng',
             ]);
-            $order->load('shipping_history');
-
-            $data['products']->each(function ($product) use ($data) {
-                $product->available_quantity -= $data['map'][$product->id];
-                $product->save();
-            });
 
             DB::commit();
+            $order->load(['shipping_history', 'orderItems.product']);
+
             return response()->json([
                 'message' => 'Ok',
                 'order' => $order,
@@ -110,24 +117,20 @@ class CreateOrder extends Controller
     private function validateProductCondition($inputProducs)
     {
         $productIds = Collection::make($inputProducs)->pluck('id')->toArray();
-        $productQuantityMap = Collection::make($inputProducs)->keyBy('id')->map(function ($product) {
-            return $product['quantity'];
-        })->toArray();
+        $productQuantityMap = [];
+        Collection::make($inputProducs)->each(function ($product) use (&$productQuantityMap) {
+            $productQuantityMap[$product['id']] = isset($productQuantityMap[$product['id']])
+                ? $productQuantityMap[$product['id']] + $product['quantity']
+                : $product['quantity'];
+        });
         $products = ProductRetail::whereIn('id', $productIds)->get();
         foreach ($products as $product) {
-            if ($product->available_quantity < $productQuantityMap[$product->id]) {
-                abort(442, 'Số lượng sản phẩm không đủ');
-            }
+            abort_if($product->available_quantity < $productQuantityMap[$product->id], 442, 'Số lượng sản phẩm không đủ');
         }
 
         return [
             'products' => $products,
             'map' => $productQuantityMap,
         ];
-    }
-
-    private function updateProductAvailableQuantity()
-    {
-
     }
 }

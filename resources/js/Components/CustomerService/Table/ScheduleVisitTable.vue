@@ -48,12 +48,12 @@ import CycleTime from '@/Components/CustomerService/CycleTime.vue';
 </script>
 
 <template>
-  <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm">
+  <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
       <div class="text-center">{{ index + 1 }}</div>
       <div class="col-span-2 pl-1">{{ orderPackage.idPackage }}</div>
       <div class="text-center">{{ orderPackage.product_service.life_time }} {{ cycleYear }}</div>
-      <div v-for="(visit, index) in visits" class="text-center">
-        <CycleTime :data="visit" :position="index - subtractPosition" :startDate="startDate"
+      <div v-for="(visit, visitIndex) in visits" class="text-center">
+        <CycleTime :data="visit" :position="visitIndex - subtractPosition" :packageIndex="index" :startDate="startDate"
           :allowEmpty="true" :showEmpty="true" />
       </div>
       <div class="bg-zinc-700 col-span-2" />

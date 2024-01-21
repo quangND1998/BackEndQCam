@@ -1,14 +1,17 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import moment from 'moment';
 
 import { SCHEDULE_VISIT_STATE, CYCLE_TIME } from '@/Components/CustomerService/stuffs/constants';
-import { arrow, useFloating, autoUpdate, offset } from '@floating-ui/vue';
+import { arrow, useFloating, autoUpdate } from '@floating-ui/vue';
+
+const { onOpenEditOrderDialog } = inject('ORDER')
 
 const props = defineProps({
   data: Object,
   position: Number,
   startDate: String,
+  packageIndex: Number,
   allowEmpty: {
     required: false,
     default: false,
@@ -43,9 +46,11 @@ const date = computed(() => {
   return moment(props.startDate, 'YYYY-MM-DD HH:mm:ss').add((props.position + 1) * CYCLE_TIME - subtractDate, 'days');
 });
 const cellStyle = computed(() => {
+  if (props.data && props.data?.status === 'complete') return 'bg-emerald-600 text-white';
   if (!props.data && props.showEmpty) return 'bg-zinc-700 text-zinc-700 select-none';
   if (props.data && props.data?.state === SCHEDULE_VISIT_STATE.COMPLETE) return 'bg-emerald-600 text-white';
   if (props.data && props.data?.state === SCHEDULE_VISIT_STATE.CANCEL) return 'bg-red-600 text-white';
+  if (props.data && props.data?.state === SCHEDULE_VISIT_STATE.PENDING && date.value.diff(new Date(), 'days') < 0) return 'bg-red-600 text-white';
   if (props.data && date.value.diff(new Date(), 'days') >= 0) return 'bg-yellow-600 text-white';
   if (date.value.diff(new Date(), 'days') < 0 && !props.allowEmpty) return 'bg-red-600 text-white';
   if (!props.data) return 'bg-zinc-700 text-white';
@@ -63,13 +68,17 @@ const closePopover = () => {
   clearTimeout(timeoutRef.value);
   showPopover.value = false;
 }
+const onUpdateOrder = () => {
+  if (!props.data) return;
+  onOpenEditOrderDialog(props.data, props.position, props.packageIndex);
+}
 </script>
 
 <template>
   <div @mouseover="openPopover" @mouseleave="closePopover">
     <p ref="reference" class="text-xs leading-5 cursor-pointer" :class="cellStyle">{{ displayText }}</p>
 
-    <div v-if="data && allowPopover" v-show="showPopover" ref="floating" :style="floatingStyles"
+    <div v-if="data && data.order_number && allowPopover" v-show="showPopover" ref="floating" :style="floatingStyles"
       class="bg-white rounded-lg border !border-gray-400 py-3">
       <div ref="floatingArrow" class="triangle" :style="{
         position: 'absolute',
@@ -80,7 +89,15 @@ const closePopover = () => {
         top: `calc(${-floatingArrow?.offsetWidth}px + 26px)`,
       }"></div>
       <div></div>
-      <p class="mb-1 text-left pl-3 font-semibold">Lịch sử nhận quà lần {{ position + 1 }}</p>
+      <div class="mb-2 px-3 flex items-center justify-between">
+        <p class="text-left l-3 font-semibold">Lịch sử nhận quà lần {{ position + 1 }}</p>
+        <button
+          class="rounded-md bg-orange-600 text-white relative font-medium px-3 py-2"
+          @click="onUpdateOrder"
+        >
+          Cập nhật đơn
+        </button>
+      </div>
       <div class="grid grid-cols-12 items-center bg-gray-400 text-white font-bold leading-6 w-[700px]">
         <div>STT</div>
         <div class="col-span-3">Ngày</div>

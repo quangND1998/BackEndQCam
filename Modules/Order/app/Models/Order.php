@@ -20,12 +20,24 @@ class Order extends Model implements HasMedia
     use HasFactory;
     protected $table = 'orders';
     protected $fillable = [
-        "id", "order_number", "user_id", "status", "item_count", "payment_status", "payment_method", "grand_total", "discount", "shipping_fee", "last_price", "notes", "reason", 'specific_address',
+        "order_number",
+        "user_id",
+        "status", // pending - packing- shipping - completed - redunf - decline
+        "item_count",
+        "payment_status",
+        "payment_method", // 0 - cash, 1 - bank, 2 - payoo
+        "grand_total", // Full price
+        "discount",
+        "shipping_fee",// in VND
+        "last_price", // Price after discount, vat, shipping fee
+        "notes",
+        "reason",
+        'specific_address',
         'address',
         'city',
         'district',
-        'vat',
-        'discount_deal',
+        'vat', // 0 - 100%
+        'discount_deal', // 0 - 100%
         'amount_paid',
         'amount_unpaid',
         'type',

@@ -79,7 +79,7 @@
         </div>
         <div class="flex mb-4">
           <p class="w-28">Ghi chú</p>
-          <textarea v-model="bookingForm.description" class="flex-1 resize-none rounded bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
+          <textarea v-model="bookingForm.description" class="flex-1 resize-none rounded focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
         </div>
         <div class="flex justify-end">
           <button class="rounded-md bg-sky-600 text-white font-medium px-3 py-2 mb-2" @click="executeQuery">

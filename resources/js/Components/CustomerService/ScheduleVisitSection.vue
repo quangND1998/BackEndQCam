@@ -34,6 +34,6 @@ const props = defineProps({
       <div></div>
     </div>
     <ScheduleVisitTable v-for="(orderPackage, index) in orderPackages" :key="orderPackage.id" :index="index" :orderPackage="orderPackage" />
-    <div class="w-full border-b border-x h-5 !border-gray-400"></div>
+    <div class="w-full border-b border-x h-5 !border-gray-400 bg-white"></div>
   </div>
 </template>

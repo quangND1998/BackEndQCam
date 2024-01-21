@@ -1,9 +1,38 @@
 <script setup>
-import { ref } from 'vue';
-import DialogLoading from './DialogLoading.vue';
+import { inject, reactive, ref } from 'vue';
 
-const isLoading = ref(false);
+import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '@/Components/CustomerService/composables/useQuery';
+import DialogLoading from './DialogLoading.vue';
+import SpinnerIcon from '@/Components/CustomerService/SpinnerIcon.vue';
+
+const { roles } = inject('COMPLAINT');
+const { customerId } = inject('ORDER_PACKAGE_PAGE');
+
 const visible = ref(false);
+const complaintForm = reactive({
+  description: '',
+  severity: 'normal',
+  role_id: null
+});
+
+const { isLoading, executeQuery } = useQuery(
+  CUSTOMER_SERVICE_API_MAKER.CREATE_COMPLAINT(customerId),
+  complaintForm,
+  () => {
+    visible.value = false;
+    complaintForm.description = '';
+    complaintForm.severity = 'normal';
+    complaintForm.role_id = null;
+  },
+  'Tạo khiếu nại thành công'
+);
+
+const onCreateComplaint = () => {
+  if (!complaintForm.description || !complaintForm.role_id) return;
+  console.log(complaintForm);
+  // executeQuery();
+}
+
 </script>
 
 <template>
@@ -15,22 +44,38 @@ const visible = ref(false);
       </div>
       <div class="px-4 py-3 relative">
         <div class="mb-3 flex items-start gap-3">
-          <p class="w-16 text-sm font-semibold">Nội dung</p>
-          <textarea class="flex-1 resize-none rounded bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
+          <p class="w-20 text-sm font-semibold required">Nội dung</p>
+          <textarea v-model="complaintForm.description" class="flex-1 resize-none rounded bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
         </div>
         <div class="flex items-center gap-3">
-          <p class="w-16 text-sm font-semibold">Mức độ</p>
+          <p class="w-20 text-sm font-semibold required">Mức độ</p>
           <div class="grid flex-1 grid-cols-2 gap-3">
-            <select class="rounded p-2 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-sm">
-              <option>Bình thường</option>
+            <select v-model="complaintForm.severity" class="rounded p-2 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-sm">
+              <option value="normal">Bình thường</option>
+              <option value="urgent">Xử lý sớm</option>
+              <option value="critical">Nghiêm trọng</option>
             </select>
-            <select class="rounded p-2 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-sm">
-              <option>TGĐ</option>
+            <select v-model="complaintForm.role_id" class="rounded p-2 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-sm">
+              <option disabled selected value> -- Chọn phòng ban -- </option>
+              <option v-for="role in roles" :value="role.id">
+                {{ role.name.replaceAll('-', ' ') }}
+              </option>
             </select>
           </div>
         </div>
         <div class="mt-3 flex justify-end">
-          <button class="rounded bg-red-600 px-3 py-2 text-sm font-semibold text-white">Thêm</button>
+          <button
+            class="relative rounded bg-red-600 px-3 py-2 text-sm font-semibold text-white"
+            :class="{
+              'cursor-wait': isLoading
+            }"
+            @click="onCreateComplaint"
+          >
+          <span v-if="isLoading" class="absolute w-full h-full left-0 top-0 flex items-center justify-center bg-gray-400/40">
+            <SpinnerIcon class="!m-0" />
+          </span>
+            Thêm
+          </button>
         </div>
         <DialogLoading v-if="isLoading" text="Đang thêm khiếu nại" />
       </div>
