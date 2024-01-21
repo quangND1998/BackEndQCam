@@ -267,15 +267,29 @@ onMounted(() => {
             <div class="grid grid-cols-12 bg-gray-400 divide-x divide-white leading-6 text-sm font-medium text-white text-center border-x border-gray-400">
               <div class="col-span-1">STT</div>
               <div
-                class="col-span-8"
+                class="col-span-6"
                 :class="{
                   '!col-span-4': isRetailOrder
                 }"
               >
                 Loại quà
               </div>
-              <div class="col-span-1">DVT</div>
-              <div class="col-span-1">SL</div>
+              <div
+                class="col-span-2"
+                :class="{
+                  '!col-span-1': isRetailOrder
+                }"
+              >
+                DVT
+              </div>
+              <div
+                class="col-span-2"
+                :class="{
+                  '!col-span-1': isRetailOrder
+                }"
+              >
+                SL
+              </div>
               <div v-if="isRetailOrder" class="col-span-2">Gía</div>
               <div v-if="isRetailOrder" class="col-span-2">Tổng</div>
               <div class="col-span-1"></div>
@@ -285,7 +299,7 @@ onMounted(() => {
                 <div v-if="isDisable" class="absolute w-full h-full left-0 top-0 bg-gray-400/30 cursor-not-allowed"/>
                 <div class="col-span-1">{{ index + 1 }}</div>
                 <div
-                  class="col-span-8"
+                  class="col-span-6"
                   :class="{
                     '!col-span-4': isRetailOrder
                   }"
@@ -297,8 +311,20 @@ onMounted(() => {
                     </select>
                     </div>
                 </div>
-                <div class="leading-[42px] col-span-1">{{ selectedProducts[`product_${rowNumber}`] ? selectedProducts[`product_${rowNumber}`].unit : '&#8203;' }}</div>
-                <div class="col-span-1" :class="`${ selectedProducts[`product_${rowNumber}`] ? 'p-1' : 'leading-[42px]'}`">
+                <div class="col-span-2 leading-[42px]"
+                  :class="{
+                    '!col-span-1': isRetailOrder
+                  }"
+                >
+                  {{ selectedProducts[`product_${rowNumber}`] ? selectedProducts[`product_${rowNumber}`].unit : '&#8203;' }}
+                </div>
+                <div
+                  class="col-span-2 p-1"
+                  :class="{
+                    '!col-span-1': isRetailOrder,
+                    'leading-[42px] !p-0': !selectedProducts[`product_${rowNumber}`],
+                  }"
+                >
                   {{ selectedProducts[`product_${rowNumber}`] ? '' : '&#8203;' }}
                   <input
                     v-if="selectedProducts[`product_${rowNumber}`]"
@@ -329,7 +355,7 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          <div class="grid grid-cols-12 mt-3">
+          <div v-if="isRetailOrder" class="grid grid-cols-12 mt-3">
             <div class="col-span-6">
               <p class="font-semibold !leading-8 text-sm mb-1">Phương thức thanh toán</p>
               <div class="text-sm font-medium">

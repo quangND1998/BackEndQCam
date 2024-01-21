@@ -67,6 +67,12 @@ export const CUSTOMER_SERVICE_API_MAKER = {
       url: '/customer-service/orders',
       method: 'post',
     }
+  },
+  GET_RECENT_ACTIVITY: (customerId) => {
+    return {
+      url: `/customer-service/customer/${customerId}/recent-activities`,
+      method: 'get',
+    }
   }
 }
 

@@ -13,6 +13,7 @@ import OrderDialog from '@/Components/CustomerService/Dialog/OrderDialog.vue';
 import ContractCard from '@/Components/CustomerService/ContractCard.vue';
 import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '@/Components/CustomerService/composables/useQuery';
 import PhoneCall from '@/Components/CustomerService/PhoneCall.vue';
+import RecentActivity from '@/Components/CustomerService/Table/RecentActivity.vue';
 
 const props = defineProps({
   customerId: String,
@@ -136,6 +137,9 @@ watch(orderDialogVisible, (newValue) => {
     document.body.style.overflow = 'auto';
   }
 });
+
+const showRecentActivityDialog = ref(false);
+
 </script>
 
 <template>
@@ -159,7 +163,7 @@ watch(orderDialogVisible, (newValue) => {
             :orderPackage="orderPackage"
             @onOpenOrderDialog="onOpenOrderDialog" />
         </div>
-        <div class="flex justify-center" style="grid-column: span 14 / span 14">
+        <div class="flex items-center flex-col" style="grid-column: span 14 / span 14">
           <div class="grid gap-4 grid-cols-2">
             <div>
               <button
@@ -171,6 +175,7 @@ watch(orderDialogVisible, (newValue) => {
             </div>
             <ExtraServiceDialog />
           </div>
+          <RecentActivity v-if="showRecentActivityDialog" class="mt-4" />
         </div>
       </div>
     </div>
@@ -182,7 +187,12 @@ watch(orderDialogVisible, (newValue) => {
         <ComplaintDialog />
       </div>
       <div class="flex justify-center">
-        <RecentActivityDialog />
+        <button
+          class="w-96 bg-orange-500 rounded-full font-semibold text-white py-2"
+          @click="showRecentActivityDialog = !showRecentActivityDialog"
+        >
+          Hoạt dộng mới nhất
+        </button>
       </div>
     </div>
     <PhoneCall :tableHeight="tableHeight" />

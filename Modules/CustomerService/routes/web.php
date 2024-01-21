@@ -17,6 +17,7 @@ use Modules\CustomerService\app\Http\Controllers\Api\ScheduleVisits\UpdateVisit;
 use Modules\CustomerService\app\Http\Controllers\GetCustomerOrderPackage;
 use Modules\CustomerService\app\Http\Controllers\Api\Reminds\GetRemind;
 use Modules\CustomerService\app\Http\Controllers\Api\Reminds\UpdateRemind;
+use Modules\CustomerService\app\Http\Controllers\GetRecentActivity;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::middleware(['auth'])->group(
             Route::post('/orders', CreateOrder::class);
             Route::put('/orders/{order}', UpdateOrder::class);
             Route::post('/complaints', CreateComplaint::class);
+            Route::get('/recent-activities', GetRecentActivity::class);
         });
 
 

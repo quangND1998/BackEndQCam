@@ -1,5 +1,5 @@
 <script setup>
-import { inject, reactive, ref } from 'vue';
+import { inject, reactive, ref, watch } from 'vue';
 
 import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '@/Components/CustomerService/composables/useQuery';
 import DialogLoading from './DialogLoading.vue';
@@ -12,7 +12,7 @@ const visible = ref(false);
 const complaintForm = reactive({
   description: '',
   severity: 'normal',
-  role_id: null
+  role_id: undefined
 });
 
 const { isLoading, executeQuery } = useQuery(
@@ -22,32 +22,39 @@ const { isLoading, executeQuery } = useQuery(
     visible.value = false;
     complaintForm.description = '';
     complaintForm.severity = 'normal';
-    complaintForm.role_id = null;
+    complaintForm.role_id = undefined;
   },
   'Tạo khiếu nại thành công'
 );
 
 const onCreateComplaint = () => {
   if (!complaintForm.description || !complaintForm.role_id) return;
-  console.log(complaintForm);
-  // executeQuery();
+  executeQuery();
 }
+
+watch(visible, (newValue) => {
+  if (!newValue) {
+    complaintForm.description = '';
+    complaintForm.severity = 'normal';
+    complaintForm.role_id = undefined;
+  }
+})
 
 </script>
 
 <template>
   <div class="relative">
-    <div v-if="visible" class="mt-4 w-96 rounded-lg bg-white shadow-lg absolute -top-[355px]">
+    <div v-if="visible" class="w-96 rounded-lg bg-white shadow-lg absolute -top-[330px]">
       <div class="flex items-center justify-between rounded-t-lg bg-yellow-500 pr-3 pl-4 py-2">
         <p class="font-semibold">Yêu cầu khiếu nại</p>
         <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="visible = false"/>
       </div>
       <div class="px-4 py-3 relative">
-        <div class="mb-3 flex items-start gap-3">
+        <div class="mb-3 flex items-start gap-2">
           <p class="w-20 text-sm font-semibold required">Nội dung</p>
-          <textarea v-model="complaintForm.description" class="flex-1 resize-none rounded bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
+          <textarea v-model="complaintForm.description" class="flex-1 resize-none rounded bg-white focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
           <p class="w-20 text-sm font-semibold required">Mức độ</p>
           <div class="grid flex-1 grid-cols-2 gap-3">
             <select v-model="complaintForm.severity" class="rounded p-2 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-sm">
@@ -56,7 +63,7 @@ const onCreateComplaint = () => {
               <option value="critical">Nghiêm trọng</option>
             </select>
             <select v-model="complaintForm.role_id" class="rounded p-2 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-sm">
-              <option disabled selected value> -- Chọn phòng ban -- </option>
+              <option disabled selected :value="undefined"> -- Chọn phòng ban -- </option>
               <option v-for="role in roles" :value="role.id">
                 {{ role.name.replaceAll('-', ' ') }}
               </option>
