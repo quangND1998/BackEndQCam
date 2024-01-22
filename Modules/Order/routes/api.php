@@ -22,4 +22,11 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function 
 Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
     Route::get('orderStatus', [ApiShipperController::class, 'getOrderStatus'])->name('orderStatus');
     Route::get('fetchOrders', [ApiShipperController::class, 'fetchOrders'])->name('fetchOrders');
+
+
+    Route::prefix('shipper')->as('shipper.')->group(function () {
+
+        Route::put('/{id}/confirm-shipping', [ApiShipperController::class, 'confirmShipping'])->name('confirm-shipping');
+        Route::post('/{id}/confirm-recive', [ApiShipperController::class, 'confirmCustomerRecive'])->name('confirm-recive');
+    });
 });

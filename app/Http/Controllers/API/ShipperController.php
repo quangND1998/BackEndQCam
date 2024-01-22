@@ -32,7 +32,7 @@ class ShipperController extends Base2Controller
     public function orderDetail($id)
     {
         $user = Auth::user();
-        $orders_detail = Order::with('product_service.product', 'orderItems.product', 'discount', 'customer')->where('shipper_id', $user->id)->find($id);
+        $orders_detail = Order::with('product_service.product', 'orderItems.product', 'discount', 'customer', 'order_shipper_images')->where('shipper_id', $user->id)->find($id);
 
         if ($orders_detail) {
             return response()->json($orders_detail, 200);
