@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            // hen giao
-            $table->timestampTz("delivery_appointment")->nullable();
-            $table->string('status_transport')->default('pending')->nullable();
+            $table->string('shipper_status')->nullable();
         });
     }
 
@@ -24,8 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('delivery_appointment');
-            $table->dropColumn('status_transport');
+            $table->dropColumn('shipper_status');
         });
     }
 };

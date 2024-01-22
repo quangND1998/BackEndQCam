@@ -110,8 +110,6 @@ const { isLoading: isUpdating, executeQuery: executeUpdate } = useQuery(
 );
 const onCreateOrder = () => {
   if (isLoading.value || isUpdating.value || isDisable.value || isCreateRetailOrder.value) return;
-
-
   const order = {
     products: Object.values(selectedProducts.value).map((product) => ({
       id: product.id,
@@ -137,9 +135,9 @@ const onCreateOrder = () => {
 
   if (isRetailOrder.value) onCreateRetailOrder();
   if (!props.order) {
-    executeCreate(undefined, { ...order, productServiceOwnerId: props.orderPackage.product_service_owner.id });
+    executeCreate(undefined, { ...order, productServiceOwnerId: props.orderPackage?.product_service_owner.id });
   } else {
-    executeUpdate({ orderId: props.order.id }, {...order, productServiceOwnerId: props.order.product_service_owner_id })
+    executeUpdate({ orderId: props.order.id }, {...order, productServiceOwnerId: props.order?.product_service_owner_id })
   }
 }
 

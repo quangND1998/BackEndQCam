@@ -1,7 +1,7 @@
 <template>
     <div class="modal fade" id="ModelShipping" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog rounded-2xl mx-auto mt-10 shadow-lg max-h-modal w-8/12  md:w-9/12 lg:w-8/12 xl:w-5/12 z-50 overflow-auto"
+        <div class="modal-dialog modal-xl rounded-2xl mx-auto mt-10 shadow-lg max-h-modal w-8/12  md:w-9/12 lg:w-8/12 xl:w-5/12 z-50 overflow-auto"
             role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -19,27 +19,40 @@
                     <div class="flex items-center ">
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/loading-svgrepo-com.png" alt="" class="w-12 h-12 p-2">
-                            <p class="text-[#FF0000] text-xl">Chuẩn bị</p>
+                            <p class=" text-xl"
+                                :class="(form.order?.status_transport == 'pending' || form.order?.status_transport == 'packing' || form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'text-[#FF0000]' : ''">
+                                Chuẩn bị</p>
                         </div>
-                        <div class="arrow mx-1 "></div>
-                        <div class="mx-1 flex flex-col items-center">
+                        <div class=" arrow mx-1  "
+                            :class="(form.order?.status_transport == 'packing' || form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'active' : ''">
+                        </div>
+                        <div class=" mx-1 flex flex-col items-center">
                             <img src="/assets/icon/box.png" alt="" class="w-12 h-12 p-2">
-                            <p class="text-[#FF0000] text-base">Đóng gói</p>
+                            <p class="text-base"
+                                :class="(form.order?.status_transport == 'packing' || form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'text-[#FF0000]' : ''">
+                                Đóng gói</p>
                         </div>
-                        <div class="arrow mx-1"></div>
+                        <div class="arrow mx-1"
+                            :class="(form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'active' : ''">
+                        </div>
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/ship.png" alt="" class="w-12 h-12 p-2">
-                            <p class="text-[#FF0000] text-base">Vận chuyển</p>
+                            <p class=" text-base"
+                                :class="(form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'text-[#FF0000]' : ''">
+                                Vận chuyển</p>
                         </div>
-                        <div class="arrow mx-1"></div>
+                        <div class="arrow mx-1" :class="(form.order?.status_transport == 'completed') ? 'active' : ''">
+                        </div>
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/success.png" alt="" class="w-12 h-12 p-2">
-                            <p class="text-[#FF0000] text-base">Thành công</p>
+                            <p class="text-base" :class="(form.order?.status_transport == 'completed') ? 'text-[#FF0000]' : ''">
+                                Thành công</p>
                         </div>
                         <div class="arrow mx-1"></div>
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/backward.png" alt="" class="w-12 h-12 p-2">
-                            <p class="text-[#FF0000] text-base">Hoàn</p>
+                            <p class="text-base" :class="form.order?.status_transport == 'refund' ? 'text-[#FF0000]' : ''">Hoàn
+                            </p>
                         </div>
                     </div>
                     <div class="w-full flex items-center mx-auto mt-3 ">
@@ -148,7 +161,7 @@ onUnmounted(() => {
     position: relative;
     height: 2px;
     width: 60px;
-    background-color: #AEAEAE;
+
 }
 
 .arrow:before {
@@ -168,5 +181,18 @@ onUnmounted(() => {
     height: 2px;
     background-color: #AEAEAE;
     position: absolute;
+}
+
+.active {
+    background-color: #FF6100;
+
+}
+
+.active:after {
+    background-color: #FF6100;
+}
+
+.active:before {
+    background-color: #FF6100;
 }
 </style>

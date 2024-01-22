@@ -128,10 +128,30 @@ Route::middleware(['auth'])->group(
                 Route::get('/{order}/Cash&Banking', [PaymentController::class, 'orderCashBankingPayment'])->name('orderCashBankingPayment');
             });
             Route::prefix('review')->as('review.')->group(function () {
-                Route::get('index',[ReviewController::class,'index'])->name('index');
+                Route::get('index', [ReviewController::class, 'index'])->name('index');
             });
             Route::prefix('cskh')->as('cskh.')->group(function () {
-                Route::get('all',[CSKHOrderController::class,'index'])->name('all');
+                Route::get('all', [CSKHOrderController::class, 'all'])->name('all');
+            });
+
+
+            Route::prefix('cskh')->as('cskh.')->group(function () {
+
+                Route::post('pushOrder', [CSKHOrderController::class, 'pushOrder'])->name('pushOrder');
+                Route::post('shipperOwner', [CSKHOrderController::class, 'shipperOwner'])->name('shipperOwner');
+
+                Route::post('packedOrder', [CSKHOrderController::class, 'packedOrder'])->name('packedOrder');
+                Route::post('shipperOwner', [CSKHOrderController::class, 'shipperOwner'])->name('shipperOwner');
+
+                Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
+                Route::get('packing', [CSKHOrderController::class, 'packing'])->name('packing');
+                Route::get('packed', [CSKHOrderController::class, 'packed'])->name('packed');
+                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
+                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
+                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
+                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
+                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
+                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
             });
         });
     }

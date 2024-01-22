@@ -71,19 +71,19 @@ export default [{
             {
                 route: 'commission.policy',
                 label: 'Quản lý chính sách',
-                permissions: ['setting-commersion','super-admin'],
+                permissions: ['setting-commersion', 'super-admin'],
                 route_list: null
             },
             {
                 route: 'commission.index',
                 label: 'Cài đặt hoa hồng',
-                permissions: ['setting-commersion','super-admin'],
+                permissions: ['setting-commersion', 'super-admin'],
                 route_list: null
             },
             {
                 route: 'commission.dashboard.user',
                 label: 'Hoa hồng',
-                permissions: ['view-commersion','super-admin'],
+                permissions: ['view-commersion', 'super-admin'],
                 route_list: null
             }
         ]
@@ -155,19 +155,19 @@ export default [{
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'admin.cskh.pending',
                 label: 'Đang chờ',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'admin.cskh.packing',
                 label: 'Đóng gói',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'admin.cskh.packed',
                 label: 'Giao shipper',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
