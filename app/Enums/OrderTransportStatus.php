@@ -8,7 +8,7 @@ enum OrderTransportStatus: string
     case processing = 'processing';
     case packing = 'packing';
     case packed = 'packed';
-        // case not_shipper_receive = 'not_shipper_receive';
+    case not_shipper_receive = 'not_shipper_receive';
         // case not_delivery = 'not_delivery';
     case delivering = 'delivering';
     case delivered = 'delivered';
