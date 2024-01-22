@@ -30,7 +30,7 @@ const props = defineProps({
       <div class="text-center">STT</div>
       <div class="text-center col-span-2">Mã HĐ</div>
       <div class="text-center">Số năm</div>
-      <div v-for="n in 12" class="text-center">L{{ n }}</div>
+      <div v-for="n in 12" :key="n" class="text-center">L{{ n }}</div>
       <div></div>
     </div>
     <ScheduleVisitTable v-for="(orderPackage, index) in orderPackages" :key="orderPackage.id" :index="index" :orderPackage="orderPackage" />

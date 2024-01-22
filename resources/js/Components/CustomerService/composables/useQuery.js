@@ -73,6 +73,12 @@ export const CUSTOMER_SERVICE_API_MAKER = {
       url: `/customer-service/customer/${customerId}/recent-activities`,
       method: 'get',
     }
+  },
+  GET_USER_BY_PHONE_NUMBER: () => {
+    return {
+      url: `/customer-service/find-user-by-phone-number?phone_number=$phoneNumber`,
+      method: 'get',
+    }
   }
 }
 

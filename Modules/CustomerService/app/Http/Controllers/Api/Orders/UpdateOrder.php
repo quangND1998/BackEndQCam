@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Order\app\Models\Order;
-use Modules\Order\app\Models\OrderItem;
 use Modules\Tree\app\Models\ProductRetail;
 
 class UpdateOrder extends Controller
@@ -23,7 +22,8 @@ class UpdateOrder extends Controller
             'notes' => 'nullable|string',
             'products.*.id' => 'required|integer|exists:product_retails,id',
             'products.*.quantity' => 'required|integer|min:1',
-            'subPhoneNumber' => 'nullable|string',
+            'subPhoneNumber' => 'nullable|numeric',
+            'delivery_appointment' => 'required|date|after:today',
         ]);
         abort_if($order->user_id != $request->customerId, 403, 'Sai thông tin khách hàng');
         $data = $this->validateProductCondition($order->orderItems, $request->products);
@@ -39,6 +39,7 @@ class UpdateOrder extends Controller
                 'wards' => $request->address['ward'],
                 'notes' => $request->note,
                 'phone_number' => $request->subPhoneNumber,
+                'delivery_appointment' => $request->delivery_appointment,
             ]);
 
             $order->orderItems()->delete();

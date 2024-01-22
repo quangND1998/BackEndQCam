@@ -51,27 +51,18 @@ class Order extends Model implements HasMedia
         "updated_at",
         'delivery_no',
         'phone_number',
+        'delivery_appointment',
     ];
-
-
-    protected static function newFactory(): OrderFactory
-    {
-        //return OrderFactory::new();
-    }
-
 
     public function customer()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-
-
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class, 'order_id');
     }
-
 
     public function scopeFillter($query, array $filters)
     {

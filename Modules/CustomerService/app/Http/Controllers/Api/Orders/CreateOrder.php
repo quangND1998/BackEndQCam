@@ -26,8 +26,9 @@ class CreateOrder extends Controller
             'notes' => 'nullable|string',
             'products.*.id' => 'required|integer|exists:product_retails,id',
             'products.*.quantity' => 'required|integer|min:1',
-            'subPhoneNumber' => 'nullable|string',
+            'subPhoneNumber' => 'nullable|numeric',
             'productServiceOwnerId' => 'required|integer|exists:product_service_owners,id',
+            'delivery_appointment' => 'required|date|after:today',
         ]);
 
         $this->validateContract($request->productServiceOwnerId, $request->customerId);
@@ -60,6 +61,7 @@ class CreateOrder extends Controller
                 'sale_id' => auth()->id(),
                 'phone_number' => $request->subPhoneNumber,
                 'delivery_no' => $deliveryNo,
+                'delivery_appointment' => $request->delivery_appointment,
             ]);
 
 

@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, onMounted, reactive, ref, toRaw, watch } from 'vue';
+import { computed, inject, nextTick, onMounted, reactive, ref, toRaw, watch } from 'vue';
+import moment from 'moment';
 
 import FilterableDropdown from '@/Components/CustomerService/FilterableDropdown.vue';
 import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '../composables/useQuery';
@@ -89,7 +90,49 @@ watch(addressType, (newType) => {
 });
 
 // Other
+const deliveryAppointment = ref();
+const showDateError = ref(false);
+watch(deliveryAppointment, (newVal) => {
+  if (newVal) showDateError.value = false;
+});
+const foundedUser = ref(null);
+const { executeQuery: getUserByPhoneNumber } = useQuery(
+  CUSTOMER_SERVICE_API_MAKER.GET_USER_BY_PHONE_NUMBER(),
+  undefined,
+  (data) => {
+    if (data.user) {
+      foundedUser.value = data.user;
+    } else {
+      foundedUser.value = null;
+    }
+  }
+);
+const fillFoundedUserData = () => {
+  if (foundedUser.value) {
+    address.city = foundedUser.value.city;
+    address.detail = foundedUser.value.address;
+    nextTick(() => {
+      address.district = foundedUser.value.district;
+      setTimeout(() => {
+        address.ward = foundedUser.value.wards;
+        foundedUser.value = null;
+      }, 0)
+    });
+  }
+}
+const timeoutRef = ref();
 const subPhoneNumber = ref('');
+const findUser = () => {
+  clearTimeout(timeoutRef.value);
+  timeoutRef.value = setTimeout(() => {
+    getUserByPhoneNumber({ phoneNumber: subPhoneNumber.value });
+  }, 300);
+}
+watch(subPhoneNumber, (newVal) => {
+  findUser();
+});
+
+
 const note = ref('');
 
 const { isLoading, executeQuery: executeCreate } = useQuery(
@@ -120,10 +163,16 @@ const onCreateOrder = () => {
     address: toRaw(address),
     note: note.value,
     subPhoneNumber: subPhoneNumber.value,
-    deliveryNo: props.deliveryNo
+    deliveryNo: props.deliveryNo,
+    delivery_appointment: deliveryAppointment.value ? moment(deliveryAppointment.value).format('YYYY-MM-DD HH:mm:ss') : undefined,
   }
 
-  const haveError = false;
+  let haveError = false;
+  if (!order.delivery_appointment) {
+    showDateError.value = true;
+    haveError = true;
+  }
+
   if (order.products.length === 0) {
     showProductError.value = true
     haveError = true;
@@ -161,10 +210,10 @@ const priceForm = reactive({
   order_code: '',
 });
 watch(() => priceForm.order_code, () => {
-  retailOrderError.other_code = false;
+  if (retailOrderError.other_code) retailOrderError.other_code = false;
 });
 watch(() => subPhoneNumber.value, () => {
-  retailOrderError.phone_number = false;
+  if (retailOrderError.phone_number) retailOrderError.phone_number = false;
 });
 const productPrice = computed(() => {
   return Object.values(selectedProducts.value).reduce((total, product) => total + product.price * product.quantity, 0) || 0;
@@ -191,6 +240,7 @@ const onCreateRetailOrder = () => {
     note: note.value,
     subPhoneNumber: subPhoneNumber.value,
     otherPayment: toRaw(priceForm),
+    delivery_appointment: deliveryAppointment.value ? moment(deliveryAppointment.value).format('YYYY-MM-DD HH:mm:ss') : undefined,
   }
 
   const haveError = false;
@@ -209,6 +259,8 @@ const onCreateRetailOrder = () => {
 
   createRetailOrder(undefined, order);
 }
+
+const minDate = computed(() => new Date());
 
 onMounted(() => {
   if (!props.order) return;
@@ -234,13 +286,13 @@ onMounted(() => {
 
 <template>
   <div class="fixed w-screen h-screen bg-black/40 top-0 left-0 z-50 overflow-hidden flex items-center justify-center">
-    <div class="bg-white shadow-lg w-[calc(100vw_-_150px)] rounded-xl">
+    <div class="bg-white shadow-lg w-[calc(100vw_-_100px)] rounded-xl">
       <div class="flex items-center justify-between rounded-t-lg bg-orange-500 pr-3 pl-4 py-2">
         <p v-if="!isRetailOrder" class="font-semibold text-white">Lên đơn cho hợp đồng {{ orderPackage?.idPackage }}</p>
         <p v-else class="font-semibold text-white">Lên đơn bán lẻ</p>
         <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="emit('onCloseDialog')"/>
       </div>
-      <div class="grid grid-cols-12 p-3 pt-4 gap-10">
+      <div class="grid grid-cols-12 p-3 pt-4 gap-8">
         <div class="col-span-6">
           <div class="flex items-center justify-between border-b border-gray-400 pb-2 mb-3">
             <p v-if="!isRetailOrder" class="font-semibold text-sm">Lần: {{ deliveryNo }}</p>
@@ -355,6 +407,7 @@ onMounted(() => {
               </div>
             </div>
           </div>
+          <p v-if="showProductError" class="mt-2 text-red-500 font-semibold">Hãy chọn sản phẩm</p>
           <div v-if="isRetailOrder" class="grid grid-cols-12 mt-3">
             <div class="col-span-6">
               <p class="font-semibold !leading-8 text-sm mb-1">Phương thức thanh toán</p>
@@ -430,8 +483,6 @@ onMounted(() => {
               </div>
             </div>
           </div>
-
-          <p v-if="showProductError" class="mt-2 text-red-500 font-semibold">Hãy chọn sản phẩm</p>
         </div>
 
         <div class="col-span-3">
@@ -501,20 +552,40 @@ onMounted(() => {
         </div>
 
         <div class="col-span-3">
-          <div class="flex items-center gap-4 pb-1 mb-3 border-b border-gray-400">
-            <p
-              class="text-sm font-semibold mb-1 w-20"
-              :class="{
-                'required': isRetailOrder
-              }"
-            >
-              SĐT {{ isRetailOrder ? '' : 'phụ' }}
-            </p>
-            <input :disabled="isDisable" v-model="subPhoneNumber" type="text" placeholder="Số điện thoại" class="disabled:cursor-not-allowed w-full h-8 rounded-sm border-gray-400 disabled:!bg-gray-200 disabled:text-gray-600 focus:border-gray-400 focus:outline-none focus:ring-0"
-              :class="{
-                '!border-red-600': retailOrderError.other_code && priceForm.order_code === '' && isRetailOrder
-              }"
-            />
+          <div class="flex pb-1 mb-3 border-b border-gray-400 items-center justify-between">
+            <div class="date-appointment flex gap-1 items-center">
+              <p class="text-sm font-semibold w-22 required">Dự kiến GH</p>
+              <VueDatePicker
+                :class="{
+                  'border-red-600': showDateError && !deliveryAppointment
+                }"
+                class="!w-32 text-sm" v-model="deliveryAppointment" :min-date="minDate" :clearable="false" :enable-time-picker="false" format="dd/MM/yyyy" />
+            </div>
+            <div class="relative">
+              <div class="flex items-center gap-1">
+                <p
+                  class="text-sm font-semibold w-26"
+                  :class="{
+                    'required': isRetailOrder
+                  }"
+                >
+                  SĐT {{ isRetailOrder ? '' : 'phụ' }}
+                </p>
+                <input :disabled="isDisable" v-model="subPhoneNumber" type="text" placeholder="Số điện thoại" class="phone disabled:cursor-not-allowed w-28 px-1 h-8 rounded-sm border-gray-400 disabled:!bg-gray-200 disabled:text-gray-600 focus:border-gray-400 focus:outline-none focus:ring-0"
+                  :class="{
+                    '!border-red-600': retailOrderError.phone_number && subPhoneNumber === '' && isRetailOrder
+                  }"
+                />
+              </div>
+              <p
+                v-if="foundedUser"
+                @click="fillFoundedUserData"
+                title="Điền địa chỉ"
+                class="cursor-pointer !mt-1 absolute bg-white !border-gray-400 rounded-lg p-2 w-max right-0 border">
+                {{ foundedUser.name }} ({{ foundedUser.phone_number }})
+                <i class="fa fa-times ml-4 inline-block" aria-hidden="true" @click="(e) => { e.stopPropagation(); foundedUser = null }"></i>
+              </p>
+            </div>
           </div>
           <div class="mt-3">
             <p class="text-sm font-semibold mb-1">Ghi chú đơn hàng (giờ nhận...)</p>
@@ -541,8 +612,16 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
-
+<style>
+.date-appointment .dp__input {
+  padding: 4px 4px 4px 26px !important;
+}
+.date-appointment .dp__input_icons {
+  padding: 4px !important;
+}
+.date-appointment .border-red-600 .dp__input {
+  border-color: theme('colors.red.600') !important;
+}
 .product-detail {
   --sb-track-color: #9ca3af;
   --sb-thumb-color: #ea580c;
@@ -563,6 +642,16 @@ onMounted(() => {
 .product-detail::-webkit-scrollbar-thumb {
   background: var(--sb-thumb-color);
   border-radius: 1px;
+}
 
-  }
+.phone::-webkit-outer-spin-button,
+.phone::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.phone[type=number] {
+  -moz-appearance: textfield;
+}
 </style>

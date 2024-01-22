@@ -71,7 +71,7 @@
         <div class="flex items-center mb-3">
           <p class="w-28">Dịch vụ</p>
           <div class="flex gap-5 !flex-wrap">
-            <div v-for="service in activeService" class="flex items-center">
+            <div v-for="service in activeService" :key="service.id" class="flex items-center">
               <input v-model="bookingForm.services" :id="`service_${service.id}`" :value="service.id" type="checkbox" class="focus:outline-none focus:ring-0" />
               <label :for="`service_${service.id}`" class="m-0 select-none pl-2">{{ service.name }}</label>
             </div>

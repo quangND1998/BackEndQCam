@@ -64,7 +64,7 @@ watch(visible, (newValue) => {
             </select>
             <select v-model="complaintForm.role_id" class="rounded p-2 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-sm">
               <option disabled selected :value="undefined"> -- Chọn phòng ban -- </option>
-              <option v-for="role in roles" :value="role.id">
+              <option v-for="role in roles" :value="role.id" :key="role.id">
                 {{ role.name.replaceAll('-', ' ') }}
               </option>
             </select>

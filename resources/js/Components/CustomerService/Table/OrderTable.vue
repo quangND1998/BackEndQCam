@@ -31,7 +31,7 @@ import CycleTime from '@/Components/CustomerService/CycleTime.vue';
     <div class="text-center">{{ index + 1 }}</div>
     <div class="col-span-2 pl-1">{{ orderPackage.idPackage }}</div>
     <div class="text-center">{{ orderPackage.product_service.life_time }} {{ cycleYear }}</div>
-    <div v-for="(order, orderIndex) in orders" class="text-center">
+    <div v-for="(order, orderIndex) in orders" :key="order" class="text-center">
       <CycleTime :data="order" :position="orderIndex" :packageIndex="index"  :startDate="orderPackage.product_service_owner.time_approve" :allowPopover="true" />
     </div>
     <div v-if="lifeTime === 1 || cycleYear === lifeTime" class="bg-zinc-700 col-span-2" />

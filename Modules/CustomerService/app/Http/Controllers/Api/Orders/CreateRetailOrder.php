@@ -22,13 +22,15 @@ class CreateRetailOrder extends Controller
             'notes' => 'nullable|string',
             'products.*.id' => 'required|integer|exists:product_retails,id',
             'products.*.quantity' => 'required|integer|min:1',
-            'subPhoneNumber' => 'required|string',
+            'subPhoneNumber' => 'required|numeric',
             'otherPayment.discount_deal' => 'required|numeric|min:0|max:100',
             'otherPayment.order_code' => 'required|string',
             'otherPayment.payment_method' => 'required|in:0,1,2',
             'otherPayment.shipping_fee' => 'required|numeric|min:0',
             'otherPayment.vat' => 'required|numeric|min:0|max:100',
+            'delivery_appointment' => 'required|date|after:today',
         ]);
+
         $data = $this->validateProductCondition((array) $request->products);
         $products = $data['products'];
         $map = $data['map'];
@@ -60,6 +62,7 @@ class CreateRetailOrder extends Controller
                 'payment_method' => $request->otherPayment['payment_method'],
                 'shipping_fee' => $request->otherPayment['shipping_fee'],
                 'vat' => $request->otherPayment['vat'],
+                'delivery_appointment' => $request->delivery_appointment,
             ]);
             $order->orderItems()->createMany(Collection::make($map)->map(function ($item, $itemId) {
                 return [
@@ -69,7 +72,7 @@ class CreateRetailOrder extends Controller
                     'product_id' => $itemId,
                 ];
             })->toArray());
-            $data['products']->each(function ($product) use ($map) {
+            $products->each(function ($product) use ($map) {
                 $product->available_quantity -= $map[$product->id]['quantity'];
                 $product->save();
             });
