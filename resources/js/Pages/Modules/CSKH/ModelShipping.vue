@@ -20,16 +20,16 @@
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/loading-svgrepo-com.png" alt="" class="w-12 h-12 p-2">
                             <p class=" text-xl"
-                                :class="(form.order?.status_transport == 'pending' || form.order?.status_transport == 'packing' || form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'text-[#FF0000]' : ''">
+                                :class="(form.order?.status_transport == 'pending' || form.order?.status_transport == 'packing' || form.order?.status_transport == 'packed' || form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'text-[#FF0000]' : ''">
                                 Chuẩn bị</p>
                         </div>
                         <div class=" arrow mx-1  "
-                            :class="(form.order?.status_transport == 'packing' || form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'active' : ''">
+                            :class="(form.order?.status_transport == 'packing' || form.order?.status_transport == 'packed' || form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'active' : ''">
                         </div>
                         <div class=" mx-1 flex flex-col items-center">
                             <img src="/assets/icon/box.png" alt="" class="w-12 h-12 p-2">
                             <p class="text-base"
-                                :class="(form.order?.status_transport == 'packing' || form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'text-[#FF0000]' : ''">
+                                :class="(form.order?.status_transport == 'packing' || form.order?.status_transport == 'packed' || form.order?.status_transport == 'shipping' || form.order?.status_transport == 'completed') ? 'text-[#FF0000]' : ''">
                                 Đóng gói</p>
                         </div>
                         <div class="arrow mx-1"
@@ -45,13 +45,15 @@
                         </div>
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/success.png" alt="" class="w-12 h-12 p-2">
-                            <p class="text-base" :class="(form.order?.status_transport == 'completed') ? 'text-[#FF0000]' : ''">
+                            <p class="text-base"
+                                :class="(form.order?.status_transport == 'completed') ? 'text-[#FF0000]' : ''">
                                 Thành công</p>
                         </div>
                         <div class="arrow mx-1"></div>
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/backward.png" alt="" class="w-12 h-12 p-2">
-                            <p class="text-base" :class="form.order?.status_transport == 'refund' ? 'text-[#FF0000]' : ''">Hoàn
+                            <p class="text-base" :class="form.order?.status_transport == 'refund' ? 'text-[#FF0000]' : ''">
+                                Hoàn
                             </p>
                         </div>
                     </div>

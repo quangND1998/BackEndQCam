@@ -4,6 +4,7 @@ namespace Modules\Order\app\Http\Controllers\API;
 
 use App\Contracts\OrderContract;
 use App\Enums\OrderDocument;
+use App\Enums\OrderTransportStatus;
 use App\Enums\ShipperStatusEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -56,5 +57,45 @@ class ApiShipperController extends Controller
         $user = Auth::user();
         $orders = Order::with('customer')->where('shipper_id', $user->id)->fillterApi($request->only('search', 'date', 'day', 'shipper_status'))->paginate(1);
         return response()->json($orders, 200);
+    }
+
+    public function confirmShipping(Request $request, $id)
+    {
+        $order = Order::find($id);
+        if ($order) {
+            $order->update([
+                'shipper_status' => ShipperStatusEnum::shipping,
+                'status_transport' => OrderTransportStatus::delivering
+            ]);
+
+            return response()->json($order->load('product_service.product', 'orderItems.product', 'discount', 'customer', 'order_shipper_images'), 200);
+        } else {
+            return response()->json('Không tìm thấy đơn hàng', 404);
+        }
+    }
+
+
+    public function confirmCustomerRecive(Request $request, $id)
+    {
+        $order = Order::find($id);
+        if ($order) {
+            $order->update([
+                'shipper_status' => ShipperStatusEnum::delivered,
+                'status_transport' => OrderTransportStatus::delivered
+            ]);
+            if ($request->images) {
+                foreach ($request->images as $image) {
+                    $order->addMedia($image)->toMediaCollection('order_shipper_images');
+                }
+                $order->update([
+                    'state_document' => OrderDocument::pending
+                ]);
+            }
+
+
+            return response()->json($order->load('product_service.product', 'orderItems.product', 'discount', 'customer', 'order_shipper_images'), 200);
+        } else {
+            return response()->json('Không tìm thấy đơn hàng', 404);
+        }
     }
 }
