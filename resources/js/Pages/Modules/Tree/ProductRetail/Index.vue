@@ -40,6 +40,7 @@ const form = useForm({
     id: null,
     name: null,
     description: null,
+    available_quantity: null,
     price: null,
     images: null
 });
@@ -67,6 +68,7 @@ const edit = (product) => {
     form.name = product.name;
     form.price = product.price;
     form.description = product.description;
+    form.available_quantity = product.available_quantity;
     product_retail.value= product;
 };
 
@@ -79,7 +81,7 @@ const save = () => {
                 editMode.value = true;
             },
             onSuccess: () => {
-                form.reset('id', 'name', 'price', 'description', 'images');
+                form.reset('id', 'name', 'price', 'description', 'images','available_quantity');
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -91,7 +93,7 @@ const save = () => {
                 editMode.value = false;
             },
             onSuccess: () => {
-                form.reset('id', 'name', 'price', 'description', 'images');
+                form.reset('id', 'name', 'price', 'description', 'images','available_quantity');
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -226,6 +228,12 @@ const Delete = (id) => {
 
                     </div>
                     <div>
+                        <div class="flex flex-row">
+                                <InputLabel for="name" value="Số lượng" />
+                                <input v-model="form.available_quantity" type="number"
+                                    :min="0"  />
+                                <InputError class="mt-2" :message="form.errors.available_quantity" />
+                        </div>
                         <div class="">
                             <InputLabel for="name" value="Description" />
                             <label class="input w-full" for="recipient-name">

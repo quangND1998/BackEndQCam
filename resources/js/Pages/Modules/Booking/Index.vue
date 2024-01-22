@@ -200,7 +200,7 @@ const Delete = (id) => {
                                 <div class="w-full flex flex-col items-center ">
                                     <h3 class="text-black text-sm font-medium ">{{ booking.ballot_number }} </h3>
                                         <p :class="booking.status == 'active' ? 'text-[#4F8D06]' : 'text-black' ">
-                                            Đã phát: /{{ booking.history_count }}
+                                            Đã phát: {{ booking.booking_owner_count }}/{{ booking.history_count }}
                                         </p>
                                 </div>
                                 <div class="">

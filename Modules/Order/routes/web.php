@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Order\app\Http\Controllers\CSKH\CSKHOrderController;
+use Modules\Order\app\Http\Controllers\CSKH\GiftDistributeController;
 use Modules\Order\app\Http\Controllers\CskhController;
 use Modules\Order\app\Http\Controllers\HistoryPaymentController;
 use Modules\Order\app\Http\Controllers\OrderController;
@@ -152,6 +153,9 @@ Route::middleware(['auth'])->group(
                 // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
                 // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
                 // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
+            });
+            Route::prefix('gift_distribute')->as('gift_distribute.')->group(function () {
+                Route::get('index', [GiftDistributeController::class, 'index'])->name('index');
             });
         });
     }
