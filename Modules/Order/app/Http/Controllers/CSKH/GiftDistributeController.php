@@ -51,8 +51,11 @@ class GiftDistributeController extends Controller
 
             if(count($order->distributeDate) == 0){
 
-                $date = Carbon::parse($order->time_approve)->addDays($dayDistant);
                 for($i=0; $i<12; $i++){
+                    $date = Carbon::parse($order->time_approve)->addDays($dayDistant);
+                    if($date->isWeekend()){
+                        $date = $date->subDays(1);
+                    }
                     $distributeDate = new DistributeDate;
                     $distributeDate->date_recevie = $date;
                     $distributeDate->order_package_id = $order->id;
