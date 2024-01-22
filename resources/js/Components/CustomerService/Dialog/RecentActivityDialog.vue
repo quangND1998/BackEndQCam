@@ -13,7 +13,7 @@ const visible = ref(false);
       </div>
       <div class="px-4 my-3 h-[361px] overflow-y-auto">
         <div class="border border-gray-400 !border-b-0 mb-8">
-          <div class="grid grid-cols-6 text-center text-sm text-white font-medium bg-gray-400 py-2">
+          <div class="grid grid-cols-6 text-center text-sm text-white font-medium bg-gray-400 leading-6 divide-x divide-white">
             <div>STT</div>
             <div class="col-span-2">Đơn hàng</div>
             <div>Loại</div>
@@ -34,9 +34,9 @@ const visible = ref(false);
           <div class=" text-sm text-center border-b border-gray-400 h-5"></div>
         </div>
         <div class="border border-gray-400 !border-b-0 mb-8">
-          <div class="grid grid-cols-6 text-center text-sm text-white font-medium bg-gray-400 py-2">
+          <div class="grid grid-cols-6 text-center text-sm text-white font-medium bg-gray-400 leading-6 divide-x divide-white">
             <div>STT</div>
-            <div class="col-span-2">Đơn hàng</div>
+            <div class="col-span-2">Booking</div>
             <div class="col-span-3">Trạng thái</div>
           </div>
           <div class="grid grid-cols-6 divide-x divide-gray-400 text-sm text-center leading-5 border-b border-gray-400">
@@ -52,7 +52,7 @@ const visible = ref(false);
           <div class=" text-sm text-center border-b border-gray-400 h-5"></div>
         </div>
         <div class="border border-gray-400 !border-b-0">
-          <div class="grid grid-cols-6 text-center text-sm text-white font-medium bg-gray-400 py-2">
+          <div class="grid grid-cols-6 text-center text-sm text-white font-medium bg-gray-400 leading-6 divide-x divide-white">
             <div>STT</div>
             <div class="col-span-2">Khiếu nại</div>
             <div class="col-span-3">Trạng thái</div>

@@ -1,13 +1,17 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, inject, ref } from 'vue';
 import moment from 'moment';
 
 import { SCHEDULE_VISIT_STATE, CYCLE_TIME } from '@/Components/CustomerService/stuffs/constants';
+import { arrow, useFloating, autoUpdate } from '@floating-ui/vue';
+
+const { onOpenEditOrderDialog } = inject('ORDER')
 
 const props = defineProps({
   data: Object,
   position: Number,
   startDate: String,
+  packageIndex: Number,
   allowEmpty: {
     required: false,
     default: false,
@@ -16,29 +20,122 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  allowPopover: {
+    required: false,
+    default: false,
+  }
+});
+
+const reference = ref(null);
+const floating = ref(null);
+const showPopover = ref(false);
+const floatingArrow = ref(null);
+const timeoutRef = ref();
+const { floatingStyles, middlewareData } = useFloating(reference, floating, {
+  middleware: [
+    arrow({ element: floatingArrow }),
+  ],
+  whileElementsMounted: autoUpdate,
 });
 
 const date = computed(() => {
-  if (props.data) {
+  if (props.data && props.data.state) {
     return moment(props.data.date_time, 'YYYY-MM-DD HH:mm:ss');
   }
   const subtractDate = moment(props.startDate, 'YYYY-MM-DD HH:mm:ss').weekday() === 7 ? 1 : 0;
   return moment(props.startDate, 'YYYY-MM-DD HH:mm:ss').add((props.position + 1) * CYCLE_TIME - subtractDate, 'days');
 });
 const cellStyle = computed(() => {
+  if (props.data && props.data?.status === 'complete') return 'bg-emerald-600 text-white';
   if (!props.data && props.showEmpty) return 'bg-zinc-700 text-zinc-700 select-none';
-  if (props.data && props.data.state === SCHEDULE_VISIT_STATE.COMPLETE) return 'bg-emerald-600 text-white';
-  if (props.data && props.data.state === SCHEDULE_VISIT_STATE.CANCEL) return 'bg-red-600 text-white';
-  if (props.data && date.value.diff(new Date(), 'seconds') > 0) return 'bg-yellow-600 text-white';
-  if (date.value.diff(new Date(), 'seconds') < 0 && !props.allowEmpty) return 'bg-red-600 text-white';
+  if (props.data && props.data?.state === SCHEDULE_VISIT_STATE.COMPLETE) return 'bg-emerald-600 text-white';
+  if (props.data && props.data?.state === SCHEDULE_VISIT_STATE.CANCEL) return 'bg-red-600 text-white';
+  if (props.data && props.data?.state === SCHEDULE_VISIT_STATE.PENDING && date.value.diff(new Date(), 'days') < 0) return 'bg-red-600 text-white';
+  if (props.data && date.value.diff(new Date(), 'days') >= 0) return 'bg-yellow-600 text-white';
+  if (date.value.diff(new Date(), 'days') < 0 && !props.allowEmpty) return 'bg-red-600 text-white';
   if (!props.data) return 'bg-zinc-700 text-white';
 });
 const displayText = computed(() => {
   if (!props.data && props.showEmpty) return 'Chưa thăm';
   return date.value.format('DD/MM/YYYY');
 })
+
+const openPopover = () => {
+  clearTimeout(timeoutRef.value);
+  timeoutRef.value = setTimeout(() => { showPopover.value = true }, 200);
+}
+const closePopover = () => {
+  clearTimeout(timeoutRef.value);
+  showPopover.value = false;
+}
+const onUpdateOrder = () => {
+  if (!props.data) return;
+  onOpenEditOrderDialog(props.data, props.position, props.packageIndex);
+}
 </script>
 
 <template>
-  <p class="text-xs leading-5 cursor-pointer" :class="cellStyle">{{ displayText }}</p>
+  <div @mouseover="openPopover" @mouseleave="closePopover">
+    <p ref="reference" class="text-xs leading-5 cursor-pointer" :class="cellStyle">{{ displayText }}</p>
+
+    <div v-if="data && data.order_number && allowPopover" v-show="showPopover" ref="floating" :style="floatingStyles"
+      class="bg-white rounded-lg border !border-gray-400 py-3">
+      <div ref="floatingArrow" class="triangle" :style="{
+        position: 'absolute',
+        left:
+          middlewareData.arrow?.x != null
+            ? `${middlewareData.arrow.x}px`
+            : '',
+        top: `calc(${-floatingArrow?.offsetWidth}px + 26px)`,
+      }"></div>
+      <div></div>
+      <div class="mb-2 px-3 flex items-center justify-between">
+        <p class="text-left l-3 font-semibold">Lịch sử nhận quà lần {{ position + 1 }}</p>
+        <button
+          class="rounded-md bg-orange-600 text-white relative font-medium px-3 py-2"
+          @click="onUpdateOrder"
+        >
+          Cập nhật đơn
+        </button>
+      </div>
+      <div class="grid grid-cols-12 items-center bg-gray-400 text-white font-bold leading-6 w-[700px]">
+        <div>STT</div>
+        <div class="col-span-3">Ngày</div>
+        <div class="col-span-8 text-left pl-2">Mô tả</div>
+      </div>
+      <div class="h-[300px] overflow-y-auto">
+        <div v-for="(history, index) in data?.shipping_history || []" :key="history.id"
+          class="grid grid-cols-12  divide-x divide-gray-400 border-gray-400 border-b border-x text-sm">
+          <div>{{ index + 1 }}</div>
+          <div class="col-span-3">{{ moment(history.created_at, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY') }}</div>
+          <div class="col-span-8 text-left pl-2">{{ history.note }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.triangle {
+  position: relative;
+  width: 0px;
+  height: 0px;
+  border-style: solid;
+  border-width: 0 16px 6px 16px;
+  border-color: transparent transparent #ffffff transparent;
+  transform: rotate(0deg);
+}
+.triangle::after, .triangle::before {
+  content: '';
+  position: absolute;
+  width: 50px;
+  height: 10px;
+  top: 0;
+}
+.triangle::after {
+  left: 0;
+}
+.triangle::before {
+  right: 0;
+}
+</style>
