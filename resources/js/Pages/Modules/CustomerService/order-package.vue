@@ -7,7 +7,7 @@ import OrderTableSection from "@/Components/CustomerService/OrderTableSection.vu
 import ScheduleVisitSection from "@/Components/CustomerService/ScheduleVisitSection.vue";
 import NoteDialog from "@/Components/CustomerService/Dialog/NoteDialog.vue";
 import ComplaintDialog from "@/Components/CustomerService/Dialog/ComplaintDialog.vue";
-import RecentActivityDialog from "@/Components/CustomerService/Dialog/RecentActivityDialog.vue";
+// import RecentActivityDialog from "@/Components/CustomerService/Dialog/RecentActivityDialog.vue";
 import ExtraServiceDialog from '@/Components/CustomerService/Dialog/ExtraServiceDialog.vue';
 import OrderDialog from '@/Components/CustomerService/Dialog/OrderDialog.vue';
 import ContractCard from '@/Components/CustomerService/ContractCard.vue';
@@ -139,12 +139,14 @@ watch(orderDialogVisible, (newValue) => {
 });
 
 const showRecentActivityDialog = ref(false);
-
 </script>
 
 <template>
     <Head title="Customer Order Packages" />
-    <div class="pt-10 pb-20 px-10 bg-slate-100">
+    <div class="pt-3 pb-20 px-10 bg-slate-100 relative min-h-screen">
+      <a class="mb-3 font-bold inline-block cursor-pointer hover:!text-sky-600">
+        <i class="fa fa-arrow-left mr-2" aria-hidden="true"></i> Quay lại
+      </a>
       <div ref="tableRef">
         <OrderTableSection :orderPackages="orderPackages" :declineOrderPackageCount="declineOrderPackageCount" class="mb-3" />
         <ScheduleVisitSection :orderPackages="orderPackages" />

@@ -52,7 +52,7 @@ import CycleTime from '@/Components/CustomerService/CycleTime.vue';
       <div class="text-center">{{ index + 1 }}</div>
       <div class="col-span-2 pl-1">{{ orderPackage.idPackage }}</div>
       <div class="text-center">{{ orderPackage.product_service.life_time }} {{ cycleYear }}</div>
-      <div v-for="(visit, visitIndex) in visits" class="text-center">
+      <div v-for="(visit, visitIndex) in visits" :key="visitIndex" class="text-center">
         <CycleTime :data="visit" :position="visitIndex - subtractPosition" :packageIndex="index" :startDate="startDate"
           :allowEmpty="true" :showEmpty="true" />
       </div>

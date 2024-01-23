@@ -70,7 +70,7 @@ onMounted(() => {
         <SpinnerIcon class="!m-0 !w-10 !h-10" />
       </div>
       <tempate v-else>
-        <div v-for="(visit, index) in data?.latestVisits || []" class="text-sm grid grid-cols-12 bg-white divide-x divide-gray-400 text-center leading-8 border-x border-b border-gray-400">
+        <div v-for="(visit, index) in data?.latestVisits || []" :key="visit.id" class="text-sm grid grid-cols-12 bg-white divide-x divide-gray-400 text-center leading-8 border-x border-b border-gray-400">
           <div class="flex items-center justify-center">{{ index + 1 }}</div>
           <div class="col-span-2 flex items-center justify-center">{{ visit?.product_owner_service?.order_package?.idPackage }}</div>
           <div class="col-span-2 text-left pl-2 flex flex-col justify-center">
@@ -104,7 +104,7 @@ onMounted(() => {
         <SpinnerIcon class="!m-0 !w-10 !h-10" />
       </div>
       <tempate v-else>
-        <div v-for="(complaint, index) in data?.latestComplaints || []" class="grid grid-cols-12 bg-white divide-x divide-gray-400 text-center leading-8 border-x border-b border-gray-400 text-sm">
+        <div v-for="(complaint, index) in data?.latestComplaints || []"  :key="complaint.id" class="grid grid-cols-12 bg-white divide-x divide-gray-400 text-center leading-8 border-x border-b border-gray-400 text-sm">
           <div class="flex items-center justify-center">{{ index + 1 }}</div>
           <div class="col-span-2 flex items-center justify-center">
             <Status :status="complaint.severity" />

@@ -11,7 +11,7 @@ use Modules\Order\app\Models\OrderPackage;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Modules\CustomerService\app\Models\DistributeDate;
-
+use App\Models\User;
 class GiftDistributeController extends Controller
 {
     /**
@@ -19,31 +19,50 @@ class GiftDistributeController extends Controller
      */
     public function index(Request $request)
     {
-        $results = OrderPackage::with(['customer','distributeDate', 'product_service','historyPayment.order_package_payment','historyPayment.user','saler','product_service_owner','history_extend.contract.lastcontract.images'])->role()->whereHas(
-            'customer',
-            function ($q) use ($request) {
-                $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','%' . $request->search . '%');
-            }
-        )
-
-        ->orwhere('order_number', 'LIKE', '%' . $request->search . '%')
-        ->orwhere('idPackage', 'LIKE', '%' . $request->search . '%')
-        ->role()
-        ->where('status','complete')
-        ->fillter($request->only('from', 'to', 'payment_status', 'payment_method', 'type','document_status'));
-        $orderPackages = $results->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 5);
+        $orderPackages = $this->getOrderPackage($request);
+        //  return $orderPackages;
 
         $this->distributeDate($orderPackages);
-        // return $orderPackages;
+
         return Inertia::render('Modules/CSKH/gift_distribution', compact('orderPackages'));
     }
-
+    public function getRolePackage(Request $request){
+        $orderPackages = $this->getOrderPackage($request);
+        // return $orderPackages;
+        return Inertia::render('Modules/CSKH/Role', compact('orderPackages'));
+    }
+    public function getSchedule(Request $request){
+        $orderPackages = $this->getOrderPackage($request);
+        $cskh = User::whereHas(
+            'roles',
+            function ($query) {
+                $query->where('name', 'cskh');
+            }
+        )->get();
+        return Inertia::render('Modules/CSKH/Schedule', compact('orderPackages','cskh'));
+    }
     public function groupByOrderStatus()
     {
         // chua nhan qua l2
         // qua han 15 ngay chua nhan qua
 
     }
+    public function getOrderPackage($request){
+        $results = OrderPackage::with(['customer','product_service','distributeDate','historyPayment.order_package_payment','historyPayment.user','product_service_owner.product','history_extend.contract.lastcontract.images'])->role()->whereHas(
+            'customer',
+            function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','LIKE','%' . $request->search . '%');
+            }
+        )
+        ->role()
+        ->where('status','complete')
+        ->orderBy('user_id')->orderBy('created_at', 'desc')
+        ->fillter($request->only('search'));
+
+        $orderPackages = $results->paginate($request->per_page ? $request->per_page : 5);
+        return $orderPackages;
+    }
+
     public function distributeDate($orderPackages){
         // toi da tao 12 lan, Ngày nhận quà = ngày kích hoạt  + 25 ngày. trùng ngày chủ nhật chuyển trước 1 ngày
         $dayDistant = 25;
@@ -51,7 +70,7 @@ class GiftDistributeController extends Controller
 
             if(count($order->distributeDate) == 0){
 
-                for($i=0; $i<12; $i++){
+                for($i=0; $i<$order->product_service->number_receive_product; $i++){
                     $date = Carbon::parse($order->time_approve)->addDays($dayDistant);
                     if($date->isWeekend()){
                         $date = $date->subDays(1);

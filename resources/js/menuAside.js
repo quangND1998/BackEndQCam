@@ -148,37 +148,37 @@ export default [{
                 route: 'admin.booking.index',
                 label: 'QLHS',
 
-                permissions: ['super-admin'],
+                permissions: ['super-admin','cskh'],
                 route_list: ['admin.booking.index','admin.booking.detail']
             },
             {
                 route: 'admin.gift_distribute.index',
                 label: 'Bảng PB quà',
-                permissions: ['super-admin'],
+                permissions: ['super-admin','cskh'],
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'admin.gift_distribute.role',
                 label: 'Quyền hợp đồng',
-                permissions: ['super-admin'],
+                permissions: ['super-admin','cskh'],
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'admin.gift_distribute.schedule',
                 label: 'Lên KH',
-                permissions: ['super-admin'],
+                permissions: ['super-admin','cskh'],
                 route_list: null
             },
             {
                 route: 'admin.orders.package.all',
                 label: 'Pending',
-                permissions: ['super-admin'],
+                permissions: ['super-admin','cskh'],
                 route_list: null
             },
             {
                 route: 'admin.orders.package.all',
                 label: 'Call Center',
-                permissions: ['super-admin'],
+                permissions: ['super-admin','cskh'],
                 route_list: null
             },
         ]

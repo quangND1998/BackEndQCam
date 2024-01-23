@@ -67,7 +67,8 @@ class OrderPackage extends Model implements HasMedia
     {
         if (isset($filters['search']) && isset($filters['search'])) {
 
-            $query->where('order_number', 'like', '%' . $filters['search'] . '%');
+            $query->orwhere('order_number', 'like', '%' . $filters['search'] . '%')
+            ->orwhere('idPackage', 'like', '%' . $filters['search'] . '%');
         }
         if (isset($filters['from']) && isset($filters['to'])) {
 

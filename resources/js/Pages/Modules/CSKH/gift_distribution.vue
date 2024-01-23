@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, inject, reactive, toRef } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import Pagination from "@/Components/Pagination.vue";
+import Pagination from "@/Components/PaginationDefault.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
@@ -29,7 +29,8 @@ import {
     mdiArrowLeftBoldCircleOutline,
     mdiLayersTripleOutline,
     mdiPhone,
-    mdiBellRingOutline
+    mdiBellRingOutline,
+    mdiCalendarRange
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -95,18 +96,8 @@ const state = reactive({
 })
 initFlowbite();
 
-const searchCustomer = () => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
-
 const search = () => {
-    router.get(route(`admin.orders.${props.status}`),
+    router.get(route(`admin.gift_distribute.index`),
         filter,
         {
             preserveState: true,
@@ -121,17 +112,6 @@ const contents = ref([
     { id: 3, text: 'Content 3' },
 ]);
 
-
-
-const changeDate = () => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
 const selected = ref([])
 const selectAll = computed({
     get() {
@@ -165,7 +145,7 @@ const totalOrder = (status) => {
         <ModelShipping></ModelShipping>
 
         <Head title="Bảng phân bố quà theo hợp đồng" />
-        <SectionMain class="p-3 mt-10">
+        <SectionMain class="p-1 mt-10">
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
                 <div>
                     <h2 class="font-semibold  flex mr-2">
@@ -176,20 +156,22 @@ const totalOrder = (status) => {
             <div class="w-full my-3 flex">
                 <div class="w-1/3">
                     <div class="w-full flex items-center py-2">
-                        <BaseIcon  :path="mdiBellRingOutline " class=" text-[#ff0000] rounded-lg mr-2 " size="20"></BaseIcon>
-                        <p class="text-[#ff0000] cursor-pointer" >Hợp đồng chưa nhận quà lần 2 (10)</p>
+                        <BaseIcon :path="mdiBellRingOutline" class=" text-[#ff0000] rounded-lg mr-2 " size="20"></BaseIcon>
+                        <p class="text-[#ff0000] cursor-pointer">Hợp đồng chưa nhận quà lần 2 (10)</p>
                     </div>
                     <div class="w-full flex items-center mb-2">
-                        <BaseIcon  :path="mdiBellRingOutline " class=" text-[#ff0000] rounded-lg mr-2 " size="20"></BaseIcon>
-                        <p class="text-[#ff0000] cursor-pointer" >Hơp đồng quá hạn 15 ngày chưa nhận quà (5)</p>
+                        <BaseIcon :path="mdiBellRingOutline" class=" text-[#ff0000] rounded-lg mr-2 " size="20"></BaseIcon>
+                        <p class="text-[#ff0000] cursor-pointer">Hơp đồng quá hạn 15 ngày chưa nhận quà (5)</p>
                     </div>
                 </div>
                 <div class="w-2/3">
                     <div class="w-full flex items-center">
-                        <p class="text-[#000000] py-2" >Ngày nhận quà = ngày kích hoạt  + 25 ngày. trùng ngày chủ nhật chuyển trước 1 ngày</p>
+                        <p class="text-[#000000] py-2">Ngày nhận quà = ngày kích hoạt + 25 ngày. trùng ngày chủ nhật chuyển
+                            trước 1 ngày</p>
                     </div>
                     <div class="w-full flex items-center">
-                        <p class="text-[#000000]" >Lúc lên đơn sẽ chọn ngày giao dự kiến, tính từ ngày giao dự kiến + 5 ngày mà đơn hàng chưa giao thành công => chưa nhận </p>
+                        <p class="text-[#000000]">Lúc lên đơn sẽ chọn ngày giao dự kiến, tính từ ngày giao dự kiến + 5 ngày
+                            mà đơn hàng chưa giao thành công => chưa nhận </p>
                     </div>
                 </div>
             </div>
@@ -204,7 +186,7 @@ const totalOrder = (status) => {
                     </div>
                     <div class="flex items-center">
                         <div class="mr-4">
-                            <div class="min-[320px]:w-full form_search">
+                            <div class="mx-2 min-[320px]:w-full form_search">
                                 <form v-on:submit.prevent>
                                     <div class="relative">
 
@@ -227,7 +209,7 @@ const totalOrder = (status) => {
                         </div>
                         <p class="font-bold px-3"> Tổng: 59</p>
                         <p class="font-bold px-3"> Chưa giao lần 2: 14</p>
-                        <p class="font-bold px-3"> Quá hạn 15 ngày:  5</p>
+                        <p class="font-bold px-3"> Quá hạn 15 ngày: 5</p>
                         <p class="font-bold px-3"> Dự kiến 10 ngày tới: 30</p>
                     </div>
                     <button class="w-[100px] py-1 rounded bg-[#E9E9E9]">Xuất</button>
@@ -241,23 +223,59 @@ const totalOrder = (status) => {
                         <div class="text-center py-2 border">Loại HĐ</div>
                         <div class="text-center py-2 border">Tên KH</div>
                         <div class="text-center py-2 border">Ngày kích hoạt</div>
-                        <div v-for="n in 12" :key="n" class="text-center py-2 border-0">Lần {{n}}</div>
+                        <div v-for="n in 12" :key="n" class="text-center py-2 border-0">Lần {{ n }}</div>
                         <div class="text-center py-2 border-0"></div>
                     </div>
-                    <div v-for="(orderPackage, index) in orderPackages.data" :key="orderPackage.id" :index="index" :orderPackage="orderPackage" class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
-                        <div class="text-center border">{{ index + 1 }}</div>
-                        <div class="pl-2 text-[#FF0000] border">{{ orderPackage.idPackage }}</div>
+                    <div v-for="(orderPackage, index) in orderPackages.data" :key="orderPackage.id" :index="index"
+                        :orderPackage="orderPackage"
+                        class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
+                        <div class="text-center border">{{ index + orderPackages.from }}</div>
+                        <div class=" text-[#FF0000] font-bold px-1 text-[13px] border">{{ orderPackage.idPackage }}</div>
                         <div class="text-center border">{{ orderPackage.product_service?.life_time }}</div>
                         <div class="text-center border">{{ orderPackage.customer?.name }}</div>
                         <div class="text-center border">{{ orderPackage.time_approve }}</div>
-                        <div v-for="date in orderPackage?.distribute_date" :key="date.id" class="text-center py-2 border-0">
-                           <div class="bg-[#3D3C3C] m-1 py-2  text-white">{{ date.date_recevie }}</div>
+                        <div v-for="(date, indexD) in orderPackage?.distribute_date" :key="indexD">
+                            <div v-if="indexD < 13" class="text-center py-2 border-0">
+                                <div class="bg-[#3D3C3C] text-[12px] m-1 px-1 py-1  text-white">
+                                    {{ date.date_recevie }}
+                                    0
+                                </div>
+                            </div>
                         </div>
+
 
                     </div>
                 </div>
+                <div class="w-full flex items-center justify-between  my-3">
+                    <pagination :links="orderPackages.links" />
 
+                </div>
+                <div class="w-full flex items-center justify-center mx-auto ">
+                        <div class="flex ">
+                            <BaseIcon :path="mdiCalendarRange" class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
+                                size="20"></BaseIcon>
+                            <label>{{ currentDate() }}</label>
+                        </div>
+                        <div class="flex px-2 items-center mx-2">
+                            <div class="flex items-center">
+                                <div class="bg-[#4F8D06] w-4 h-4 mx-2 rounded"></div>
+                                Thành công
+                            </div>
+                            <div class="flex items-center mx-2">
+                                <div class="bg-[#FF0303] w-4 h-4 mx-2 rounded"></div>
+                                Chưa nhận
+                            </div>
+                            <div class="flex items-center">
+                                <div class="bg-[#FFD600] w-4 h-4 mx-2 rounded"></div>
+                                Dự kiến trước 10 ngày
+                            </div>
+                            <div class="flex items-center mx-2">
+                                <div class="bg-[#FF6100] w-4 h-4 mx-2 rounded"></div>
+                                Đã lên đơn
+                            </div>
+                        </div>
 
+                    </div>
             </div>
 
         </SectionMain>
@@ -303,5 +321,4 @@ const totalOrder = (status) => {
 
 .v-calendar .input-field svg.datepicker {
     fill: #65716b;
-}
-</style>
+}</style>

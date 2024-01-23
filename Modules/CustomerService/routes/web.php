@@ -18,6 +18,8 @@ use Modules\CustomerService\app\Http\Controllers\GetCustomerOrderPackage;
 use Modules\CustomerService\app\Http\Controllers\Api\Reminds\GetRemind;
 use Modules\CustomerService\app\Http\Controllers\Api\Reminds\UpdateRemind;
 use Modules\CustomerService\app\Http\Controllers\GetRecentActivity;
+use Modules\CustomerService\app\Http\Controllers\GetUserByPhoneNumber;
+use Modules\CustomerService\app\Http\Controllers\GetWeeklyPlan;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,10 +50,12 @@ Route::middleware(['auth'])->group(
 
 
         Route::prefix('/customer-service')->group(function () {
+            Route::get('/weekly-plan', GetWeeklyPlan::class);
             Route::post('/orders', CreateRetailOrder::class);
             Route::get('/reminds', GetRemind::class);
             Route::put('/reminds/{remind}', UpdateRemind::class);
             Route::get('/product-retails', GetProductRetails::class);
+            Route::get('/find-user-by-phone-number', GetUserByPhoneNumber::class);
         });
 
         Route::prefix('/extra-services')->group(function () {
