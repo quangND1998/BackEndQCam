@@ -12,7 +12,6 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class ComplaintManagement extends Model
 {
-    use HasFactory;
     protected $table = 'complaint_management';
     /**
      * The attributes that are mass assignable.
@@ -35,4 +34,8 @@ class ComplaintManagement extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 }

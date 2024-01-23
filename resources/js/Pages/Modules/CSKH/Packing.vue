@@ -46,6 +46,7 @@ import { initFlowbite } from "flowbite";
 import OrderHome from "@/Pages/Test/OrderHome.vue";
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue";
 import { emitter } from "@/composable/useEmitter";
+import OrderStatusBar from "./OrderStatusBar.vue";
 const props = defineProps({
     orders: Object,
     status: String,
@@ -54,8 +55,8 @@ const props = defineProps({
     to: String,
     statusGroup: Array,
     shippers: Array,
+    count_orders: Number
 });
-
 const list_order = toRef(props.orders.data);
 const filter = reactive({
     customer: null,

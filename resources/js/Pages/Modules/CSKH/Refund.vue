@@ -46,6 +46,7 @@ import { initFlowbite } from "flowbite";
 import OrderHome from "@/Pages/Test/OrderHome.vue";
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue";
 import { emitter } from "@/composable/useEmitter";
+import OrderStatusBar from "./OrderStatusBar.vue";
 const props = defineProps({
     orders: Object,
     status: String,
@@ -54,6 +55,7 @@ const props = defineProps({
     to: String,
     statusGroup: Array,
     shippers: Array,
+    count_orders: Number
 });
 
 const list_order = toRef(props.orders.data);
@@ -290,6 +292,7 @@ const selectAll = computed({
                         </div>
                     </div>
                 </div>
+                      <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders"></OrderStatusBar>
                 <div class="my-3 w-full flex justify-between">
                     <button v-if="selected.length > 0" @click="packedOrders()"
                         class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">

@@ -61,6 +61,7 @@ class CSKHOrderController extends Controller
     }
     public function index(Request $request)
     {
+        $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
@@ -75,6 +76,7 @@ class CSKHOrderController extends Controller
 
     public function pending(Request $request)
     {
+        $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportStatus::pending;
@@ -82,98 +84,118 @@ class CSKHOrderController extends Controller
         $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
 
-        // return $orders;
         // dd($statusGroup);
-        return Inertia::render('Modules/CSKH/Pending', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+        return Inertia::render('Modules/CSKH/Pending', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders'));
     }
-    public function packing(Request $request)
-    {
-        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
-        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = OrderTransportStatus::packed;
-        $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
-        $shippers = $this->shipperRepository->getShipper();
 
-        // return $orders;
-        // dd($statusGroup);
-        return Inertia::render('Modules/CSKH/Packing', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
-    }
     public function packed(Request $request)
     {
-
-
+        $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportStatus::packed;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
-        return Inertia::render('Modules/CSKH/Packed', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+        return Inertia::render(
+            'Modules/CSKH/Packed',
+            compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+        );
+    }
+
+
+    public function not_shipper_receive(Request $request)
+    {
+        $count_orders = Order::where('state', true)->count();
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = OrderTransportStatus::not_shipper_receive;
+        $orders =  $this->orderRepository->getOrderGift($request, $status);
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render(
+            'Modules/CSKH/NotShipperReceive',
+            compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+        );
     }
     public function shipping(Request $request)
     {
 
-
+        $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportStatus::delivering;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
-        return Inertia::render('Modules/CSKH/Shipping', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+        return Inertia::render(
+            'Modules/CSKH/Shipping',
+            compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+        );
     }
 
     public function delivered(Request $request)
     {
 
-
+        $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportStatus::delivered;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
-        return Inertia::render('Modules/CSKH/Delivered', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+        return Inertia::render(
+            'Modules/CSKH/Delivered',
+            compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+        );
     }
 
     public function refunding(Request $request)
     {
 
-
+        $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportStatus::refunding;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
-        return Inertia::render('Modules/CSKH/Refunding', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+        return Inertia::render(
+            'Modules/CSKH/Refunding',
+            compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+        );
     }
 
     public function refund(Request $request)
     {
 
-
+        $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportStatus::refund;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
-        return Inertia::render('Modules/CSKH/Refund', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+        return Inertia::render(
+            'Modules/CSKH/Refund',
+            compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+        );
     }
 
     public function decline(Request $request)
     {
 
-
+        $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportStatus::decline;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
-        return Inertia::render('Modules/CSKH/Delivered', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+        return Inertia::render(
+            'Modules/CSKH/Delivered',
+            compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+        );
     }
 
 

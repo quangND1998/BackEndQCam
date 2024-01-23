@@ -1,7 +1,7 @@
 <script setup>
 import { emitter } from '@/composable/useEmitter';
 import { computed } from 'vue';
-import OrderShipperStatus from './OrderShipperStatus.vue';
+
 const props = defineProps({
     order: Object,
 });

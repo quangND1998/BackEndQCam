@@ -2,13 +2,22 @@
 
 namespace App\Http\Middleware;
 
+use App\Contracts\OrderContract;
+use App\Enums\OrderTransportStatus;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Modules\Landingpage\app\Models\Contact;
+use Modules\Order\app\Models\Order;
+use Modules\Order\Repositories\OrderRepository;
 use Tightenco\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
+    protected $orderRepository;
+    public function __construct(OrderContract $orderRepository)
+    {
+        $this->orderRepository = $orderRepository;
+    }
     /**
      * The root template that is loaded on the first page visit.
      *
@@ -57,7 +66,7 @@ class HandleInertiaRequests extends Middleware
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
-                'query'=>$request->query()
+                'query' => $request->query()
             ],
             'flash' => function () use ($request) {
                 return [
@@ -67,7 +76,9 @@ class HandleInertiaRequests extends Middleware
                 ];
             },
             'company_infor' => Contact::first(),
-            'author' => 'Quang Nguyens'
+            'author' => 'Quang Nguyens',
+            'order_status' => $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport'),
+            'count_orders' => Order::where('state', true)->count()
         ];
     }
 }

@@ -28,7 +28,7 @@
   const scheduleVisitId = ref();
   const bookingForm = reactive(cloneDeep(initData));
   const minDate = computed(() => new Date());
-  const activeService = computed(() => extraServices.filter((service) => service.is_active));
+  const activeService = computed(() => extraServices.value.filter((service) => service.is_active));
 
   watch(() => bookingForm.date, (newVal) => {
     bookingForm.date_time = moment(newVal).format('YYYY-MM-DD HH:mm:ss');
@@ -47,8 +47,8 @@
 </script>
 
 <template>
-  <div class="relative">
-    <div v-if="visible" class="mt-4 w-[700px] rounded-lg bg-white shadow-lg absolute -top-[272px] left-[300px] z-10">
+  <div v-if="visible" class="fixed w-screen h-screen bg-black/40 top-0 left-0 z-50 overflow-hidden flex items-center justify-center rounded-lg">
+    <div class="mt-4 w-[700px] rounded-xl bg-white shadow-lg z-10">
       <div class="flex items-center justify-between rounded-t-lg bg-yellow-500 pr-3 pl-4 py-2">
         <p class="font-semibold">Booking theo HD {{ packageId }}</p>
         <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="visible = false"/>
@@ -71,7 +71,7 @@
         <div class="flex items-center mb-3">
           <p class="w-28">Dịch vụ</p>
           <div class="flex gap-5 !flex-wrap">
-            <div v-for="service in activeService" class="flex items-center">
+            <div v-for="service in activeService" :key="service.id" class="flex items-center">
               <input v-model="bookingForm.services" :id="`service_${service.id}`" :value="service.id" type="checkbox" class="focus:outline-none focus:ring-0" />
               <label :for="`service_${service.id}`" class="m-0 select-none pl-2">{{ service.name }}</label>
             </div>
@@ -79,7 +79,7 @@
         </div>
         <div class="flex mb-4">
           <p class="w-28">Ghi chú</p>
-          <textarea v-model="bookingForm.description" class="flex-1 resize-none rounded bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
+          <textarea v-model="bookingForm.description" class="flex-1 resize-none rounded focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
         </div>
         <div class="flex justify-end">
           <button class="rounded-md bg-sky-600 text-white font-medium px-3 py-2 mb-2" @click="executeQuery">
@@ -89,6 +89,6 @@
         <DialogLoading v-if="isLoading" text="Booking" />
       </div>
     </div>
-    <button class="rounded-full bg-sky-600 text-white font-medium px-3 py-2 mb-2" @click="visible = !visible">Booking</button>
   </div>
+  <button class="rounded-full bg-sky-600 text-white font-medium px-3 py-2 mb-2" @click="visible = !visible">Booking</button>
 </template>

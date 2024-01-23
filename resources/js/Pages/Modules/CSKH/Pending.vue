@@ -5,15 +5,9 @@ import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import CardBox from "@/Components/CardBox.vue";
-import CardBoxModal from "@/Components/CardBoxModal.vue";
-import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
 import ModelShipping from "./ModelShipping.vue";
-// import ModalDecline from "./ModalDecline.vue";
-// import ModelRefund from "./ModelRefund.vue";
-// import ModalShipping from "./ModalShipping.vue";
 import OrderStatus from "./OrderStatus.vue";
 import {
     mdiEye,
@@ -32,20 +26,11 @@ import {
     mdiPhone,
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
-import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-
-import Dropdown from "@/Components/Dropdown.vue";
 import BaseIcon from "@/Components/BaseIcon.vue";
-import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
-import MazInputPrice from "maz-ui/components/MazInputPrice";
 import { initFlowbite } from "flowbite";
-import OrderHome from "@/Pages/Test/OrderHome.vue";
-import OrderRow from "@/Pages/Modules/Order/OrderRow.vue";
 import { emitter } from "@/composable/useEmitter";
+import OrderStatusBar from "./OrderStatusBar.vue";
 const props = defineProps({
     orders: Object,
     status: String,
@@ -54,6 +39,7 @@ const props = defineProps({
     to: String,
     statusGroup: Array,
     shippers: Array,
+    count_orders: Number
 });
 
 const list_order = toRef(props.orders.data);
@@ -133,26 +119,6 @@ const changeDate = () => {
     });
 };
 
-const loadOrder = async ($state) => {
-    // console.log("loading...");
-    // router.get(route(`admin.orders.${props.status}`),
-    //     filter,
-    //     {
-    //         preserveState: true,
-    //         preserveScroll: true,
-    //         onSuccess: page => {
-    //             if (props.orders.current_page == props.orders.last_page) $state.complete();
-    //             else {
-    //                 $state.loaded();
-    //             }
-    //             filter.per_page += 10;
-    //         },
-    //         onError: errors => {
-    //             $state.error();
-    //         },
-    //     },
-    // );
-};
 const packedOrder = (order) => {
     let query = {
         ids: [order.id],
@@ -230,6 +196,7 @@ const selectAll = computed({
     <LayoutAuthenticated>
         <ModelShipping></ModelShipping>
 
+
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
@@ -290,6 +257,8 @@ const selectAll = computed({
                         </div>
                     </div>
                 </div>
+
+                <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders"></OrderStatusBar>
                 <div class="my-3 w-full flex justify-between">
                     <button v-if="selected.length > 0" @click="packedOrders()"
                         class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">

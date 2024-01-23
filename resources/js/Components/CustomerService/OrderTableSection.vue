@@ -35,10 +35,10 @@ const props = defineProps({
         <div class="text-center">STT</div>
         <div class="text-center col-span-2">Mã HĐ</div>
         <div class="text-center">Số năm</div>
-        <div v-for="n in 12" class="text-center">L{{n}}</div>
+        <div v-for="n in 12" :key="n" class="text-center">L{{n}}</div>
         <div></div>
       </div>
       <OrderTable v-for="(orderPackage, index) in orderPackages" :key="orderPackage.id" :index="index" :orderPackage="orderPackage" />
-      <div class="w-full border-b border-x h-5 !border-gray-400"></div>
+      <div class="w-full border-b border-x h-5 !border-gray-400 bg-white"></div>
   </div>
 </template>

@@ -37,6 +37,48 @@ export const CUSTOMER_SERVICE_API_MAKER = {
       url: '/extra-services/$extraServiceId',
       method: 'put',
     }
+  },
+  CREATE_ORDER: (customerId) => {
+    return {
+      url: `/customer-service/customer/${customerId}/orders`,
+      method: 'post',
+    }
+  },
+  GET_PRODUCT_RETAIL: () => {
+    return {
+      url: '/customer-service/product-retails',
+      method: 'get',
+    }
+  },
+  UPDATE_ORDER: (customerId) => {
+    return {
+      url: `/customer-service/customer/${customerId}/orders/$orderId`,
+      method: 'put',
+    }
+  },
+  CREATE_COMPLAINT: (customerId) => {
+    return {
+      url: `/customer-service/customer/${customerId}/complaints`,
+      method: 'post',
+    }
+  },
+  CREATE_RETAIL_ORDER: () => {
+    return {
+      url: '/customer-service/orders',
+      method: 'post',
+    }
+  },
+  GET_RECENT_ACTIVITY: (customerId) => {
+    return {
+      url: `/customer-service/customer/${customerId}/recent-activities`,
+      method: 'get',
+    }
+  },
+  GET_USER_BY_PHONE_NUMBER: () => {
+    return {
+      url: `/customer-service/find-user-by-phone-number?phone_number=$phoneNumber`,
+      method: 'get',
+    }
   }
 }
 
@@ -53,7 +95,7 @@ const useQuery = (setupApi, inputData, successCallback, successMessage) => {
   const responseData = ref(null);
   const error = ref(null);
 
-  const swal = inject('$swal')
+  const swal = inject('$swal');
 
   const executeQuery = async (urlData, externalData) => {
     let { url, method } = setupApi;
@@ -61,7 +103,6 @@ const useQuery = (setupApi, inputData, successCallback, successMessage) => {
 
     if (urlData) {
       url = updateUrl(url, urlData);
-      console.log(urlData, url);
     }
 
     isLoading.value = true;
@@ -75,6 +116,7 @@ const useQuery = (setupApi, inputData, successCallback, successMessage) => {
       }
 
       if (successMessage) {
+        console.log('here');
         swal.fire({
           text: successMessage,
           timer: 2000,

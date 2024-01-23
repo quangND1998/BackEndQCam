@@ -153,11 +153,12 @@ class OrderRepository implements OrderContract
     public function groupByOrderByStatus($array_status, $attribute)
     {
 
-        $statusGroup = Order::role()->whereHas('orderItems')
+        $statusGroup = Order::whereHas('orderItems')
             ->select($attribute, DB::raw('count(*) as total'))
             ->groupBy($attribute)
-            ->get();
 
+            ->get();
+      
         foreach ($array_status as $status) {
             $filtered = $statusGroup->where($attribute, $status->value)->first();
             if ($filtered == null) {

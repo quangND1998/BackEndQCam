@@ -44,25 +44,25 @@
 <template>
   <div class="relative">
     <div v-if="visible" class="mt-4 w-96 rounded-lg bg-white shadow-lg absolute -top-[196px] left-[127px] z-10">
-      <div class="flex items-center justify-between rounded-t-lg bg-red-600 pr-3 pl-4 py-2">
+      <div class="flex items-center justify-between rounded-t-lg bg-red-600 pr-3 pl-4 ">
         <p class="font-semibold text-white">Tạo lịch hẹn</p>
         <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="visible = false"/>
       </div>
       <div class="px-4 py-3 relative">
-        <div class="grid grid-cols-8  bg-gray-400 text-white font-bold devide-x text-center">
+        <div class="grid grid-cols-8 bg-gray-400 text-white font-bold divide-x divide-white text-center">
           <div>STT</div>
           <div class="col-span-3">Mã HĐ</div>
           <div class="col-span-4">Hẹn gọi lại</div>
         </div>
         <div class="grid grid-cols-8 divide-x divide-gray-400 border-gray-400 border-b border-x text-sm text-center items-center">
-          <div>1</div>
-          <div class="col-span-3">{{ packageId }}</div>
-          <div class="col-span-4 p-1">
+          <div class="!p-1 leading-10">1</div>
+          <div class="col-span-3 !p-1 leading-10">{{ packageId }}</div>
+          <div class="col-span-4 !p-1">
             <VueDatePicker v-model="remindForm.date" :min-date="minDate" :clearable="false" :enable-time-picker="false" format="dd/MM/yyyy" />
           </div>
         </div>
         <div class="my-3 flex items-start gap-3 flex-col">
-          <p class="w-16 text-sm font-semibold">Lý do</p>
+          <p class="w-16 text-sm font-semibold required">Lý do</p>
           <textarea :value="remindForm.note" @input="(e) => remindForm.note = e.target.value"
               class="w-full flex-1 resize-none rounded bg-gray-100 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
         </div>

@@ -27,6 +27,7 @@ import {
     mdiAccountKey
 } from '@mdi/js'
 
+
 export default [{
         label: 'MAIN',
     },
@@ -164,6 +165,12 @@ export default [{
             {
                 route: 'admin.cskh.packed',
                 label: 'Đóng gói',
+                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
+                route_list: null
+            },
+            {
+                route: 'admin.cskh.notShipperReceive',
+                label: 'Shipper không nhận',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
