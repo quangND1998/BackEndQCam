@@ -1,7 +1,17 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import moment from 'moment';
-import { computed, ref } from 'vue';
+import { computed, provide, ref } from 'vue';
+
+import Table from '@/Components/CustomerService/RemindTable/Table.vue';
+
+const props = defineProps({
+  remindData: Object,
+});
+
+provide('REMIND', {
+  remindData: props.remindData,
+});
 
 const date = computed(() => moment());
 const heading = computed(() => {
@@ -111,59 +121,7 @@ const formatNumerOfFreeContract = computed(() => numberOfFreeContract.value < 10
             <button class="px-4 py-1 rounded-sm bg-zinc-900 text-white font-semibold">Xuất</button>
           </div>
         </div>
-        <div
-          class="grid grid-cols-[repeat(28,_minmax(0,_1fr))] divide-x text-sm bg-gray-400 text-white divide-white items-center  text-center font-semibold leading-10">
-          <div>STT</div>
-          <div class="col-span-3">Mã HĐ</div>
-          <div class="col-span-2">Loại HĐ</div>
-          <div class="col-span-4">Tên KH</div>
-          <div class="col-span-2">Thứ tuần</div>
-          <div class="text-center col-span-12"> Lý do</div>
-          <div class="col-span-2">Lịch hẹn gọi lại</div>
-          <div class="col-span-2">Chăm sóc</div>
-        </div>
-        <div
-          class="grid grid-cols-[repeat(28,_minmax(0,_1fr))] divide-x text-sm bg-white border-x border-b !border-gray-400 divide-gray-400 items-center  text-center font-semibold leading-10">
-          <div>1</div>
-          <div class="col-span-3">23012024</div>
-          <div class="col-span-2">1 năm</div>
-          <div class="col-span-4">Đào Quang Huy</div>
-          <div class="col-span-2">Thứ 2/ Tuần 3</div>
-          <div class="text-left pl-2 col-span-12">Bận</div>
-          <div class="col-span-2">27/01/2023</div>
-          <div class="col-span-2 grid items-center"><i class="fa fa-phone text-2xl text-emerald-600" aria-hidden="true"></i></div>
-        </div>
-        <div
-          v-for="n in 5" :key="n"
-          class="grid grid-cols-[repeat(28,_minmax(0,_1fr))] divide-x text-sm bg-white border-x border-b !border-gray-400 divide-gray-400 items-center  text-center font-semibold leading-10">
-          <div>&#8203;</div>
-          <div class="col-span-3">&#8203;</div>
-          <div class="col-span-2">&#8203;</div>
-          <div class="col-span-4">&#8203;</div>
-          <div class="col-span-2">&#8203;</div>
-          <div class="text-left pl-2 col-span-12">&#8203;</div>
-          <div class="col-span-2">&#8203;</div>
-          <div class="col-span-2 grid items-center">&#8203;</div>
-        </div>
-        <div class="flex items-center justify-between mt-3">
-          <div class="flex items-center gap-4">
-            <p>Hiển thị</p>
-            <select class="border !border-gray-400 rounded-sm px-2 py-1 !w-20 focus:outline-none focus:!border-gray-400 focus:ring-0">
-              <option>10</option>
-              <option>20</option>
-              <option>30</option>
-            </select>
-          </div>
-          <div class="flex items-center gap-2">
-            <p>Trang:</p>
-            <div class="flex items-center gap-3">
-              <p>1</p>
-              <p>2</p>
-              <p>3...</p>
-              <p>100</p>
-            </div>
-          </div>
-        </div>
+        <Table />
       </div>
     </div>
   </div>

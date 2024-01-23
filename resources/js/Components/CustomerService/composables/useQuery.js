@@ -79,6 +79,12 @@ export const CUSTOMER_SERVICE_API_MAKER = {
       url: `/customer-service/find-user-by-phone-number?phone_number=$phoneNumber`,
       method: 'get',
     }
+  },
+  GET_REMIND: () => {
+    return {
+      url: '/customer-service/reminds',
+      method: 'get',
+    }
   }
 }
 

@@ -74,9 +74,9 @@ onMounted(() => {
             <div class="col-span-2">Trạng thái</div>
           </div>
           <div v-for="(complaint, index) in data?.latestComplaints || []" :key="complaint.id" class="grid grid-cols-6 divide-x divide-gray-400 text-sm text-center leading-5 border-b border-gray-400 items-stretch">
-            <div class="grid items-center justify-center">{{ index + 1 }}</div>
-            <div class="col-span-3 text-left px-1">{{ complaint.description }}</div>
-            <div class="col-span-2 grid items-center justify-center"><Status :status="complaint.state" /></div>
+            <div class="pt-1">{{ index + 1 }}</div>
+            <div class="col-span-3 text-left px-1 py-1">{{ complaint.description }}</div>
+            <div class="col-span-2 grid items-center justify-center py-1"><Status :status="complaint.state" /></div>
           </div>
           <div v-if="!data || data?.latestComplaints?.length < 3" class=" text-sm text-center border-b border-gray-400 h-5"></div>
         </div>

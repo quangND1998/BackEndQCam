@@ -25,6 +25,7 @@ class GetCustomerOrderPackage extends Controller
             ->with('product_service_owner', function ($query) {
                 $query->with('orders', function ($orderQuery) {
                     $orderQuery->orderBy('receive_at', 'desc')
+                        ->where('type', 'gift_delivery')
                         ->whereNotIn('status', ['decline', 'refund'])
                         ->with(['shipping_history', 'orderItems.product']);
                 })->with('visit', function ($visitQuery) {
