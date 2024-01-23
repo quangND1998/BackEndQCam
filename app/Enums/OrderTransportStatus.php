@@ -12,6 +12,7 @@ enum OrderTransportStatus: string
         // case not_delivery = 'not_delivery';
     case delivering = 'delivering';
     case delivered = 'delivered';
+    case refunding = 'refunding';
     case refund = 'refund';
     case decline = 'decline';
 }

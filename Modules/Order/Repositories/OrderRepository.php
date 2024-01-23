@@ -101,7 +101,7 @@ class OrderRepository implements OrderContract
                 $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
             }
 
-        )->where('type', 'gift_delivery')->where('status_transport', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+        )->where('state', true)->where('status_transport', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
     public function getAllOrderGift($request)
     {
@@ -112,7 +112,7 @@ class OrderRepository implements OrderContract
                 $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
             }
 
-        )->where('type', 'gift_delivery')->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+        )->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
 
 

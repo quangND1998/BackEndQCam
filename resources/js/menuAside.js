@@ -160,44 +160,39 @@ export default [{
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
+
             {
-                route: 'admin.cskh.packing',
+                route: 'admin.cskh.packed',
                 label: 'Đóng gói',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
             {
-                route: 'admin.cskh.packed',
-                label: 'Giao shipper',
-                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
-                route_list: null
-            },
-            {
-                route: 'admin.orders.package.all',
+                route: 'admin.cskh.shipping',
                 label: 'Vận chuyển',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'admin.cskh.delivered',
                 label: 'Đã giao',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'admin.cskh.refunding',
                 label: 'Chờ hoàn',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'admin.cskh.refund',
                 label: 'Hoàn đơn',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'admin.cskh.decline',
                 label: 'Hủy',
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null

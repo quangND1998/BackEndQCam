@@ -37,6 +37,7 @@ class Order extends Model implements HasMedia
         'status_transport',
         'shipper_status',
         'state_document',
+        'state',
         'wards',  "created_at", "updated_at"
     ];
 

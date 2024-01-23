@@ -146,9 +146,11 @@ Route::middleware(['auth'])->group(
                 Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
                 Route::get('packing', [CSKHOrderController::class, 'packing'])->name('packing');
                 Route::get('packed', [CSKHOrderController::class, 'packed'])->name('packed');
-                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
-                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
-                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
+                Route::get('shipping', [CSKHOrderController::class, 'shipping'])->name('shipping');
+                Route::get('delivered', [CSKHOrderController::class, 'delivered'])->name('delivered');
+                Route::get('refunding', [CSKHOrderController::class, 'refunding'])->name('refunding');
+                Route::get('refund', [CSKHOrderController::class, 'refund'])->name('refund');
+                Route::get('decline', [CSKHOrderController::class, 'decline'])->name('decline');
                 // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
                 // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
                 // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
