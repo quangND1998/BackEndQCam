@@ -18,19 +18,16 @@ class GetRecentActivity extends Controller
             ->get();
 
         $latestOrders = Order::where('user_id', $customerId)
-            ->with(['orderItems.product', 'product_service.order_package'])
+            ->limit(3)
             ->latest()
-            ->limit(5)
             ->get();
         $latestVisits = ScheduleVisit::whereIn('product_service_owner_id', $activePackages->pluck('product_service_owner.id')->toArray())
-            ->with(['extraServices', 'product_owner_service.order_package'])
+            ->limit(3)
             ->latest()
-            ->limit(5)
             ->get();
         $latestComplaints = ComplaintManagement::where('user_id', $customerId)
-            ->with(['role'])
+            ->limit(3)
             ->latest()
-            ->limit(5)
             ->get();
 
         return response()->json([
