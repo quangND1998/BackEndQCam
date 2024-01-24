@@ -210,9 +210,20 @@ class CSKHOrderController extends Controller
             foreach ($orders as $order) {
                 $order->state = true;
                 $order->save();
+                $order_package = $order->product_service->order_package;
+                if ($order_package) {
+                    $number = Order::where('product_service_owner_id', $order->product_service_owner_id)
+                        ->count() + 1;
+
+                    $order->order_transport_number = $order_package->order_number + $number;
+                    $order->save();
+                }
+
+
                 // $this->orderRepository->changeTransportStatus($order, OrderTransportStatus::packing);
-                return back()->with('success', "Đã đẩy đơn thành công");
+
             }
+            return back()->with('success', "Đã đẩy đơn thành công");
         }
         return back()->with('warning', "Hãy chọn select box");
     }

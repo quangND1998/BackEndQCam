@@ -46,6 +46,7 @@ import OrderHome from "@/Pages/Test/OrderHome.vue"
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
 import { emitter } from '@/composable/useEmitter';
 import OrderStatus from "./OrderStatus.vue";
+import { usePopOverStore } from '@/stores/popover.js'
 const props = defineProps({
     orders: Object,
     status: String,
@@ -55,6 +56,8 @@ const props = defineProps({
     statusGroup: Array,
     shippers: Array
 });
+const { openPopover,
+    closePopover } = usePopOverStore();
 
 const list_order = toRef(props.orders.data)
 const filter = reactive({
@@ -254,7 +257,10 @@ const selectAll = computed({
 
         if (value) {
             props.orders.data.forEach(function (order) {
-                array_selected.push(order.id);
+                if (!order.state) {
+                    array_selected.push(order.id);
+                }
+
             });
         }
         selected.value = array_selected;
@@ -374,7 +380,7 @@ const selectAll = computed({
                                         <th scope="col" class="px-6 py-3 ">
                                             <div class="flex items-center ">
                                                 <input id="default-checkbox" type="checkbox" v-model="selected"
-                                                    :value="order.id"
+                                                    :disabled="order.state == true" :value="order.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                                             </div>
                                         </th>
@@ -441,8 +447,9 @@ const selectAll = computed({
                                                 formatTimeDayMonthyear(order?.delivery_appointment) : "Chưa cập nhật" }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @click="openSHippingDetail(order)" data-toggle="modal"
-                                                data-target="#ModelShipping">xem</button>
+                                            <button @mouseover="openPopover(order)" @mouseleave="closePopover">
+                                                xem
+                                            </button>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             xem

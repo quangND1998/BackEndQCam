@@ -47,6 +47,7 @@ import OrderHome from "@/Pages/Test/OrderHome.vue";
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
+import { usePopOverStore } from '@/stores/popover.js'
 const props = defineProps({
     orders: Object,
     status: String,
@@ -58,6 +59,8 @@ const props = defineProps({
     count_orders: Number
 });
 
+const { openPopover,
+    closePopover } = usePopOverStore();
 const list_order = toRef(props.orders.data);
 const filter = reactive({
     customer: null,
@@ -292,7 +295,7 @@ const selectAll = computed({
                         </div>
                     </div>
                 </div>
-                      <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders"></OrderStatusBar>
+                <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders"></OrderStatusBar>
                 <div class="my-3 w-full flex justify-between">
                     <button v-if="selected.length > 0" @click="packedOrders()"
                         class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
@@ -397,8 +400,7 @@ const selectAll = computed({
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @click="openSHippingDetail(order)" data-toggle="modal"
-                                                data-target="#ModelShipping">
+                                            <button @mouseover="openPopover(order)" @mouseleave="closePopover">
                                                 xem
                                             </button>
                                         </td>

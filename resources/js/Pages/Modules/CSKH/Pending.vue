@@ -10,18 +10,7 @@ import "vue-datepicker-ui/lib/vuedatepickerui.css";
 import ModelShipping from "./ModelShipping.vue";
 import OrderStatus from "./OrderStatus.vue";
 import {
-    mdiEye,
-    mdiAccountLockOpen,
-    mdiPlus,
-    mdiFilter,
-    mdiMagnify,
-    mdiDotsVertical,
-    mdiTrashCanOutline,
-    mdiCodeBlockBrackets,
-    mdiPencil,
-    mdiLandFields,
-    mdiSquareEditOutline,
-    mdiArrowLeftBoldCircleOutline,
+
     mdiLayersTripleOutline,
     mdiPhone,
 } from "@mdi/js";
@@ -31,6 +20,8 @@ import "vue-search-input/dist/styles.css";
 import { initFlowbite } from "flowbite";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
+import { usePopOverStore } from '@/stores/popover.js';
+import Icon from '@/Components/Icon.vue'
 const props = defineProps({
     orders: Object,
     status: String,
@@ -42,6 +33,8 @@ const props = defineProps({
     count_orders: Number
 });
 
+const { openPopover,
+    closePopover } = usePopOverStore();
 const list_order = toRef(props.orders.data);
 const filter = reactive({
     customer: null,
@@ -175,6 +168,9 @@ const openSHippingDetail = (order) => {
     console.log("ModelShipping");
     emitter.emit("ModelShipping", order);
 };
+const closeShippingDetail = () => {
+    emitter.emit("closeModalShipping");
+}
 const selected = ref([]);
 const selectAll = computed({
     get() {
@@ -191,6 +187,32 @@ const selectAll = computed({
         selected.value = array_selected;
     },
 });
+const canceldeliveryNoOrder = (order) => {
+    let query = {
+        ids: [order.id],
+    };
+    swal
+        .fire({
+            title: "Thông báo?",
+            text: "Bạn muốn muốn xóa Mã vận đơn!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                router.post(route("admin.cskh.packedOrder"), query, {
+                    onError: () => { },
+                    onSuccess: () => {
+                        form.reset();
+                    },
+                });
+            } else {
+                return;
+            }
+        });
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -281,6 +303,8 @@ const selectAll = computed({
                                         <th scope="col" class="px-6 py-2 text-left">
                                             <input id="default-checkbox" type="checkbox" v-model="selectAll"
                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
+
+
                                         </th>
                                         <th scope="col" class="px-3 py-2 text-left">STT</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã HĐ</th>
@@ -297,6 +321,7 @@ const selectAll = computed({
                                         <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã vận đơn </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -306,6 +331,9 @@ const selectAll = computed({
                                                 <input id="default-checkbox" type="checkbox" v-model="selected"
                                                     :value="order.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
+                                                <button v-tooltip="'Hủy mã vận đơn'" @click="canceldeliveryNoOrder(order)">
+                                                    <Icon icon="cancel"></Icon>
+                                                </button>
                                             </div>
                                         </th>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
@@ -363,8 +391,7 @@ const selectAll = computed({
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @click="openSHippingDetail(order)" data-toggle="modal"
-                                                data-target="#ModelShipping">
+                                            <button @mouseover="openPopover(order)" @mouseleave="closePopover">
                                                 xem
                                             </button>
                                         </td>
@@ -373,6 +400,9 @@ const selectAll = computed({
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order?.order_number }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order?.delivery_no }}
                                         </td>
                                     </tr>
                                 </tbody>

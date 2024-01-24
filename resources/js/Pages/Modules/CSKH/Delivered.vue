@@ -5,48 +5,21 @@ import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import CardBox from "@/Components/CardBox.vue";
-import CardBoxModal from "@/Components/CardBoxModal.vue";
-import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
 import ModelShipping from "./ModelShipping.vue";
-// import ModalDecline from "./ModalDecline.vue";
-// import ModelRefund from "./ModelRefund.vue";
-// import ModalShipping from "./ModalShipping.vue";
 import OrderStatus from "./OrderStatus.vue";
 import {
-    mdiEye,
-    mdiAccountLockOpen,
-    mdiPlus,
-    mdiFilter,
-    mdiMagnify,
-    mdiDotsVertical,
-    mdiTrashCanOutline,
-    mdiCodeBlockBrackets,
-    mdiPencil,
-    mdiLandFields,
-    mdiSquareEditOutline,
-    mdiArrowLeftBoldCircleOutline,
     mdiLayersTripleOutline,
     mdiPhone,
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
-import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-
-import Dropdown from "@/Components/Dropdown.vue";
 import BaseIcon from "@/Components/BaseIcon.vue";
-import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
-import MazInputPrice from "maz-ui/components/MazInputPrice";
 import { initFlowbite } from "flowbite";
-import OrderHome from "@/Pages/Test/OrderHome.vue";
-import OrderRow from "@/Pages/Modules/Order/OrderRow.vue";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
+import { usePopOverStore } from '@/stores/popover.js'
 const props = defineProps({
     orders: Object,
     status: String,
@@ -55,10 +28,11 @@ const props = defineProps({
     to: String,
     statusGroup: Array,
     shippers: Array,
-      count_orders: Number
+    count_orders: Number
 });
 
-const list_order = toRef(props.orders.data);
+const { openPopover,
+    closePopover } = usePopOverStore();
 const filter = reactive({
     customer: null,
     name: null,
@@ -71,8 +45,6 @@ const filter = reactive({
     per_page: 10,
     selectedDate: null,
 });
-const customer = ref();
-const searchVal = ref("");
 const swal = inject("$swal");
 const form = useForm({
     id: null,
@@ -80,19 +52,8 @@ const form = useForm({
     state: null,
     selectedDate: [new Date(), new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)],
 });
-const isModalActive = ref(false);
-const editMode = ref(false);
-const isModalDangerActive = ref(false);
 
-const state = reactive({
-    content: "<p>2333</p>",
-    _content: "",
-    editorOption: {
-        placeholder: "core",
-        modules: {},
-    },
-    disabled: false,
-});
+
 initFlowbite();
 
 const searchCustomer = () => {
@@ -122,11 +83,6 @@ const search = () => {
     });
 };
 
-const contents = ref([
-    { id: 1, text: "Content 1" },
-    { id: 2, text: "Content 2" },
-    { id: 3, text: "Content 3" },
-]);
 
 const changeDate = () => {
     router.get(route(`admin.orders.${props.status}`), filter, {
@@ -135,52 +91,8 @@ const changeDate = () => {
     });
 };
 
-const loadOrder = async ($state) => {
-    // console.log("loading...");
-    // router.get(route(`admin.orders.${props.status}`),
-    //     filter,
-    //     {
-    //         preserveState: true,
-    //         preserveScroll: true,
-    //         onSuccess: page => {
-    //             if (props.orders.current_page == props.orders.last_page) $state.complete();
-    //             else {
-    //                 $state.loaded();
-    //             }
-    //             filter.per_page += 10;
-    //         },
-    //         onError: errors => {
-    //             $state.error();
-    //         },
-    //     },
-    // );
-};
-const packedOrder = (order) => {
-    let query = {
-        ids: [order.id],
-    };
-    swal
-        .fire({
-            title: "Thông báo?",
-            text: "Bạn muốn đóng gói đơn hàng này!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-        })
-        .then((result) => {
-            if (result.isConfirmed) {
-                router.post(route("admin.cskh.packedOrder"), query, {
-                    onError: () => { },
-                    onSuccess: () => {
-                        form.reset();
-                    },
-                });
-            } else {
-                return;
-            }
-        });
-};
+
+
 const packedOrders = () => {
     let query = {
         ids: selected.value,
@@ -208,7 +120,7 @@ const packedOrders = () => {
         });
 };
 const openSHippingDetail = (order) => {
-    console.log("ModelShipping");
+
     emitter.emit("ModelShipping", order);
 };
 const selected = ref([]);
@@ -230,7 +142,7 @@ const selectAll = computed({
 </script>
 <template>
     <LayoutAuthenticated>
-        <ModelShipping></ModelShipping>
+
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -305,7 +217,7 @@ const selectAll = computed({
                             label="Pending" />
                     </div>
                 </div>
-
+                <ModelShipping />
                 <div class="w-full mt-2">
                     <div class="flex flex-col">
                         <div class="overflow-x-auto inline-block min-w-full sm:px-6 lg:px-8 m-0 p-0 h-[60vh]">
@@ -396,11 +308,13 @@ const selectAll = computed({
                                                 : "Chưa cập nhật"
                                             }}
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @click="openSHippingDetail(order)" data-toggle="modal"
-                                                data-target="#ModelShipping">
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500 ">
+                                            <button @mouseover="openPopover(order)" @mouseleave="closePopover"
+                                                class="cursor-pointer">
                                                 xem
                                             </button>
+
+
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             xem

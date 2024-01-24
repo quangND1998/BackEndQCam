@@ -47,6 +47,9 @@ import OrderHome from "@/Pages/Test/OrderHome.vue";
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
+import { usePopOverStore } from '@/stores/popover.js'
+const { openPopover,
+    closePopover } = usePopOverStore();
 const props = defineProps({
     orders: Object,
     status: String,
@@ -437,8 +440,7 @@ const selectAll = computed({
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @click="openSHippingDetail(order)" data-toggle="modal"
-                                                data-target="#ModelShipping">
+                                            <button @mouseover="openPopover(order)" @mouseleave="closePopover">
                                                 xem
                                             </button>
                                         </td>

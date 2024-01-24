@@ -6,6 +6,7 @@ import { useDarkModeStore } from '@/stores/darkMode.js'
 import { useTreeStore } from '@/stores/tree'
 import { useProfileStore } from '@/stores/profile'
 import { useCartStore } from '@/stores/cart'
+import { usePopOverStore } from '@/stores/popover.js'
 import { darkModeKey } from '@/config'
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -66,6 +67,7 @@ const darkModeStore = useDarkModeStore(pinia)
 const treeStore = useTreeStore(pinia)
 const profileStore = useProfileStore(pinia)
 const cartStore = useCartStore(pinia)
+const popOverStore = usePopOverStore(pinia)
 document.documentElement.classList.forEach((token) => {
         if (token.indexOf('style') === 0) {
             document.documentElement.classList.replace(token, `style-basic`)
