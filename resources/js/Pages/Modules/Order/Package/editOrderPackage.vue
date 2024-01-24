@@ -77,7 +77,7 @@ const form = useForm({
     idPackage: props.order.idPackage,
     order_number: props.order.order_number,
     total_paymented: props.order?.price_percent,
-
+    market: props.order?.market
 })
 
 const getProvinces = async () => {
@@ -145,10 +145,10 @@ const foundUser = (data) => {
     searchPhone.value = data.phone_number
 }
 const onSearchUser = async () => {
-    if(search.value.length > 7 && search.value.includes(" ") == false && searchPhone.value != props.order?.customer?.phone_number){
-    return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
-        console.log(res);
-        if (res.data) {
+    if (search.value.length > 7 && search.value.includes(" ") == false && searchPhone.value != props.order?.customer?.phone_number) {
+        return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
+            console.log(res);
+            if (res.data) {
                 user.value = res.data;
                 swal.fire({
                     text: "Số điện thoại này đã tồn tại, vui lòng kiểm tra lại",
@@ -157,9 +157,9 @@ const onSearchUser = async () => {
                     cancelButtonColor: "#d33",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                    //     foundUser(res.data)
-                    //     findUser.value = true;
-                    // }else{
+                        //     foundUser(res.data)
+                        //     findUser.value = true;
+                        // }else{
                         console.log('not user');
                         user.value = null
                         // flash.value = err.response.data
@@ -172,11 +172,11 @@ const onSearchUser = async () => {
                 // foundUser(res.data)
 
                 flash.value = null;
-        }
+            }
         }).catch(err => {
             console.log('not user');
         })
-    }else{
+    } else {
         //  user.value = null
         //  form.reset()
         // searchPhone.value = null;
@@ -184,15 +184,15 @@ const onSearchUser = async () => {
     }
 
 }
-const isNumber =  (value) => {
-  return typeof value === 'number';
+const isNumber = (value) => {
+    return typeof value === 'number';
 }
 const onSearchUserPhone = async () => {
     console.log(isNumber(searchPhone.value));
-    if(searchPhone.value.length > 7 && searchPhone.value != props.order?.customer?.phone_number){
-    return axios.get(`/admin/orders/searchUser?search=${searchPhone.value}`).then(res => {
-        console.log(res);
-        if (res.data) {
+    if (searchPhone.value.length > 7 && searchPhone.value != props.order?.customer?.phone_number) {
+        return axios.get(`/admin/orders/searchUser?search=${searchPhone.value}`).then(res => {
+            console.log(res);
+            if (res.data) {
                 user.value = res.data;
                 swal.fire({
                     text: "Số điện thoại này đã tồn tại, vui lòng kiểm tra lại",
@@ -201,7 +201,7 @@ const onSearchUserPhone = async () => {
                     cancelButtonColor: "#d33",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                         console.log('not user');
+                        console.log('not user');
                         user.value = null
                         // flash.value = err.response.data
                         findUser.value = false;
@@ -213,11 +213,11 @@ const onSearchUserPhone = async () => {
                 // foundUser(res.data)
 
                 flash.value = null;
-        }
+            }
         }).catch(err => {
             console.log('not user');
         })
-    }else{
+    } else {
         // user.value = null
         // form.reset()
         // search.value = null;
@@ -327,7 +327,7 @@ const maxPrice = computed({
 const openAcceptPayment = (id) => {
     let query = {
         status: "complete"
-      };
+    };
     swal
         .fire({
             title: "Bạn có muốn?",
@@ -340,7 +340,7 @@ const openAcceptPayment = (id) => {
         })
         .then((result) => {
             if (result.isConfirmed) {
-                form.post(route("admin.orders.package.setPaymentComplete", [props.order?.id,id]),  { preserveState: false },{
+                form.post(route("admin.orders.package.setPaymentComplete", [props.order?.id, id]), { preserveState: false }, {
                     onSuccess: () => {
                         swal.fire("Thành Công!", "Đã thêm hợp đồng với khách hàng.", "success");
                     },
@@ -363,7 +363,7 @@ const deleteHistory = (id) => {
         .then((result) => {
             if (result.isConfirmed) {
                 console.log(id);
-                form.post(route("admin.orders.package.deleteHistoryPayment", [props.order?.id,id]), { preserveState: false }, {
+                form.post(route("admin.orders.package.deleteHistoryPayment", [props.order?.id, id]), { preserveState: false }, {
                     onSuccess: () => {
                         swal.fire(
                             "Deleted!",
@@ -452,9 +452,19 @@ const date = ref(new Date());
                                     <div class="my-1">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Số điện thoại *</label>
-                                        <input type="text" id="first_name"   v-model="searchPhone" @keyup="onSearchUserPhone()"
+                                        <input type="text" id="first_name" v-model="searchPhone"
+                                            @keyup="onSearchUserPhone()"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
+                                    </div>
+                                    <div class="my-1">
+                                        <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
+                                            Khu vực *</label>
+                                        <select v-model="form.market"
+                                            class="w-full height_fix_30 md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
+                                            <option selected value="Miền Bắc">Miền Bắc</option>
+                                            <option value="Miền Nam">Miền Nam</option>
+                                        </select>
                                     </div>
                                     <div class="my-1">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
@@ -462,14 +472,14 @@ const date = ref(new Date());
                                         <div class="flex">
                                             <div class="flex items-center ">
                                                 <input id="default-radio-1" type="radio" value="male" name="default-radio"
-                                                    v-model="form.sex" :checked="form.sex =='male'"
+                                                    v-model="form.sex" :checked="form.sex == 'male'"
                                                     class="w-4 h-4  text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-radio-1"
                                                     class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nam</label>
                                             </div>
                                             <div class="flex items-center mx-5">
-                                                <input :checked="form.sex =='female'" id="default-radio-2" type="radio" value="female"
-                                                    v-model="form.sex" name="default-radio"
+                                                <input :checked="form.sex == 'female'" id="default-radio-2" type="radio"
+                                                    value="female" v-model="form.sex" name="default-radio"
                                                     class="w-4 h-4 text[#F78F43] bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="default-radio-2"
                                                     class="ms-2 text-sm  text-gray-900 dark:text-gray-300">Nữ</label>
@@ -482,7 +492,8 @@ const date = ref(new Date());
                                     <div class="my-1">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Địa chỉ *</label>
-                                        <input type="text" id="first_name" v-model="form.address" :disabled="findUser && user?.address != null"
+                                        <input type="text" id="first_name" v-model="form.address"
+                                            :disabled="findUser && user?.address != null"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                     </div>
@@ -490,8 +501,9 @@ const date = ref(new Date());
                                     <div class="my-1">
                                         <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                             Thành phố *</label>
-                                        <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name" :disabled="findUser && user?.city != null"
-                                            @change="onChangeCity($event)" optionValue="Name" placeholder="Chọn tỉnh thành"
+                                        <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name"
+                                            :disabled="findUser && user?.city != null" @change="onChangeCity($event)"
+                                            optionValue="Name" placeholder="Chọn tỉnh thành"
                                             class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
                                             <template #value="slotProps">
 
@@ -518,7 +530,8 @@ const date = ref(new Date());
                                                 class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
 
-                                            <Dropdown v-model="form.district" :options="districts.Districts" filter :disabled="findUser && user?.district != null"
+                                            <Dropdown v-model="form.district" :options="districts.Districts" filter
+                                                :disabled="findUser && user?.district != null"
                                                 @change="onChangeDistrict($event)" optionLabel="Name" optionValue="Name"
                                                 placeholder="Chọn Quận/huyện"
                                                 class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
@@ -547,8 +560,9 @@ const date = ref(new Date());
                                                 Phường xã*</label>
 
 
-                                            <Dropdown v-model="form.wards" :options="wards.Wards" filter optionLabel="Name" :disabled="findUser && user?.wards != null"
-                                                optionValue="Name" placeholder="Chọn Phường xã"
+                                            <Dropdown v-model="form.wards" :options="wards.Wards" filter optionLabel="Name"
+                                                :disabled="findUser && user?.wards != null" optionValue="Name"
+                                                placeholder="Chọn Phường xã"
                                                 class="w-full md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
                                                 <template #value="slotProps">
 
@@ -649,7 +663,8 @@ const date = ref(new Date());
 
                                                     <div class="list_image flex"
                                                         v-for="image in payment.order_package_payment" :key="image.id">
-                                                        <img  v-fullscreen-img class="w-[50px] h-[50px]" :src="image.original_url" alt="">
+                                                        <img v-fullscreen-img class="w-[50px] h-[50px]"
+                                                            :src="image.original_url" alt="">
                                                     </div>
                                                 </td>
                                                 <td class="border-0">
@@ -659,8 +674,9 @@ const date = ref(new Date());
                                                         @click="openAcceptPayment(payment.id)">Duyệt </button>
                                                 </td>
                                                 <td class="border-0">
-                                                    <BaseButton v-if="payment.status != 'complete' || hasAnyRoles(['Kế toán','super-admin'])" color="gray"
-                                                        class="border-0 text=gray=300 hover:text-black"
+                                                    <BaseButton
+                                                        v-if="payment.status != 'complete' || hasAnyRoles(['Kế toán', 'super-admin'])"
+                                                        color="gray" class="border-0 text=gray=300 hover:text-black"
                                                         :icon="mdiTrashCanOutline" small
                                                         @click="deleteHistory(payment.id)" />
                                                 </td>
@@ -754,7 +770,8 @@ const date = ref(new Date());
                                     Số tiền</label>
                                 <!-- <MazInputPrice v-model="form.price_percent" currency="VND" locale="vi-VN" :min="0" :disabled="order?.history_payment.length > 0"
                                     :max="maxPrice" @formatted="formattedPrice = $event" /> -->
-                                    <InputNumber v-model="form.price_percent" :min="0"  :max="maxPrice" :disabled="order?.history_payment.length > 0"
+                                <InputNumber v-model="form.price_percent" :min="0" :max="maxPrice"
+                                    :disabled="order?.history_payment.length > 0"
                                     inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="w-1/2">
@@ -769,7 +786,8 @@ const date = ref(new Date());
                             </div>
                         </div>
                         <p class="my-1 px-2 py-2 text-white bg-red-500 border border_round max-w-fit text-[12px] "
-                                v-if="order?.history_payment.length > 0">Muốn sửa khoản thanh toán cần xóa hết thanh toán đã có.</p>
+                            v-if="order?.history_payment.length > 0">Muốn sửa khoản thanh toán cần xóa hết thanh toán đã có.
+                        </p>
                         <div class="my-2">
                             <label for="first_name" class="block mb-2 text-sm  text-gray-900 dark:text-white">
                                 NV tư vấn bán hàng(Ref)</label>
@@ -777,8 +795,8 @@ const date = ref(new Date());
                             :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="None"
                            /> -->
 
-                            <Multiselect v-model="form.ref_id" :searchable="true" label="name" valueProp="id"
-                                trackBy="name" placeholder="None" :options="sales" :classes="{
+                            <Multiselect v-model="form.ref_id" :searchable="true" label="name" valueProp="id" trackBy="name"
+                                placeholder="None" :options="sales" :classes="{
                                     tagsSearch: 'absolute  inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
                                     container: 'relative border_round mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
                                 }">
@@ -898,7 +916,8 @@ const date = ref(new Date());
                                 </div>
                                 <div class="flex justify-between my-2">
                                     <p class="text-sm text-[#686868]">Đã thanh toán</p>
-                                    <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.total_paymented + form.price_percent) }} VND
+                                    <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.total_paymented +
+                                        form.price_percent) }} VND
                                     </p>
                                 </div>
                                 <div class="flex justify-between my-2">
@@ -906,7 +925,8 @@ const date = ref(new Date());
                                         ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
                                         form.price_percent) > 0">Còn thiếu</p>
                                     <p v-else class="text-sm text-[#686868] font-bold">Còn thừa</p>
-                                    <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice(maxPrice - form.total_paymented -
+                                    <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice(maxPrice -
+                                        form.total_paymented -
                                         form.price_percent) }} VND</p>
                                 </div>
                                 <div class="my-1">

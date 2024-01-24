@@ -39,6 +39,7 @@ class GiftDistributeController extends Controller
                 $query->where('name', 'cskh');
             }
         )->get();
+        // return $orderPackages;
         return Inertia::render('Modules/CSKH/Schedule', compact('orderPackages','cskh'));
     }
     public function groupByOrderStatus()
@@ -65,15 +66,13 @@ class GiftDistributeController extends Controller
 
     public function distributeDate($orderPackages){
         // toi da tao 12 lan, Ngày nhận quà = ngày kích hoạt  + 25 ngày. trùng ngày chủ nhật chuyển trước 1 ngày
-        $dayDistant = 25;
         foreach($orderPackages as $order){
-
+            $dayDistant = 25;
             if(count($order->distributeDate) == 0){
-
                 for($i=0; $i<$order->product_service->number_receive_product; $i++){
                     $date = Carbon::parse($order->time_approve)->addDays($dayDistant);
-                    if($date->isWeekend()){
-                        $date = $date->subDays(1);
+                    if($date->isSunday()){
+                        $date = $date->addDays(1);
                     }
                     $distributeDate = new DistributeDate;
                     $distributeDate->date_recevie = $date;

@@ -152,63 +152,128 @@ const cacularOffSet = (index) => {
 
         <Head title="Kế hoạch tuần" />
         <SectionMain class="p-3 mt-10">
-            <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
+            <div class="w-full">
                 <div>
                     <h2 class="font-semibold  flex mr-2">
-                        KẾ HOẠCH TUẦN {{ getWeekOffset(offset) }}
+                        KẾ HOẠCH TUẦN {{ getWeekOffset(offset)[0] }}
                     </h2>
-                    <div class="flex justify-between">
-                        <div class="flex">
-                            <BaseIcon :path="mdiArrowLeftCircleOutline " class="  rounded-lg  mr-1 hover:text-red-700"
-                                size="30" @click="cacularOffSet(-1)" ></BaseIcon>
-                            <BaseIcon :path="mdiArrowRightCircleOutline " class=" rounded-lg  mr-2 hover:text-red-700"
+                    <div class="flex w-full justify-between">
+                        <div class="flex ">
+                            <BaseIcon :path="mdiArrowLeftCircleOutline" class="  rounded-lg  mr-1 hover:text-red-700"
+                                size="30" @click="cacularOffSet(-1)"></BaseIcon>
+                            <BaseIcon :path="mdiArrowRightCircleOutline" class=" rounded-lg  mr-2 hover:text-red-700"
                                 size="30" @click="cacularOffSet(1)"></BaseIcon>
 
+                        </div>
+                        <div class="flex right-0">
+                            <button class="w-[120px] py-1 rounded bg-[#E9E9E9] mr-2">{{ getWeekOffset(offset)[1]
+                            }}</button>
+                            <button class="w-[80px] py-1 rounded bg-[#1D75FA] text-white ">Xem</button>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="mt-3">
-                <div class="w-full flex justify-between">
-                    <div class="flex mr-2">
-                        <div class="flex">
-                            <button class="w-[100px] py-1 rounded bg-[#1D75FA] text-white mr-2">MB</button>
-                            <button class="w-[100px] py-1 rounded bg-[#E9E9E9]">MN</button>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="w-full mt-2 ">
-                    <div class="bg-[#5C5C5C] text-white  grid grid-cols-9 divide-x">
+                    <div class="bg-[#5C5C5C] text-white  grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x">
                         <div class="text-center py-2 border">STT</div>
                         <div class="text-center py-2 border">Mã HĐ</div>
                         <div class="text-center py-2 border">Loại HĐ</div>
                         <div class="text-center py-2 border">Tên KH</div>
-                        <div class="text-center py-2 border">CCCD</div>
-                        <div class="text-center py-2 border">Số điện thoại</div>
-                        <div class="text-center py-2 border">Lỹ kế nhận quà</div>
-                        <div class="text-center py-2 border">Số lần chưa nhận quà</div>
-                        <div class="text-center py-2 border">Số lần trễ</div>
+                        <div class="text-center py-2 border">Ngày kích hoạt</div>
+                        <div v-for="n in 6" :key="n" class="text-center py-2 ">
+                            <div>Thứ {{ n + 1 }}</div>
+                            <div>{{ getWeekOffset(offset)[2][n] }}</div>
+                        </div>
+                        <div class="text-center py-2 border">Thị trường</div>
+                        <div class="text-center py-2 border">Tỉnh</div>
+                        <div class="text-center py-2 border">Quận/Huyện</div>
 
                     </div>
-                    <div v-for="(orderPackage, index) in orderPackages.data" :key="orderPackage.id" :index="index" :orderPackage="orderPackage"
-                    class="grid grid-cols-9 divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
+                    <div v-for="(orderPackage, index) in orderPackages.data" :key="orderPackage.id" :index="index"
+                        :orderPackage="orderPackage"
+                        class="grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
                         <div class="text-center border">{{ index + orderPackages.from }}</div>
                         <div class="pl-2 text-[#FF0000] border">{{ orderPackage.idPackage }}</div>
                         <div class="text-center border">{{ orderPackage.product_service?.life_time }} năm</div>
                         <div class="text-center border">{{ orderPackage.customer?.name }}</div>
-                        <div class="text-center border">{{ orderPackage.customer?.cic_number }}</div>
-                        <div class="text-center border">
-                            {{ hasAnyPermission(['super-admin']) ? orderPackage?.customer?.phone_number :
-                                                hidePhoneNumber(orderPackage?.customer?.phone_number) }}
+                        <div class="text-center border">{{ orderPackage.time_approve }}</div>
+                        <div v-for="n in 6" :key="n" class="text-center py-2 ">
+
                         </div>
-                        <div class="text-center border">{{ orderPackage.product_service_owner?.quantity_delivered }}</div>
-                        <div class="text-center border">{{ orderPackage.product_service_owner?.product.number_receive_product - orderPackage.product_service_owner?.quantity_delivered }}</div>
-                        <div class="text-center border"></div>
+                        <div class="text-center border">{{ orderPackage.market }}</div>
+                        <div class="text-center border">{{ orderPackage.customer?.wards }}</div>
+                        <div class="text-center border">{{ orderPackage.customer?.district }}/{{ orderPackage.customer?.city
+                        }} </div>
                     </div>
                 </div>
                 <pagination :links="orderPackages.links" />
+
+
+            </div>
+
+            <div class="mt-3">
+                <h2 class="font-semibold  flex mr-2">
+                    Chọn nhân viên CSKH {{ getWeekOffset(offset)[3] }}
+                </h2>
+                <div class="w-full flex">
+                    <div class="lg:w-1/2 sm:w-full mt-2 ">
+                        <div class="bg-[#5C5C5C] text-white  grid grid-cols-4 divide-x">
+                            <div class="text-center py-2 border">STT</div>
+                            <div class="text-center py-2 border">User CSKH</div>
+                            <div class="text-center py-2 border">Trạng thái</div>
+                            <div class="text-center py-2 border">Chọn</div>
+
+                        </div>
+                        <div v-for="(user, index) in cskh" :key="user.id" :index="index"
+                            class="grid grid-cols-4 divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
+                            <div class="text-center border py-2">{{ index + 1 }}</div>
+                            <div class="pl-2 text-[#FF0000] border py-2">{{ user.name }}</div>
+                            <div class="text-center border py-2">{{ user.isActive == 1 ? 'Active' : 'Inactive' }}</div>
+                            <div class="text-center border py-2">
+                                <input v-if="user.isActive == 1" id="default-checkbox" type="checkbox" v-model="selected"
+                                    :value="user.id"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" lg:w-1/2 sm:w-full mt-2 mb-0 container flex flex-col">
+                        <div class="absolute right-6  ">
+                            <div class="px-4">
+                                <div class="flex items-center">
+                                    <div class="bg-[#4F8D06] w-4 h-4 mx-2 rounded"></div>
+                                    Đã gọi điện
+                                </div>
+                                <div class="flex items-center ">
+                                    <div class="bg-[#3D3C3C] w-4 h-4 mx-2 rounded"></div>
+                                    Chưa gọi điện
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="bg-[#FF0303] w-4 h-4 mx-2 rounded"></div>
+                                    Không nghe máy
+                                </div>
+                                <div class="flex items-center ">
+                                    <div class="bg-[#1D75FA] w-4 h-4 mx-2 rounded"></div>
+                                    Bắt máy, không trả lời
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-40 flex ">
+                            <div class="mx-auto mb-0">
+                                <p class="text-[#FF0000] font-bold"> . Có 01 khách hàng mới tạo hợp đồng chưa được phân công
+                                    chăm sóc </p>
+                                <div class="flex">
+                                    <button class="px-2 py-2 bg-[#1D75FA] rounded text-white mr-2">Chia công việc</button>
+                                    <Link href="" class="px-2 py-2 bg-[#1D75FA] rounded text-white"> Xem bảng chia CV</Link>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
 
 
             </div>
@@ -256,5 +321,4 @@ const cacularOffSet = (index) => {
 
 .v-calendar .input-field svg.datepicker {
     fill: #65716b;
-}
-</style>
+}</style>

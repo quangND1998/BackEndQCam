@@ -70,7 +70,7 @@ initFlowbite();
 
 const Fillter = (event) => {
     console.log(filter);
-    router.get(route(`admin.booking.detail`,props.booking.id),
+    router.get(route(`admin.booking.detail`, props.booking.id),
         filter,
         {
             preserveState: true,
@@ -80,7 +80,7 @@ const Fillter = (event) => {
 }
 const FillterStatus = (status) => {
     filter.status = status;
-    router.get(route(`admin.booking.detail`,props.booking.id),
+    router.get(route(`admin.booking.detail`, props.booking.id),
         filter,
         {
             preserveState: true,
@@ -176,7 +176,7 @@ const changeStatus = (code, index, status) => {
     formRef.index = index;
     formRef.status = status;
     console.log(formRef.ref_id[index]);
-    if (status !="Đã hủy" && ( formRef.index == null || formRef.ref_id[index] == "None")) {
+    if (status != "Đã hủy" && (formRef.index == null || formRef.ref_id[index] == "None")) {
         swal.fire({
             title: "Lỗi?",
             text: "Chưa có thông tin Ref nhận!",
@@ -237,11 +237,16 @@ const changeStatusAll = (status) => {
                         <label>Toàn thời gian</label>
                     </div>
                     <div class="flex">
-                        <label @click="FillterStatus('all')" class="px-3 cursor-pointer">Tổng: {{ booking.history_count }} mã booking</label>
-                        <label @click="FillterStatus('Chưa phát')" class="px-3 text-[#FF6100] cursor-pointer">Chưa phát: {{ totalBooking("Chưa phát") }}</label>
-                        <label @click="FillterStatus('Đang phát')" class="px-3 text-[#1D75FA] cursor-pointer">Đang phát: {{ totalBooking("Đang phát") }} </label>
-                        <label @click="FillterStatus('Đã thu hồi')" class="px-3 text-[#4F8D06] cursor-pointer">Thu hồi: {{ totalBooking("Đã thu hồi") }} </label>
-                        <label @click="FillterStatus('Đã hủy')" class="px-3 text-[#FF0303] cursor-pointer">Hủy: {{ totalBooking("Đã hủy") }} </label>
+                        <label @click="FillterStatus('all')" class="px-3 cursor-pointer">Tổng: {{ booking.history_count }}
+                            mã booking</label>
+                        <label @click="FillterStatus('Chưa phát')" class="px-3 text-[#FF6100] cursor-pointer">Chưa phát: {{
+                            totalBooking("Chưa phát") }}</label>
+                        <label @click="FillterStatus('Đang phát')" class="px-3 text-[#1D75FA] cursor-pointer">Đang phát: {{
+                            totalBooking("Đang phát") }} </label>
+                        <label @click="FillterStatus('Đã thu hồi')" class="px-3 text-[#4F8D06] cursor-pointer">Thu hồi: {{
+                            totalBooking("Đã thu hồi") }} </label>
+                        <label @click="FillterStatus('Đã hủy')" class="px-3 text-[#FF0303] cursor-pointer">Hủy: {{
+                            totalBooking("Đã hủy") }} </label>
                     </div>
                     <div>
                         <div class=" px-2">
@@ -259,32 +264,34 @@ const changeStatusAll = (status) => {
                 <div class="w-full mt-2 flex items-center justify-between">
                     <div class="flex">
                         <div class="mr-4 flex-col flex">
-                            <Button @click="changeStatusAll('phát')" class="px-4 py-1.5 rounded bg-[#1D75FA] text-white"> Phát toàn bộ</Button>
+                            <Button @click="changeStatusAll('phát')" class="px-4 py-1.5 rounded bg-[#1D75FA] text-white">
+                                Phát toàn bộ</Button>
                         </div>
                         <div class="mr-4 flex-col flex">
-                            <Button @click="changeStatusAll('thu')" class="px-4 py-1.5 rounded bg-[#FF6100] text-white"> Thu toàn bộ</Button>
+                            <Button @click="changeStatusAll('thu')" class="px-4 py-1.5 rounded bg-[#FF6100] text-white"> Thu
+                                toàn bộ</Button>
                         </div>
                     </div>
 
                     <div class="flex items-center mr-4">
                         <div class=" form_search">
-                                <form v-on:submit.prevent>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-1 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg aria-hidden="true" class="w-5 h-5 text-sm text-gray-500 text-gray-400"
-                                                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                            </svg>
-                                        </div>
-                                        <input type="search" id="default-search" name="search" data-toggle="hideseek"
-                                            laceholder="Search Menus" data-list=".menu-category" v-model="filter.search"
-                                            @keyup="Fillter()"
-                                            class="block w-full p-2 pl-5 text-xs text-gray-900 border border-gray-300 rounded-xl bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Nhập mã booking" required />
+                            <form v-on:submit.prevent>
+                                <div class="relative">
+                                    <div class="absolute inset-y-1 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-sm text-gray-500 text-gray-400"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
                                     </div>
-                                </form>
+                                    <input type="search" id="default-search" name="search" data-toggle="hideseek"
+                                        laceholder="Search Menus" data-list=".menu-category" v-model="filter.search"
+                                        @keyup="Fillter()"
+                                        class="block w-full p-2 pl-5 text-xs text-gray-900 border border-gray-300 rounded-xl bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Nhập mã booking" required />
+                                </div>
+                            </form>
                         </div>
                         <div class="mr-4 ">
                             <div class="w-full flex flex-wrap">
@@ -306,17 +313,18 @@ const changeStatusAll = (status) => {
                                         <option value="Đã hủy">Đã hủy</option>
                                     </select>
                                     <!-- <Button class="mx-2 px-3 rounded py-1.5 bg-[#EAEAEA] text-black">Chưa phát</Button> -->
-                                    <Button @click="Fillter()" class="px-4 py-2 rounded bg-[#4F8D06] text-white">Lọc</Button>
+                                    <Button @click="Fillter()"
+                                        class="px-4 py-2 rounded bg-[#4F8D06] text-white">Lọc</Button>
                                 </div>
 
                             </div>
                         </div>
                     </div>
                     <div class="flex">
-                        <Link :href="route('admin.booking.print',props.booking.id)" class="flex">
-                            <BaseIcon :path="mdiPrinterOutline" class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
-                                size="60"></BaseIcon>
-                            <p>In</p>
+                        <Link :href="route('admin.booking.print', props.booking.id)" class="flex">
+                        <BaseIcon :path="mdiPrinterOutline" class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
+                            size="60"></BaseIcon>
+                        <p>In</p>
                         </Link>
 
                     </div>
@@ -344,11 +352,11 @@ const changeStatusAll = (status) => {
                                         <td class=" text-left px-3 py-2 text-gray-500">{{ index + 1 }}</td>
                                         <td class=" text-left px-3 py-2 font-bold " :class="code.status == 'Chưa phát' ? 'text-[#FF6100]' : code.status == 'Đang phát' ? 'text-[#1D75FA]' :
                                             code.status == 'Đã thu hồi' ? 'text-[#4F8D06]' : 'text-[#FF0000]'">{{
-                                            code?.ballot_code
-                                        }}</td>
-                                        <td class="w-[300px] px-4">
-                                            <Multiselect @select="ChangeRef(code, index,'select')" @clear="ChangeRef(code, index,'huy')"
-                                                 v-model="formRef.ref_id[index]"
+        code?.ballot_code
+    }}</td>
+                                        <td class="w-[300px] px-4 booking_td">
+                                            <Multiselect @select="ChangeRef(code, index, 'select')"
+                                                @clear="ChangeRef(code, index, 'huy')" v-model="formRef.ref_id[index]"
                                                 :searchable="true" label="name" valueProp="id" trackBy="name"
                                                 placeholder="None" :options="users" :classes="{
                                                     placeholder: 'text-[12px] relative text-left w-full px-3',
@@ -394,19 +402,21 @@ const changeStatusAll = (status) => {
                                             code?.reason }}
                                         </td>
                                         <td class=" text-left px-3 py-2 action flex items-center">
-                                            <Button class=" rounded-lg mr-2 " :disabled="code.status == 'Đang phát' ? true : false" :class="code.status == 'Đang phát' ? 'text-gray':  'text-[#FF6100]' "
+                                            <Button class=" rounded-lg mr-2 "
+                                                :disabled="code.status == 'Đang phát' ? true : false"
+                                                :class="code.status == 'Đang phát' ? 'text-gray' : 'text-[#FF6100]'"
                                                 @click="changeStatus(code, index, 'Đang phát')">
                                                 Phát
                                             </Button>
-                                            <Button class=" text-[#FF6100] rounded-lg mr-2 " :disabled="code.status == 'Đã thu hồi' ? true : false" :class="code.status == 'Đã thu hồi' ? 'text-gray':  'text-[#FF6100]' "
+                                            <Button class=" text-[#FF6100] rounded-lg mr-2 "
+                                                :disabled="code.status == 'Đã thu hồi' ? true : false"
+                                                :class="code.status == 'Đã thu hồi' ? 'text-gray' : 'text-[#FF6100]'"
                                                 @click="changeStatus(code, index, 'Đã thu hồi')">
                                                 Thu
                                             </Button>
                                             <BaseIcon :path="mdiCloseThick" class=" text-[#FF0000] rounded-lg  mr-2 "
-                                                v-tooltip.top="'hủy'"
-                                                data-toggle="modal"
-                                                data-target="#exampleModalDecline" @click="openDecline(code)"
-                                                size="20">
+                                                v-tooltip.top="'hủy'" data-toggle="modal" data-target="#exampleModalDecline"
+                                                @click="openDecline(code)" size="20">
                                             </BaseIcon>
                                         </td>
                                     </tr>
@@ -432,7 +442,6 @@ td {
     font-size: 12px;
     /* color: rgb(107 114 128 / var(--tw-text-opacity)); */
     font-family: sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-}
-</style>
+}</style>
 
 
