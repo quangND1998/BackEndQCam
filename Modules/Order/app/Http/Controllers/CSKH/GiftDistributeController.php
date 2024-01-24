@@ -31,17 +31,7 @@ class GiftDistributeController extends Controller
         // return $orderPackages;
         return Inertia::render('Modules/CSKH/Role', compact('orderPackages'));
     }
-    public function getSchedule(Request $request){
-        $orderPackages = $this->getOrderPackage($request);
-        $cskh = User::whereHas(
-            'roles',
-            function ($query) {
-                $query->where('name', 'cskh');
-            }
-        )->get();
-        // return $orderPackages;
-        return Inertia::render('Modules/CSKH/Schedule', compact('orderPackages','cskh'));
-    }
+
     public function groupByOrderStatus()
     {
         // chua nhan qua l2
