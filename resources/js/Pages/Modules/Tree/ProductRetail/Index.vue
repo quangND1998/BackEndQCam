@@ -40,6 +40,7 @@ const form = useForm({
     id: null,
     name: null,
     description: null,
+    available_quantity: null,
     price: null,
     images: null
 });
@@ -67,6 +68,7 @@ const edit = (product) => {
     form.name = product.name;
     form.price = product.price;
     form.description = product.description;
+    form.available_quantity = product.available_quantity;
     product_retail.value= product;
 };
 
@@ -79,7 +81,7 @@ const save = () => {
                 editMode.value = true;
             },
             onSuccess: () => {
-                form.reset('id', 'name', 'price', 'description', 'images');
+                form.reset('id', 'name', 'price', 'description', 'images','available_quantity');
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -91,7 +93,7 @@ const save = () => {
                 editMode.value = false;
             },
             onSuccess: () => {
-                form.reset('id', 'name', 'price', 'description', 'images');
+                form.reset('id', 'name', 'price', 'description', 'images','available_quantity');
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -190,7 +192,7 @@ const Delete = (id) => {
                         @click="
                             isModalActive = true;
                             editMode= false;
-                            form.reset('id', 'name', 'price', 'description', 'images');
+                            form.reset();
                         " label="Create Product Retail" />
                 </div>
             </div>
@@ -199,10 +201,12 @@ const Delete = (id) => {
                 :title="editMode ? 'Update Product Retail' : 'Create Product Retail'">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <InputLabel for="name" value="Name" />
-                        <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
-                            autocomplete="name" />
-                        <InputError class="mt-2" :message="form.errors.name" />
+                        <div class="mb-2">
+                            <InputLabel for="name" value="Name" />
+                            <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
+                                autocomplete="name" />
+                            <InputError class="mt-2" :message="form.errors.name" />
+                        </div>
                         <div class="">
                             <label class="input w-full" for="recipient-name">
 
@@ -213,7 +217,7 @@ const Delete = (id) => {
                             </label>
                             <InputError class="mt-2" :message="form.errors.price" />
                         </div>
-                        <div class="mt-2">
+                        <div class="mt">
 
                             <!-- <input @input="form.images = $event.target.files" multiple accept="image/*"
                                 class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
@@ -226,12 +230,16 @@ const Delete = (id) => {
 
                     </div>
                     <div>
+                        <div class="flex flex-col">
+                                <InputLabel for="name" value="Số lượng" />
+                                <input v-model="form.available_quantity" type="number" class="border rounded mb-2"
+                                    :min="0"  />
+                                <InputError class="mt-2" :message="form.errors.available_quantity" />
+                        </div>
                         <div class="">
                             <InputLabel for="name" value="Description" />
                             <label class="input w-full" for="recipient-name">
-
                                 <quill-editor v-model:content="form.description" contentType="html"></quill-editor>
-
                             </label>
                             <InputError class="mt-2" :message="form.errors.description" />
                         </div>

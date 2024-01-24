@@ -314,7 +314,7 @@ const changeStatus = (data, event) => {
                                     Mức áp dụng
                                 </div>
                                 <div class="w-4/5 ml-2 pl-2">
-                                    Mốc doanh thu áp dụng(TRIỆU ĐỒNG)
+                                    Mốc doanh thu áp dụng (TRIỆU ĐỒNG)
                                 </div>
                             </div>
                             <div class="w-full" >

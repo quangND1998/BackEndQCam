@@ -46,6 +46,50 @@ export const helper = {
             let val = (value / 1).toFixed(0).replace('.', ',')
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         },
+        currentDate(){
+            const date = new Date();
+            return moment(String(date)).format(' HH:mm DD/MM/YYYY')
+        },
+        currentWeek(){
+            const date = new Date();
+            const datecurrent = moment(); // Lấy ngày hiện tại
+            const weekNumber = datecurrent.isoWeek(); // Lấy tuần thứ bao nhiêu của năm
+            const weekMonth = datecurrent.week(); // Lấy tuần thứ bao nhiêu của tháng
+            const currentMonth = date.getMonth() + 1;
+
+            // Lấy ngày đầu tuần
+            const startOfWeek = datecurrent.startOf('week').format('DD/MM/YYYY');
+
+            // Lấy ngày cuối tuần
+            const endOfWeek = datecurrent.endOf('week').format('DD/MM/YYYY');
+
+            let text = 'TUẦN ' + weekNumber + ' NĂM ' + date.getFullYear() + ' (Tuần thứ ' + weekMonth + '/tháng ' + currentMonth + ")"
+                        + ' TỪ NGÀY ' + startOfWeek + ' ĐẾN NGÀY ' + endOfWeek;
+            return text;
+            console.log('Tuần thứ:', weekNumber);
+        },
+        getWeekOffset(offset) {
+            const currentWeek = moment().week();
+            const targetWeek = currentWeek + offset;
+            const targetDate = moment().week(targetWeek).startOf('week');
+
+            const weekNumber = targetDate.week(); // Lấy tuần thứ bao nhiêu của năm
+            const weekMonth = targetDate.week() - targetDate.clone().startOf('month').week() + 1; // Lấy tuần thứ bao nhiêu của tháng
+            const targetStartDate = moment().week(targetWeek).startOf('week').format('YYYY-MM-DD');
+            const targetEndDate = moment().week(targetWeek).endOf('week').format('YYYY-MM-DD');
+
+            const month = targetDate.format('M');
+            const year = targetDate.format('YYYY');
+
+            // return {
+            //   week: targetWeek,
+            //   startDate: targetStartDate,
+            //   endDate: targetEndDate
+            // };
+            let text = 'TUẦN ' + weekNumber + ' NĂM ' + year + ' (Tuần thứ ' + weekMonth + '/tháng ' + month + ")"
+                        + ' TỪ NGÀY ' + targetStartDate + ' ĐẾN NGÀY ' + targetEndDate;
+            return text;
+        },
         formatPriceShort(value) {
             // console.log(value.toString().length)
             let val = (value / 1).toFixed(0).replace('.', ',')

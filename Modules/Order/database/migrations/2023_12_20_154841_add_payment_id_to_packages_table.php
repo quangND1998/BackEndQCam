@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('commissions_packages', function (Blueprint $table) {
 
-            $table->unsignedBigInteger('history_payment_id')->nullable();
-            $table->foreign('history_payment_id')->references('id')->on('history_payments')->onDelete('cascade');
+            // $table->unsignedBigInteger('history_payment_id')->nullable();
+            // $table->foreign('history_payment_id')->references('id')->on('history_payments')->onDelete('cascade');
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('commissions_packages', function (Blueprint $table) {
-            $table->string('history_payment_id');
+            // $table->string('history_payment_id');
         });
     }
 };

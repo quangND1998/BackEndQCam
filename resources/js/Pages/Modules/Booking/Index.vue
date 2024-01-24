@@ -29,15 +29,19 @@ import Dropdown from '@/Components/Dropdown.vue';
 import BaseIcon from '@/Components/BaseIcon.vue'
 import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
+import Multiselect from '@vueform/multiselect'
 defineProps({
     bookings: Object,
+    users: Object,
 });
 const searchVal = ref("");
 const swal = inject("$swal");
 const form = useForm({
     id: null,
-    name: null,
-    state: null,
+    ballot_number: null,
+    ballot_code: null,
+    user_id: null,
+    status: 'active',
 });
 const isModalActive = ref(false);
 const editMode = ref(false);
@@ -54,14 +58,16 @@ const edit = (booking) => {
     isModalActive.value = true;
     editMode.value = true;
     form.id = booking.id;
-    form.name = booking.name;
-    form.state = booking.state;
+    form.ballot_number = booking.ballot_number;
+    form.ballot_code = booking.ballot_code;
+    form.status = booking.status;
+    form.user_id = booking.user_id;
 };
 
 const save = () => {
     console.log(form);
     if (editMode.value == true) {
-        form.put(route("admin.land.update", form.id), {
+        form.put(route("admin.booking.update", form.id), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = true;
@@ -73,7 +79,7 @@ const save = () => {
             },
         });
     } else {
-        form.post(route("admin.land.store"), {
+        form.post(route("admin.booking.store"), {
             onError: () => {
                 isModalActive.value = true;
                 editMode.value = false;
@@ -93,8 +99,8 @@ const save = () => {
 const Delete = (id) => {
     swal
         .fire({
-            title: "Are you sure?",
-            text: "Delete this permission!",
+            title: "Bạn có chắc chắn?",
+            text: "Muốn xóa đầu phiếu!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -104,11 +110,11 @@ const Delete = (id) => {
         .then((result) => {
             if (result.isConfirmed) {
                 console.log(id);
-                form.delete(route("admin.land.delete", id), {
+                form.delete(route("admin.booking.destroy", id), {
                     onSuccess: () => {
                         swal.fire(
                             "Deleted!",
-                            "Your permission has been deleted.",
+                            "Đã xóa đầu phiếu.",
                             "success"
                         );
                     },
@@ -121,7 +127,7 @@ const Delete = (id) => {
     <LayoutAuthenticated>
 
         <SectionMain class="pl-0 mt-5 p-3" >
-            <SectionTitleLineWithButton title="Lô đất" main></SectionTitleLineWithButton>
+            <SectionTitleLineWithButton title="Quản lý booking" main></SectionTitleLineWithButton>
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
@@ -130,84 +136,102 @@ const Delete = (id) => {
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 " :icon="mdiPlus" small
+                    <Button color="info" class="bg-[#FF6100] text-white px-4 py-2.5 rounded-xl "
                         @click="
                             isModalActive = true;
                         form.reset();
-                        " label="Thêm mã" />
+                        " label="Thêm mã" >Thêm mã</Button>
+
                 </div>
             </div>
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
-                :title="editMode ? 'Update Land' : 'Create Land'">
-                <InputLabel for="name" value="Name" />
-                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
-                    autocomplete="name" />
-                <InputError class="mt-2" :message="form.errors.name" />
+                :title="editMode ? 'Sửa phiếu' : 'Tạo phiếu'">
+                <div class="w-full flex">
+                    <div class="w-1/3 px-2">
+                        <InputLabel for="ballot_number" value="Đầu phiếu" />
+                        <TextInput id="ballot_number" v-model="form.ballot_number" type="text" class="mt-1 block w-full" required autofocus
+                            autocomplete="ballot_number" />
+                        <InputError class="mt-2" :message="form.errors.ballot_number" />
+                    </div>
+                    <div class="w-1/3 px-2">
+                        <InputLabel for="ballot_code" value="Mã phiếu" />
+                        <TextInput id="ballot_code" v-model="form.ballot_code" type="text" class="mt-1 block w-full" required autofocus
+                            autocomplete="ballot_code" />
+                        <InputError class="mt-2" :message="form.errors.ballot_code" />
+                    </div>
+                    <div class="w-1/3 px-2">
+                        <InputLabel for="ballot_code" value="Đơn vị nhận mã" />
+                        <Multiselect v-model="form.user_id" :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="users" :classes="{
+                            tagsSearch: 'absolute  inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                            container: 'relative border_round mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                            }" >
+                                <template v-slot:singlelabel="{ value }">
+                                    <div class="multiselect-single-label">
+                                        {{ value.name }}
+                                    </div>
+                                </template>
 
-                <InputLabel for="owner" value="Status" />
+                                <template v-slot:option="{ option }">
+                                    {{ option.name }}
+                                </template>
+                        </Multiselect>
+                    </div>
+                </div>
+                <div class="px-2">
+                    <InputLabel for="owner" value="Trạng thái" />
 
-                <select id="category_project_id" v-model="form.state"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option :value="null">Choose Status</option>
-                    <option value="public">Mở bán</option>
-                    <option value="private">Chưa mở bán</option>
-                </select>
-                <InputError class="mt-2" :message="form.errors.state" />
+                    <select id="category_project_id" v-model="form.status"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="active">active</option>
+                        <option value="deactive">deactive</option>
+                    </select>
+                    <InputError class="mt-2" :message="form.errors.status" />
+                </div>
+
             </CardBoxModal>
             <!-- End Modal -->
             <div class="mt-2">
                 <div class="grid sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 gap-4 ">
                     <div v-for="(booking, index) in bookings.data" :key="index" class="py-2">
                         <!-- </Link> -->
-                        <Link :href="route('admin.land.tree.index',  land.id)">
-                        <div class="bg-[#ffffff] border px-2 py-2 items-center  rounded-xl">
-                            <div class="flex justify-between">
-
+                        <Link :href="route('admin.booking.detail',  booking.id)">
+                            <div class="bg-[#ffffff] border px-2 py-2 items-center  rounded-xl">
+                                <div class="w-full flex  items-center justify-between ">
+                                <div class="w-full flex flex-col items-center ">
                                     <h3 class="text-black text-sm font-medium ">{{ booking.ballot_number }} </h3>
-                                    <p>
-                                        Đã phát: /{{ booking.history_count }}
-                                    </p>
+                                        <p :class="booking.status == 'active' ? 'text-[#4F8D06]' : 'text-black' ">
+                                            Đã phát: {{ booking.booking_owner_count }}/{{ booking.history_count }}
+                                        </p>
+                                </div>
+                                <div class="">
+                                    <Dropdown align="right" width="40" @click.prevent>
+                                        <template #trigger>
+                                            <span class="inline-flex rounded-md">
+                                                <BaseButton class="bg-[#D9D9D9] border-[#D9D9D9]" :icon="mdiDotsVertical" small />
+                                            </span>
+                                        </template>
 
-                                <Dropdown align="right" width="40" @click.prevent>
-                                <template #trigger>
-                                    <span class="inline-flex rounded-md">
-                                        <BaseButton class="bg-[#D9D9D9] border-[#D9D9D9]" :icon="mdiDotsVertical" small />
-                                    </span>
-                                </template>
+                                        <template #content>
+                                            <div class="w-40">
+                                                <div @click="edit(booking)"
+                                                    class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
+                                                    <p class="hover:text-blue-700"> Edit</p>
+                                                    <BaseButton :icon="mdiPencil" small class="text-[#2264E5]" type="button"
+                                                        data-toggle="modal" data-target="#exampleModal" />
+                                                </div>
+                                                <div @click="Delete(booking.id)"
+                                                    class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
+                                                    <p class="hover:text-red-700"> Delete</p>
+                                                    <BaseButton :icon="mdiTrashCanOutline" small class="text-[#D12953]" />
+                                                </div>
 
-                                <template #content>
-                                    <div class="w-40">
-                                        <div @click="edit(booking)"
-                                            class="flex justify-between items-center px-4 text-sm text-[#2264E5] cursor-pointer  font-semibold">
-                                            <p class="hover:text-blue-700"> Edit</p>
-                                            <BaseButton :icon="mdiPencil" small class="text-[#2264E5]" type="button"
-                                                data-toggle="modal" data-target="#exampleModal" />
-                                        </div>
-                                        <div @click="Delete(booking.id)" v-if="land.state !== 'public'"
-                                            class="flex justify-between items-center px-4  text-sm text-[#D12953] cursor-pointer  font-semibold">
-                                            <p class="hover:text-red-700"> Delete</p>
-                                            <BaseButton :icon="mdiTrashCanOutline" small class="text-[#D12953]" />
-                                        </div>
-
-                                    </div>
-                                </template>
-                            </Dropdown>
+                                            </div>
+                                        </template>
+                                    </Dropdown>
+                                </div>
+                                </div>
                             </div>
-                            <div class=" flex justify-center">
-                                <span v-if="booking.state == 'public'"
-                                class="text-xs font-mono paid btn_key text-center">
-                                Mở bán
-                            </span>
-                            <span v-if="booking.state == 'private'"
-                                class="inline-block whitespace-nowrap rounded-full bg-red-200 border-rose-600 text-red px-[0.65em] py-1 text-center align-baseline text-[0.75em] font-bold leading-none text-danger-700">
-                                Chưa Mở bán
-                            </span>
-                            </div>
-
-
-
-                        </div>
-                    </Link>
+                        </Link>
                     </div>
 
                 </div>
@@ -217,3 +241,4 @@ const Delete = (id) => {
     </LayoutAuthenticated>
 </template>
 
+<style src="@vueform/multiselect/themes/default.css"></style>

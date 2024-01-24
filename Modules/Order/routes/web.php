@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Order\app\Http\Controllers\CSKH\CSKHOrderController;
+use Modules\Order\app\Http\Controllers\CSKH\GiftDistributeController;
 use Modules\Order\app\Http\Controllers\CskhController;
 use Modules\Order\app\Http\Controllers\HistoryPaymentController;
 use Modules\Order\app\Http\Controllers\OrderController;
@@ -152,6 +153,12 @@ Route::middleware(['auth'])->group(
                 Route::get('refund', [CSKHOrderController::class, 'refund'])->name('refund');
                 Route::get('decline', [CSKHOrderController::class, 'decline'])->name('decline');
                 Route::get('notShipperReceive', [CSKHOrderController::class, 'not_shipper_receive'])->name('notShipperReceive');
+            });
+            Route::prefix('gift_distribute')->as('gift_distribute.')->group(function () {
+                Route::get('index', [GiftDistributeController::class, 'index'])->name('index');
+                Route::get('role', [GiftDistributeController::class, 'getRolePackage'])->name('role');
+                Route::get('schedule', [GiftDistributeController::class, 'getSchedule'])->name('schedule');
+
             });
         });
     }

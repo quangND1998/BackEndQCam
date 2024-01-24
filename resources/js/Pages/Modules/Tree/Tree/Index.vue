@@ -9,7 +9,7 @@ import CardBoxModal from "@/Components/CardBoxModal.vue";
 import CardBoxModalFull from "@/Components/CardBoxModalFull.vue";
 import {
     mdiPlus,
-    mdiFilter, mdiPencilOutline, mdiTrashCan
+    mdiFilter, mdiPencilOutline, mdiTrashCan,mdiTrashCanOutline,mdiCloseThick
 } from '@mdi/js'
 import BaseButton from "@/Components/BaseButton.vue";
 
@@ -26,6 +26,8 @@ import BaseButtons from '@/Components/BaseButtons.vue';
 import InputLabel from "@/Components/InputLabel.vue";
 import Multiselect from '@vueform/multiselect'
 import InputError from "@/Components/InputError.vue";
+import VueDatepickerUi from 'vue-datepicker-ui'
+import 'vue-datepicker-ui/lib/vuedatepickerui.css';
 const store = useTreeStore()
 const props = defineProps({
     land: Object,
@@ -51,6 +53,7 @@ const formActivity = useForm({
     id: null,
     tree: null,
     date: null,
+    note: null,
     activities: null,
     selectedActivity: [],
 });
@@ -132,7 +135,7 @@ const save = () => {
     // axios.post(`/admin/historyCare/${formActivity.tree?.id}/store`, formActivity)
     // .then(response => {
     //     // console.log(response);
-    //     form.tree = response.data;
+    //     formActivity.tree = response.data;
     //     formActivity.reset();
     //     isModalActivityActive.value = false;
     //     editActivityMode.value = false;
@@ -185,7 +188,32 @@ const Delete = (id) => {
             }
         });
 };
-
+const deleteHistory = (id) => {
+    swal
+        .fire({
+            title: "Bạn có chắn chắn",
+            text: "Muốn xóa lịch sử chăm sóc cây",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                console.log(id);
+                    axios.delete(`/admin/historyCare/${id}/destroy`, formActivity)
+                    .then(response => {
+                        console.log(response);
+                        formActivity.tree = response.data;
+                    })
+                    .catch(error => {
+                        // console.log(error);
+                        console.error("There was an error!", error.message);
+                    });
+            }
+        });
+}
 const searchTree = () => {
     router.get(route(`admin.land.tree.index`, props.land.id),
         { search: searchVal.value },
@@ -245,7 +273,7 @@ if (formActivityLand.selectedActivity.includes(id)) {
         <SectionMain class="p-3">
             <SectionTitleLineWithButton title="Cây cam " main></SectionTitleLineWithButton>
             <!-- Modal -->
-            <CardBoxModalFull class="w-full overflow-hidden" v-model="isModalActivityActive" buttonLabel="Xác nhận" has-cancel
+            <CardBoxModalFull class="w-full overflow-hidden" v-model="isModalActivityActive" buttonLabel="Xác nhận"
                 @confirm="save"
                 :title="`Lịch sử chăm sóc cây ${formActivity?.tree?.name} (${formActivity?.tree?.address})`">
                 <div class="p-6 flex-auto">
@@ -258,7 +286,7 @@ if (formActivityLand.selectedActivity.includes(id)) {
                                         <div
                                             class="absolute border_round inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                         </div>
-                                        <VueDatePicker class="border_round" v-model="formActivity.date" placeholder="date" />
+                                        <VueDatepickerUi class="border_round" lang="vn" v-model="formActivity.date" placeholder="date" ></VueDatepickerUi>
                                     </div>
                                 </div>
                             </div>
@@ -273,7 +301,16 @@ if (formActivityLand.selectedActivity.includes(id)) {
                                 </div>
 
                             </div>
+
                         </div>
+                        <div class="md:w-1/2">
+                                <label class="input w-full" for="recipient-name">
+
+                                    <quill-editor ref="description" v-model:content="formActivity.note" contentType="html"></quill-editor>
+                                    <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Ghi chú </span>
+                                </label>
+                                <InputError class="mt-2" :message="formActivity.errors.note" />
+                            </div>
                         <div class="flex justify-end">
                             <Button label="Xác nhận" color="blue"
                                 class="border py-2 px-4 rounded-2xl bg-[#4F8D06] text-white" @click="save">Xác nhận</Button>
@@ -286,6 +323,7 @@ if (formActivityLand.selectedActivity.includes(id)) {
                                 <th>Loại</th>
                                 <th>Ngày</th>
                                 <th>Hoạt động</th>
+                                <th>Ghi chú</th>
                                 <th>Hành động</th>
                             </tr>
                         </thead>
@@ -299,10 +337,13 @@ if (formActivityLand.selectedActivity.includes(id)) {
                                 <td class="border-0 flex">
                                     <p v-for="(activity,index3) in history_care.activity_care" :key="index3"> {{ activity.name }}, </p>
                                 </td>
-
                                 <td class="border-0">
-                                    <BaseButton color="gray" class="border-0 text=gray=300 hover:text-black"
-                                        :icon="mdiTrashCanOutline" small @click="deleteHistory(history_care.id)" />
+                                    <div  class="" v-html="history_care.note" />
+                                </td>
+                                <td class="border-0">
+                                    <!-- <BaseButton color="gray" class="border-0 text=gray=300 hover:text-black"
+                                        :icon="mdiTrashCanOutline" small @click="deleteHistory(history_care.id)" /> -->
+                                    <BaseButton color="danger" :icon="mdiCloseThick" small @click="deleteHistory(history_care.id)" />
                                 </td>
                             </tr>
                         </tbody>
@@ -519,5 +560,14 @@ if (formActivityLand.selectedActivity.includes(id)) {
     margin: 0 6px 0 0;
     border-radius: 50%;
     height: 22px;
+  }
+  .ql-toolbar{
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+  }
+  .ql-container {
+    height: 120px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
   }
 </style>

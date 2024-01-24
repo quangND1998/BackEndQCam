@@ -124,13 +124,13 @@ export default [{
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: ['visit.pending', 'visit.confirm', 'visit.completed']
             },
-            // {
-            //     route: 'visit.pending',
-            //     label: 'Khiếu nại',
+            {
+                route: 'visit.pending',
+                label: 'Khiếu nại',
 
-            //     permissions: ['super-admin'],
-            //     route_list: null
-            // },
+                permissions: ['super-admin'],
+                route_list: null
+            },
             {
                 route: 'admin.review.index',
                 label: 'Đánh giá',
@@ -138,6 +138,50 @@ export default [{
                 permissions: ['super-admin'],
                 route_list: null
             }
+        ]
+    },
+    {
+        label: 'CSKH',
+        icon: mdiFileTreeOutline,
+        permissions: ['super-admin','cskh'],
+        route_list: ['admin.booking.index','admin.booking.detail'],
+        menu: [{
+                route: 'admin.booking.index',
+                label: 'QLHS',
+
+                permissions: ['super-admin','cskh'],
+                route_list: ['admin.booking.index','admin.booking.detail']
+            },
+            {
+                route: 'admin.gift_distribute.index',
+                label: 'Bảng PB quà',
+                permissions: ['super-admin','cskh'],
+                route_list: null
+            },
+            {
+                route: 'admin.gift_distribute.role',
+                label: 'Quyền hợp đồng',
+                permissions: ['super-admin','cskh'],
+                route_list: null
+            },
+            {
+                route: 'admin.gift_distribute.schedule',
+                label: 'Lên KH',
+                permissions: ['super-admin','cskh'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.all',
+                label: 'Pending',
+                permissions: ['super-admin','cskh'],
+                route_list: null
+            },
+            {
+                route: 'admin.orders.package.all',
+                label: 'Call Center',
+                permissions: ['super-admin','cskh'],
+                route_list: null
+            },
         ]
     },
     {

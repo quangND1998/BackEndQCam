@@ -41,7 +41,7 @@ const updateScheduleVisits = (orderPackageIndex, scheduleVisit) => {
   orderPackages.value[orderPackageIndex].product_service_owner.visit.push(scheduleVisit);
 }
 const addExtraService = (extraService) => {
-  extraServices.push(extraService);
+  extraServices.value.push(extraService);
 }
 const updateExtraServiceState = (index, newState) => {
   extraServices.value[index].is_active = newState;

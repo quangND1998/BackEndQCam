@@ -14,6 +14,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Modules\Customer\app\Models\HistoryExtend;
+use Modules\CustomerService\app\Models\DistributeDate;
 
 class OrderPackage extends Model implements HasMedia
 {
@@ -66,7 +67,8 @@ class OrderPackage extends Model implements HasMedia
     {
         if (isset($filters['search']) && isset($filters['search'])) {
 
-            $query->where('order_number', 'like', '%' . $filters['search'] . '%');
+            $query->orwhere('order_number', 'like', '%' . $filters['search'] . '%')
+            ->orwhere('idPackage', 'like', '%' . $filters['search'] . '%');
         }
         if (isset($filters['from']) && isset($filters['to'])) {
 
@@ -241,5 +243,10 @@ class OrderPackage extends Model implements HasMedia
     public function commissions_packages()
     {
         return $this->hasMany(commissionsPackage::class, 'order_package_id');
+    }
+
+    public function distributeDate()
+    {
+        return $this->hasMany(DistributeDate::class,'order_package_id');
     }
 }

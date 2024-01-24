@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('order_packages', function (Blueprint $table) {
-            // $table->string('state_document')->default('BS')->nullable();
+        Schema::table('history_cares', function (Blueprint $table) {
+            $table->longText('note')->nullable();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('order_packages', function (Blueprint $table) {
-            // $table->dropColumn('state_document');
+        Schema::table('history_cares', function (Blueprint $table) {
+            $table->dropColumn('note');
         });
     }
 };

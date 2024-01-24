@@ -14,7 +14,7 @@ class HistoryCare extends Model
      * The attributes that are mass assignable.
      */
     protected $table = 'history_cares';
-    protected $fillable = ["id", "date","trees_id", "created_at", "updated_at"];
+    protected $fillable = ["id", "date","note","trees_id", "created_at", "updated_at"];
 
     protected static function newFactory(): HistoryCareFactory
     {
