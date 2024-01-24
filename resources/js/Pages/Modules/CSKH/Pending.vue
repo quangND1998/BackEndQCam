@@ -22,6 +22,9 @@ import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
 import { usePopOverStore } from '@/stores/popover.js';
 import Icon from '@/Components/Icon.vue'
+import OrderNote from '@/Pages/Modules/CSKH/Dialog/OrderNote.vue';
+import useDialog from '@/composable/useDialog'
+import { useOrderStore } from '@/stores/order.js'
 const props = defineProps({
     orders: Object,
     status: String,
@@ -35,6 +38,7 @@ const props = defineProps({
 
 const { openPopover,
     closePopover } = usePopOverStore();
+const { showDetailOrder} = useOrderStore();
 const list_order = toRef(props.orders.data);
 const filter = reactive({
     customer: null,
@@ -217,7 +221,7 @@ const canceldeliveryNoOrder = (order) => {
 <template>
     <LayoutAuthenticated>
         <ModelShipping></ModelShipping>
-
+        <OrderNote />
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -331,7 +335,8 @@ const canceldeliveryNoOrder = (order) => {
                                                 <input id="default-checkbox" type="checkbox" v-model="selected"
                                                     :value="order.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
-                                                <button v-tooltip="'Hủy mã vận đơn'" @click="canceldeliveryNoOrder(order)">
+                                                <button v-tooltip="'Hủy mã vận đơn'" @click="showDetailOrder(order)" data-toggle="modal"
+                                                data-target="#OrderNote">
                                                     <Icon icon="cancel"></Icon>
                                                 </button>
                                             </div>
