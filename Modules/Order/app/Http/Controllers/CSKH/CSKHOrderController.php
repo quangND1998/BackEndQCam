@@ -206,17 +206,25 @@ class CSKHOrderController extends Controller
 
 
         if ($request->ids && count($request->ids) > 0) {
-            $orders = Order::find($request->ids);
-            foreach ($orders as $order) {
+
+            $orders = Order::whereIn('id', $request->ids)->whereNull('order_transport_number')->get();
+
+            foreach ($orders as $key => $order) {
                 $order->state = true;
                 $order->save();
-                $order_package = $order->product_service->order_package;
-                if ($order_package) {
-                    $number = Order::where('product_service_owner_id', $order->product_service_owner_id)
-                        ->count() + 1;
 
-                    $order->order_transport_number = $order_package->order_number + $number;
-                    $order->save();
+                if ($order->product_service) {
+                    $order_package = $order->product_service->order_package;
+
+                    $total_orders_not_null = Order::where('product_service_owner_id', $order->product_service_owner_id)->whereNotNull('order_transport_number')->count();
+                    $total_order = Order::where('product_service_owner_id', $order->product_service_owner_id)->count();
+
+                    if ($order_package) {
+
+
+                        $order->order_transport_number = $order_package->order_number . "-" . ($total_orders_not_null + 1) . "-" . $order_package->market;
+                        $order->save();
+                    }
                 }
 
 

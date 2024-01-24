@@ -15,6 +15,7 @@ use Modules\Order\Database\factories\OrderFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Modules\CustomerService\app\Models\DistributeDate;
+
 class Order extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -57,6 +58,7 @@ class Order extends Model implements HasMedia
         'state_document',
         'wards',  "created_at", "updated_at",
         'delivery_appointment',
+        'order_transport_number'
     ];
 
     public function customer()
@@ -248,6 +250,6 @@ class Order extends Model implements HasMedia
     }
     public function distributeDate()
     {
-        return $this->hasOne(DistributeDate::class,'order_id');
+        return $this->hasOne(DistributeDate::class, 'order_id');
     }
 }
