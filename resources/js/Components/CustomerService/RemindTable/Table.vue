@@ -17,6 +17,11 @@
     }
   );
   const itemPerPage = ref(5);
+  watch(itemPerPage, (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      executeQuery({ pageNo: 1, itemPerPage: newValue });
+    }
+  });
   const currentPage = ref(remindData.current_page || 0);
   const lastPage = computed(() => remindData.last_page || 0);
   const pageNumbers = computed(() => generatePageNumbers(currentPage.value, lastPage.value));
