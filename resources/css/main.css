@@ -121,11 +121,11 @@
     border-radius: 0.75rem !important;
     padding-bottom: 10px
 }
-.multiselect-wrapper {
+.booking_td .multiselect-wrapper {
     min-height: 28px !important;
 
 }
-.multiselect-search{
+.booking_td .multiselect-search{
     background: #c1c1c1 !important;
     color: black !important;
 }

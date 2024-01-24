@@ -236,9 +236,9 @@ const totalOrder = (status) => {
                         <div class="text-center border">{{ orderPackage.time_approve }}</div>
                         <div v-for="(date, indexD) in orderPackage?.distribute_date" :key="indexD">
                             <div v-if="indexD < 13" class="text-center py-2 border-0">
-                                <div class="bg-[#3D3C3C] text-[12px] m-1 px-1 py-1  text-white">
-                                    {{ date.date_recevie }}
-                                    0
+                                <div class="bg-[#3D3C3C] text-[12px] m-1 px-1 py-1  text-white flex flex-col text-center">
+                                    <div>{{formatDateOnly(date.date_recevie)}}</div>
+                                    <div>0</div>
                                 </div>
                             </div>
                         </div>

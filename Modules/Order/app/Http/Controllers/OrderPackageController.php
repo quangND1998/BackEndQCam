@@ -199,7 +199,7 @@ class OrderPackageController extends Controller
                     'to_id' => $request->leader_sale_id,
                     'customer_resources' => $request->type_customer_resource,
                     'customer_resources_id' => $request->customer_resource_id,
-
+                    'market' => $request->market
                 ]);
 
                 // foreach ($request->images as $image) {
@@ -287,7 +287,7 @@ class OrderPackageController extends Controller
             'ref_id'  => $request->ref_id,
             'customer_resources' => $request->type_customer_resource,
             'customer_resources_id' => $request->customer_resource_id,
-
+            'market' => $request->market
         ]);
         // if ($request->hasFile('images')) {
         //     $order->clearMediaCollection('order_package_images');

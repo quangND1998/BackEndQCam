@@ -140,6 +140,7 @@ export default [{
         ]
     },
     {
+        // chưởng phòng CSKH
         label: 'CSKH',
         icon: mdiFileTreeOutline,
         permissions: ['super-admin','cskh'],

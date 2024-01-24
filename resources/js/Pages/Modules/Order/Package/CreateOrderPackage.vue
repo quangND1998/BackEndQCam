@@ -75,7 +75,8 @@ const form = useForm({
     type_customer_resource: "private",
     customer_resource_id: null,
     idPackage: null,
-    order_number : 'ORD-' + Math.floor(100000000 + Math.random() * 900000000),
+    order_number: 'ORD-' + Math.floor(100000000 + Math.random() * 900000000),
+    market: null,
 })
 
 const getProvinces = async () => {
@@ -138,10 +139,10 @@ const foundUser = (data) => {
     searchPhone.value = data.phone_number
 }
 const onSearchUser = async () => {
-    if(search.value.length > 7 && search.value.includes(" ") == false ){
-    return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
-        // console.log(res);
-        if (res.data) {
+    if (search.value.length > 7 && search.value.includes(" ") == false) {
+        return axios.get(`/admin/orders/searchUser?search=${search.value}`).then(res => {
+            // console.log(res);
+            if (res.data) {
                 user.value = res.data;
                 swal.fire({
                     text: "Số điện thoại này đã tồn tại, bạn có muốn load thông tin có sẵn không?",
@@ -154,7 +155,7 @@ const onSearchUser = async () => {
                     if (result.isConfirmed) {
                         foundUser(res.data)
                         findUser.value = true;
-                    }else{
+                    } else {
                         console.log('not user');
                         user.value = null
                         findUser.value = false;
@@ -165,11 +166,11 @@ const onSearchUser = async () => {
                 });
                 // foundUser(res.data)
                 flash.value = null;
-        }
+            }
         }).catch(err => {
             console.log('not user');
         })
-    }else{
+    } else {
         //  user.value = null
         //  form.reset()
         // searchPhone.value = null;
@@ -177,15 +178,15 @@ const onSearchUser = async () => {
     }
 
 }
-const isNumber =  (value) => {
-  return typeof value === 'number';
+const isNumber = (value) => {
+    return typeof value === 'number';
 }
 const onSearchUserPhone = async () => {
     // console.log(isNumber(searchPhone.value));
-    if(searchPhone.value.length > 7){
-    return axios.get(`/admin/orders/searchUser?search=${searchPhone.value}`).then(res => {
-        // console.log(res);
-        if (res.data) {
+    if (searchPhone.value.length > 7) {
+        return axios.get(`/admin/orders/searchUser?search=${searchPhone.value}`).then(res => {
+            // console.log(res);
+            if (res.data) {
                 user.value = res.data;
                 swal.fire({
                     text: "Số điện thoại này đã tồn tại, bạn có muốn load thông tin có sẵn không?",
@@ -198,8 +199,8 @@ const onSearchUserPhone = async () => {
                     if (result.isConfirmed) {
                         foundUser(res.data)
                         findUser.value = true;
-                    }else{
-                         console.log('not user');
+                    } else {
+                        console.log('not user');
                         user.value = null
                         // flash.value = err.response.data
                         findUser.value = false;
@@ -211,11 +212,11 @@ const onSearchUserPhone = async () => {
                 // foundUser(res.data)
 
                 flash.value = null;
-        }
+            }
         }).catch(err => {
             console.log('not user');
         })
-    }else{
+    } else {
         // user.value = null
         // form.reset()
         // search.value = null;
@@ -223,8 +224,8 @@ const onSearchUserPhone = async () => {
     }
 }
 const save = () => {
-        form.name = search.value;
-        form.phone_number = searchPhone.value;
+    form.name = search.value;
+    form.phone_number = searchPhone.value;
     if (form.name == null || form.phone_number == null) {
         swal.fire({
             title: "Lỗi?",
@@ -334,14 +335,16 @@ const date = ref(new Date());
                     <div class="col-span-2">
                         <div class="min-[320px]:block md:flex border-b border-gray-200 ">
                             <div class="min-[320px]:w-full md:w-1/2 px-0">
-                            <div class="pb-3 ">
-                                <img src="/assets/images/cammattroi.png" alt="">
-                                <h1 class="text-base font-semibold uppercase">CÔNG TY CỔ PHẦN {{ $page.props.company_infor?.name }}</h1>
-                                <p class="text-sm text-[#5F5F5F]">Địa chỉ: {{ $page.props.company_infor?.address }}</p>
-                                <p class="text-sm text-[#5F5F5F]">Farm:</p>
-                                <p class="text-sm text-[#5F5F5F]">Điện thoại: {{ $page.props.company_infor?.hotline }}</p>
-                                <p class="text-sm text-[#5F5F5F]">Email: {{ $page.props.company_infor?.email }}</p>
-                            </div>
+                                <div class="pb-3 ">
+                                    <img src="/assets/images/cammattroi.png" alt="">
+                                    <h1 class="text-base font-semibold uppercase">CÔNG TY CỔ PHẦN {{
+                                        $page.props.company_infor?.name }}</h1>
+                                    <p class="text-sm text-[#5F5F5F]">Địa chỉ: {{ $page.props.company_infor?.address }}</p>
+                                    <p class="text-sm text-[#5F5F5F]">Farm:</p>
+                                    <p class="text-sm text-[#5F5F5F]">Điện thoại: {{ $page.props.company_infor?.hotline }}
+                                    </p>
+                                    <p class="text-sm text-[#5F5F5F]">Email: {{ $page.props.company_infor?.email }}</p>
+                                </div>
                             </div>
                             <div class="min-[320px]:w-full min-[320px]:mt-3 min-[320px]:px-0 md:w-1/2 md:mt-0 md:px-2">
                                 <div class="w-full">
@@ -349,14 +352,14 @@ const date = ref(new Date());
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Đơn hàng #</p>
                                         <input type="text" id="first_name" disabled v-model="form.order_number"
                                             class="height_fix_30  bg-gray-50 border-0 border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            :placeholder="form.order_number" >
+                                            :placeholder="form.order_number">
                                     </div>
                                     <div class="flex items-center w-full my-1">
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Số phiếu #</p>
                                         <div class="w-full">
                                             <input type="text" id="first_name" v-model="form.idPackage"
-                                            class=" height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" required>
+                                                class=" height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                placeholder="" required>
                                             <InputError class="mt-2" :message="form.errors.idPackage" />
                                         </div>
                                     </div>
@@ -364,7 +367,8 @@ const date = ref(new Date());
                                     <div class="flex items-center w-full my-1">
                                         <p class="text-sm text-[#5F5F5F] w-28 ">Ngày</p>
                                         <div class="relative w-full">
-                                            <VueDatePicker class="rounded-lg height_fix_30" v-model="date" time-picker-inline />
+                                            <VueDatePicker class="rounded-lg height_fix_30" v-model="date"
+                                                time-picker-inline />
                                         </div>
                                     </div>
                                 </div>
@@ -382,21 +386,32 @@ const date = ref(new Date());
                                             Khách
                                             Hàng
                                             *</label>
-                                        <input type="text" id="name"  v-model="search" @keyup="onSearchUser()" autocomplete="search"
-                                            class="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" >
+                                        <input type="text" id="name" v-model="search" @keyup="onSearchUser()"
+                                            autocomplete="search"
+                                            class="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="">
                                         <div class="text-red-500" v-if="flash"> {{ flash }}</div>
                                     </div>
                                     <InputError class="mt-2" :message="form.errors.name" />
                                     <div class="my-1">
                                         <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                             Số điện thoại *</label>
-                                        <input type="text" id="first_name"
-                                            v-model="searchPhone" @keyup="onSearchUserPhone()"
-                                            class="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="" >
+                                        <input type="text" id="first_name" v-model="searchPhone"
+                                            @keyup="onSearchUserPhone()"
+                                            class="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="">
                                     </div>
                                     <InputError class="mt-2" :message="form.errors.phone_number" />
+                                    <div class="my-1">
+                                        <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
+                                            Khu vực *</label>
+                                        <select v-model="form.market"
+                                        class="w-full height_fix_30 md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
+                                            <option selected value="Miền Bắc">Miền Bắc</option>
+                                            <option  value="Miền Nam">Miền Nam</option>
+                                        </select>
+                                    </div>
+                                    <InputError class="mt-2" :message="form.errors.market" />
                                     <div class="my-1">
                                         <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                             Giới tính</label>
@@ -424,16 +439,18 @@ const date = ref(new Date());
                                     <div class="my-1">
                                         <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                             Địa chỉ *</label>
-                                        <input type="text" id="first_name" v-model="form.address" :disabled="findUser && user?.address != null"
-                                            class="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        <input type="text" id="first_name" v-model="form.address"
+                                            :disabled="findUser && user?.address != null"
+                                            class="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="" required>
                                     </div>
 
                                     <div class="my-1">
                                         <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                             Thành phố *</label>
-                                        <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name" :disabled="findUser && user?.city != null"
-                                            @change="onChangeCity($event)" optionValue="Name" placeholder="Chọn tỉnh thành"
+                                        <Dropdown v-model="form.city" :options="provinces" filter optionLabel="Name"
+                                            :disabled="findUser && user?.city != null" @change="onChangeCity($event)"
+                                            optionValue="Name" placeholder="Chọn tỉnh thành"
                                             class="w-full height_fix_30 md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
                                             <template #value="slotProps">
 
@@ -460,7 +477,8 @@ const date = ref(new Date());
                                                 class="block mb-1 text-sm  text-gray-900 dark:text-white">
                                                 Quận/huyện *</label>
 
-                                            <Dropdown v-model="form.district" :options="districts.Districts" filter :disabled="findUser && user?.district != null"
+                                            <Dropdown v-model="form.district" :options="districts.Districts" filter
+                                                :disabled="findUser && user?.district != null"
                                                 @change="onChangeDistrict($event)" optionLabel="Name" optionValue="Name"
                                                 placeholder="Chọn Quận/huyện"
                                                 class="w-full height_fix_30 md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
@@ -489,8 +507,9 @@ const date = ref(new Date());
                                                 Phường xã*</label>
 
 
-                                            <Dropdown v-model="form.wards" :options="wards.Wards" filter optionLabel="Name" :disabled="findUser && user?.wards != null"
-                                                optionValue="Name" placeholder="Chọn Phường xã"
+                                            <Dropdown v-model="form.wards" :options="wards.Wards" filter optionLabel="Name"
+                                                :disabled="findUser && user?.wards != null" optionValue="Name"
+                                                placeholder="Chọn Phường xã"
                                                 class="w-full height_fix_30 md:w-14rem bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round">
                                                 <template #value="slotProps">
 
@@ -514,83 +533,89 @@ const date = ref(new Date());
                                     </div>
                                 </div>
                             </div>
-                                            <div class="overflow-x-auto col-span-2 mt-2 w-full">
-                    <div class="relative shadow-md sm:border_round mb-2 mt-4">
-                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">
-                                        Gói sản phẩm
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Tổng
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="bg-white border-b ">
-                                    <td class="px-6 py-4 ">
-                                        <select id="countries" @change="changeProduct" v-model="form.product_selected"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 ">
-                                            <option v-for="(product, index) in product_services" :key="index"
-                                                :value="product.id">{{
-                                                    product.name }}</option>
+                            <div class="overflow-x-auto col-span-2 mt-2 w-full">
+                                <div class="relative shadow-md sm:border_round mb-2 mt-4">
+                                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                        <thead
+                                            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Gói sản phẩm
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Tổng
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="bg-white border-b ">
+                                                <td class="px-6 py-4 ">
+                                                    <select id="countries" @change="changeProduct"
+                                                        v-model="form.product_selected"
+                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 ">
+                                                        <option v-for="(product, index) in product_services" :key="index"
+                                                            :value="product.id">{{
+                                                                product.name }}</option>
 
-                                        </select>
-                                        <label for="first_name"
-                                            class="block mb-1 mt-4 text-sm  text-gray-900 dark:text-white">
-                                            Áp dụng từ ngày</label>
-                                        <div class="flex items-center w-60 ">
-                                            <VueDatePicker v-model="form.time_approve" time-picker-inline />
+                                                    </select>
+                                                    <label for="first_name"
+                                                        class="block mb-1 mt-4 text-sm  text-gray-900 dark:text-white">
+                                                        Áp dụng từ ngày</label>
+                                                    <div class="flex items-center w-60 ">
+                                                        <VueDatePicker v-model="form.time_approve" time-picker-inline />
+                                                    </div>
+                                                </td>
+
+                                                <td class="px-6  py-4">
+                                                    <p type="number" class="border-[0px] text-[#686868] font-bold w-28">{{
+                                                        formatPrice(product?.price) }}</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="bg-white border_round p-3">
+                                    <div class="flex justify-between">
+                                        <div class="mb-1">
+                                            <!-- <font-awesome-icon :icon="['fas', 'cart-shopping']" class="mt-1" /> -->
+                                            <span class="text-xl font-semibold ml-2">Quyền lợi nhận nuôi {{ product?.name
+                                            }}</span>
                                         </div>
-                                    </td>
 
-                                    <td class="px-6  py-4">
-                                        <p type="number" class="border-[0px] text-[#686868] font-bold w-28">{{
-                                            formatPrice(product?.price) }}</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="bg-white border_round p-3">
-                        <div class="flex justify-between">
-                            <div class="mb-1">
-                                <!-- <font-awesome-icon :icon="['fas', 'cart-shopping']" class="mt-1" /> -->
-                                <span class="text-xl font-semibold ml-2">Quyền lợi nhận nuôi {{ product?.name }}</span>
-                            </div>
+                                    </div>
+                                    <hr />
+                                    <div class="my-1">
+                                        <div class="block ml-2 w-4/5 mb-1">
+                                            <h3 class="text-base font-semibold">1. Thăm vườn không giới hạn</h3>
+                                            <p class="text-xs font-normal">Nhận {{ product?.free_visit }} lần tham quan miễn
+                                                phí</p>
+                                        </div>
+                                        <div class="block ml-2 w-4/5 mb-1">
+                                            <h3 class="text-base font-semibold">2. Thu hoạch {{
+                                                product?.amount_products_received }} kg
+                                                cam</h3>
+                                            <p class="text-xs font-normal">{{ product?.number_deliveries }} lần ship hàng về
+                                                tận nhà</p>
+                                        </div>
+                                        <div class="block ml-2 w-4/5 mb-1">
+                                            <h3 class="text-base font-semibold">3. Tặng thẻ Membership</h3>
+                                            <p class="text-xs font-normal">Hưởng đặc quyền riêng từ trang trại</p>
+                                        </div>
+                                        <div class="block ml-2 w-4/5 mb-1">
+                                            <h3 class="text-base font-semibold">4. Nhận nông sản sạch
+                                                {{ product?.number_receive_product / product?.life_time }} lần/năm</h3>
+                                            <p class="text-xs font-normal">Các sản phẩm nông sản như thanh long
+                                                sầu riêng là quà tặng đến cho bạn</p>
+                                        </div>
+                                        <div class="block ml-2 w-4/5 mb-1">
+                                            <h3 class="text-base font-semibold">5. Quà tặng thêm</h3>
+                                            <p class="text-xs font-normal">Nhiều phần quà nông sản hấp dẫn trị tổng
+                                                trị giá xx triệu</p>
+                                        </div>
+                                    </div>
 
-                        </div>
-                        <hr />
-                        <div class="my-1">
-                            <div class="block ml-2 w-4/5 mb-1">
-                                <h3 class="text-base font-semibold">1. Thăm vườn không giới hạn</h3>
-                                <p class="text-xs font-normal">Nhận {{ product?.free_visit }} lần tham quan miễn phí</p>
+                                </div>
                             </div>
-                            <div class="block ml-2 w-4/5 mb-1">
-                                <h3 class="text-base font-semibold">2. Thu hoạch {{ product?.amount_products_received }} kg
-                                    cam</h3>
-                                <p class="text-xs font-normal">{{ product?.number_deliveries }} lần ship hàng về tận nhà</p>
-                            </div>
-                            <div class="block ml-2 w-4/5 mb-1">
-                                <h3 class="text-base font-semibold">3. Tặng thẻ Membership</h3>
-                                <p class="text-xs font-normal">Hưởng đặc quyền riêng từ trang trại</p>
-                            </div>
-                            <div class="block ml-2 w-4/5 mb-1">
-                                <h3 class="text-base font-semibold">4. Nhận nông sản sạch
-                                    {{ product?.number_receive_product/product?.life_time }} lần/năm</h3>
-                                <p class="text-xs font-normal">Các sản phẩm nông sản như thanh long
-                                    sầu riêng là quà tặng đến cho bạn</p>
-                            </div>
-                            <div class="block ml-2 w-4/5 mb-1">
-                                <h3 class="text-base font-semibold">5. Quà tặng thêm</h3>
-                                <p class="text-xs font-normal">Nhiều phần quà nông sản hấp dẫn trị tổng
-                                    trị giá xx triệu</p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
                         </div>
 
 
@@ -604,7 +629,8 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" min="0" max="100" v-model="form.vat"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber  v-model="form.vat"  :min="0"  :max="100"  inputClass="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                                <InputNumber v-model="form.vat" :min="0" :max="100"
+                                    inputClass="height_fix_30 bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="w-1/4 mr-3">
                                 <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
@@ -612,7 +638,8 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" v-model="form.discount_deal" min="0" max="100"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                    <InputNumber  v-model="form.discount_deal"  :min="0"  :max="100" inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                                <InputNumber v-model="form.discount_deal" :min="0" :max="100"
+                                    inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="w-1/2">
                                 <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
@@ -620,7 +647,8 @@ const date = ref(new Date());
                                 <!-- <input type="number" id="first_name" v-model="form.time_reservations"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required> -->
-                                <InputNumber  v-model="form.time_reservations"  :min="0"  :max="100" inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                                <InputNumber v-model="form.time_reservations" :min="0" :max="100"
+                                    inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
 
                             </div>
                         </div>
@@ -630,7 +658,8 @@ const date = ref(new Date());
                                     Số tiền</label>
                                 <!-- <MazInputPrice v-model="form.price_percent"  locale="vi-VN" :min="0"
                                     :max="maxPrice" @formatted="formattedPrice = $event" /> -->
-                                <InputNumber  v-model="form.price_percent"  :min="0"  :max="maxPrice"  inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                                <InputNumber v-model="form.price_percent" :min="0" :max="maxPrice"
+                                    inputClass="bg-gray-50 border border-gray-300 text-gray-900 text-sm border_round focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="w-1/2">
                                 <label for="first_name" class="block mb-1 text-sm  text-gray-900 dark:text-white">
@@ -651,10 +680,11 @@ const date = ref(new Date());
                             :searchable="true" label="name" valueProp="id" trackBy="name" :options="sales"  placeholder="None"
                            /> -->
 
-                            <Multiselect v-model="form.ref_id" :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="sales" :classes="{
-                            tagsSearch: 'absolute  inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
-                            container: 'relative border_round mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
-                            }" >
+                            <Multiselect v-model="form.ref_id" :searchable="true" label="name" valueProp="id" trackBy="name"
+                                placeholder="None" :options="sales" :classes="{
+                                    tagsSearch: 'absolute  inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                                    container: 'relative border_round mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                                }">
                                 <template v-slot:singlelabel="{ value }">
                                     <div class="multiselect-single-label">
                                         {{ value.name }} (Team: {{ value.team?.name }})
@@ -672,10 +702,11 @@ const date = ref(new Date());
                             <!-- <Multiselect v-model="form.leader_sale_id" :appendNewTag="false" :createTag="false"
                                 :searchable="true" label="name" valueProp="id" trackBy="name" :options="leaders"
                                 placeholder="None" /> -->
-                                <Multiselect v-model="form.leader_sale_id" :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="leaders" :classes="{
-                                tagsSearch: 'absolute  inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
-                                container: 'relative border_round mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
-                                }" >
+                            <Multiselect v-model="form.leader_sale_id" :searchable="true" label="name" valueProp="id"
+                                trackBy="name" placeholder="None" :options="leaders" :classes="{
+                                    tagsSearch: 'absolute  inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                                    container: 'relative border_round mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                                }">
                                 <template v-slot:singlelabel="{ value }">
                                     <div class="multiselect-single-label">
                                         {{ value.name }} ({{ value.email }})
@@ -697,9 +728,10 @@ const date = ref(new Date());
                                 <label for="one" class="w-[80px] mr-2">Telesale</label>
                                 <Multiselect v-model="form.customer_resource_id" :appendNewTag="false" :createTag="false"
                                     :disabled="form.type_customer_resource == 'telesale' ? false : true" :searchable="true"
-                                    label="name" valueProp="id" trackBy="name" :options="telesale" placeholder="None" :classes="{
-                                container: 'relative border_round mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
-                                }"/>
+                                    label="name" valueProp="id" trackBy="name" :options="telesale" placeholder="None"
+                                    :classes="{
+                                        container: 'relative border_round mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                                    }" />
                             </div>
 
 
@@ -711,21 +743,21 @@ const date = ref(new Date());
                                 <!-- <Multiselect v-model="form.customer_resource_id" :appendNewTag="false" :createTag="false"
                                     :disabled="form.type_customer_resource == 'ctv' ? false : true" :searchable="true"
                                     label="name" valueProp="id" trackBy="name" :options="ctv" placeholder="None" /> -->
-                                    <Multiselect v-model="form.customer_resource_id"  :disabled="form.type_customer_resource == 'ctv' ? false : true"
-                                    :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="None"  :options="ctv" :classes="{
-                                container: 'relative mx-auto border_round w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
-                                }"
-                                     >
-                                        <template v-slot:singlelabel="{ value }">
-                                            <div class="multiselect-single-label">
-                                                {{ value.name }} ({{ value.email }})
-                                            </div>
-                                        </template>
+                                <Multiselect v-model="form.customer_resource_id"
+                                    :disabled="form.type_customer_resource == 'ctv' ? false : true" :searchable="true"
+                                    label="name" valueProp="id" trackBy="name" placeholder="None" :options="ctv" :classes="{
+                                        container: 'relative mx-auto border_round w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-gray-50 text-sm  '
+                                    }">
+                                    <template v-slot:singlelabel="{ value }">
+                                        <div class="multiselect-single-label">
+                                            {{ value.name }} ({{ value.email }})
+                                        </div>
+                                    </template>
 
-                                        <template v-slot:option="{ option }">
-                                            {{ option.name }} ({{ option.email }})
-                                        </template>
-                                    </Multiselect>
+                                    <template v-slot:option="{ option }">
+                                        {{ option.name }} ({{ option.email }})
+                                    </template>
+                                </Multiselect>
                             </div>
                             <div class=" mb-1">
 
@@ -741,50 +773,52 @@ const date = ref(new Date());
                                     <InputError class="mt-2" :message="form.errors[`images.${index}`]" />
                                 </div>
                             </div>
-                <div class="p-2 bg-gray-100">
-                    <div class="flex justify-between my-1">
-                        <p class="text-sm text-[#686868] font-bold">Tổng</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(product?.price) }} VND</p>
-                    </div>
-                    <div class="flex justify-between my-1">
-                        <p class="text-sm text-[#686868] font-bold">VAT({{ form.vat }}%)</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.vat * (product?.price +
-                            ((form.discount_deal * product?.price) / 100)) / 100) }} vnd
-                        </p>
-                    </div>
-                    <div class="flex justify-between my-1">
-                        <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
-                        <p class="text-sm text-[#686868] font-bold">Miễn phí</p>
-                    </div>
-                    <div class="flex justify-between my-1">
-                        <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.discount_deal * product?.price) /
-                            100) }} VND
-                        </p>
-                    </div>
-                    <div class="flex justify-between my-1">
-                        <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
-                        <p class="text-sm text-[#686868]">{{ formatPrice(maxPrice) }} vnd</p>
-                    </div>
-                    <div class="flex justify-between my-1">
-                        <p class="text-sm text-[#686868]">Đã thanh toán</p>
-                        <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.price_percent) }} VND</p>
-                    </div>
-                    <div class="flex justify-between my-1">
-                        <p class="text-sm text-[#686868] font-bold" v-if="((product?.price +
-                            ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
-                            form.price_percent) > 0">Còn thiếu</p>
-                        <p v-else class="text-sm text-[#686868] font-bold">Còn thừa</p>
-                        <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice(maxPrice -
-                            form.price_percent) }} VND</p>
-                    </div>
-                    <div class="my-1">
-                        <BaseButton color="info" @click="save()"
-                            class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center border_round"
-                            :icon="mdiContentSaveMove" small label="Lưu hợp đồng" />
-                    </div>
+                            <div class="p-2 bg-gray-100">
+                                <div class="flex justify-between my-1">
+                                    <p class="text-sm text-[#686868] font-bold">Tổng</p>
+                                    <p class="text-sm text-[#686868] font-bold">{{ formatPrice(product?.price) }} VND</p>
+                                </div>
+                                <div class="flex justify-between my-1">
+                                    <p class="text-sm text-[#686868] font-bold">VAT({{ form.vat }}%)</p>
+                                    <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.vat * (product?.price +
+                                        ((form.discount_deal * product?.price) / 100)) / 100) }} vnd
+                                    </p>
+                                </div>
+                                <div class="flex justify-between my-1">
+                                    <p class="text-sm text-[#686868] font-bold">Vận chuyển</p>
+                                    <p class="text-sm text-[#686868] font-bold">Miễn phí</p>
+                                </div>
+                                <div class="flex justify-between my-1">
+                                    <p class="text-sm text-[#686868] font-bold">Ưu đãi</p>
+                                    <p class="text-sm text-[#686868] font-bold">{{ formatPrice((form.discount_deal *
+                                        product?.price) /
+                                        100) }} VND
+                                    </p>
+                                </div>
+                                <div class="flex justify-between my-1">
+                                    <p class="text-sm text-[#686868] font-bold">Tổng cộng</p>
+                                    <p class="text-sm text-[#686868]">{{ formatPrice(maxPrice) }} vnd</p>
+                                </div>
+                                <div class="flex justify-between my-1">
+                                    <p class="text-sm text-[#686868]">Đã thanh toán</p>
+                                    <p class="text-sm text-[#686868] font-bold">{{ formatPrice(form.price_percent) }} VND
+                                    </p>
+                                </div>
+                                <div class="flex justify-between my-1">
+                                    <p class="text-sm text-[#686868] font-bold" v-if="((product?.price +
+                                        ((form.vat * product?.price) / 100) - ((form.discount_deal * product?.price) / 100)) -
+                                        form.price_percent) > 0">Còn thiếu</p>
+                                    <p v-else class="text-sm text-[#686868] font-bold">Còn thừa</p>
+                                    <p class="text-sm text-[#ec5353] font-bold">{{ formatPrice(maxPrice -
+                                        form.price_percent) }} VND</p>
+                                </div>
+                                <div class="my-1">
+                                    <BaseButton color="info" @click="save()"
+                                        class="bg-orange-500 hover:bg-orange-600 text-white p-2 w-full text-center justify-center border_round"
+                                        :icon="mdiContentSaveMove" small label="Lưu hợp đồng" />
+                                </div>
 
-                </div>
+                            </div>
                         </div>
 
                     </div>

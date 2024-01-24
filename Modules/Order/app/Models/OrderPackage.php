@@ -29,7 +29,7 @@ class OrderPackage extends Model implements HasMedia
         'vat',
         'discount_deal',
         'type',
-        'sale_id', 'ref_id', 'to_id', 'customer_resources', 'customer_resources_id', 'package_reviewer',
+        'sale_id', 'ref_id', 'to_id', 'customer_resources', 'customer_resources_id', 'package_reviewer', 'market',
         'wards',"state_document",  "created_at", "updated_at", "product_selected", "time_approve", "time_end", "price_percent", "time_reservations", "time_expried"
     ];
     protected $appends = ['payment_check', 'exist_accept', 'document_check', 'document_add'];
