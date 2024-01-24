@@ -2,12 +2,14 @@
   import { inject, computed } from 'vue';
 
   import Row from '@/Components/CustomerService/RemindTable/Row.vue';
+  import { generatePageNumbers } from '@/Components/CustomerService/stuffs/helpers';
 
   const { remindData } = inject('REMIND');
 
   const reminds = computed(() => remindData.data);
-  const currentPage = computed(() => remindData.current_page);
-  const lastPage = computed(() => remindData.last_page);
+  const currentPage = computed(() => remindData.current_page || 0);
+  const lastPage = computed(() => remindData.last_page || 0);
+  const pageNumbers = computed(() => generatePageNumbers(currentPage.value, lastPage.value));
 </script>
 
 <template>
