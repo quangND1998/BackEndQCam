@@ -7,7 +7,7 @@ import OrderTableSection from "@/Components/CustomerService/OrderTableSection.vu
 import ScheduleVisitSection from "@/Components/CustomerService/ScheduleVisitSection.vue";
 import NoteDialog from "@/Components/CustomerService/Dialog/NoteDialog.vue";
 import ComplaintDialog from "@/Components/CustomerService/Dialog/ComplaintDialog.vue";
-// import RecentActivityDialog from "@/Components/CustomerService/Dialog/RecentActivityDialog.vue";
+import RecentActivityDialog from "@/Components/CustomerService/Dialog/RecentActivityDialog.vue";
 import ExtraServiceDialog from '@/Components/CustomerService/Dialog/ExtraServiceDialog.vue';
 import OrderDialog from '@/Components/CustomerService/Dialog/OrderDialog.vue';
 import ContractCard from '@/Components/CustomerService/ContractCard.vue';
@@ -24,6 +24,10 @@ const props = defineProps({
   customer: Object,
   roles: Array,
 });
+
+const idPackageList = computed(() => {
+  return orderPackages.value.map((orderPackage) => orderPackage.idPackage);
+})
 
 const tableRef = ref();
 const tableHeight = computed(() => {
@@ -112,7 +116,8 @@ provide('COMPLAINT', {
 })
 
 provide('ORDER', {
-  onOpenEditOrderDialog
+  onOpenEditOrderDialog,
+  idPackageList
 });
 
 provide('ORDER_PACKAGE_PAGE', {
@@ -189,12 +194,13 @@ const showRecentActivityDialog = ref(false);
         <ComplaintDialog />
       </div>
       <div class="flex justify-center">
-        <button
+        <RecentActivityDialog />
+        <!-- <button
           class="w-96 bg-orange-500 rounded-full font-semibold text-white py-2"
           @click="showRecentActivityDialog = !showRecentActivityDialog"
         >
           Hoạt dộng mới nhất
-        </button>
+        </button> -->
       </div>
     </div>
     <PhoneCall :tableHeight="tableHeight" />

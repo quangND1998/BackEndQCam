@@ -7,6 +7,7 @@ import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '../composables/useQuery';
 import SpinnerIcon from '@/Components/CustomerService/SpinnerIcon.vue';
 
 const { productRetails, data, cities, districts, customer, customerId, addOrder, updateOrder } = inject('ORDER_PACKAGE_PAGE');
+const { idPackageList } = inject('ORDER');
 
 const props = defineProps({
   orderPackage: Object,
@@ -182,7 +183,7 @@ const onCreateOrder = () => {
 
   if (haveError) return;
 
-  if (isRetailOrder.value) onCreateRetailOrder();
+  if (isRetailOrder.value) return onCreateRetailOrder();
   if (!props.order) {
     executeCreate(undefined, { ...order, productServiceOwnerId: props.orderPackage?.product_service_owner.id });
   } else {
@@ -295,12 +296,22 @@ onMounted(() => {
           <div class="flex items-center justify-between border-b border-gray-400 pb-2 mb-3">
             <p v-if="!isRetailOrder" class="font-semibold text-sm">Lần: {{ deliveryNo }}</p>
             <div v-else class="flex items-center">
-              <p class="font-semibold text-sm mr-2 required">Nhập mã phiếu</p>
-              <input v-model="priceForm.order_code" type="text" class="px-2 w-36 h-8 rounded-sm border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0"
+              <p class="font-semibold text-sm mr-2 required">Chọn mã HĐ</p>
+              <!-- <input v-model="priceForm.order_code" type="text" class="px-2 w-36 h-8 rounded-sm border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0"
                 :class="{
                   '!border-red-600': retailOrderError.other_code && priceForm.order_code === ''
                 }"
-              />
+              /> -->
+              <select v-model="priceForm.order_code" class="rounded p-2 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-sm"
+                :class="{
+                  '!border-red-600': retailOrderError.other_code && priceForm.order_code === ''
+                }"
+              >
+                <option disabled selected :value="undefined"> -- Chọn hợp đồng -- </option>
+                <option v-for="idPackage in idPackageList" :value="idPackage" :key="idPackage">
+                  {{ idPackage }}
+                </option>
+              </select>
             </div>
               <button
                 :disabled="isDisable"

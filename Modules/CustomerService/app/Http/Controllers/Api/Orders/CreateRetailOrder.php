@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Modules\Order\app\Models\Order;
+use Modules\Order\app\Models\OrderPackage;
 use Modules\Tree\app\Models\ProductRetail;
 
 class CreateRetailOrder extends Controller
@@ -31,6 +32,8 @@ class CreateRetailOrder extends Controller
             'delivery_appointment' => 'required|date|after:today',
         ]);
 
+        $orderPackage = OrderPackage::where('idPackage', $request->otherPayment['order_code'])->first();
+        abort_if(!$orderPackage, 442, 'Mã hợp đồng không tồn tại');
         $data = $this->validateProductCondition((array) $request->products);
         $products = $data['products'];
         $map = $data['map'];
@@ -58,7 +61,7 @@ class CreateRetailOrder extends Controller
                 'sale_id' => auth()->id(),
                 'phone_number' => $request->subPhoneNumber,
                 'discount_deal' => $request->otherPayment['discount_deal'],
-                'order_code' => $request->otherPayment['order_code'],
+                'product_service_owner_id' => $orderPackage->product_service_owner->id,
                 'payment_method' => $request->otherPayment['payment_method'],
                 'shipping_fee' => $request->otherPayment['shipping_fee'],
                 'vat' => $request->otherPayment['vat'],
