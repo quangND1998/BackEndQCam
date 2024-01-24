@@ -22,7 +22,7 @@ const weekday = computed(() => {
     <div class="col-span-2 pt-1">{{ remind.product_service_owner.order_package.product_service.life_time }} năm</div>
     <div class="col-span-4 pt-1">{{ remind.product_service_owner.customer.name }}</div>
     <div class="col-span-2 pt-1">
-        {{ weekday }}/ Tuần {{ data.value.week() }}
+        {{ weekday }}/ Tuần {{ date.week() }}
     </div>
     <div class="text-left pl-2 col-span-12">{{ remind.note }}</div>
     <div class="col-span-2 pt-1">{{ date.format('DD/MM/YYYY') }}</div>
