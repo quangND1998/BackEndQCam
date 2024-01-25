@@ -13,6 +13,7 @@ use Modules\Customer\app\Models\Address;
 use Modules\Customer\app\Models\ComplaintManagement;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ReviewManagement;
+use Modules\CustomerService\app\Models\DistributeCall;
 use Modules\Order\app\Models\commissionsPackage;
 use Modules\Order\app\Models\HistoryPayment;
 use Modules\Order\app\Models\Order;
@@ -231,5 +232,8 @@ class User extends Authenticatable implements HasMedia
     }
     public function commission() {
         return $this->hasMany(commissionsPackage::class,'user_id');
+    }
+    public function distribute_call(){
+        return $this->hasMany(DistributeCall::class,'cskh_id');
     }
 }

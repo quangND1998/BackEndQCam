@@ -39,13 +39,12 @@ class GiftDistributeController extends Controller
 
     }
     public function getOrderPackage($request){
-        $results = OrderPackage::with(['customer','product_service','distributeDate','historyPayment.order_package_payment','historyPayment.user','product_service_owner.product','history_extend.contract.lastcontract.images'])->role()->whereHas(
+        $results = OrderPackage::with(['customer','product_service','distributeDate','product_service_owner.product'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','LIKE','%' . $request->search . '%');
             }
         )
-        ->role()
         ->where('status','complete')
         ->orderBy('user_id')->orderBy('created_at', 'desc')
         ->fillter($request->only('search'));

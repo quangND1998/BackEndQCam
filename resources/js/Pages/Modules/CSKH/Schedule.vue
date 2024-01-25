@@ -48,26 +48,22 @@ import { initFlowbite } from 'flowbite'
 import OrderHome from "@/Pages/Test/OrderHome.vue"
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
 import { emitter } from '@/composable/useEmitter';
+import  calWeekOffset  from "@/composable/weekOffset";
 const props = defineProps({
     orderPackages: Object,
     cskh: Object
 });
-
+const offset = ref(0);
 const list_order = toRef(props.orderPackages.data)
 const filter = reactive({
-    customer: null,
-    name: null,
-    fromDate: null,
-    toDate: null,
-    search: null,
-    payment_status: null,
-    payment_method: null,
-    type: null,
+    fromDate:  calWeekOffset(offset.value)[4],
+    toDate:  calWeekOffset(offset.value)[5],
     per_page: 10,
-    selectedDate: null
-
 
 })
+console.log(filter.fromDate);
+console.log(filter.toDate);
+
 const customer = ref()
 const searchVal = ref("");
 const swal = inject("$swal");
@@ -75,10 +71,9 @@ const form = useForm({
     id: null,
     name: null,
     state: null,
-    selectedDate: [
-        new Date(),
-        new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)]
-    ,
+    cskh_selected: [],
+    fromDate:  filter.fromDate,
+    toDate:  filter.toDate,
 });
 const isModalActive = ref(false);
 const editMode = ref(false);
@@ -99,7 +94,7 @@ const state = reactive({
 initFlowbite();
 
 const search = () => {
-    router.get(route(`admin.gift_distribute.index`),
+    router.get(route(`admin.call_distribute.schedule`),
         filter,
         {
             preserveState: true,
@@ -133,17 +128,30 @@ const selectAll = computed({
 
     }
 });
-const totalOrder = (status) => {
-    var findStatus = props.statusGroup.find(e => e.status == status);
-    if (findStatus) {
-        return findStatus.total;
-    } else {
-        return 0;
-    }
-}
-const offset = ref(0);
+const save = () => {
+    // console.log(form);
+    form.fromDate =  filter.fromDate;
+    form.toDate =  filter.toDate;
+    form.post(route("admin.call_distribute.deviceSchedule"), filter, {
+        onError: () => {
+            isModalActive.value = true;
+            editMode.value = false;
+        },
+        onSuccess: () => {
+            form.reset();
+            isModalActive.value = false;
+            editMode.value = false;
+        },
+    });
+};
+
 const cacularOffSet = (index) => {
     offset.value += index;
+    filter.fromDate = calWeekOffset(offset.value)[4];
+    filter.toDate = calWeekOffset(offset.value)[5];
+    // console.log(filter.fromDate);
+    // console.log(filter.toDate);
+    search();
 }
 </script>
 <template>
@@ -165,6 +173,7 @@ const cacularOffSet = (index) => {
                                 size="30" @click="cacularOffSet(1)"></BaseIcon>
 
                         </div>
+                        {{ filter.fromDate }} - {{ filter.toDate }}
                         <div class="flex right-0">
                             <button class="w-[120px] py-1 rounded bg-[#E9E9E9] mr-2">{{ getWeekOffset(offset)[1]
                             }}</button>
@@ -199,6 +208,10 @@ const cacularOffSet = (index) => {
                         <div class="text-center border">{{ orderPackage.customer?.name }}</div>
                         <div class="text-center border">{{ orderPackage.time_approve }}</div>
                         <div v-for="n in 6" :key="n" class="text-center py-2 ">
+                            <div v-for="(dateCall,indexCall) in orderPackage.distribute_call" :key="indexCall">
+                                {{ dateCall.date_call == getWeekOffset(offset)[5][n] ? 'cs' : '' }}
+                                <!-- {{ dateCall.date_call }} -->
+                            </div>
 
                         </div>
                         <div class="text-center border">{{ orderPackage.market }}</div>
@@ -231,7 +244,7 @@ const cacularOffSet = (index) => {
                             <div class="pl-2 text-[#FF0000] border py-2">{{ user.name }}</div>
                             <div class="text-center border py-2">{{ user.isActive == 1 ? 'Active' : 'Inactive' }}</div>
                             <div class="text-center border py-2">
-                                <input v-if="user.isActive == 1" id="default-checkbox" type="checkbox" v-model="selected"
+                                <input v-if="user.isActive == 1" id="default-checkbox" type="checkbox" v-model="form.cskh_selected"
                                     :value="user.id"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
                             </div>
@@ -261,10 +274,11 @@ const cacularOffSet = (index) => {
                         </div>
                         <div class="mt-40 flex ">
                             <div class="mx-auto mb-0">
-                                <p class="text-[#FF0000] font-bold"> . Có 01 khách hàng mới tạo hợp đồng chưa được phân công
-                                    chăm sóc </p>
+                                <!-- <p class="text-[#FF0000] font-bold"> . Có 01 khách hàng mới tạo hợp đồng chưa được phân công
+                                    chăm sóc </p> -->
+                                <p class="mt-2 text-[#FF0000] font-bold" >{{ form.errors.cskh_selected != null ? 'Chưa chọn cskh' : null  }}</p>
                                 <div class="flex">
-                                    <button class="px-2 py-2 bg-[#1D75FA] rounded text-white mr-2">Chia công việc</button>
+                                    <button class="px-2 py-2 bg-[#1D75FA] rounded text-white mr-2" @click="save()">Chia công việc</button>
                                     <Link href="" class="px-2 py-2 bg-[#1D75FA] rounded text-white"> Xem bảng chia CV</Link>
                                 </div>
                             </div>

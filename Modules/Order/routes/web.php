@@ -161,7 +161,7 @@ Route::middleware(['auth'])->group(
             });
             Route::prefix('call_distribute')->as('call_distribute.')->group(function () {
                 Route::get('schedule', [CallDistributeController::class, 'getSchedule'])->name('schedule');
-
+                Route::post('deviceSchedule', [CallDistributeController::class, 'deviceSchedule'])->name('deviceSchedule');
             });
         });
     }

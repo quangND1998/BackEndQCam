@@ -229,7 +229,6 @@ const selectAll = computed({
 <template>
     <LayoutAuthenticated>
         <ModelShipping></ModelShipping>
-
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
@@ -240,7 +239,6 @@ const selectAll = computed({
                     </h2>
                 </div>
             </div>
-
             <div class="mt-3">
                 <div class="w-full flex justify-between">
                     <div class="flex mr-2">

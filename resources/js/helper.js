@@ -50,24 +50,6 @@ export const helper = {
             const date = new Date();
             return moment(String(date)).format(' HH:mm DD/MM/YYYY')
         },
-        currentWeek(){
-            const date = new Date();
-            const datecurrent = moment(); // Lấy ngày hiện tại
-            const weekNumber = datecurrent.isoWeek(); // Lấy tuần thứ bao nhiêu của năm
-            const weekMonth = datecurrent.week(); // Lấy tuần thứ bao nhiêu của tháng
-            const currentMonth = date.getMonth() + 1;
-
-            // Lấy ngày đầu tuần
-            const startOfWeek = datecurrent.startOf('week').format('DD/MM/YYYY');
-
-            // Lấy ngày cuối tuần
-            const endOfWeek = datecurrent.endOf('week').format('DD/MM/YYYY');
-
-            let text = 'TUẦN ' + weekNumber + ' NĂM ' + date.getFullYear() + ' (Tuần thứ ' + weekMonth + '/tháng ' + currentMonth + ")"
-                        + ' TỪ NGÀY ' + startOfWeek + ' ĐẾN NGÀY ' + endOfWeek;
-            return text;
-            console.log('Tuần thứ:', weekNumber);
-        },
         getWeekOffset(offset) {
             const currentWeek = moment().week();
             const targetWeek = currentWeek + offset;
@@ -84,38 +66,30 @@ export const helper = {
             let text = 'TUẦN ' + weekNumber + ' NĂM ' + year + ' (Tuần thứ ' + weekMonth + '/tháng ' + month + ")"
                         + ' TỪ NGÀY ' + targetStartDate.format('DD/MM/YYYY') + ' ĐẾN NGÀY ' + targetEndDate.format('DD/MM/YYYY');
             let text_week = 'Tuần ' + weekNumber + ' (T' + month + ')';
-            let text_week_detail = 'Tuần ' + weekNumber + ' (Tuần thứ' + weekMonth + ')';
+            let text_week_detail = 'Tuần ' + weekNumber + ' (Tuần thứ ' + weekMonth + ')';
             let list_date = [];
+            let list_date_detail = [];
             const currentDate = targetStartDate.clone();
-
+            const currentDateDetail = targetStartDate.clone();
             while (currentDate <= targetEndDate) {
                 const dayName = currentDate.format('DD/MM');
-                console.log(dayName + ': ' + dayName);
                 list_date.push(dayName);
                 currentDate.add(1, 'day');
+            }
+            while (currentDateDetail <= targetEndDate) {
+                const dayNameDetail = currentDateDetail.format('YYYY-MM-DD');
+                list_date_detail.push(dayNameDetail);
+                currentDateDetail.add(1, 'day');
+                console.log(currentDateDetail);
             }
             return  [
                 text,
                 text_week,
                 list_date,
-                text_week_detail
+                text_week_detail,
+                targetWeek,
+                list_date_detail
             ];
-        },
-        getWeekOriginOffset(offset) {
-            const currentWeek = moment().week();
-            const targetWeek = currentWeek + offset;
-            const targetDate = moment().week(targetWeek).startOf('week');
-
-            const weekNumber = targetDate.week(); // Lấy tuần thứ bao nhiêu của năm
-            const weekMonth = targetDate.week() - targetDate.clone().startOf('month').week() + 1; // Lấy tuần thứ bao nhiêu của tháng
-            const targetStartDate = moment().week(targetWeek).startOf('week').format('YYYY-MM-DD');
-            const targetEndDate = moment().week(targetWeek).endOf('week').format('YYYY-MM-DD');
-
-            const month = targetDate.format('M');
-            const year = targetDate.format('YYYY');
-
-            let text = 'Tuần ' + weekNumber + ' (T' + month + ')';
-            return text;
         },
         formatPriceShort(value) {
             // console.log(value.toString().length)

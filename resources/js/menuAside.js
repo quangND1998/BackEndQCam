@@ -165,7 +165,7 @@ export default [{
                 route_list: null
             },
             {
-                route: 'admin.gift_distribute.schedule',
+                route: 'admin.call_distribute.schedule',
                 label: 'Lên KH',
                 permissions: ['super-admin','cskh'],
                 route_list: null
