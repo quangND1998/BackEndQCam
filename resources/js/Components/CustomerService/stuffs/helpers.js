@@ -11,7 +11,7 @@ export const getCycleYear = (lifeTime, timeApprove) => {
   return `(${dateMilestones.findIndex(dateMilestone => dateMilestone.diff(new Date(), 'seconds') > 0) + 1})`;
 }
 
-export const generatePageNumbers(currentPage, totalPages) {
+export const generatePageNumbers = (currentPage, totalPages) => {
   let startPage, endPage;
   if (totalPages <= 5) {
     startPage = 1;

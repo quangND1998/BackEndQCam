@@ -82,7 +82,7 @@ export const CUSTOMER_SERVICE_API_MAKER = {
   },
   GET_REMIND: () => {
     return {
-      url: '/customer-service/reminds?page=${pageNo}&per_page=${itemPerPage}',
+      url: '/customer-service/reminds?page=$pageNo&per_page=$itemPerPage',
       method: 'get',
     }
   },

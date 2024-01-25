@@ -23,9 +23,13 @@ const heading = computed(() => {
 
   return headingSegments.join('  ');
 })
-
 const numberOfFreeContract = ref(1);
 const formatNumerOfFreeContract = computed(() => numberOfFreeContract.value < 10 ? `0${numberOfFreeContract.value}` : numberOfFreeContract.value);
+
+const tableRef = ref();
+const changePage = (diffPageNo) => {
+  tableRef.value.changePage(diffPageNo);
+}
 </script>
 
 <template>
@@ -110,8 +114,8 @@ const formatNumerOfFreeContract = computed(() => numberOfFreeContract.value < 10
         <p class="font-semibold mb-1">Danh sách pending của bạn</p>
         <div class="flex items-center justify-between mb-2">
           <div class="flex items-center gap-3">
-            <i class="fa fa-arrow-circle-o-left text-3xl cursor-pointer" aria-hidden="true"></i>
-            <i class="fa fa-arrow-circle-o-right text-3xl cursor-pointer" aria-hidden="true"></i>
+            <i class="fa fa-arrow-circle-o-left text-3xl cursor-pointer" aria-hidden="true" @click="changePage(-1)"></i>
+            <i class="fa fa-arrow-circle-o-right text-3xl cursor-pointer" aria-hidden="true" @click="changePage(1)"></i>
           </div>
           <div class="flex items-center gap-20">
             <div class="flex items-center gap-2">
@@ -121,7 +125,7 @@ const formatNumerOfFreeContract = computed(() => numberOfFreeContract.value < 10
             <button class="px-4 py-1 rounded-sm bg-zinc-900 text-white font-semibold">Xuất</button>
           </div>
         </div>
-        <Table />
+        <Table ref="tableRef" />
       </div>
     </div>
   </div>

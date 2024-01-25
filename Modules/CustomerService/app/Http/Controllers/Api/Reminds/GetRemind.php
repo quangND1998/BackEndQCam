@@ -11,6 +11,9 @@ class GetRemind extends Controller
     public function __invoke(Request $request)
     {
         $reminds = Remind::where('user_id', auth()->id())
+            ->with('productServiceOwner', function ($query) {
+                $query->with(['order_package.product_service', 'customer']);
+            })
             ->where('remind_at', '>=', now()->toDateString())
             ->paginate($request->per_page);
 

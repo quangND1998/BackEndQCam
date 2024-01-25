@@ -1,35 +1,45 @@
 <script setup>
-  import { inject, computed, ref } from 'vue';
+import { inject, computed, ref, watch } from 'vue';
 
-  import useQuery from '@/Components/CustomerService/composables/useQuery';
-  import { generatePageNumbers } from '@/Components/CustomerService/stuffs/helpers';
-  import Row from '@/Components/CustomerService/RemindTable/Row.vue';
-  import Spinner from '@/Components/CustomerService/SpinnerIcon.vue';
+import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '@/Components/CustomerService/composables/useQuery';
+import { generatePageNumbers } from '@/Components/CustomerService/stuffs/helpers';
+import Row from '@/Components/CustomerService/RemindTable/Row.vue';
+import SpinnerIcon from '@/Components/CustomerService/SpinnerIcon.vue';
 
-  const { remindData } = inject('REMIND');
-  const reminds = ref(props.remindData.data);
+const { remindData } = inject('REMIND');
+const reminds = ref(remindData.data);
 
-  const { isLoading, executeQuery } = useQuery(
-    CUSTOMER_SERVICE_API_MAKER.GET_REMIND(),
-    undefined,
-    (response) => {
-      reminds.value = response.data
-    }
-  );
-  const itemPerPage = ref(5);
-  watch(itemPerPage, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-      executeQuery({ pageNo: 1, itemPerPage: newValue });
-    }
-  });
-  const currentPage = ref(remindData.current_page || 0);
-  const lastPage = computed(() => remindData.last_page || 0);
-  const pageNumbers = computed(() => generatePageNumbers(currentPage.value, lastPage.value));
-  const onChangePage = (pageNo) => {
-    if (pageNo === currentPage.value) return;
-    currentPage.value = pageNo;
-    executeQuery({ pageNo, itemPerPage });
+const { isLoading, executeQuery } = useQuery(
+  CUSTOMER_SERVICE_API_MAKER.GET_REMIND(),
+  undefined,
+  (response) => {
+    reminds.value = response.reminds.data
+    lastPage.value = response.reminds.last_page;
   }
+);
+const itemPerPage = ref(5);
+watch(itemPerPage, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    currentPage.value = 1;
+    executeQuery({ pageNo: 1, itemPerPage: newValue });
+  }
+});
+const currentPage = ref(remindData.current_page || 0);
+const lastPage = ref(remindData.last_page || 0);
+const pageNumbers = computed(() => generatePageNumbers(currentPage.value, lastPage.value));
+const onChangePage = (pageNo) => {
+  if (pageNo === currentPage.value) return;
+  currentPage.value = pageNo;
+  executeQuery({ pageNo, itemPerPage: itemPerPage.value });
+}
+
+const changePage = (diffPageNo) => {
+  const newPageNo = currentPage.value + diffPageNo;
+  if (newPageNo < 1 || newPageNo > lastPage.value) return;
+  currentPage.value = newPageNo;
+  executeQuery({ pageNo: newPageNo, itemPerPage: itemPerPage.value });
+}
+defineExpose({ changePage });
 </script>
 
 <template>
@@ -45,7 +55,7 @@
     <div class="col-span-2">Chăm sóc</div>
   </div>
   <div v-if="isLoading" class="w-full h-[200px] flex items-center justify-center">
-    <SpinnerIcon class="!m-0 text-2xl text-orange-600" />
+    <SpinnerIcon class="!m-0 !w-14 !h-14 text-orange-600" />
   </div>
   <template v-else>
     <Row v-for="(remind, index) in reminds" :key="remind.id" :index="index" :remind="remind" />
@@ -65,8 +75,7 @@
     <div class="flex items-center justify-between mt-3">
       <div class="flex items-center gap-4">
         <p>Hiển thị</p>
-        <select
-          v-model="itemPerPage"
+        <select v-model="itemPerPage"
           class="border !border-gray-400 rounded-sm px-2 py-1 !w-20 focus:outline-none focus:!border-gray-400 focus:ring-0">
           <option :value="5">5</option>
           <option :value="10">10</option>
@@ -76,23 +85,24 @@
       <div class="flex items-center gap-2">
         <p>Trang:</p>
         <div class="flex items-center gap-3">
-          <ul class="flex items-center gap-1"> 
-            <li v-for="page in pageNumbers" :key="page" @click="onChangePage(page)">
-                <span aria-current="page" class="page-number" :class="{ 'active': page === currentPage }">
-                  {{ page }}
-                </span>
+          <ul class="flex items-center gap-1">
+            <li v-for="page in pageNumbers" :key="page" class="cursor-pointer" @click="onChangePage(page)">
+              <span aria-current="page" class="page-number" :class="{ 'active': page === currentPage }">
+                {{ page }}
+              </span>
             </li>
-        </ul>
+          </ul>
         </div>
       </div>
-    </template>
-  </div>
+    </div>
+  </template>
 </template>
 
 <style scoped>
 .page-number {
   @apply !px-3 !py-2 rounded-lg duration-150 hover:text-white hover:bg-orange-600;
 }
+
 .active {
   @apply bg-orange-600 text-white font-medium;
 }

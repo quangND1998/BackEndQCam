@@ -212,4 +212,7 @@ const showRecentActivityDialog = ref(false);
   color: theme('colors.red.600');
   margin-right: 2px;
 }
+#pwBackground {
+  visibility: hidden !important;
+}
 </style>
