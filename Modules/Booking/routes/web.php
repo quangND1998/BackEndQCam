@@ -15,7 +15,6 @@ use Modules\Booking\app\Http\Controllers\BookingManagerController;
 |
 */
 
-auth()->loginUsingId(1);
 Route::middleware(['auth'])->group(
     function () {
         Route::prefix('admin')->as('admin.')->group(function () {
