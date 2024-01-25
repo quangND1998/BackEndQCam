@@ -36,8 +36,10 @@ import "v3-infinite-loading/lib/style.css";
 import VueCountdown from '@chenfengyuan/vue-countdown';
 import "@vueform/multiselect/themes/default.css"
 import VueApexCharts from "vue3-apexcharts";
-import menuAside from '@/menuAside.js'
-// import 'vue3-carousel/dist/carousel.css'
+import vClickOutside from "click-outside-vue3"
+import { Fancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
+Fancybox.bind("[data-fancybox]", {});
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`,
@@ -54,6 +56,7 @@ createInertiaApp({
             .component('vue-countdown', VueCountdown)
             .use(VueApexCharts)
             .use(VueSweetalert2)
+            .use(vClickOutside)
             .directive('tooltip', Tooltip)
             .mixin(helper, base)
             .mount(el);

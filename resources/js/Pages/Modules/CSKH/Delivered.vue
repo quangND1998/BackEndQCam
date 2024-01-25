@@ -7,7 +7,7 @@ import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
-import ModelShipping from "./ModelShipping.vue";
+
 import OrderStatus from "./OrderStatus.vue";
 import {
     mdiLayersTripleOutline,
@@ -19,7 +19,9 @@ import "vue-search-input/dist/styles.css";
 import { initFlowbite } from "flowbite";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
-import { usePopOverStore } from '@/stores/popover.js'
+import { usePopOverStore } from '@/stores/popover.js';
+import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue'
+import OrderDocument from '@/Pages/Modules/CSKH/Dialog/OrderDocument.vue'
 const props = defineProps({
     orders: Object,
     status: String,
@@ -93,14 +95,14 @@ const changeDate = () => {
 
 
 
-const packedOrders = () => {
+const ordersConfirm = () => {
     let query = {
         ids: selected.value,
     };
     swal
         .fire({
             title: "Thông báo?",
-            text: "Bạn muốn đóng gói các đơn hàng này!",
+            text: "Bạn duyệt hàng loạt các đơn hàng này!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -108,7 +110,7 @@ const packedOrders = () => {
         })
         .then((result) => {
             if (result.isConfirmed) {
-                router.post(route("admin.cskh.packedOrder"), query, {
+                router.post(route("admin.cskh.confirm-document"), query, {
                     onError: () => { },
                     onSuccess: () => {
                         form.reset();
@@ -133,7 +135,10 @@ const selectAll = computed({
 
         if (value) {
             props.orders.data.forEach(function (order) {
-                array_selected.push(order.id);
+                if (order.state_document == 'not_approved') {
+                    array_selected.push(order.id);
+                }
+
             });
         }
         selected.value = array_selected;
@@ -143,6 +148,7 @@ const selectAll = computed({
 <template>
     <LayoutAuthenticated>
 
+        <OrderDocument />
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -206,9 +212,9 @@ const selectAll = computed({
                 </div>
                 <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders"></OrderStatusBar>
                 <div class="my-3 w-full flex justify-between">
-                    <button v-if="selected.length > 0" @click="packedOrders()"
+                    <button v-if="selected.length > 0" @click="ordersConfirm()"
                         class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
-                        Xác nhận đóng gói hàng loạt ({{ selected.length }})
+                        Xác nhận duyệt hàng loạt ({{ selected.length }})
                     </button>
                     <div class="flex">
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
@@ -217,7 +223,7 @@ const selectAll = computed({
                             label="Pending" />
                     </div>
                 </div>
-                <ModelShipping />
+
                 <div class="w-full mt-2">
                     <div class="flex flex-col">
                         <div class="overflow-x-auto inline-block min-w-full sm:px-6 lg:px-8 m-0 p-0 h-[60vh]">
@@ -236,13 +242,13 @@ const selectAll = computed({
                                         <th scope="col" class="px-3 py-2 text-left">Loại hàng</th>
                                         <th scope="col" class="px-3 py-2 text-left">SL</th>
                                         <th scope="col" class="px-3 py-2 text-left">DVT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Trạng thái</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Tình Trạng</th>
 
                                         <th scope="col" class="px-3 py-2 text-left">Shipper</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hẹn giao</th>
                                         <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Hồ sơ</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã Vận Đơn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -250,6 +256,7 @@ const selectAll = computed({
                                         <th scope="col" class="px-6 py-3">
                                             <div class="flex items-center">
                                                 <input id="default-checkbox" type="checkbox" v-model="selected"
+                                                    :disabled="order.state_document == 'not_approved' ? false : true"
                                                     :value="order.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
                                             </div>
@@ -309,18 +316,18 @@ const selectAll = computed({
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500 ">
-                                            <button @mouseover="openPopover(order)" @mouseleave="closePopover"
-                                                class="cursor-pointer">
+                                            <button @mouseover="openPopover(order)" class="cursor-pointer">
                                                 xem
                                             </button>
 
 
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            xem
+                                            <StateDocument :order="order" />
                                         </td>
+
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.order_number }}
+                                            {{ order?.order_transport_number }}
                                         </td>
                                     </tr>
                                 </tbody>

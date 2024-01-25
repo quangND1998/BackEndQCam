@@ -4,6 +4,7 @@ namespace Modules\Order\app\Http\Controllers\API;
 
 use App\Contracts\OrderContract;
 use App\Enums\OrderDocument;
+use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTransportStatus;
 use App\Enums\ShipperStatusEnum;
 use App\Http\Controllers\Controller;
@@ -66,6 +67,7 @@ class ApiShipperController extends Controller
         $order = Order::find($id);
         if ($order) {
             $order->update([
+                'status' => OrderStatusEnum::shipping,
                 'shipper_status' => ShipperStatusEnum::shipping,
                 'status_transport' => OrderTransportStatus::delivering
             ]);
@@ -97,6 +99,7 @@ class ApiShipperController extends Controller
         $order = Order::find($id);
         if ($order) {
             $order->update([
+                'status' => OrderStatusEnum::completed,
                 'shipper_status' => ShipperStatusEnum::delivered,
                 'status_transport' => OrderTransportStatus::delivered
             ]);
@@ -105,7 +108,7 @@ class ApiShipperController extends Controller
                     $order->addMedia($image)->toMediaCollection('order_shipper_images');
                 }
                 $order->update([
-                    'state_document' => OrderDocument::pending
+                    'state_document' => OrderDocument::not_approved
                 ]);
             } else {
                 if (count($order->order_shipper_images) == 0) {
@@ -144,7 +147,7 @@ class ApiShipperController extends Controller
                         $order->addMedia($image)->toMediaCollection('order_shipper_images');
                     }
                     $order->update([
-                        'state_document' => OrderDocument::pending
+                        'state_document' => OrderDocument::not_approved
                     ]);
                 }
             }

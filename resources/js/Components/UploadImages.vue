@@ -28,12 +28,14 @@ const props = defineProps({
             return uuid()
         },
     },
-    max_files: {
-        type: Number,
-        required: false,
-        default: 1
+    disabled: {
+        type: Boolean,
+        default: false
     },
-    modelValue: Array | File,
+    url: {
+        type: String,
+        default: null
+    },
     label: {
         type: String,
         required: false,
@@ -82,22 +84,22 @@ const listener = (data) => {
 
 const onFileChange = (e) => {
     const files = e.target.files;
-
-    if (form.images.length == props.max_files) {
-        return
-    }
+    console.log(files);
     if (files.length > 0) {
-        if (props.max_files > 1) {
-            setFiles(files)
-        }
-        else {
-            emit('update:modelValue', files[0])
-            form.images.push(files[0])
-            images.value.push({
-                name: files[0].name,
-                image: URL.createObjectURL(files[0])
-            });
-        }
+
+        setFiles(files)
+        form.post(props.url, {
+            preserveState: true,
+            onError: errors => {
+                if (Object.keys(errors).length > 0) {
+
+                }
+            },
+            onSuccess: page => {
+
+                form.reset();
+            }
+        });
 
     }
 
@@ -105,42 +107,22 @@ const onFileChange = (e) => {
 
 const setFiles = (files) => {
     for (var i = 0; i < files.length; i++) {
-
-        if (((props.old_images ? props.old_images.length : 0) + form.images.length) < props.max_files) {
-
-            form.images.push(files[i])
-            emit('update:modelValue', form.images)
-            images.value.push({
-                name: files[i].name,
-                image: URL.createObjectURL(files[i])
-            });
-        }
+        form.images.push(files[i])
+        images.value.push({
+            name: files[i].name,
+            image: URL.createObjectURL(files[i])
+        });
 
     }
 }
 const Delete = (img) => {
-    swal
-        .fire({
-            title: "Bạn có muốn?",
-            text: "Xóa ảnh này!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes!",
-        })
-        .then((result) => {
-            if (result.isConfirmed) {
-
-                axios.delete(`/media/delete/${img.id}`).then(res => {
-                    console.log(res);
-                    let index = props.old_images.findIndex(e => e.id == res.data.id);
-                    if (index !== -1) {
-                        props.old_images.splice(index, 1)
-                    }
-                })
-            }
-        });
+    axios.delete(`/media/delete/${img.id}`).then(res => {
+        console.log(res);
+        let index = props.old_images.findIndex(e => e.id == res.data.id);
+        if (index !== -1) {
+            props.old_images.splice(index, 1)
+        }
+    })
 }
 </script>
 
@@ -171,12 +153,11 @@ const Delete = (img) => {
                         <img :src="img.image" class="w-16 h-14 object-cover rounded-lg" alt="">
                     </div>
 
-                    <label :for="id" v-if="((old_images ? old_images.length : 0) + form.images.length) < max_files"
+                    <label :for="id"
                         class="cursor-pointer w-16 h-16 border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg">
                         <BaseIcon :path="mdiPlus" class="" :size="16" />
                     </label>
-                    <input @change="onFileChange"
-                        v-if="((old_images ? old_images.length : 0) + form.images.length) < max_files"
+                    <input @change="onFileChange" :disabled="disabled"
                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 hidden"
                         :id="id" type="file" :multiple="multiple" accept="image/*">
 

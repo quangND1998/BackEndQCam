@@ -146,19 +146,27 @@ Route::middleware(['auth'])->group(
 
                 Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
 
-                Route::get('packed', [CSKHOrderController::class, 'packed'])->name('packed');
+                Route::get('packing', [CSKHOrderController::class, 'packing'])->name('packing');
                 Route::get('shipping', [CSKHOrderController::class, 'shipping'])->name('shipping');
-                Route::get('delivered', [CSKHOrderController::class, 'delivered'])->name('delivered');
+                Route::get('completed', [CSKHOrderController::class, 'completed'])->name('completed');
                 Route::get('refunding', [CSKHOrderController::class, 'refunding'])->name('refunding');
                 Route::get('refund', [CSKHOrderController::class, 'refund'])->name('refund');
                 Route::get('decline', [CSKHOrderController::class, 'decline'])->name('decline');
                 Route::get('notShipperReceive', [CSKHOrderController::class, 'not_shipper_receive'])->name('notShipperReceive');
+
+                Route::prefix('order')->as('order.')->group(function () {
+                    Route::post('/{order}/decline', [CSKHOrderController::class, 'orderDecline'])->name('decline');
+                    Route::post('/{order}/refunding', [CSKHOrderController::class, 'orderRefunding'])->name('refunding');
+                    Route::post('/{order}/refund', [CSKHOrderController::class, 'orderRefund'])->name('refund');
+                });
+                Route::post('/confirm-document', [CSKHOrderController::class, 'confirmStateDocument'])->name('confirm-document');
+
+                Route::post('{order}/uploadImages', [CSKHOrderController::class, 'updloadImages'])->name('updloadImages');
             });
             Route::prefix('gift_distribute')->as('gift_distribute.')->group(function () {
                 Route::get('index', [GiftDistributeController::class, 'index'])->name('index');
                 Route::get('role', [GiftDistributeController::class, 'getRolePackage'])->name('role');
                 Route::get('schedule', [GiftDistributeController::class, 'getSchedule'])->name('schedule');
-
             });
         });
     }

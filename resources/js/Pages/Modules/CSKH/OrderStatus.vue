@@ -92,7 +92,7 @@ const order_color = computed(() => {
 
 </script>
 <template>
-    <span class="px-1 py-1 border rounded-sm " :class="order_color">{{
+    <span class="px-1 py-1 border rounded-md " :class="order_color">{{
         order_text }} </span>
 </template>
 <style ></style>

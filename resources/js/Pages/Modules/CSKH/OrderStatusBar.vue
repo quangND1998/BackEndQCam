@@ -12,7 +12,7 @@ const props = defineProps({
     count_orders: Number
 })
 const totalOrder = (status) => {
-    var findStatus = props.statusGroup.find(e => e.status_transport == status);
+    var findStatus = props.statusGroup.find(e => e.status == status);
     if (findStatus) {
         return findStatus.total;
     } else {
@@ -42,11 +42,11 @@ const totalOrder = (status) => {
             <span class="text-gray-400 ml-2"> Đơn chờ({{ totalOrder('pending') }})</span>
             </Link>
 
-            <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.cskh.packed')"
+            <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.cskh.packing')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
-                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/cskh/packed') }">
+                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/cskh/packing') }">
             <Icon icon="packing"></Icon>
-            <span class="text-gray-400 ml-2">Đóng gói ({{ totalOrder('packed') }})</span>
+            <span class="text-gray-400 ml-2">Đóng gói ({{ totalOrder('packing') }})</span>
             </Link>
 
             <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.cskh.notShipperReceive')"
@@ -62,14 +62,14 @@ const totalOrder = (status) => {
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/cskh/shipping') }">
             <Icon icon="rocket-ship"></Icon>
-            <span class="text-gray-400 ml-2"> Đang vận chuyển({{ totalOrder('delivering') }})</span>
+            <span class="text-gray-400 ml-2"> Đang vận chuyển({{ totalOrder('shipping') }})</span>
             </Link>
-            <Link v-if="hasAnyPermission(['order-completed'])" :href="route('admin.cskh.delivered')"
+            <Link v-if="hasAnyPermission(['order-completed'])" :href="route('admin.cskh.completed')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
-                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/cskh/delivered') }">
+                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/cskh/completed') }">
             <Icon icon="check-green"></Icon>
 
-            <span class="text-gray-400 ml-2"> Đã giao ({{ totalOrder('delivered') }})</span>
+            <span class="text-gray-400 ml-2"> Đã giao ({{ totalOrder('completed') }})</span>
             </Link>
             <Link v-if="hasAnyPermission(['order-refund'])" :href="route('admin.cskh.refunding')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
@@ -85,9 +85,9 @@ const totalOrder = (status) => {
             <Icon icon="back"></Icon>
             <span class="text-gray-400 ml-2"> Hoàn đơn ({{ totalOrder('refund') }})</span>
             </Link>
-            <Link v-if="hasAnyPermission(['order-decline'])" :href="route('admin.cskh.delivered')"
+            <Link v-if="hasAnyPermission(['order-decline'])" :href="route('admin.cskh.decline')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
-                :class="{ 'bg-white text-blue-500': $page.url.includes('/admin/cskh/delivered') }">
+                :class="{ 'bg-white text-blue-500': $page.url.includes('/admin/cskh/decline') }">
             <Icon icon="cancel"></Icon>
             <span class="text-gray-400 ml-2">Đơn hủy ({{ totalOrder('decline') }})</span>
             </Link>

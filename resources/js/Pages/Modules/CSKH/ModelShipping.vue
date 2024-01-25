@@ -1,5 +1,5 @@
 <template>
-    <div class="space-y-4 text-gray-700 rounded-2xl ">
+    <div class="space-y-4 text-gray-700 rounded-2xl " v-click-outside="closePopover">
         <div v-if="showPopover"
             class="modal-dialog modal-xl rounded-2xl overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
             <div class="modal-content relative w-auto my-6 mx-auto max-w-3xl">
@@ -53,7 +53,12 @@
                         </div>
                         <div class="w-full flex  items-center mx-auto mt-3 ">
                             <img src="/assets/icon/note.png" alt="" class="w-12 h-12 p-2">
-                            <p class="text-[#000000] text-base">Ghi chú: Khách hàng nhận hàng trước 9h {{ data?.reason }}
+                            <p class="text-[#000000] text-base">Ghi chú: {{ data?.note }}
+                            </p>
+                        </div>
+                        <div class="w-full flex  items-center mx-auto mt-3 ">
+                            <img src="/assets/icon/note.png" alt="" class="w-12 h-12 p-2">
+                            <p class="text-[#000000] font-semibold">Lý do: {{ data?.reason }}
                             </p>
                         </div>
                         <div class="w-full flex items-center mx-auto ">
@@ -109,7 +114,8 @@ const { data,
 
     showPopover,
 } = storeToRefs(usePopOverStore())
-
+const { openPopover,
+    closePopover } = usePopOverStore();
 const isActive = (status) => {
     if (data.value && status.includes(data.value.status_transport)) {
         return true
