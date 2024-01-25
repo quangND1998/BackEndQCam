@@ -37,9 +37,9 @@ class CallDistributeController extends Controller
             $q->whereBetween('date_call', [$fromDate, $todate]);
         }])->role()
         ->whereHas(
-            'distributeDate',
+            'distributeCall',
             function ($q) use ($fromDate,$todate) {
-                $q->whereBetween('date_recevie', [$fromDate, $todate]);
+                $q->whereBetween('date_call', [$fromDate, $todate]);
             }
         )
         ->where('status','complete')
