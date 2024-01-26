@@ -23,7 +23,6 @@ import OrderStatusBar from "./OrderStatusBar.vue";
 import { usePopOverStore } from '@/stores/popover.js';
 import Icon from '@/Components/Icon.vue'
 import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
-import useDialog from '@/composable/useDialog'
 import { useOrderStore } from '@/stores/order.js'
 const props = defineProps({
     orders: Object,
@@ -116,32 +115,6 @@ const changeDate = () => {
     });
 };
 
-const packedOrder = (order) => {
-    let query = {
-        ids: [order.id],
-    };
-    swal
-        .fire({
-            title: "Thông báo?",
-            text: "Bạn muốn đóng gói đơn hàng này!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-        })
-        .then((result) => {
-            if (result.isConfirmed) {
-                router.post(route("admin.cskh.packedOrder"), query, {
-                    onError: () => { },
-                    onSuccess: () => {
-                        form.reset();
-                    },
-                });
-            } else {
-                return;
-            }
-        });
-};
 const packedOrders = () => {
     let query = {
         ids: selected.value,
@@ -168,13 +141,11 @@ const packedOrders = () => {
             }
         });
 };
-const openSHippingDetail = (order) => {
-    console.log("ModelShipping");
-    emitter.emit("ModelShipping", order);
+const openOrderCancel = (order) => {
+    showDetailOrder(order)
+    emitter.emit("OrderCancel", order);
 };
-const closeShippingDetail = () => {
-    emitter.emit("closeModalShipping");
-}
+
 const selected = ref([]);
 const selectAll = computed({
     get() {
@@ -335,7 +306,7 @@ const canceldeliveryNoOrder = (order) => {
                                                 <input id="default-checkbox" type="checkbox" v-model="selected"
                                                     :value="order.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
-                                                <button v-tooltip="'Hủy mã vận đơn'" @click="showDetailOrder(order)"
+                                                <button v-tooltip="'Hủy mã vận đơn'" @click="openOrderCancel(order)"
                                                     data-toggle="modal" data-target="#OrderCancel">
                                                     <Icon icon="cancel"></Icon>
                                                 </button>

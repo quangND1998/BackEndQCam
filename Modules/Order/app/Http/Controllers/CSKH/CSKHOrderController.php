@@ -13,11 +13,14 @@ use App\Enums\OrderDocument;
 use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTransportStatus;
 use App\Enums\ShipperStatusEnum;
+use App\Http\Resources\OrderResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Modules\Order\app\Http\Requests\ChangeShipperStatusRequest;
 use Modules\Order\app\Models\Order;
+use Modules\Order\app\Models\RefundProducts;
+use Modules\Tree\app\Models\ProductRetail;
 
 class CSKHOrderController extends Controller
 {
@@ -54,7 +57,8 @@ class CSKHOrderController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
-        $orders =  $this->orderRepository->getAllOrderGift($request);
+        $orders = OrderResource::collection($this->orderRepository->getAllOrderGift($request));
+
         $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
 
@@ -83,7 +87,7 @@ class CSKHOrderController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderStatusEnum::pending;
-        $orders =  $this->orderRepository->getOrderGift($request, $status);
+        $orders =  OrderResource::collection($this->orderRepository->getOrderGift($request, $status));
         $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderStatusEnum::cases(), 'status');
 
         $shippers = $this->shipperRepository->getShipper();
@@ -292,7 +296,9 @@ class CSKHOrderController extends Controller
 
 
         $order->update([
+            'status' => OrderStatusEnum::decline,
             'status_transport' => OrderTransportStatus::decline,
+            'shipper_status' => OrderTransportStatus::decline,
             'reason' => $request->reason,
             'delivery_appointment' => $request->delivery_appointment
         ]);
@@ -302,40 +308,69 @@ class CSKHOrderController extends Controller
 
     public function orderRefunding(Request $request, Order $order)
     {
+
         $this->validate(
             $request,
             [
-                'order_note' => 'required',
-                'delivery_appointment' => 'null',
+                'reason' => 'required',
 
             ]
         );
 
         $order->update([
-            'status_transport' => OrderTransportStatus::refunding,
-            'note_order' => $request->note_order,
+            'status' => OrderStatusEnum::refunding,
+            'shipper_status' => OrderTransportStatus::refunding,
+            'reason' => $request->reason,
 
         ]);
         return back()->with('success', "Đơn hàng đang chuyển về chờ hoàn");
     }
 
-    public function orderRefund(Request $request, Order $order)
+    public function orderRefund(Request $request)
     {
+
         $this->validate(
             $request,
             [
-                'order_note' => 'required',
-                'delivery_appointment' => 'null',
+                'check' => 'required',
+
 
             ]
         );
-        $order->update([
-            'status_transport' => OrderTransportStatus::refund,
-            'note_order' => $request->note_order,
 
-        ]);
+        if ($request->ids && count($request->ids) > 0) {
+            $orders = Order::find($request->ids);
+            foreach ($orders as $order) {
+                $order->update([
+                    'status' => OrderStatusEnum::refund,
+                    'status_transport' => OrderTransportStatus::refund,
+                    'shipper_status' => OrderTransportStatus::refund,
 
-        return back()->with('success', "Đơn hàng đã hoàn");
+                ]);
+                if ($request->check) {
+                    foreach ($order->orderItems as $item) {
+                        $product = ProductRetail::find($item->product_id);
+                        if ($product) {
+                            RefundProducts::create([
+                                'name' => $product->name,
+                                'state' => 'pending',
+                                'code' => $product->code,
+                                'time' => Carbon::now(),
+                                // 'type' => $product->type,
+                                'reason' => $order->reason,
+                                'order_transport_number' => $order->order_transport_number,
+                                'order_number' => $order->order_number,
+                                'order_id' => $order->id,
+                                'product_id' => $product->id
+
+                            ]);
+                        }
+                    }
+                }
+            }
+            return back()->with('success', "Đã hoàn thành công");
+        }
+        return back()->with('warning', "Hãy chọn select box");
     }
 
 

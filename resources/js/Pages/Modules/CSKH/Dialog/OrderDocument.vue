@@ -88,9 +88,9 @@
 
                             <div class="flex  w-full">
 
-                                <UploadImages v-if="data" :disabled="data.state_document == 'approved' ? true : false"
-                                    :multiple="true" :old_images="data.order_shipper_images"
-                                    :url="`/admin/cskh/${data.id}/uploadImages`" class="w-30 justify-start" />
+                                <UploadImages v-if="data" :disabled="disabled" :multiple="true"
+                                    :old_images="data.order_shipper_images" :url="`/admin/cskh/${data.id}/uploadImages`"
+                                    class="w-30 justify-start" />
                                 <InputError class="mt-2" :message="form.errors.images" />
                             </div>
                         </div>
@@ -135,6 +135,13 @@ const isActive = (status) => {
     }
     return false
 }
+
+const disabled = computed(() => {
+    if (data.value.state_document == 'approved' || data.value.status_transport == 'decline') {
+        return true
+    }
+    return false
+})
 const confirmStateDocument = () => {
     let query = {
         ids: [data.value.id],

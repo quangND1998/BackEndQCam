@@ -5,41 +5,41 @@ import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
-
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
 import ModelShipping from "./ModelShipping.vue";
-
 import OrderStatus from "./OrderStatus.vue";
 import {
+
     mdiLayersTripleOutline,
     mdiPhone,
 } from "@mdi/js";
-import BaseButton from "@/Components/BaseButton.vue";
 
 import BaseIcon from "@/Components/BaseIcon.vue";
 import "vue-search-input/dist/styles.css";
-
+import { initFlowbite } from "flowbite";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
-import { usePopOverStore } from '@/stores/popover.js'
+import { usePopOverStore } from '@/stores/popover.js';
 import Icon from '@/Components/Icon.vue'
-import OrderRefund from '@/Pages/Modules/CSKH/Dialog/OrderRefund.vue';
+import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
 import { useOrderStore } from '@/stores/order.js'
-const props = defineProps({
-    orders: Object,
-    status: String,
-    status: String,
-    from: String,
-    to: String,
-    statusGroup: Array,
-    shippers: Array,
-    count_orders: Number
-});
+import axios from "axios";
 const { openPopover,
     closePopover } = usePopOverStore();
-const { showDetailOrder, closeModal } = useOrderStore();
-const list_order = toRef(props.orders.data);
+const { showDetailOrder } = useOrderStore();
+
+const orders = ref(null);
+const statusGroup = ref(null);
+const count_orders = ref(null)
+const fetchOrders = () => {
+    axios.get('/admin/cskh/fetchOrders').then(res => {
+        orders.value = res.data.orders
+        statusGroup.value = res.data.statusGroup
+    })
+}
+
+fetchOrders();
 const filter = reactive({
     customer: null,
     name: null,
@@ -61,6 +61,7 @@ const form = useForm({
     selectedDate: [new Date(), new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)],
 });
 
+initFlowbite();
 
 const searchCustomer = () => {
     router.get(route(`admin.orders.${props.status}`), filter, {
@@ -90,7 +91,6 @@ const search = () => {
 };
 
 
-
 const changeDate = () => {
     router.get(route(`admin.orders.${props.status}`), filter, {
         preserveState: true,
@@ -98,43 +98,18 @@ const changeDate = () => {
     });
 };
 
-const loadOrder = async ($state) => {
-
+const openOrderCancel = (order) => {
+    showDetailOrder(order)
+    emitter.emit("OrderCancel", order);
 };
 
 
-const refundOrders = () => {
-    closeModal()
-    if (selected.value.length == 1) {
-        console.log(selected.value[0])
-        const found = props.orders.data.find((element) => element.id == selected.value[0]);
-        if (found) {
-            showDetailOrder(found)
-        }
-    }
-
-};
-const selected = ref([]);
-const selectAll = computed({
-    get() {
-        return props.orders.data ? selected.value.length == props.orders.data : false;
-    },
-    set(value) {
-        var array_selected = [];
-
-        if (value) {
-            props.orders.data.forEach(function (order) {
-                array_selected.push(order.id);
-            });
-        }
-        selected.value = array_selected;
-    },
-});
 </script>
 <template>
-    <LayoutAuthenticated>
+    <div>
         <ModelShipping></ModelShipping>
-        <OrderRefund v-if="selected.length > 0" :ids="selected"></OrderRefund>
+        <OrderCancel />
+
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -196,32 +171,17 @@ const selectAll = computed({
                         </div>
                     </div>
                 </div>
-                <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders"></OrderStatusBar>
-                <div class="my-3 w-full flex justify-between">
-                    <button v-if="selected.length > 0" @click="refundOrders()" data-toggle="modal"
-                        data-target="#OrderRefund"
-                        class=" inline-flex px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
-                        <Icon icon="flip" />
-                        Xác nhận hoàn ({{ selected.length }})
-                    </button>
-                    <div class="flex">
-                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
-                            label="Tất cả (11)" />
-                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
-                            label="Pending" />
-                    </div>
-                </div>
 
+                <OrderStatusBar v-if="statusGroup" :statusGroup="statusGroup" :count_orders="count_orders"></OrderStatusBar>
+
+                {{ orders }}
                 <div class="w-full mt-2">
                     <div class="flex flex-col">
                         <div class="overflow-x-auto inline-block min-w-full sm:px-6 lg:px-8 m-0 p-0 h-[60vh]">
                             <table class="table_stripe min-w-full text-center text-sm font-light overflow-x-auto">
                                 <thead class="font-medium">
                                     <tr>
-                                        <th scope="col" class="px-6 py-2 text-left">
-                                            <input id="default-checkbox" type="checkbox" v-model="selectAll"
-                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
-                                        </th>
+
                                         <th scope="col" class="px-3 py-2 text-left">STT</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã HĐ</th>
                                         <th scope="col" class="px-3 py-2 text-left">Loại HĐ</th>
@@ -237,17 +197,12 @@ const selectAll = computed({
                                         <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã vận đơn </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(order, index) in orders?.data" :key="index">
-                                        <th scope="col" class="px-6 py-3">
-                                            <div class="flex items-center">
-                                                <input id="default-checkbox" type="checkbox" v-model="selected"
-                                                    :value="order.id"
-                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
-                                            </div>
-                                        </th>
+
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ index + 1 }}
                                         </td>
@@ -313,6 +268,9 @@ const selectAll = computed({
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order?.order_number }}
                                         </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order?.order_transport_number }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -321,7 +279,7 @@ const selectAll = computed({
                 </div>
             </div>
         </SectionMain>
-    </LayoutAuthenticated>
+    </div>
 </template>
 <style>
 .list_icon_crud {

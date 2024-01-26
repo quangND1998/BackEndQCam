@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="OrderCancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="OrderRefunding" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-xl rounded-2xl mx-auto mt-10 shadow-lg max-h-modal w-8/12   md:w-9/12 lg:w-8/12 xl:w-5/12 z-50 "
             role="document">
@@ -61,7 +61,7 @@
                     </div>
                     <div class="w-full flex flex-col  mx-auto mt-4">
 
-                        <h1 class="text-[#000000] text-[16px] font-semibold mr-2">Đơn có vẫn đề?
+                        <h1 class="text-[#000000] text-[16px] font-semibold mr-2">Yêu cầu hoàn đơn?
                         </h1>
 
                         <textarea v-model="form.reason" name="" id="" cols="30" rows="5"
@@ -71,25 +71,12 @@
                         </div>
                     </div>
 
-                    <div class="w-full flex justify-between mt-3">
-                        <div class="text-black font-semibold my-1 text-[16px]">Chuyển ngày giao đến </div>
-                        <div class="text-black font-semibold my-1 text-[16px]">
 
-                            <VueDatePicker v-model="form.delivery_appointment"
-                                :class="form.errors.delivery_appointment ? 'border-red-500' : ''" :min-date="minDate"
-                                :clearable="true" :enable-time-picker="false" format="dd/MM/yyyy">
-
-                            </VueDatePicker>
-                            <div class="text-red-500" v-if="form.errors.delivery_appointment">{{
-                                form.errors.delivery_appointment }}
-                            </div>
-                        </div>
-                    </div>
                     <div class="modal-footer">
 
-                        <button type="submit" @click.prevent="orderCancel()"
-                            class="inline-block px-3 py-4 bg-red-600 text-white font-black text-sm leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Xác
-                            nhận hủy đơn</button>
+                        <button type="submit" @click.prevent="orderRefunding()"
+                            class="inline-block px-2 py-3 bg-red-600 text-white font-black text-sm leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Yêu
+                            cầu hoàn đơn đơn</button>
                     </div>
                 </div>
             </div>
@@ -104,7 +91,7 @@ import { storeToRefs } from 'pinia'
 import { useForm, router } from "@inertiajs/vue3";
 import { useOrderStore } from '@/stores/order.js'
 import OrderStatus from '@/Pages/Modules/CSKH/OrderStatus.vue'
-import moment from 'moment';
+
 
 const { order
 } = storeToRefs(useOrderStore())
@@ -114,7 +101,8 @@ const form = useForm({
 })
 
 onMounted(() => {
-    emitter.on('OrderCancel', (order) => {
+
+    emitter.on('OrderRefunding', (order) => {
         console.log(order.reason)
 
         form.reason = order.reason,
@@ -127,25 +115,11 @@ const isActive = (status) => {
     }
     return false
 }
-const minDate = computed(() => {
-    if (form.delivery_appointment) {
-        // return new Date()
-        return new Date(moment(new Date(form.delivery_appointment), "DD-MM-YYYY").add(2, 'days'))
-    }
-    else {
-        return new Date(moment(new Date(), "DD-MM-YYYY").add(2, 'days'))
-
-    }
-}
-
-);
 
 
+const orderRefunding = () => {
 
-
-const orderCancel = () => {
-
-    form.post(route("admin.cskh.order.decline", order.value.id), {
+    form.post(route("admin.cskh.order.refunding", order.value.id), {
         preserveState: true,
         onError: errors => {
             if (Object.keys(errors).length > 0) {
@@ -153,7 +127,7 @@ const orderCancel = () => {
             }
         },
         onSuccess: page => {
-            $("#OrderCancel").modal("hide");
+            $("#OrderRefunding").modal("hide");
             form.reset();
         }
     });
@@ -162,7 +136,7 @@ const listener = () => {
 }
 onUnmounted(() => {
 
-    emitter.off('OrderCancel', listener)
+    emitter.off('OrderRefunding', listener)
 })
 </script>
 

@@ -5,49 +5,24 @@ import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import CardBox from "@/Components/CardBox.vue";
-import CardBoxModal from "@/Components/CardBoxModal.vue";
-import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
 import ModelShipping from "./ModelShipping.vue";
-// import ModalDecline from "./ModalDecline.vue";
-// import ModelRefund from "./ModelRefund.vue";
-// import ModalShipping from "./ModalShipping.vue";
 import OrderStatus from "./OrderStatus.vue";
 import {
-    mdiEye,
-    mdiAccountLockOpen,
-    mdiPlus,
-    mdiFilter,
-    mdiMagnify,
-    mdiDotsVertical,
-    mdiTrashCanOutline,
-    mdiCodeBlockBrackets,
-    mdiPencil,
-    mdiLandFields,
-    mdiSquareEditOutline,
-    mdiArrowLeftBoldCircleOutline,
     mdiLayersTripleOutline,
     mdiPhone,
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
-import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-
-import Dropdown from "@/Components/Dropdown.vue";
 import BaseIcon from "@/Components/BaseIcon.vue";
-import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
-import MazInputPrice from "maz-ui/components/MazInputPrice";
 import { initFlowbite } from "flowbite";
-import OrderHome from "@/Pages/Test/OrderHome.vue";
-import OrderRow from "@/Pages/Modules/Order/OrderRow.vue";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
 import { usePopOverStore } from '@/stores/popover.js'
+import OrderRefunding from '@/Pages/Modules/CSKH/Dialog/OrderRefunding.vue';
+import { useOrderStore } from '@/stores/order.js'
+import Icon from '@/Components/Icon.vue'
 const props = defineProps({
     orders: Object,
     status: String,
@@ -58,10 +33,9 @@ const props = defineProps({
     shippers: Array,
     count_orders: Number
 });
-const {
-    openPopover,
-    closePopover
-} = usePopOverStore();
+const { openPopover,
+    closePopover } = usePopOverStore();
+const { showDetailOrder } = useOrderStore();
 const list_order = toRef(props.orders.data);
 const filter = reactive({
     customer: null,
@@ -139,52 +113,8 @@ const changeDate = () => {
     });
 };
 
-const loadOrder = async ($state) => {
-    // console.log("loading...");
-    // router.get(route(`admin.orders.${props.status}`),
-    //     filter,
-    //     {
-    //         preserveState: true,
-    //         preserveScroll: true,
-    //         onSuccess: page => {
-    //             if (props.orders.current_page == props.orders.last_page) $state.complete();
-    //             else {
-    //                 $state.loaded();
-    //             }
-    //             filter.per_page += 10;
-    //         },
-    //         onError: errors => {
-    //             $state.error();
-    //         },
-    //     },
-    // );
-};
-const packedOrder = (order) => {
-    let query = {
-        ids: [order.id],
-    };
-    swal
-        .fire({
-            title: "Thông báo?",
-            text: "Bạn muốn đóng gói đơn hàng này!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-        })
-        .then((result) => {
-            if (result.isConfirmed) {
-                router.post(route("admin.cskh.packedOrder"), query, {
-                    onError: () => { },
-                    onSuccess: () => {
-                        form.reset();
-                    },
-                });
-            } else {
-                return;
-            }
-        });
-};
+
+
 const packedOrders = () => {
     let query = {
         ids: selected.value,
@@ -211,10 +141,11 @@ const packedOrders = () => {
             }
         });
 };
-const openSHippingDetail = (order) => {
-    console.log("ModelShipping");
-    emitter.emit("ModelShipping", order);
+const openOrderRefunding = (order) => {
+    showDetailOrder(order)
+    emitter.emit("OrderRefunding", order);
 };
+
 const selected = ref([]);
 const selectAll = computed({
     get() {
@@ -235,6 +166,7 @@ const selectAll = computed({
 <template>
     <LayoutAuthenticated>
         <ModelShipping></ModelShipping>
+        <OrderRefunding />
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -344,6 +276,11 @@ const selectAll = computed({
                                                 <input id="default-checkbox" type="checkbox" v-model="selected"
                                                     :value="order.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
+
+                                                <button v-tooltip="'Hủy mã vận đơn'" @click="openOrderRefunding(order)"
+                                                    data-toggle="modal" data-target="#OrderRefunding">
+                                                    <Icon icon="cancel"></Icon>
+                                                </button>
                                             </div>
                                         </th>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">

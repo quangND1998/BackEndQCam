@@ -31,7 +31,12 @@ const status_color = {
 
 
 const order_text = computed(() => {
-    return status_text[props.order.state_document]
+    if (status_text[props.order.state_document]) {
+        return status_text[props.order.state_document]
+    }
+    else {
+        return 'Chưa giao'
+    }
 
 })
 
@@ -41,9 +46,7 @@ const order_color = computed(() => {
 
 </script>
 <template>
- 
     <span class="px-1 py-1 border rounded-md " :class="order_color">{{
         order_text }} </span>
-   
 </template>
 <style ></style>

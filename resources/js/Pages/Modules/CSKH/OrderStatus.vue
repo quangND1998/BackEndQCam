@@ -24,7 +24,7 @@ const status_color = {
     delivering: 'border-[#FF6100] text-[#FF6100]',
     delivered: 'bg-[#4F8D06] text-white',
     refunding: 'bg-[#27AE60] text-white',
-    refund: 'border-[#00327F] text-white',
+    refund: 'bg-[#00327F] text-white',
     decline: 'border-[#FF0000] text-[#FF0000]',
 
 
@@ -37,7 +37,8 @@ const status_shipper_text = {
     pending: 'Chưa vận chuyển',
     shipping: 'Chưa giao',
     delivered: 'Đã giao hàng',
-    refund: 'Đóng gói',
+    refunding: 'Chờ hoàn',
+    refund: 'Hoàn đơn',
     decline: 'Shipper không nhận đơn',
 
 
@@ -46,7 +47,8 @@ const status_shipper_color = {
     pending: 'bg-[#EE2736] text-white',
     shipping: 'bg-[#1D75FA] text-white',
     delivered: 'bg-[#4F8D06] text-white',
-    refund: 'border-[#AEAEAE] text-[#000000]',
+    refunding: 'bg-[#27AE60] text-white',
+    refund: 'bg-[#00327F] text-white',
     decline: 'border-[#FF6100] text-[#FF6100]',
 
 
@@ -55,7 +57,13 @@ const status_shipper_color = {
 }
 
 const order_text = computed(() => {
-    if (props.order.shipper_status == 'pending' && props.order.status_transport == 'not_shipper_receive') {
+    if (props.order.new_create && props.order.status == 'pending') {
+        return 'Tạo mới'
+    }
+    else if (props.order.state == 0) {
+        return 'Pending'
+    }
+    else if (props.order.shipper_status == 'pending' && props.order.status_transport == 'not_shipper_receive') {
         return status_text[props.order.status_transport]
     }
     else if (props.order.shipper_status == null && props.order.status_transport !== 'packed') {
@@ -73,7 +81,14 @@ const order_text = computed(() => {
 })
 
 const order_color = computed(() => {
-    if (props.order.shipper_status == 'pending' && props.order.status_transport == 'not_shipper_receive') {
+    if (props.order.new_create && props.order.status == 'pending') {
+        return 'border-[#4F8D06] text-[#4F8D06]'
+    }
+    else if
+        (props.order.state == 0) {
+        return 'border-[#FF6100] text-[#FF6100]'
+    }
+    else if (props.order.shipper_status == 'pending' && props.order.status_transport == 'not_shipper_receive') {
         return status_color[props.order.status_transport]
     }
 

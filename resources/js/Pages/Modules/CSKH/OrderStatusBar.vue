@@ -49,14 +49,14 @@ const totalOrder = (status) => {
             <span class="text-gray-400 ml-2">Đóng gói ({{ totalOrder('packing') }})</span>
             </Link>
 
-            <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.cskh.notShipperReceive')"
+            <!-- <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.cskh.notShipperReceive')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/cskh/notShipperReceive') }">
 
             <BaseIcon :path="mdiTruckRemove" class=" text-[#1D75FA] hover:text-blue-700" size="22">
             </BaseIcon>
             <span class="text-gray-400 ml-1"> Shipper không nhận ({{ totalOrder('not_shipper_receive') }})</span>
-            </Link>
+            </Link> -->
 
             <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('admin.cskh.shipping')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
@@ -73,14 +73,14 @@ const totalOrder = (status) => {
             </Link>
             <Link v-if="hasAnyPermission(['order-refund'])" :href="route('admin.cskh.refunding')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
-                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/cskh/refunding') }">
+                :class="{ 'bg-white  text-blue-500': $page.component == 'Modules/CSKH/Refunding' }">
 
             <Icon icon="back" color="#AEAEAE"></Icon>
             <span class="text-gray-400 ml-2"> Chờ hoàn ({{ totalOrder('refunding') }})</span>
             </Link>
             <Link v-if="hasAnyPermission(['order-refund'])" :href="route('admin.cskh.refund')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
-                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/cskh/refund') }">
+                :class="{ 'bg-white  text-blue-500': $page.component == 'Modules/CSKH/Refund' }">
 
             <Icon icon="back"></Icon>
             <span class="text-gray-400 ml-2"> Hoàn đơn ({{ totalOrder('refund') }})</span>
@@ -89,7 +89,7 @@ const totalOrder = (status) => {
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white text-blue-500': $page.url.includes('/admin/cskh/decline') }">
             <Icon icon="cancel"></Icon>
-            <span class="text-gray-400 ml-2">Đơn hủy ({{ totalOrder('decline') }})</span>
+            <span class="text-gray-400 ml-2">Hủy giao ({{ totalOrder('decline') }})</span>
             </Link>
         </div>
         <div>

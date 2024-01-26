@@ -5,48 +5,22 @@ import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import CardBox from "@/Components/CardBox.vue";
-import CardBoxModal from "@/Components/CardBoxModal.vue";
-import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
+
 import VueDatepickerUi from 'vue-datepicker-ui'
 import 'vue-datepicker-ui/lib/vuedatepickerui.css';
 import ModelShipping from './ModelShipping.vue'
-// import ModalDecline from "./ModalDecline.vue";
-// import ModelRefund from "./ModelRefund.vue";
-// import ModalShipping from "./ModalShipping.vue";
+
 import {
-    mdiEye,
-    mdiAccountLockOpen,
-    mdiPlus,
-    mdiFilter,
-    mdiMagnify,
-    mdiDotsVertical,
-    mdiTrashCanOutline,
-    mdiCodeBlockBrackets,
-    mdiPencil,
-    mdiLandFields,
     mdiSquareEditOutline,
     mdiArrowLeftBoldCircleOutline,
     mdiLayersTripleOutline,
     mdiPhone
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
-import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 
-import Dropdown from '@/Components/Dropdown.vue';
-import BaseIcon from '@/Components/BaseIcon.vue'
-import SearchInput from "vue-search-input";
-import "vue-search-input/dist/styles.css";
-import MazInputPrice from 'maz-ui/components/MazInputPrice'
-import { initFlowbite } from 'flowbite'
-import OrderHome from "@/Pages/Test/OrderHome.vue"
-import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
-import { emitter } from '@/composable/useEmitter';
 import OrderStatus from "./OrderStatus.vue";
 import { usePopOverStore } from '@/stores/popover.js'
+import OrdersTable from '@/Pages/Modules/CSKH/OrdersTable.vue'
 const props = defineProps({
     orders: Object,
     status: String,
@@ -86,23 +60,7 @@ const form = useForm({
         new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)]
     ,
 });
-const isModalActive = ref(false);
-const editMode = ref(false);
-const isModalDangerActive = ref(false);
 
-const state = reactive({
-    content: '<p>2333</p>',
-    _content: '',
-    editorOption: {
-        placeholder: 'core',
-        modules: {
-
-        },
-
-    },
-    disabled: false
-})
-initFlowbite();
 
 const searchCustomer = () => {
     router.get(route(`admin.orders.${props.status}`),
@@ -143,13 +101,6 @@ const search = () => {
     );
 }
 
-const contents = ref([
-    { id: 1, text: 'Content 1' },
-    { id: 2, text: 'Content 2' },
-    { id: 3, text: 'Content 3' },
-]);
-
-
 
 const changeDate = () => {
     router.get(route(`admin.orders.${props.status}`),
@@ -161,32 +112,7 @@ const changeDate = () => {
     );
 }
 
-const loadOrder = async $state => {
-    // console.log("loading...");
 
-
-    // router.get(route(`admin.orders.${props.status}`),
-    //     filter,
-    //     {
-    //         preserveState: true,
-    //         preserveScroll: true,
-    //         onSuccess: page => {
-    //             if (props.orders.current_page == props.orders.last_page) $state.complete();
-    //             else {
-
-
-    //                 $state.loaded();
-    //             }
-    //             filter.per_page += 10;
-    //         },
-    //         onError: errors => {
-    //             $state.error();
-    //         },
-    //     },
-
-    // );
-
-};
 const pushOrder = (order) => {
     let query = {
         ids: [order.id]
@@ -241,10 +167,7 @@ const pushOrders = () => {
         }
     });
 }
-const openSHippingDetail = (order) => {
-    console.log("ModelShipping");
-    emitter.emit('ModelShipping', order);
-}
+
 const selected = ref([])
 const selectAll = computed({
     get() {
@@ -371,6 +294,7 @@ const selectAll = computed({
                                         <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã vận đơn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -419,6 +343,8 @@ const selectAll = computed({
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <OrderStatus :order="order" />
+
+
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <BaseIcon :path="mdiArrowLeftBoldCircleOutline" @click="pushOrder(order)"
@@ -455,18 +381,24 @@ const selectAll = computed({
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order?.order_number }}
                                         </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order?.order_transport_number }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
 
                         </div>
                     </div>
+
                 </div>
 
 
             </div>
 
         </SectionMain>
+
+        <OrdersTable />
     </LayoutAuthenticated>
 </template>
 <style >

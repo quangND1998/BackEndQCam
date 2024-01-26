@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Order\app\Http\Controllers\API\GetOrders;
 use Modules\Order\app\Http\Controllers\CSKH\CSKHOrderController;
 use Modules\Order\app\Http\Controllers\CSKH\GiftDistributeController;
 use Modules\Order\app\Http\Controllers\CskhController;
@@ -157,11 +158,13 @@ Route::middleware(['auth'])->group(
                 Route::prefix('order')->as('order.')->group(function () {
                     Route::post('/{order}/decline', [CSKHOrderController::class, 'orderDecline'])->name('decline');
                     Route::post('/{order}/refunding', [CSKHOrderController::class, 'orderRefunding'])->name('refunding');
-                    Route::post('/{order}/refund', [CSKHOrderController::class, 'orderRefund'])->name('refund');
+                    Route::post('refund', [CSKHOrderController::class, 'orderRefund'])->name('refund');
                 });
                 Route::post('/confirm-document', [CSKHOrderController::class, 'confirmStateDocument'])->name('confirm-document');
 
                 Route::post('{order}/uploadImages', [CSKHOrderController::class, 'updloadImages'])->name('updloadImages');
+
+                Route::get('fetchOrders',GetOrders::class)->name('fetch-orders');
             });
             Route::prefix('gift_distribute')->as('gift_distribute.')->group(function () {
                 Route::get('index', [GiftDistributeController::class, 'index'])->name('index');
