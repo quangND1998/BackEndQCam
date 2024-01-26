@@ -48,12 +48,11 @@ import { initFlowbite } from 'flowbite'
 import OrderHome from "@/Pages/Test/OrderHome.vue"
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
 import { emitter } from '@/composable/useEmitter';
+
 import  calWeekOffset  from "@/composable/weekOffset";
 const { getWeekOffset,getOffset } = calWeekOffset();
 const props = defineProps({
-    orderPackages: Object,
-    cskh: Object,
-    packageNotDistribute: Number
+    list_cskh: Object,
 });
 const offset = ref(0);
 const filter = reactive({
@@ -64,6 +63,8 @@ const filter = reactive({
 })
 console.log(filter.fromDate);
 console.log(filter.toDate);
+offset.value = getOffset(filter.fromDate);
+// console.log(offset);
 
 const customer = ref()
 const searchVal = ref("");
@@ -111,24 +112,7 @@ const contents = ref([
 ]);
 
 const selected = ref([])
-const selectAll = computed({
-    get() {
-        return props.orderPackages.data
-            ? selected.value.length == props.orderPackages.data
-            : false;
-    },
-    set(value) {
-        var array_selected = [];
 
-        if (value) {
-            props.orderPackages.data.forEach(function (order) {
-                array_selected.push(order.id);
-            });
-        }
-        selected.value = array_selected;
-
-    }
-});
 const save = () => {
     // console.log(form);
     form.fromDate =  filter.fromDate;
@@ -183,79 +167,49 @@ const cacularOffSet = (index) => {
                 </div>
             </div>
             <div class="mt-3">
-                <div class="w-full mt-2 ">
-                    <div class="bg-[#5C5C5C] text-white  grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x">
-                        <div class="text-center py-2 border">STT</div>
-                        <div class="text-center py-2 border">Mã HĐ</div>
-                        <div class="text-center py-2 border">Loại HĐ</div>
-                        <div class="text-center py-2 border">Tên KH</div>
-                        <div class="text-center py-2 border">Ngày kích hoạt</div>
-                        <div v-for="n in 6" :key="n" class="text-center py-2 ">
-                            <div>Thứ {{ n + 1 }}</div>
-                            <div>{{ getWeekOffset(offset)[2][n] }}</div>
-                        </div>
-                        <div class="text-center py-2 border">Thị trường</div>
-                        <div class="text-center py-2 border">Tỉnh</div>
-                        <div class="text-center py-2 border">Quận/Huyện</div>
-
-                    </div>
-                    <div v-for="(orderPackage, index) in orderPackages.data" :key="orderPackage.id" :index="index"
-                        :orderPackage="orderPackage"
-                        class="grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
-                        <div class="text-center border">{{ index + orderPackages.from }}</div>
-                        <div class="pl-2 text-[#FF0000] border">{{ orderPackage.idPackage }}</div>
-                        <div class="text-center border">{{ orderPackage.product_service?.life_time }} năm</div>
-                        <div class="text-center border">{{ orderPackage.customer?.name }}</div>
-                        <div class="text-center border">{{ orderPackage.time_approve }}</div>
-                        <div v-for="n in 6" :key="n" class="text-center py-2 ">
-                            <div v-for="(dateCall,indexCall) in orderPackage.distribute_call" :key="indexCall">
-                                <div v-if="dateCall.date_call == getWeekOffset(offset)[5][n]">
-                                    <div class="bg-[#3D3C3C] w-4 h-4 mx-2 rounded"></div>
-                                    {{ dateCall?.cskh?.name }}
+                <div v-for="(cskh,index) in list_cskh" :key="index">
+                    <div class="">Bảng kế hoạch {{ cskh.name }}</div>
+                        <div class="w-full mt-2 ">
+                            <div class="bg-[#5C5C5C] text-white  grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x">
+                                <div class="text-center py-2 border">STT</div>
+                                <div class="text-center py-2 border">Mã HĐ</div>
+                                <div class="text-center py-2 border">Loại HĐ</div>
+                                <div class="text-center py-2 border">Tên KH</div>
+                                <div class="text-center py-2 border">Ngày kích hoạt</div>
+                                <div v-for="n in 6" :key="n" class="text-center py-2 ">
+                                    <div>Thứ {{ n + 1 }}</div>
+                                    <div>{{ getWeekOffset(offset)[2][n] }}</div>
                                 </div>
-
+                                <div class="text-center py-2 border">Thị trường</div>
+                                <div class="text-center py-2 border">Tỉnh</div>
+                                <div class="text-center py-2 border">Quận/Huyện</div>
                             </div>
-
+                            <div v-for="(distribute_call, index) in cskh.distribute_call" :key="distribute_call.id" :index="index"
+                                class="grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
+                                <div class="text-center border">{{ index + 1 }}</div>
+                                <div class="pl-2 text-[#FF0000] border">{{ distribute_call?.order_package.idPackage }}</div>
+                                <div class="text-center border">{{ distribute_call?.order_package.product_service?.life_time }} năm</div>
+                                <div class="text-center border">{{ distribute_call?.order_package.customer?.name }}</div>
+                                <div class="text-center border">{{ distribute_call?.order_package.time_approve }}</div>
+                                <div v-for="n in 6" :key="n" class="text-center py-2 ">
+                                        <div v-if="distribute_call.date_call == getWeekOffset(offset)[5][n]">
+                                            <div class="bg-[#3D3C3C] w-4 h-4 mx-2 rounded"></div>
+                                            {{ distribute_call?.cskh?.name }}
+                                        </div>
+                                </div>
+                                <div class="text-center border">{{ distribute_call?.order_package.market }}</div>
+                                <div class="text-center border">{{ distribute_call?.order_package.customer?.wards }}</div>
+                                <div class="text-center border">{{ distribute_call?.order_package.customer?.district }}/{{ distribute_call?.order_package.customer?.city
+                                }} </div>
+                            </div>
                         </div>
-                        <div class="text-center border">{{ orderPackage.market }}</div>
-                        <div class="text-center border">{{ orderPackage.customer?.wards }}</div>
-                        <div class="text-center border">{{ orderPackage.customer?.district }}/{{ orderPackage.customer?.city
-                        }} </div>
-                    </div>
                 </div>
-                <pagination :links="orderPackages.links" />
-
 
             </div>
-
             <div class="mt-3">
-                <h2 class="font-semibold  flex mr-2">
-                    Chọn nhân viên CSKH {{ getWeekOffset(offset)[3] }}
-                </h2>
                 <div class="w-full flex">
-                    <div class="lg:w-1/2 sm:w-full mt-2 ">
-                        <div class="bg-[#5C5C5C] text-white  grid grid-cols-4 divide-x">
-                            <div class="text-center py-2 border">STT</div>
-                            <div class="text-center py-2 border">User CSKH</div>
-                            <div class="text-center py-2 border">Trạng thái</div>
-                            <div class="text-center py-2 border">Chọn</div>
-
-                        </div>
-                        <div v-for="(user, index) in cskh" :key="user.id" :index="index"
-                            class="grid grid-cols-4 divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
-                            <div class="text-center border py-2">{{ index + 1 }}</div>
-                            <div class="pl-2 text-[#FF0000] border py-2">{{ user.name }}</div>
-                            <div class="text-center border py-2">{{ user.isActive == 1 ? 'Active' : 'Inactive' }}</div>
-                            <div class="text-center border py-2">
-                                <input v-if="user.isActive == 1" id="default-checkbox" type="checkbox" v-model="form.cskh_selected"
-                                    :value="user.id"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class=" lg:w-1/2 sm:w-full mt-2 mb-0 container flex flex-col">
-                        <div class="absolute right-6  ">
+                    <div class="w-full mt-2 mb-0 container flex justify-end ">
+                        <div class="relative right-6  ">
                             <div class="px-4">
                                 <div class="flex items-center">
                                     <div class="bg-[#4F8D06] w-4 h-4 mx-2 rounded"></div>
@@ -275,21 +229,6 @@ const cacularOffSet = (index) => {
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-40 flex ">
-                            <div class="mx-auto mb-0">
-                                <p class="text-[#FF0000] font-bold"> . Có {{ packageNotDistribute }} khách hàng mới tạo hợp đồng chưa được phân công
-                                    chăm sóc </p>
-                                <p class="mt-2 text-[#FF0000] font-bold" >{{ form.errors.cskh_selected != null ? 'Chưa chọn cskh' : null  }}</p>
-                                <div class="flex">
-                                    <button class="px-2 py-2 bg-[#1D75FA] rounded text-white mr-2" @click="save()">Chia công việc</button>
-                                    <!-- <Link href="admin/call_distribute/scheduleDetail" class="px-2 py-2 bg-[#1D75FA] rounded text-white"> Xem bảng chia CV</Link> -->
-                                    <Link :href="route('admin.call_distribute.scheduleDetail')" :data="filter"   class="px-2 py-2 bg-[#1D75FA] rounded text-white">Xem bảng chia CV</Link>
-                                </div>
-                            </div>
-
-                        </div>
-
-
                     </div>
                 </div>
 

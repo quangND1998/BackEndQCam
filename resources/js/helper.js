@@ -50,6 +50,17 @@ export const helper = {
             const date = new Date();
             return moment(String(date)).format(' HH:mm DD/MM/YYYY')
         },
+        getOffsetWeek(fromdate){
+            // Lấy tuần hiện tại
+            var currentWeek = moment().isoWeek();
+
+            // Định nghĩa tuần cần tính khoảng cách
+            var targetWeek = moment(fromdate).isoWeek();
+
+            // Tính khoảng cách giữa hai tuần
+            var distance = Math.abs(currentWeek - targetWeek);
+            return distance
+        },
         getWeekOffset(offset) {
             const currentWeek = moment().week();
             const targetWeek = currentWeek + offset;
@@ -80,7 +91,7 @@ export const helper = {
                 const dayNameDetail = currentDateDetail.format('YYYY-MM-DD');
                 list_date_detail.push(dayNameDetail);
                 currentDateDetail.add(1, 'day');
-                console.log(currentDateDetail);
+                // console.log(currentDateDetail);
             }
             return  [
                 text,

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Order\app\Http\Controllers\CSKH\CallDistributeController;
 use Modules\Order\app\Http\Controllers\CSKH\CSKHOrderController;
+use Modules\Order\app\Http\Controllers\CSKH\DetailCallDistributeController;
 use Modules\Order\app\Http\Controllers\CSKH\GiftDistributeController;
 use Modules\Order\app\Http\Controllers\CskhController;
 use Modules\Order\app\Http\Controllers\HistoryPaymentController;
@@ -161,6 +162,7 @@ Route::middleware(['auth'])->group(
             });
             Route::prefix('call_distribute')->as('call_distribute.')->group(function () {
                 Route::get('schedule', [CallDistributeController::class, 'getSchedule'])->name('schedule');
+                Route::get('scheduleDetail', [DetailCallDistributeController::class, 'getScheduleDetail'])->name('scheduleDetail');
                 Route::post('deviceSchedule', [CallDistributeController::class, 'deviceSchedule'])->name('deviceSchedule');
             });
         });

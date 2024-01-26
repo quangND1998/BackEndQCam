@@ -15,15 +15,24 @@ use Modules\CustomerService\app\Models\DistributeCall;
 class CallDistributeController extends Controller
 {
     public function getSchedule(Request $request){
-        $orderPackages = $this->getOrderPackage($request);
+        $orderPackages = $this->getOrderPackage($request)->paginate(10);
+        if($request->fromDate == null){
+            $fromDate = Carbon::now()->startOfWeek();
+            $todate =  Carbon::now()->endOfWeek();
+        }else{
+            $fromDate = Carbon::createFromFormat('d/m/Y',$request->fromDate)->format('Y-m-d H:i');
+            $todate =  Carbon::createFromFormat('d/m/Y',$request->toDate)->format('Y-m-d H:i');
+        }
+        $packageNotDistribute = OrderPackage::whereHas('distributeCall', function($q) use ($fromDate,$todate){
+            $q->where('cskh_id',null)->whereBetween('date_call', [$fromDate, $todate]);
+        })->count();
         $cskh = User::whereHas(
             'roles',
             function ($query) {
                 $query->where('name', 'cskh');
             }
         )->get();
-        // return $orderPackages;
-        return Inertia::render('Modules/CSKH/Schedule', compact('orderPackages','cskh'));
+        return Inertia::render('Modules/CSKH/Schedule', compact('orderPackages','cskh','packageNotDistribute'));
     }
     public function getOrderPackage($request){
         if($request->fromDate == null){
@@ -33,9 +42,9 @@ class CallDistributeController extends Controller
             $fromDate = Carbon::createFromFormat('d/m/Y',$request->fromDate)->format('Y-m-d H:i');
             $todate =  Carbon::createFromFormat('d/m/Y',$request->toDate)->format('Y-m-d H:i');
         }
-        $results = OrderPackage::with(['customer','product_service','product_service_owner.product','distributeDate','distributeCall' => function($q) use ($fromDate,$todate) {
+        $results = OrderPackage::with(['customer','product_service','product_service_owner.product','distributeCall' => function($q) use ($fromDate,$todate) {
             $q->whereBetween('date_call', [$fromDate, $todate]);
-        }])->role()
+        }, 'distributeCall.cskh'])->role()
         ->whereHas(
             'distributeCall',
             function ($q) use ($fromDate,$todate) {
@@ -44,12 +53,7 @@ class CallDistributeController extends Controller
         )
         ->where('status','complete')
         ->orderBy('user_id')->orderBy('created_at', 'desc');
-
-        // [Carbon::parse($request->fromDate), Carbon::parse($request->toDate)]
-
-        $orderPackages = $results->paginate($request->per_page ? $request->per_page : 10);
-        return $orderPackages;
-        // return $results;
+         return $results;
     }
     public function deviceSchedule(Request $request){
         $this->validate(
@@ -66,29 +70,20 @@ class CallDistributeController extends Controller
         )->where('isActive',1)
         ->whereIn('id',$request->cskh_selected)->pluck('id')->toArray();
 
-        if($request->fromDate == null){
-            $fromDate = Carbon::now()->startOfWeek();
-            $todate =  Carbon::now()->endOfWeek();
-        }else{
-            $fromDate = Carbon::createFromFormat('d/m/Y',$request->fromDate)->format('Y-m-d H:i');
-            $todate =  Carbon::createFromFormat('d/m/Y',$request->toDate)->format('Y-m-d H:i');
-        }
-        $orderPackages = $this->getOrderPackage($request);
+        $orderPackages = $this->getOrderPackage($request)->get();
+        $index =0;
         foreach($orderPackages as $order){
-            $dateDistribute = $order->distributeDate()->whereBetween('date_recevie', [$fromDate, $todate])->get();
-            // dd($dateDistribute);
-            foreach($dateDistribute as $date){
-                    $datecall = Carbon::parse($date->date_recevie)->subDays(2);
-                    if($datecall->isSunday()){
-                        $datecall = $datecall->addDays(1);
-                    }
-                    $distributeCall = new DistributeCall;
-                    $distributeCall->date_call = $datecall;
-                    $distributeCall->order_package_id = $order->id;
-                    $distributeCall->cskh_id = $cskh_select[array_rand($cskh_select)];
-                    $distributeCall->save();
+            foreach($order->distributeCall as $distributeCall){
+                // $distributeCall->cskh_id = $cskh_select[array_rand($cskh_select)];
+                $distributeCall->cskh_id = $cskh_select[$index];
+                $distributeCall->save();
+                $index++;
+                if ($index >= count($cskh_select)) {
+                    $index = 0;
+                }
             }
+
         }
-        return $orderPackages;
+        return back()->with('success', "Đã chia công việc của tuần");
     }
 }

@@ -332,32 +332,32 @@ const callPhone = (order) => {
     //     extraHeaders: ["CALL-FROM: PitelSDK"]
     // })
 }
-// onMounted(() => {
-//     (function (a, b) {
-//         var s = document.createElement('script');
-//         s.type = 'text/javascript';
-//         s.async = true;
-//         s.onload = () => { PitelSDK.k = a; b() };
-//         s.src = '/assets/js/sdk-1.1.test.min.js';
+onMounted(() => {
+    (function (a, b) {
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.async = true;
+        s.onload = () => { PitelSDK.k = a; b() };
+        s.src = '/assets/js/sdk-1.1.test.min.js';
 
-//         var x = document.getElementsByTagName('script')[0];
-//         x.parentNode.insertBefore(s, x);
-//     })('d1ca84ac-2d98-4faa-92d4-699a6ce14eb7', () => {
-//         console.log('Pitel SDK Loaded');
-//     });
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(s, x);
+    })('d1ca84ac-2d98-4faa-92d4-699a6ce14eb7', () => {
+        console.log('Pitel SDK Loaded');
+    });
 
-//     setTimeout(function () {
-//         let sdkOptions = {
-//             enableWidget: true,
-//             sipOnly: true,
-//             sipDomain: 'demo.cgvtelecom.vn:5060',
-//             wsServer: "wss://cgvcall.mobilesip.vn:7444",
-//             sipPassword: "Cgv@@2023##"
-//         }
-//         pitelSDK = new PitelSDK('xxx', 'xxx', '102', {}, sdkOptions)
+    setTimeout(function () {
+        let sdkOptions = {
+            enableWidget: true,
+            sipOnly: true,
+            sipDomain: 'demo.cgvtelecom.vn:5060',
+            wsServer: "wss://cgvcall.mobilesip.vn:7444",
+            sipPassword: "Cgv@@2023##"
+        }
+        pitelSDK = new PitelSDK('xxx', 'xxx', '102', {}, sdkOptions)
 
-//     }, 500);
-// })
+    }, 500);
+})
 </script>
 <template class="body_fix">
     <Head title="Quản lý chăm sóc kh" />
