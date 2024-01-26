@@ -91,7 +91,7 @@ watch(addressType, (newType) => {
 });
 
 // Other
-const deliveryAppointment = ref();
+const deliveryAppointment = ref(new Date(new Date().setDate(new Date().getDate() + 2)));
 const showDateError = ref(false);
 watch(deliveryAppointment, (newVal) => {
   if (newVal) showDateError.value = false;
