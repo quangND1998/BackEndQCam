@@ -14,7 +14,7 @@ use App\Http\Resources\OrderResource;
 use Carbon\Carbon;
 use Modules\Order\app\Models\Order;
 
-class GetOrders extends Controller
+class GetStausOrders extends Controller
 {
     protected $orderRepository, $shipperRepository;
 
@@ -27,6 +27,20 @@ class GetOrders extends Controller
     }
     public function __invoke(Request $request)
     {
-        return  new OrderCollection($this->orderRepository->getAllOrderGift($request));
+        $count_orders = Order::where('state', true)->count();
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
+        $response = [
+
+            'statusGroup' => $statusGroup,
+            'from' => $from,
+            'from' => $to,
+            'count_orders' => $count_orders
+
+        ];
+
+        return response()->json($response, 200);
     }
 }

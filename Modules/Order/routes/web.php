@@ -164,7 +164,8 @@ Route::middleware(['auth'])->group(
 
                 Route::post('{order}/uploadImages', [CSKHOrderController::class, 'updloadImages'])->name('updloadImages');
 
-                Route::get('fetchOrders',GetOrders::class)->name('fetch-orders');
+                Route::get('fetchOrders', GetOrders::class)->name('fetch-orders');
+                Route::get(' ', GetOrders::class)->name('fetchStatusOrders');
             });
             Route::prefix('gift_distribute')->as('gift_distribute.')->group(function () {
                 Route::get('index', [GiftDistributeController::class, 'index'])->name('index');
