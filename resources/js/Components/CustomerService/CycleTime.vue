@@ -81,7 +81,7 @@ const onUpdateOrder = () => {
     <p ref="reference" class="text-xs leading-5 cursor-pointer" :class="cellStyle">{{ displayText }}</p>
 
     <div v-if="data && data.order_number && allowPopover" v-show="showPopover" ref="floating" :style="floatingStyles"
-      class="bg-white rounded-lg border !border-gray-400 py-3">
+      class="bg-white rounded-lg border !border-gray-400 py-3 z-50">
       <div ref="floatingArrow" class="triangle" :style="{
         position: 'absolute',
         left:
