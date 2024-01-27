@@ -13,6 +13,10 @@ const props = defineProps({
   orderPackage: Object,
   deliveryNo: Number,
   order: Object,
+  marginTop: {
+    required: false,
+    default: 0
+  },
 });
 
 const emit = defineEmits(['onCloseDialog']);
@@ -91,7 +95,7 @@ watch(addressType, (newType) => {
 });
 
 // Other
-const deliveryAppointment = ref();
+const deliveryAppointment = ref(new Date(new Date().setDate(new Date().getDate() + 2)));
 const showDateError = ref(false);
 watch(deliveryAppointment, (newVal) => {
   if (newVal) showDateError.value = false;
@@ -130,7 +134,9 @@ const findUser = () => {
   }, 300);
 }
 watch(subPhoneNumber, (newVal) => {
-  findUser();
+  if (newVal !== '') {
+    findUser();
+  }
 });
 
 
@@ -284,8 +290,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="fixed w-screen h-screen bg-black/40 top-0 left-0 z-50 overflow-hidden flex items-center justify-center">
-    <div class="bg-white shadow-lg w-[calc(100vw_-_100px)] rounded-xl">
+  <div class="fixed w-screen h-screen bg-black/40 top-0 left-0 z-50 overflow-hidden flex items-center justify-center"
+    :class="{
+      '!static !w-fit !h-fit !bg-transparent': isRetailOrder
+    }"
+    :style="{
+      marginTop: `${marginTop}px`
+    }"
+  >
+    <div class="bg-white shadow-lg w-[calc(100vw_-_100px)] rounded-xl"
+      :class="{
+        '!w-full !shadow-none border': isRetailOrder
+      }"
+    >
       <div class="flex items-center justify-between rounded-t-lg bg-orange-500 pr-3 pl-4 py-2">
         <p v-if="!isRetailOrder" class="font-semibold text-white">Lên đơn cho hợp đồng {{ orderPackage?.idPackage }}</p>
         <p v-else class="font-semibold text-white">Lên đơn bán lẻ</p>
@@ -297,11 +314,6 @@ onMounted(() => {
             <p v-if="!isRetailOrder" class="font-semibold text-sm">Lần: {{ deliveryNo }}</p>
             <div v-else class="flex items-center">
               <p class="font-semibold text-sm mr-2 required">Chọn mã HĐ</p>
-              <!-- <input v-model="priceForm.order_code" type="text" class="px-2 w-36 h-8 rounded-sm border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0"
-                :class="{
-                  '!border-red-600': retailOrderError.other_code && priceForm.order_code === ''
-                }"
-              /> -->
               <select v-model="priceForm.order_code" class="rounded p-2 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-sm"
                 :class="{
                   '!border-red-600': retailOrderError.other_code && priceForm.order_code === ''
@@ -563,26 +575,27 @@ onMounted(() => {
         <div class="col-span-3">
           <div class="flex pb-1 mb-3 border-b border-gray-400 items-center justify-between">
             <div class="date-appointment flex gap-1 items-center">
-              <p class="text-sm font-semibold w-22 required">Dự kiến GH</p>
+              <p class="text-[13px] font-semibold w-20 required">Dự kiến GH</p>
               <VueDatePicker
                 :class="{
                   'border-red-600': showDateError && !deliveryAppointment
                 }"
-                class="!w-32 text-sm" v-model="deliveryAppointment" :min-date="minDate" :clearable="false" :enable-time-picker="false" format="dd/MM/yyyy" />
+                class="!w-32 text-xs" v-model="deliveryAppointment" :min-date="minDate" :clearable="false" :enable-time-picker="false" format="dd/MM/yyyy" />
             </div>
             <div class="relative">
               <div class="flex items-center gap-1">
                 <p
                   class="text-sm font-semibold w-26"
                   :class="{
-                    'required': isRetailOrder
+                    'required !w-10 !text-[13px]': isRetailOrder
                   }"
                 >
                   SĐT {{ isRetailOrder ? '' : 'phụ' }}
                 </p>
                 <input :disabled="isDisable" v-model="subPhoneNumber" type="text" placeholder="Số điện thoại" class="phone disabled:cursor-not-allowed w-28 px-1 h-8 rounded-sm border-gray-400 disabled:!bg-gray-200 disabled:text-gray-600 focus:border-gray-400 focus:outline-none focus:ring-0"
                   :class="{
-                    '!border-red-600': retailOrderError.phone_number && subPhoneNumber === '' && isRetailOrder
+                  '!text-[13px] !w-24': isRetailOrder,
+                    '!border-red-600': retailOrderError.phone_number && subPhoneNumber === '' && isRetailOrder,
                   }"
                 />
               </div>
@@ -622,6 +635,10 @@ onMounted(() => {
 </template>
 
 <style>
+.text-xs .dp__input_readonly {
+  font-size: 13px !important;
+  width: 106px;
+}
 .date-appointment .dp__input {
   padding: 4px 4px 4px 26px !important;
 }

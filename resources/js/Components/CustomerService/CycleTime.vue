@@ -42,8 +42,10 @@ const date = computed(() => {
   if (props.data && props.data.state) {
     return moment(props.data.date_time, 'YYYY-MM-DD HH:mm:ss');
   }
-  const subtractDate = moment(props.startDate, 'YYYY-MM-DD HH:mm:ss').weekday() === 7 ? 1 : 0;
-  return moment(props.startDate, 'YYYY-MM-DD HH:mm:ss').add((props.position + 1) * CYCLE_TIME - subtractDate, 'days');
+
+  const nextDate = moment(props.startDate, 'YYYY-MM-DD HH:mm:ss').add(((props.position + 1) * CYCLE_TIME), 'days');
+
+  return nextDate.weekday() !== 7 ? nextDate : nextDate.subtract(1, 'day');
 });
 const cellStyle = computed(() => {
   if (props.data && props.data?.status === 'complete') return 'bg-emerald-600 text-white';
@@ -79,7 +81,7 @@ const onUpdateOrder = () => {
     <p ref="reference" class="text-xs leading-5 cursor-pointer" :class="cellStyle">{{ displayText }}</p>
 
     <div v-if="data && data.order_number && allowPopover" v-show="showPopover" ref="floating" :style="floatingStyles"
-      class="bg-white rounded-lg border !border-gray-400 py-3">
+      class="bg-white rounded-lg border !border-gray-400 py-3 z-50">
       <div ref="floatingArrow" class="triangle" :style="{
         position: 'absolute',
         left:

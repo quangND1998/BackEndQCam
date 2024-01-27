@@ -16,7 +16,7 @@ class GetWeeklyPlan extends Controller
                 $query->with(['order_package.product_service', 'customer']);
             })
             ->where('remind_at', '>=', now()->toDateString())
-            ->paginate(3);
+            ->paginate(5);
 
         return Inertia::render('Modules/CustomerService/weekly-plan', compact(
             'remindData'

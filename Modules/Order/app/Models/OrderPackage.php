@@ -14,6 +14,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Modules\Customer\app\Models\HistoryExtend;
+use Modules\CustomerService\app\Models\DistributeCall;
 use Modules\CustomerService\app\Models\DistributeDate;
 
 class OrderPackage extends Model implements HasMedia
@@ -248,5 +249,9 @@ class OrderPackage extends Model implements HasMedia
     public function distributeDate()
     {
         return $this->hasMany(DistributeDate::class,'order_package_id');
+    }
+    public function distributeCall()
+    {
+        return $this->hasMany(DistributeCall::class,'order_package_id');
     }
 }

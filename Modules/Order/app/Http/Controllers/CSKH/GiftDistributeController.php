@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Modules\CustomerService\app\Models\DistributeDate;
 use App\Models\User;
+use Modules\CustomerService\app\Models\DistributeCall;
 class GiftDistributeController extends Controller
 {
     /**
@@ -31,17 +32,7 @@ class GiftDistributeController extends Controller
         // return $orderPackages;
         return Inertia::render('Modules/CSKH/Role', compact('orderPackages'));
     }
-    public function getSchedule(Request $request){
-        $orderPackages = $this->getOrderPackage($request);
-        $cskh = User::whereHas(
-            'roles',
-            function ($query) {
-                $query->where('name', 'cskh');
-            }
-        )->get();
-        // return $orderPackages;
-        return Inertia::render('Modules/CSKH/Schedule', compact('orderPackages','cskh'));
-    }
+
     public function groupByOrderStatus()
     {
         // chua nhan qua l2
@@ -49,19 +40,19 @@ class GiftDistributeController extends Controller
 
     }
     public function getOrderPackage($request){
-        $results = OrderPackage::with(['customer','product_service','distributeDate','historyPayment.order_package_payment','historyPayment.user','product_service_owner.product','history_extend.contract.lastcontract.images'])->role()->whereHas(
+        $results = OrderPackage::with(['customer','product_service','distributeDate','product_service_owner.product'])->role()->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','LIKE','%' . $request->search . '%');
             }
         )
-        ->role()
         ->where('status','complete')
         ->orderBy('user_id')->orderBy('created_at', 'desc')
         ->fillter($request->only('search'));
 
         $orderPackages = $results->paginate($request->per_page ? $request->per_page : 5);
         return $orderPackages;
+        // return $results;
     }
 
     public function distributeDate($orderPackages){
@@ -71,6 +62,8 @@ class GiftDistributeController extends Controller
             if(count($order->distributeDate) == 0){
                 for($i=0; $i<$order->product_service->number_receive_product; $i++){
                     $date = Carbon::parse($order->time_approve)->addDays($dayDistant);
+                    $datecall = Carbon::parse($date)->subDays(2);
+
                     if($date->isSunday()){
                         $date = $date->addDays(1);
                     }
@@ -78,6 +71,17 @@ class GiftDistributeController extends Controller
                     $distributeDate->date_recevie = $date;
                     $distributeDate->order_package_id = $order->id;
                     $distributeDate->save();
+
+
+                    // distributeCall = ngây kich hoat + 23
+                    if($datecall->isSunday()){
+                        $datecall = $datecall->addDays(1);
+                    }
+                    $distributeCall = new DistributeCall;
+                    $distributeCall->date_call = $datecall;
+                    $distributeCall->order_package_id = $order->id;
+                    $distributeCall->save();
+
                     $dayDistant += 25;
                 }
             }

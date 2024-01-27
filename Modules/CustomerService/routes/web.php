@@ -32,7 +32,6 @@ use Modules\CustomerService\app\Http\Controllers\GetWeeklyPlan;
 |
 */
 
-auth()->login(\App\Models\User::find(1), 1);
 Route::middleware(['auth'])->group(
     function () {
         Route::prefix('/customer-service/customer/{customerId}')->group(function () {

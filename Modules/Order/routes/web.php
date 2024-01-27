@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Order\app\Http\Controllers\API\GetOrders;
 use Modules\Order\app\Http\Controllers\API\GetStausOrders;
+use Modules\Order\app\Http\Controllers\CSKH\CallDistributeController;
 use Modules\Order\app\Http\Controllers\CSKH\CSKHOrderController;
+use Modules\Order\app\Http\Controllers\CSKH\DetailCallDistributeController;
 use Modules\Order\app\Http\Controllers\CSKH\GiftDistributeController;
 use Modules\Order\app\Http\Controllers\CskhController;
 use Modules\Order\app\Http\Controllers\HistoryPaymentController;
@@ -172,6 +174,11 @@ Route::middleware(['auth'])->group(
                 Route::get('index', [GiftDistributeController::class, 'index'])->name('index');
                 Route::get('role', [GiftDistributeController::class, 'getRolePackage'])->name('role');
                 Route::get('schedule', [GiftDistributeController::class, 'getSchedule'])->name('schedule');
+            });
+            Route::prefix('call_distribute')->as('call_distribute.')->group(function () {
+                Route::get('schedule', [CallDistributeController::class, 'getSchedule'])->name('schedule');
+                Route::get('scheduleDetail', [DetailCallDistributeController::class, 'getScheduleDetail'])->name('scheduleDetail');
+                Route::post('deviceSchedule', [CallDistributeController::class, 'deviceSchedule'])->name('deviceSchedule');
             });
         });
     }

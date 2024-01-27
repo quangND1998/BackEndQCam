@@ -22,7 +22,7 @@ class ProductRetail extends Model implements HasMedia
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id", "id_priority", "name", 'code', "outstanding", 'status', "description", 'price', 'available_quantity'];
+    protected $fillable = ["id", "id_priority", "name", 'code', "outstanding", 'status', "unit", "description", 'price', 'available_quantity'];
 
     protected static function newFactory(): ProductRetailFactory
     {

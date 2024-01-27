@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::table('orders', function (Blueprint $table) {
             // hen giao
             $table->timestampTz("delivery_appointment")->nullable();
-            $table->string('status_transport')->default('pending')->nullable();
         });
     }
 
@@ -25,7 +24,6 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn('delivery_appointment');
-            $table->dropColumn('status_transport');
         });
     }
 };
