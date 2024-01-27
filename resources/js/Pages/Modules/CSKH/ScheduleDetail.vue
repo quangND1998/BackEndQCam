@@ -239,7 +239,7 @@ const cacularOffSet = (index) => {
                             <div v-for="n in 6" :key="n" class="text-center py-2 ">
                                 <div v-if="distribute_call.date_call == getWeekOffset(offset)[6][n]"
                                     class="flex items-center">
-                                    <div class="w-4 h-4 mx-2 rounded" :class="dateCall.state == 'pending' ? 'bg-[#3D3C3C]' : dateCall.state == 'called' ? 'bg-[#4F8D06]' : dateCall.state == 'dontAnswer' ? 'bg-[#FF0303]' : 'bg-[#1D75FA]' "></div>
+                                    <div class="w-4 h-4 mx-2 rounded" :class="distribute_call.state == 'pending' ? 'bg-[#3D3C3C]' : distribute_call.state == 'called' ? 'bg-[#4F8D06]' : distribute_call.state == 'dontAnswer' ? 'bg-[#FF0303]' : 'bg-[#1D75FA]' "></div>
                                     {{ cskh?.name }}
                                 </div>
                             </div>
