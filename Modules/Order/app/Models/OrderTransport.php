@@ -15,7 +15,7 @@ class OrderTransport extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['order_transport_number','transport_state','state','order_id'];
+    protected $fillable = ['order_transport_number','transport_state','status','order_id'];
     
     protected static function newFactory(): OrderTransportFactory
     {

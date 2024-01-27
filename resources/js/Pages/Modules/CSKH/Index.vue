@@ -410,7 +410,7 @@ const selectAll = computed({
         </SectionMain>
 
 
-        <!-- <OrdersTable /> -->
+        <OrdersTable />
     </LayoutAuthenticated>
 </template>
 <style >

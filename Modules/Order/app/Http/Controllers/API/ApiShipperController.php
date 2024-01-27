@@ -5,7 +5,7 @@ namespace Modules\Order\app\Http\Controllers\API;
 use App\Contracts\OrderContract;
 use App\Enums\OrderDocument;
 use App\Enums\OrderStatusEnum;
-use App\Enums\OrderTransportStatus;
+use App\Enums\OrderTransportState;
 use App\Enums\ShipperStatusEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -69,7 +69,7 @@ class ApiShipperController extends Controller
             $order->update([
                 'status' => OrderStatusEnum::shipping,
                 'shipper_status' => ShipperStatusEnum::shipping,
-                'status_transport' => OrderTransportStatus::delivering
+                'status_transport' => OrderTransportState::delivering
             ]);
 
             return response()->json($order->load('product_service.product', 'orderItems.product', 'discount', 'customer', 'order_shipper_images'), 200);
@@ -84,7 +84,7 @@ class ApiShipperController extends Controller
             $order->update([
                 'shipper_id' => null,
                 'shipper_status' => ShipperStatusEnum::pending,
-                'status_transport' => OrderTransportStatus::not_shipper_receive
+                'status_transport' => OrderTransportState::not_shipper_receive
             ]);
 
             return response()->json($order->load('product_service.product', 'orderItems.product', 'discount', 'customer', 'order_shipper_images'), 200);
@@ -101,7 +101,7 @@ class ApiShipperController extends Controller
             $order->update([
                 'status' => OrderStatusEnum::completed,
                 'shipper_status' => ShipperStatusEnum::delivered,
-                'status_transport' => OrderTransportStatus::delivered
+                'status_transport' => OrderTransportState::delivered
             ]);
             if ($request->images) {
                 foreach ($request->images as $image) {

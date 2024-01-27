@@ -3,22 +3,29 @@ import { emitter } from '@/composable/useEmitter';
 import { computed } from 'vue';
 
 const props = defineProps({
-    order: Object,
+    order_transport: Object,
 });
 
-const status_text = {
-    pending: 'Pending',
-    processing: 'Đang xử lý',
-    completed: 'Thành công',
-    create: 'Tạo mới',
-   
+const state_text = {
+    pending: 'Chờ đóng gói',
+    packed: 'Chưa giao shipper',
+
+    delivering: 'Đang vận chuyển',
+    delivered: 'Đã giao hàng',
+    refunding: 'Chờ hoàn',
+    refund: 'Đã hoàn',
+    decline: 'Hủy giao',
 
 }
 const status_color = {
     pending: 'border-[#FF6100] text-gray-800',
-    processing: 'bg-[#FF6100] text-white',
-    completed: 'bg-[#4F8D06] text-white',
-    create: 'bg-[#27AE60] text-white',
+    packed: 'bg-[#FF6100] text-white',
+    
+    delivering: 'border-[#FF6100] text-[#FF6100]',
+    delivered: 'bg-[#4F8D06] text-white',
+    refunding: 'bg-[#27AE60] text-white',
+    refund: 'bg-[#00327F] text-white',
+    decline: 'border-[#FF0000] text-[#FF0000]',
 
 
 
@@ -28,12 +35,12 @@ const status_color = {
 
 
 const order_text = computed(() => {
-    return status_text[props.order.status]
+ 
 
 })
 
 const order_color = computed(() => {
-    return status_color[props.order.status]
+  
 })
 
 </script>

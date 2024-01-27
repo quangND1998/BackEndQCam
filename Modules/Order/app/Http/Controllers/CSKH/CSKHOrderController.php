@@ -11,7 +11,7 @@ use Modules\Order\Repositories\ShipperRepository;
 use App\Contracts\OrderContract;
 use App\Enums\OrderDocument;
 use App\Enums\OrderStatusEnum;
-use App\Enums\OrderTransportStatus;
+use App\Enums\OrderTransportState;
 use App\Enums\ShipperStatusEnum;
 use App\Http\Resources\OrderResource;
 use App\Models\User;
@@ -63,11 +63,11 @@ class CSKHOrderController extends Controller
       
         $orders = OrderResource::collection($this->orderRepository->getAllOrderGift($request));
       
-        $order_transports =   $this->orderTransportRepository->getOrdersTransport($request);
+        // $order_transports =   $this->orderTransportRepository->getOrdersTransport($request);
         
-        $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportStatus::cases(), 'transport_state');
+        // $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'transport_state');
         $shippers = $this->shipperRepository->getShipper();
-        return $order_transports;
+   
         // return $orders;
         // dd($statusGroup);
         return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to','shippers'));
@@ -79,7 +79,7 @@ class CSKHOrderController extends Controller
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
         $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportState::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
 
         
@@ -123,9 +123,9 @@ class CSKHOrderController extends Controller
         $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = OrderTransportStatus::not_shipper_receive;
+        $status = OrderTransportState::not_shipper_receive;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportState::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
         return Inertia::render(
             'Modules/CSKH/NotShipperReceive',
@@ -238,7 +238,7 @@ class CSKHOrderController extends Controller
                         OrderTransport::create([
                             'order_id' => $order->id,
                             'order_transport_number'=> $order_package->order_number.'-'. ($number+1).'-'.$order_package->market,
-                            'transport_state'=> OrderTransportStatus::pending
+                            'transport_state'=> OrderTransportState::pending
                         ]);
                       
                     }
@@ -261,7 +261,7 @@ class CSKHOrderController extends Controller
                 $order->update([
                     'status' => 'packing'
                 ]);
-                $this->orderRepository->changeTransportStatus($order, OrderTransportStatus::packed);
+                $this->orderRepository->changeTransportStatus($order, OrderTransportState::packed);
             }
             return back()->with('success', "Đã đóng gói thành công");
         }
@@ -307,8 +307,8 @@ class CSKHOrderController extends Controller
 
         $order->update([
             'status' => OrderStatusEnum::decline,
-            'status_transport' => OrderTransportStatus::decline,
-            'shipper_status' => OrderTransportStatus::decline,
+            'status_transport' => OrderTransportState::decline,
+            'shipper_status' => OrderTransportState::decline,
             'reason' => $request->reason,
             'delivery_appointment' => $request->delivery_appointment
         ]);
@@ -329,7 +329,7 @@ class CSKHOrderController extends Controller
 
         $order->update([
             'status' => OrderStatusEnum::refunding,
-            'shipper_status' => OrderTransportStatus::refunding,
+            'shipper_status' => OrderTransportState::refunding,
             'reason' => $request->reason,
 
         ]);
@@ -353,8 +353,8 @@ class CSKHOrderController extends Controller
             foreach ($orders as $order) {
                 $order->update([
                     'status' => OrderStatusEnum::refund,
-                    'status_transport' => OrderTransportStatus::refund,
-                    'shipper_status' => OrderTransportStatus::refund,
+                    'status_transport' => OrderTransportState::refund,
+                    'shipper_status' => OrderTransportState::refund,
 
                 ]);
                 if ($request->check) {

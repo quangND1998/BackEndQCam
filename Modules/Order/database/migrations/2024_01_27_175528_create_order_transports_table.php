@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('order_transport_number')->nullable();
             $table->string('transport_state')->nullable();
-            $table->string('state')->nullable();
+            $table->string('status')->nullable();
             $table->unsignedBigInteger('order_id')->nullable()->index();
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->timestamps();

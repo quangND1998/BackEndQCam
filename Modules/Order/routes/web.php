@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Order\app\Http\Controllers\API\GetOrders;
-use Modules\Order\app\Http\Controllers\API\GetStausOrders;
+use Modules\Order\app\Http\Controllers\API\GetOrdersTransport;
+use Modules\Order\app\Http\Controllers\API\GetOrdersTransportStatus;
 use Modules\Order\app\Http\Controllers\CSKH\CallDistributeController;
 use Modules\Order\app\Http\Controllers\CSKH\CSKHOrderController;
 use Modules\Order\app\Http\Controllers\CSKH\DetailCallDistributeController;
@@ -167,8 +167,8 @@ Route::middleware(['auth'])->group(
 
                 Route::post('{order}/uploadImages', [CSKHOrderController::class, 'updloadImages'])->name('updloadImages');
 
-                Route::get('fetchOrders', GetOrders::class)->name('fetch-orders');
-                Route::get('fetchStatusOrders', GetStausOrders::class)->name('fetchStatusOrders');
+                Route::get('fetchOrdersTransport', GetOrdersTransport::class)->name('fetchOrdersTransport');
+                Route::get('fetchOrdersTransportGroup', GetOrdersTransportStatus::class)->name('fetchStatusOrders');
             });
             Route::prefix('gift_distribute')->as('gift_distribute.')->group(function () {
                 Route::get('index', [GiftDistributeController::class, 'index'])->name('index');
