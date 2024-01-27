@@ -13,6 +13,7 @@ const props = defineProps({
 })
 const totalOrder = (status) => {
     var findStatus = props.statusGroup.find(e => e.status == status);
+    console.log(props.statusGroup)
     if (findStatus) {
         return findStatus.total;
     } else {
@@ -23,6 +24,7 @@ const totalOrder = (status) => {
 </script>
 <template>
     <div class="my-3">
+  
         <div
             class="min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
             <Link v-if="hasAnyPermission(['order-pending'])" :href="route('admin.cskh.all')"

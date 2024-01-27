@@ -94,25 +94,44 @@ class OrderRepository implements OrderContract
     }
     public function getOrderGift($request, $status)
     {
-        return  Order::with(['customer', 'product_service.order_package', 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler', 'order_shipper_images'])->whereHas(
+        return  Order::with(['customer',  'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler', 'order_shipper_images'])->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
                 $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
+            },
+
+
+        )->whereHas(
+            'product_service.order_package',
+            function ($q) use ($request) {
+                if (isset($request['market'])) {
+
+                    $q->where('market', $request->market);
+                }
             }
 
         )->where('state', true)->where('status', $status)->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
     public function getAllOrderGift($request)
     {
-        return  Order::with(['customer', 'product_service.order_package', 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler'])->whereHas(
+        return  Order::with(['customer', 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler', 'product_service.order_package'])->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
                 $q->orWhere('phone_number', 'LIKE', '%' . $request->customer . '%');
             }
 
-        )->fillter($request->only('search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+        )->whereHas(
+            'product_service.order_package',
+            function ($q) use ($request) {
+                if (isset($request['market'])) {
+
+                    $q->where('market', $request->market);
+                }
+            }
+
+        )->fillter($request->only('market', 'status', 'search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
 
 

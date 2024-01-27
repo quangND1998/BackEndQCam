@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Contracts\OrderContract;
+use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTransportStatus;
 use App\Http\Resources\OrderCollection;
 use Modules\Order\Repositories\ShipperRepository;
@@ -31,12 +32,12 @@ class GetStausOrders extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
 
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderStatusEnum::cases(), 'status');
         $response = [
 
             'statusGroup' => $statusGroup,
             'from' => $from,
-            'from' => $to,
+            'to' => $to,
             'count_orders' => $count_orders
 
         ];

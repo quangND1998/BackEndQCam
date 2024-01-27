@@ -75,7 +75,8 @@ class Order extends Model implements HasMedia
 
         if (isset($filters['search']) && isset($filters['search'])) {
 
-            $query->where('order_number', 'like', '%' . $filters['search'] . '%');
+            $query->where('order_number', 'like', '%' . $filters['search'] . '%')->orWhere('order_transport_number', 'like', '%' . $filters['search'] . '%')
+                ->orWhere('phone_number', 'like', '%' . $filters['search'] . '%');;
         }
         if (isset($filters['fromDate']) && isset($filters['toDate'])) {
 
@@ -85,6 +86,17 @@ class Order extends Model implements HasMedia
         if (isset($filters['payment_status'])) {
 
             $query->where('payment_status', $filters['payment_status']);
+        }
+
+        if (isset($filters['market'])) {
+           
+            $query->with(['product_service.order_package' => function ($q) use ($filters) {
+                $q->where('market', $filters['market']);
+            }]);
+        }
+        if (isset($filters['status'])) {
+
+            $query->where('status', $filters['status']);
         }
 
 

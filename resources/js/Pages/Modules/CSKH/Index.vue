@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, inject, reactive, toRef } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import Pagination from "@/Components/Pagination.vue";
+import Pagination from "@/Pages/Modules/CSKH/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
@@ -194,6 +194,8 @@ const selectAll = computed({
     <LayoutAuthenticated>
         <ModelShipping></ModelShipping>
 
+
+
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
@@ -294,7 +296,7 @@ const selectAll = computed({
                                         <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Mã vận đơn</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -376,27 +378,38 @@ const selectAll = computed({
                                             </button>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            xem
+                                            {{ order.saler?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order?.order_number }}
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.order_transport_number }}
-                                        </td>
+
                                     </tr>
                                 </tbody>
                             </table>
 
                         </div>
                     </div>
+                    <div class="w-full flex  justify-between items-center">
+                        <div class="flex items-center">
+                            <span class="mr-2">Hiển thị</span>
+                            <select
+                                class="bg-gray-50 border   text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  mx-auto px-4 py-1   dark:bg-gray-700 dark:border-gray-600 ">
+                                <option :value="50">50</option>
+                                <option :value="100">100</option>
+                                <option :value="200">200</option>
+                            </select>
+                        </div>
+
+                        <Pagination :links="orders.meta.links" />
+                    </div>
 
                 </div>
-
 
             </div>
 
         </SectionMain>
+
 
         <OrdersTable />
     </LayoutAuthenticated>

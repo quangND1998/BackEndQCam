@@ -1,7 +1,6 @@
 <script setup>
-import { computed, ref, inject, reactive, toRef } from "vue";
+import { computed, ref, inject, reactive, toRef, watch } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
@@ -20,25 +19,39 @@ import "vue-search-input/dist/styles.css";
 import { initFlowbite } from "flowbite";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
+import StatusBar from '@/Pages/Modules/CSKH/Status/StatusBar.vue'
 import { usePopOverStore } from '@/stores/popover.js';
 import Icon from '@/Components/Icon.vue'
 import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
 import { useOrderStore } from '@/stores/order.js'
-import axios from "axios";
+import { useCSKHStore } from '@/stores/cskh.js'
+import DialogLoading from '@/Components/CustomerService/Dialog/DialogLoading.vue';
+import Pagination from '@/Pages/Modules/CSKH/Components/Pagination.vue'
 const { openPopover,
     closePopover } = usePopOverStore();
 const { showDetailOrder } = useOrderStore();
 
-const orders = ref(null);
-const statusGroup = ref(null);
-const count_orders = ref(null)
+const orders = computed(() => {
+    return store.orders;
+});
+const statusGroup = computed(() => {
+    return store.statusGroup;
+});
+const count_orders = computed(() => {
+    return store.count_orders;
+});
+const isLoading = computed(() => {
+    return store.isLoading;
+});
+const store = useCSKHStore();
 const fetchOrders = () => {
-    axios.get('/admin/cskh/fetchOrders').then(res => {
-        orders.value = res.data.orders
-        statusGroup.value = res.data.statusGroup
-    })
-}
 
+    store.fetchOrders();
+}
+const fetchStatusOrders = () => {
+    store.fetchStatusOrders();
+}
+fetchStatusOrders();
 fetchOrders();
 const filter = reactive({
     customer: null,
@@ -51,6 +64,9 @@ const filter = reactive({
     type: null,
     per_page: 10,
     selectedDate: null,
+    status: null,
+    market: null,
+    page: null
 });
 
 const swal = inject("$swal");
@@ -64,30 +80,12 @@ const form = useForm({
 initFlowbite();
 
 const searchCustomer = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
+    store.fetchOrders(filter)
 };
 
-const Fillter = (event) => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
 
-const fillterPaymentMethod = (event) => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
 const search = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
+    store.fetchOrders(filter)
 };
 
 
@@ -98,17 +96,39 @@ const changeDate = () => {
     });
 };
 
-const openOrderCancel = (order) => {
-    showDetailOrder(order)
-    emitter.emit("OrderCancel", order);
-};
 
+const changeStatus = (status) => {
+    filter.status = status
+    store.fetchOrders(filter)
+}
+watch(() => [filter.per_page], (newVal) => {
+    store.fetchOrders(filter)
+});
+watch(() => [filter.type], (newVal) => {
+    store.fetchOrders(filter)
+});
+
+watch(() => [form.selectedDate], (newVal) => {
+    // console.log(newVal[0][0])
+    filter.fromDate = newVal[0][0]
+    filter.toDate = newVal[0][1]
+    store.fetchOrders(filter)
+});
+watch(() => [filter.market], (newVal) => {
+    store.fetchOrders(filter)
+});
+
+const changePage = (page) => {
+    filter.page = page;
+    store.fetchOrders(filter)
+}
 
 </script>
 <template>
     <div>
         <ModelShipping></ModelShipping>
         <OrderCancel />
+
 
 
         <Head title="Quản lý đơn hàng" />
@@ -147,21 +167,22 @@ const openOrderCancel = (order) => {
                             </div>
                         </div>
                         <div class="w-[320px]">
+
                             <VueDatepickerUi range v-model="form.selectedDate" lang="vn"></VueDatepickerUi>
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
+                                <select id="countries" v-model="filter.market"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả kho hàng</option>
-                                    <option value="gift_delivery">Giao quà</option>
-                                    <option value="order">Đơn lẻ</option>
+                                    <option value="MB">Miền Bắc</option>
+                                    <option value="MN">Miền Nam</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
+                                <select id="countries" v-model="filter.type"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
                                     <option value="gift_delivery">Giao quà</option>
@@ -172,13 +193,16 @@ const openOrderCancel = (order) => {
                     </div>
                 </div>
 
-                <OrderStatusBar v-if="statusGroup" :statusGroup="statusGroup" :count_orders="count_orders"></OrderStatusBar>
+                <StatusBar v-if="statusGroup" :statusGroup="statusGroup" :count_orders="count_orders"
+                    :status="filter.status" @change-status="changeStatus"></StatusBar>
 
-                {{ orders }}
+
                 <div class="w-full mt-2">
                     <div class="flex flex-col">
-                        <div class="overflow-x-auto inline-block min-w-full sm:px-6 lg:px-8 m-0 p-0 h-[60vh]">
-                            <table class="table_stripe min-w-full text-center text-sm font-light overflow-x-auto">
+                        <div class="overflow-x-auto inline-block min-w-full sm:px-6 lg:px-8 m-0 p-0 h-[60vh] relative">
+
+                            <DialogLoading v-if="isLoading" text="Loading" />
+                            <table class="table_stripe min-w-full text-center text-sm font-light overflow-x-auto" v-else>
                                 <thead class="font-medium">
                                     <tr>
 
@@ -263,7 +287,7 @@ const openOrderCancel = (order) => {
                                             </button>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            xem
+                                            {{ order.saler?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order?.order_number }}
@@ -277,6 +301,21 @@ const openOrderCancel = (order) => {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="w-full flex  justify-between items-center">
+                <div class="flex items-center">
+                    <span class="mr-2">Hiển thị</span>
+                    <select v-model="filter.per_page"
+                        class="bg-gray-50 border   text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  mx-auto px-4 py-1   dark:bg-gray-700 dark:border-gray-600 ">
+                        <option :value="10">10</option>
+                        <option :value="50">50</option>
+                        <option :value="100">100</option>
+                        <option :value="200">200</option>
+                    </select>
+                </div>
+
+                <Pagination v-if="orders" :data="orders.meta" @change-page="changePage" />
             </div>
         </SectionMain>
     </div>
