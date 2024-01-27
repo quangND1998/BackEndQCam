@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('order_transports', function (Blueprint $table) {
             $table->id();
             $table->string('order_transport_number')->nullable();
-            $table->timestampTz("delivery_appointment")->nullable();
             $table->string('transport_state')->nullable();
             $table->string('state')->nullable();
             $table->unsignedBigInteger('order_id')->nullable()->index();

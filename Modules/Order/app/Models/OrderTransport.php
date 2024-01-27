@@ -6,21 +6,41 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Order\Database\factories\OrderTransportFactory;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class OrderTransport extends Model
 {
-    use HasFactory;
-
+    use HasFactory, SearchableTrait;
+    protected $table = 'order_transports';
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = ['order_transport_number','transport_state','state','order_id'];
     
     protected static function newFactory(): OrderTransportFactory
     {
         //return OrderTransportFactory::new();
     }
+    protected $searchable = [
+        /**
+         * Columns and their priority in search results.
+         * Columns with higher values are more important.
+         * Columns with equal values have equal importance.
+         *
+         * @var array
+         */
+        'columns' => [
+            'order_transports.order_transport_number' => 10,
+            'orders.order_number' => 8,
+            'orders.phone_number' => 8,
 
+
+        ],
+        'joins' => [
+            'orders' => ['order_id', 'orders.id'],
+        ],
+
+    ];
     public function order(){
         return $this->belongsTo(Order::class, 'order_id');
     }
@@ -29,11 +49,7 @@ class OrderTransport extends Model
     public function scopeFillter($query, array $filters)
     {
 
-        if (isset($filters['search']) && isset($filters['search'])) {
-
-            $query->where('order_number', 'like', '%' . $filters['search'] . '%')->orWhere('order_transport_number', 'like', '%' . $filters['search'] . '%')
-                ->orWhere('phone_number', 'like', '%' . $filters['search'] . '%');;
-        }
+        
         if (isset($filters['fromDate']) && isset($filters['toDate'])) {
 
             $query->whereBetween('created_at', [Carbon::parse($filters['fromDate'])->format('Y-m-d H:i:s'), Carbon::parse($filters['toDate'])->format('Y-m-d H:i:s')]);
@@ -41,7 +57,7 @@ class OrderTransport extends Model
 
      
 
-        if (isset($filters['status'])) {
+        if (isset($filters['transport_state'])) {
 
             $query->where('transport_state', $filters['transport_state']);
         }

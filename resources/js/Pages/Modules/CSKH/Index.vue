@@ -17,8 +17,8 @@ import {
     mdiPhone
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
+import OrderStatus from "@/Pages/Modules/CSKH/Status/OrderStatus.vue";
 
-import OrderStatus from "./OrderStatus.vue";
 import { usePopOverStore } from '@/stores/popover.js'
 import OrdersTable from '@/Pages/Modules/CSKH/OrdersTable.vue'
 const props = defineProps({

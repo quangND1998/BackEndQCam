@@ -64,8 +64,17 @@ class OrderTransportRepository
             }
 
         )->whereHas('order', function ($q) use ($request){
-            $q->fillter($request->only( 'status', 'search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'));
-        })->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+            if (isset($filters['search']) ) {
+
+                $q->where('order_number', 'like', '%' . $request->search . '%')
+                    ->orWhere('phone_number', 'like', '%' . $request->search . '%');;
+            }
+          
+            if (isset($filters['type'])) {
+    
+                $q->where('type',$request->type);
+            }
+        })->search($request->search, null, true)->fillter($request->only('transport_state',  'fromDate', 'toDate'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
 
   
     }
