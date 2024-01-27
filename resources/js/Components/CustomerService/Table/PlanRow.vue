@@ -16,9 +16,9 @@ defineProps({
     <template v-for="n in 7" :key="n">
       <div v-if="plan.plans[n]" class="col-span-2 text-center leading-10">
         <div v-if="plan.plans[n] === 'pending'" class="w-4 h-4 rounded-sm bg-gray-400" />
-        <div v-if="plan.plans[n] === 'not_called'" class="w-4 h-4 rounded-sm bg-red-600" />
-        <div v-if="plan.plans[n] === 'not_answerd'" class="w-4 h-4 rounded-sm bg-sky-600" />
-        <div v-if="plan.plans[n] === 'completed'" class="w-4 h-4 rounded-sm bg-emerald-600" />
+        <div v-if="plan.plans[n] === 'notCalled'" class="w-4 h-4 rounded-sm bg-red-600" />
+        <div v-if="plan.plans[n] === 'dontAnswer'" class="w-4 h-4 rounded-sm bg-sky-600" />
+        <div v-if="plan.plans[n] === 'called'" class="w-4 h-4 rounded-sm bg-emerald-600" />
       </div>
       <div v-else>&#8203;</div>
     </template>
