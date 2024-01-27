@@ -11,11 +11,18 @@ use Inertia\Inertia;
 use Modules\Order\app\Models\OrderPackage;
 use Illuminate\Support\Carbon;
 use Modules\CustomerService\app\Models\DistributeCall;
+use Modules\Order\Repositories\CSKHRepository;
 
 class CallDistributeController extends Controller
 {
+    protected $cskhResponsive;
+    public function __construct(CSKHRepository $cskhResponsive)
+    {
+        $this->cskhResponsive = $cskhResponsive;
+        $this->middleware('permission:cskh', ['only' => ['index']]);
+    }
     public function getSchedule(Request $request){
-        $orderPackages = $this->getOrderPackage($request)->paginate(10);
+        $orderPackages = $this->cskhResponsive->getOrderPackage($request)->paginate(10);
         if($request->fromDate == null){
             $fromDate = Carbon::now()->startOfWeek();
             $todate =  Carbon::now()->endOfWeek();
@@ -23,6 +30,7 @@ class CallDistributeController extends Controller
             $fromDate = Carbon::createFromFormat('d/m/Y',$request->fromDate)->format('Y-m-d H:i');
             $todate =  Carbon::createFromFormat('d/m/Y',$request->toDate)->format('Y-m-d H:i');
         }
+        $offsetWeek = $this->cskhResponsive->getOffsetWeek($todate);
         $packageNotDistribute = OrderPackage::whereHas('distributeCall', function($q) use ($fromDate,$todate){
             $q->where('cskh_id',null)->whereBetween('date_call', [$fromDate, $todate]);
         })->count();
@@ -32,29 +40,10 @@ class CallDistributeController extends Controller
                 $query->where('name', 'cskh');
             }
         )->get();
-        return Inertia::render('Modules/CSKH/Schedule', compact('orderPackages','cskh','packageNotDistribute'));
+        // return $orderPackages;
+        return Inertia::render('Modules/CSKH/Schedule', compact('orderPackages','cskh','packageNotDistribute','offsetWeek'));
     }
-    public function getOrderPackage($request){
-        if($request->fromDate == null){
-            $fromDate = Carbon::now()->startOfWeek();
-            $todate =  Carbon::now()->endOfWeek();
-        }else{
-            $fromDate = Carbon::createFromFormat('d/m/Y',$request->fromDate)->format('Y-m-d H:i');
-            $todate =  Carbon::createFromFormat('d/m/Y',$request->toDate)->format('Y-m-d H:i');
-        }
-        $results = OrderPackage::with(['customer','product_service','product_service_owner.product','distributeCall' => function($q) use ($fromDate,$todate) {
-            $q->whereBetween('date_call', [$fromDate, $todate]);
-        }, 'distributeCall.cskh'])->role()
-        ->whereHas(
-            'distributeCall',
-            function ($q) use ($fromDate,$todate) {
-                $q->whereBetween('date_call', [$fromDate, $todate]);
-            }
-        )
-        ->where('status','complete')
-        ->orderBy('user_id')->orderBy('created_at', 'desc');
-         return $results;
-    }
+
     public function deviceSchedule(Request $request){
         $this->validate(
             $request,
@@ -70,7 +59,7 @@ class CallDistributeController extends Controller
         )->where('isActive',1)
         ->whereIn('id',$request->cskh_selected)->pluck('id')->toArray();
 
-        $orderPackages = $this->getOrderPackage($request)->get();
+        $orderPackages = $this->cskhResponsive->getOrderNotCSKH($request)->get();
         $index =0;
         foreach($orderPackages as $order){
             foreach($order->distributeCall as $distributeCall){

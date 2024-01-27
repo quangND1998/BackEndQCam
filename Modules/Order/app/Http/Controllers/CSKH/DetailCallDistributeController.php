@@ -11,11 +11,15 @@ use Inertia\Inertia;
 use Modules\Order\app\Models\OrderPackage;
 use Modules\CustomerService\app\Models\DistributeCall;
 use Illuminate\Support\Carbon;
+use Modules\Order\Repositories\CSKHRepository;
 class DetailCallDistributeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $cskhResponsive;
+    public function __construct(CSKHRepository $cskhResponsive)
+    {
+        $this->cskhResponsive = $cskhResponsive;
+        $this->middleware('permission:cskh', ['only' => ['index']]);
+    }
     public function getScheduleDetail(Request $request){
         if($request->fromDate == null || $request->toDate == null){
             $fromDate = Carbon::now()->startOfWeek();
@@ -25,7 +29,12 @@ class DetailCallDistributeController extends Controller
             $toDate =  Carbon::createFromFormat('d/m/Y',$request->toDate)->format('Y-m-d H:i');
         }
         $list_cskh = $this->getCSKH($request,$fromDate,$toDate);
-        return Inertia::render('Modules/CSKH/ScheduleDetail', compact('list_cskh'));
+        // return $list_cskh;
+        $orderPackagesNot = $this->cskhResponsive->getOrderNotCSKH($request)->paginate(100);
+        $numberNotCSKH = $this->cskhResponsive->getOrderNotCSKH($request)->count();
+        // return $numberNotCSKH;
+        $offsetWeek = $this->cskhResponsive->getOffsetWeek($toDate);
+        return Inertia::render('Modules/CSKH/ScheduleDetail', compact('list_cskh','offsetWeek','orderPackagesNot','numberNotCSKH'));
     }
     public function getCSKH($request,$fromDate,$toDate){
         $cskh = User::with(['distribute_call' => function($q) use ($fromDate,$toDate){

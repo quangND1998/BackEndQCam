@@ -49,22 +49,23 @@ import OrderHome from "@/Pages/Test/OrderHome.vue"
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
 import { emitter } from '@/composable/useEmitter';
 
-import  calWeekOffset  from "@/composable/weekOffset";
-const { getWeekOffset,getOffset } = calWeekOffset();
+import calWeekOffset from "@/composable/weekOffset";
+const { getWeekOffset, getOffset } = calWeekOffset();
 const props = defineProps({
     list_cskh: Object,
+    offsetWeek: Number,
+    orderPackagesNot: Object,
+    numberNotCSKH: Number
 });
-const offset = ref(0);
+let offset = props.offsetWeek;
 const filter = reactive({
-    fromDate:  getWeekOffset(offset.value)[4],
-    toDate:  getWeekOffset(offset.value)[5],
+    fromDate: getWeekOffset(props)[4],
+    toDate: getWeekOffset(props)[5],
     per_page: 10,
-
 })
 console.log(filter.fromDate);
 console.log(filter.toDate);
-offset.value = getOffset(filter.fromDate);
-// console.log(offset);
+console.log(offset);
 
 const customer = ref()
 const searchVal = ref("");
@@ -74,8 +75,8 @@ const form = useForm({
     name: null,
     state: null,
     cskh_selected: [],
-    fromDate:  filter.fromDate,
-    toDate:  filter.toDate,
+    fromDate: filter.fromDate,
+    toDate: filter.toDate,
 });
 const isModalActive = ref(false);
 const editMode = ref(false);
@@ -87,16 +88,14 @@ const state = reactive({
     editorOption: {
         placeholder: 'core',
         modules: {
-
         },
-
     },
     disabled: false
 })
 initFlowbite();
 
 const search = () => {
-    router.get(route(`admin.call_distribute.schedule`),
+    router.get(route(`admin.call_distribute.scheduleDetail`),
         filter,
         {
             preserveState: true,
@@ -115,8 +114,8 @@ const selected = ref([])
 
 const save = () => {
     // console.log(form);
-    form.fromDate =  filter.fromDate;
-    form.toDate =  filter.toDate;
+    form.fromDate = filter.fromDate;
+    form.toDate = filter.toDate;
     form.post(route("admin.call_distribute.deviceSchedule"), filter, {
         onError: () => {
             isModalActive.value = true;
@@ -131,11 +130,11 @@ const save = () => {
 };
 
 const cacularOffSet = (index) => {
-    offset.value += index;
-    filter.fromDate = getWeekOffset(offset.value)[4];
-    filter.toDate = getWeekOffset(offset.value)[5];
+    offset += index;
+    filter.fromDate = getWeekOffset(offset)[4];
+    filter.toDate = getWeekOffset(offset)[5];
     // console.log(filter.fromDate);
-    // console.log(filter.toDate);
+    console.log(offset);
     search();
 }
 </script>
@@ -167,42 +166,90 @@ const cacularOffSet = (index) => {
                 </div>
             </div>
             <div class="mt-3">
-                <div v-for="(cskh,index) in list_cskh" :key="index">
-                    <div class="">Bảng kế hoạch {{ cskh.name }}</div>
-                        <div class="w-full mt-2 ">
-                            <div class="bg-[#5C5C5C] text-white  grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x">
-                                <div class="text-center py-2 border">STT</div>
-                                <div class="text-center py-2 border">Mã HĐ</div>
-                                <div class="text-center py-2 border">Loại HĐ</div>
-                                <div class="text-center py-2 border">Tên KH</div>
-                                <div class="text-center py-2 border">Ngày kích hoạt</div>
-                                <div v-for="n in 6" :key="n" class="text-center py-2 ">
-                                    <div>Thứ {{ n + 1 }}</div>
-                                    <div>{{ getWeekOffset(offset)[2][n] }}</div>
-                                </div>
-                                <div class="text-center py-2 border">Thị trường</div>
-                                <div class="text-center py-2 border">Tỉnh</div>
-                                <div class="text-center py-2 border">Quận/Huyện</div>
+                <div v-if="numberNotCSKH > 0" class="w-full">
+                    <div class="flex">
+                        <p class="w-1/3">Chưa lên kế hoạch</p>
+                        <p class="w-2/3 text-[#FF0000] font-bold"> . Có {{ numberNotCSKH }} hợp đồng mới thêm hiện chưa phân công </p>
+                    </div>
+                    <div class="w-full mt-2 ">
+                        <div class="bg-[#5C5C5C] text-white  grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x">
+                            <div class="text-center py-2 border">STT</div>
+                            <div class="text-center py-2 border">Mã HĐ</div>
+                            <div class="text-center py-2 border">Loại HĐ</div>
+                            <div class="text-center py-2 border">Tên KH</div>
+                            <div class="text-center py-2 border">Ngày kích hoạt</div>
+                            <div v-for="n in 6" :key="n" class="text-center py-2 ">
+                                <div>Thứ {{ n + 1 }}</div>
+                                <div>{{ getWeekOffset(offset)[2][n] }}</div>
                             </div>
-                            <div v-for="(distribute_call, index) in cskh.distribute_call" :key="distribute_call.id" :index="index"
-                                class="grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
-                                <div class="text-center border">{{ index + 1 }}</div>
-                                <div class="pl-2 text-[#FF0000] border">{{ distribute_call?.order_package.idPackage }}</div>
-                                <div class="text-center border">{{ distribute_call?.order_package.product_service?.life_time }} năm</div>
-                                <div class="text-center border">{{ distribute_call?.order_package.customer?.name }}</div>
-                                <div class="text-center border">{{ distribute_call?.order_package.time_approve }}</div>
-                                <div v-for="n in 6" :key="n" class="text-center py-2 ">
-                                        <div v-if="distribute_call.date_call == getWeekOffset(offset)[5][n]">
-                                            <div class="bg-[#3D3C3C] w-4 h-4 mx-2 rounded"></div>
-                                            {{ distribute_call?.cskh?.name }}
-                                        </div>
-                                </div>
-                                <div class="text-center border">{{ distribute_call?.order_package.market }}</div>
-                                <div class="text-center border">{{ distribute_call?.order_package.customer?.wards }}</div>
-                                <div class="text-center border">{{ distribute_call?.order_package.customer?.district }}/{{ distribute_call?.order_package.customer?.city
-                                }} </div>
-                            </div>
+                            <div class="text-center py-2 border">Thị trường</div>
+                            <div class="text-center py-2 border">Tỉnh</div>
+                            <div class="text-center py-2 border">Quận/Huyện</div>
                         </div>
+                        <div v-for="(packageNot, index) in orderPackagesNot.data" :key="packageNot.id"
+                            :index="index"
+                            class="grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
+                            <div class="text-center border">{{ index + 1 }}</div>
+                            <div class="pl-2 text-[#FF0000] border">{{ packageNot.idPackage }}</div>
+                            <div class="text-center border">{{ packageNot.product_service?.life_time }}
+                                năm</div>
+                            <div class="text-center border">{{ packageNot.customer?.name }}</div>
+                            <div class="text-center border">{{ packageNot.time_approve }}</div>
+                            <div v-for="n in 6" :key="n" class="text-center py-2 ">
+                                <div v-for="(dateCall,indexCall) in packageNot.distribute_call" :key="indexCall">
+                                    <div v-if="dateCall.date_call == getWeekOffset(offset)[6][n]" class="flex items-center">
+                                        <div class="bg-[#3D3C3C] w-4 h-4 mx-2 rounded"></div> G
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center border">{{ packageNot.market }}</div>
+                            <div class="text-center border">{{ packageNot.customer?.wards }}</div>
+                            <div class="text-center border">{{ packageNot.customer?.district }}/{{
+                                packageNot.customer?.city
+                            }} </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-for="(cskh, index) in list_cskh" :key="index">
+                    <div class="py-2">Bảng kế hoạch {{ cskh.name }}</div>
+                    <div class="w-full mt-2 ">
+                        <div class="bg-[#5C5C5C] text-white  grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x">
+                            <div class="text-center py-2 border">STT</div>
+                            <div class="text-center py-2 border">Mã HĐ</div>
+                            <div class="text-center py-2 border">Loại HĐ</div>
+                            <div class="text-center py-2 border">Tên KH</div>
+                            <div class="text-center py-2 border">Ngày kích hoạt</div>
+                            <div v-for="n in 6" :key="n" class="text-center py-2 ">
+                                <div>Thứ {{ n + 1 }}</div>
+                                <div>{{ getWeekOffset(offset)[2][n] }}</div>
+                            </div>
+                            <div class="text-center py-2 border">Thị trường</div>
+                            <div class="text-center py-2 border">Tỉnh</div>
+                            <div class="text-center py-2 border">Quận/Huyện</div>
+                        </div>
+                        <div v-for="(distribute_call, index) in cskh.distribute_call" :key="distribute_call.id"
+                            :index="index"
+                            class="grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
+                            <div class="text-center border">{{ index + 1 }}</div>
+                            <div class="pl-2 text-[#FF0000] border">{{ distribute_call?.order_package.idPackage }}</div>
+                            <div class="text-center border">{{ distribute_call?.order_package.product_service_owner?.product?.life_time }}
+                                năm</div>
+                            <div class="text-center border">{{ distribute_call?.order_package.customer?.name }}</div>
+                            <div class="text-center border">{{ distribute_call?.order_package.time_approve }}</div>
+                            <div v-for="n in 6" :key="n" class="text-center py-2 ">
+                                <div v-if="distribute_call.date_call == getWeekOffset(offset)[6][n]"
+                                    class="flex items-center">
+                                    <div class="w-4 h-4 mx-2 rounded" :class="dateCall.state == 'pending' ? 'bg-[#3D3C3C]' : dateCall.state == 'called' ? 'bg-[#4F8D06]' : dateCall.state == 'dontAnswer' ? 'bg-[#FF0303]' : 'bg-[#1D75FA]' "></div>
+                                    {{ cskh?.name }}
+                                </div>
+                            </div>
+                            <div class="text-center border">{{ distribute_call?.order_package.market }}</div>
+                            <div class="text-center border">{{ distribute_call?.order_package.customer?.wards }}</div>
+                            <div class="text-center border">{{ distribute_call?.order_package.customer?.district }}/{{
+                                distribute_call?.order_package.customer?.city
+                            }} </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>

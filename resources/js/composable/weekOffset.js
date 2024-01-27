@@ -20,12 +20,19 @@ import { router } from '@inertiajs/vue3'
             let text_week = 'Tuần ' + weekNumber + ' (T' + month + ')';
             let text_week_detail = 'Tuần ' + weekNumber + ' (Tuần thứ ' + weekMonth + ')';
             let list_date = [];
+            let list_date_detail = [];
             const currentDate = targetStartDate.clone();
-
+            const currentDateDetail = targetStartDate.clone();
             while (currentDate <= targetEndDate) {
                 const dayName = currentDate.format('DD/MM');
                 list_date.push(dayName);
                 currentDate.add(1, 'day');
+            }
+            while (currentDateDetail <= targetEndDate) {
+                const dayNameDetail = currentDateDetail.format('YYYY-MM-DD');
+                list_date_detail.push(dayNameDetail);
+                currentDateDetail.add(1, 'day');
+                // console.log(currentDateDetail);
             }
             // console.log(offset);
             return  [
@@ -34,7 +41,8 @@ import { router } from '@inertiajs/vue3'
                 list_date,
                 text_week_detail,
                 targetStartDate.format('DD/MM/YYYY'),
-                targetEndDate.format('DD/MM/YYYY')
+                targetEndDate.format('DD/MM/YYYY'),
+                list_date_detail
             ];
         }
         const getOffset = (fromdate) =>{
