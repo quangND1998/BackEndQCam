@@ -24,7 +24,7 @@ class Order extends Model implements HasMedia
     protected $fillable = [
         "order_number",
         "user_id",
-        "status", // pending - packing- shipping - completed - redunf - decline
+        "status", // create(Tạo mới) - poccessing(Đang xử lý)- completed(Thành công) - pending(Pending)
         "item_count",
         "payment_status",
         "payment_method", // 0 - cash, 1 - bank, 2 - payoo

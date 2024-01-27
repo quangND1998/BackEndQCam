@@ -21,17 +21,18 @@ use Modules\Order\app\Http\Requests\ChangeShipperStatusRequest;
 use Modules\Order\app\Models\Order;
 use Modules\Order\app\Models\RefundProducts;
 use Modules\Tree\app\Models\ProductRetail;
-
+use Modules\Order\Repositories\OrderTransportRepository;
 class CSKHOrderController extends Controller
 {
-    protected $orderRepository, $shipperRepository;
+    protected $orderRepository, $shipperRepository, $orderTransportRepository;
 
 
-    public function __construct(OrderContract $orderRepository, ShipperRepository $shipperRepository)
+    public function __construct(OrderContract $orderRepository, ShipperRepository $shipperRepository,OrderTransportRepository $orderTransportRepository )
     {
 
         $this->orderRepository = $orderRepository;
         $this->shipperRepository = $shipperRepository;
+        $this->orderTransportRepository =$orderTransportRepository;
         // $this->middleware('permission:users-manager', ['only' => ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline']]);
         $this->middleware('permission:order-pending|order-packing|order-shipping|order-completed|order-refund|order-decline', ['only' => ['index']]);
 
@@ -57,14 +58,18 @@ class CSKHOrderController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
-        $orders = OrderResource::collection($this->orderRepository->getAllOrderGift($request));
 
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
+      
+        $orders = OrderResource::collection($this->orderRepository->getAllOrderGift($request));
+      
+        // $order_transports =   $this->orderTransportRepository->getOrdersTransport($request);
+        
+        // $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
 
         // return $orders;
         // dd($statusGroup);
-        return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+        return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to','shippers'));
     }
     public function index(Request $request)
     {

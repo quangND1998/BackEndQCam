@@ -27,7 +27,6 @@ const props = defineProps({
     status: String,
     from: String,
     to: String,
-    statusGroup: Array,
     shippers: Array
 });
 const { openPopover,
@@ -411,7 +410,7 @@ const selectAll = computed({
         </SectionMain>
 
 
-        <OrdersTable />
+        <!-- <OrdersTable /> -->
     </LayoutAuthenticated>
 </template>
 <style >

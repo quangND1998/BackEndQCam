@@ -77,8 +77,8 @@ class HandleInertiaRequests extends Middleware
             },
             'company_infor' => Contact::first(),
             'author' => 'Quang Nguyens',
-            'order_status' => $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport'),
-            'count_orders' => Order::where('state', true)->count()
+            // 'order_status' => $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport'),
+            // 'count_orders' => Order::where('state', true)->count()
         ];
     }
 }

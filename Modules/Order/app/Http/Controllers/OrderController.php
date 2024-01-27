@@ -428,7 +428,7 @@ class OrderController extends Controller
             $order = Order::create([
                 'order_number'      =>  'ORD-' . strtoupper(uniqid()),
                 'user_id'           => $user->id,
-                'status'            =>  'pending',
+                'status'            =>  'create',
                 'payment_status'    =>  0,
                 'payment_method' => $request->payment_method,
                 'address' => $request->address,
@@ -562,7 +562,7 @@ class OrderController extends Controller
             $order = Order::create([
                 'order_number'      =>  'ORD-' . strtoupper(uniqid()),
                 'user_id'           => $user->id,
-                'status'            =>  'pending',
+                'status'            =>  'create',
                 'payment_status'    =>  0,
                 'payment_method' => null,
                 'address' => $request->address,
