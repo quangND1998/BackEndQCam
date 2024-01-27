@@ -27,6 +27,11 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function 
     Route::prefix('shipper')->as('shipper.')->group(function () {
 
         Route::put('/{id}/confirm-shipping', [ApiShipperController::class, 'confirmShipping'])->name('confirm-shipping');
+        Route::put('/{id}/confirm-not-shipping', [ApiShipperController::class, 'confirmNotShipping'])->name('confirm-not-shipping');
         Route::post('/{id}/confirm-recive', [ApiShipperController::class, 'confirmCustomerRecive'])->name('confirm-recive');
+
+        Route::post('/{id}/upload-order', [ApiShipperController::class, 'uploadOrder'])->name('uploadOrder');
+
+        Route::delete('{id}/order/{media_id}/deleteImage', [ApiShipperController::class, 'deleteImage'])->name('deleteImage');
     });
 });

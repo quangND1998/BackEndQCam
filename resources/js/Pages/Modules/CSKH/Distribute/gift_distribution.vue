@@ -10,7 +10,7 @@ import CardBoxModal from "@/Components/CardBoxModal.vue";
 import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
 import VueDatepickerUi from 'vue-datepicker-ui'
 import 'vue-datepicker-ui/lib/vuedatepickerui.css';
-import ModelShipping from './ModelShipping.vue'
+import ModelShipping from '../ModelShipping.vue'
 // import ModalDecline from "./ModalDecline.vue";
 // import ModelRefund from "./ModelRefund.vue";
 // import ModalShipping from "./ModalShipping.vue";

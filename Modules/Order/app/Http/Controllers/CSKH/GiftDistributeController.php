@@ -25,12 +25,12 @@ class GiftDistributeController extends Controller
 
         $this->distributeDate($orderPackages);
 
-        return Inertia::render('Modules/CSKH/gift_distribution', compact('orderPackages'));
+        return Inertia::render('Modules/CSKH/Distribute/gift_distribution', compact('orderPackages'));
     }
     public function getRolePackage(Request $request){
         $orderPackages = $this->getOrderPackage($request);
         // return $orderPackages;
-        return Inertia::render('Modules/CSKH/Role', compact('orderPackages'));
+        return Inertia::render('Modules/CSKH/Distribute/Role', compact('orderPackages'));
     }
 
     public function groupByOrderStatus()

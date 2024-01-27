@@ -19,10 +19,10 @@ class OrderGiftPostRequest extends FormRequest
             'wards' => 'required',
             'phone_number' => 'required',
             'type' => 'required',
-            'images' => 'required',
-            'images.*' => 'mimes:jpeg,png,jpg|max:2048',
+            // 'images' => 'required',
+            // 'images.*' => 'mimes:jpeg,png,jpg|max:2048',
             'receive_at' =>'required',
-            'shipper_id' =>'required',
+            // 'shipper_id' =>'required',
         ];
     }
 

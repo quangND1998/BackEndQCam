@@ -37,7 +37,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 
-import Dropdown from "@/Components/Dropdown.vue";
+import Dropdown from "primevue/dropdown";
 import BaseIcon from "@/Components/BaseIcon.vue";
 import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
@@ -46,6 +46,10 @@ import { initFlowbite } from "flowbite";
 import OrderHome from "@/Pages/Test/OrderHome.vue";
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue";
 import { emitter } from "@/composable/useEmitter";
+import OrderStatusBar from "./OrderStatusBar.vue";
+import { usePopOverStore } from '@/stores/popover.js'
+const { openPopover,
+    closePopover } = usePopOverStore();
 const props = defineProps({
     orders: Object,
     status: String,
@@ -54,8 +58,8 @@ const props = defineProps({
     to: String,
     statusGroup: Array,
     shippers: Array,
+    count_orders: Number
 });
-
 const list_order = toRef(props.orders.data);
 const filter = reactive({
     customer: null,
@@ -76,6 +80,7 @@ const form = useForm({
     id: null,
     name: null,
     state: null,
+    shipper: null,
     selectedDate: [new Date(), new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)],
 });
 const isModalActive = ref(false);
@@ -179,31 +184,42 @@ const packedOrder = (order) => {
             }
         });
 };
-const packedOrders = () => {
-    let query = {
-        ids: selected.value,
-    };
-    swal
-        .fire({
-            title: "Thông báo?",
-            text: "Bạn muốn đóng gói các đơn hàng này!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-        })
-        .then((result) => {
-            if (result.isConfirmed) {
-                router.post(route("admin.cskh.packedOrder"), query, {
-                    onError: () => { },
-                    onSuccess: () => {
-                        form.reset();
-                    },
-                });
-            } else {
-                return;
-            }
+const ownerOrders = () => {
+    if (form.shipper == null) {
+        swal.fire({
+            title: "Error!",
+            text: "Bạn chưa chọn Shipper",
+            icon: "error",
+            confirmButtonText: "Cool",
         });
+    } else {
+        swal
+            .fire({
+                title: "Thông báo?",
+                text: "Bạn giao cho shipper các đơn hàng này!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+            })
+            .then((result) => {
+                let query = {
+                    ids: selected.value,
+                    shipper_id: form.shipper.id,
+                };
+
+                if (result.isConfirmed) {
+                    router.post(route("admin.cskh.shipperOwner"), query, {
+                        onError: () => { },
+                        onSuccess: () => {
+                            form.reset();
+                        },
+                    });
+                } else {
+                    return;
+                }
+            });
+    }
 };
 const openSHippingDetail = (order) => {
     console.log("ModelShipping");
@@ -289,15 +305,28 @@ const selectAll = computed({
                     </div>
                 </div>
                 <div class="my-3 w-full flex justify-between">
-                    <button v-if="selected.length > 0" @click="packedOrders()"
-                        class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
-                        Xác nhận đóng gói hàng loạt ({{ selected.length }})
-                    </button>
                     <div class="flex">
-                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
-                            label="Tất cả (11)" />
-                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
-                            label="Pending" />
+                        <Dropdown v-model="form.shipper" :options="shippers" optionLabel="name" filter
+                            placeholder="Chọn shipper" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm">
+                            <template #value="slotProps">
+                                <div v-if="slotProps.value" class="flex align-items-center">
+                                    <div>{{ slotProps.value.name }}</div>
+                                </div>
+                                <span v-else>
+                                    {{ slotProps.placeholder }}
+                                </span>
+                            </template>
+                            <template #option="slotProps">
+                                <div class="flex align-items-center">
+                                    <div>{{ slotProps.option.name }}</div>
+                                </div>
+                            </template>
+                        </Dropdown>
+
+                        <button @click="ownerOrders()" v-if="selected.length > 0"
+                            class="px-2 py-2 text-sm bg-[#FF6100] hover:bg-[#FF6100] text-white p-2 rounded-lg border mx-1">
+                            Giao shipper
+                        </button>
                     </div>
                 </div>
 
@@ -377,25 +406,25 @@ const selectAll = computed({
                                             hộp
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <span class="px-1 py-1 border rounded-sm" :class="order?.status_shipper == null
-                                                ? 'Chưa giao shipper'
-                                                : order?.status_shipper == 'pending'
-                                                    ? 'Đã đóng gói'
+                                            <span class="px-1 py-1 border rounded-md" :class="order?.shipper_status == null
+                                                ? 'bg-[#FF6100] text-white'
+                                                : order?.shipper_status == 'pending'
+                                                    ? 'bg-red-500 text-white'
                                                     : null
-                                                ">{{ order?.status_transport == "packing"
-        ? "Chờ đóng gói"
-        : order?.status_transport == "packed"
-            ? "Đã đóng gói"
+                                                ">{{
+        order?.shipper_status == null
+        ? "Chưa giao shipper"
+        : order?.shipper_status == "pending"
+            ? "Chưa vận chuyển"
             : null
     }}</span>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <BaseIcon :path="mdiPackageVariantClosed" @click="packedOrder(order)"
                                                 v-if="order.status_transport == 'packing'"
-                                                class=" text-[#FF6100] rounded-lg mr-2 text-[#1D75FA] hover:text-blue-700"
+                                                class="text-[#FF6100] rounded-lg mr-2 text-[#1D75FA] hover:text-blue-700"
                                                 v-tooltip.top="'Đóng gói'" size="22">
                                             </BaseIcon>
-
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order?.shipper ? order?.shipper?.name : "NA" }}
@@ -409,8 +438,7 @@ const selectAll = computed({
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @click="openSHippingDetail(order)" data-toggle="modal"
-                                                data-target="#ModelShipping">
+                                            <button @mouseover="openPopover(order)" @mouseleave="closePopover">
                                                 xem
                                             </button>
                                         </td>

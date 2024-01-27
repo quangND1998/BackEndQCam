@@ -34,7 +34,7 @@ class DetailCallDistributeController extends Controller
         $numberNotCSKH = $this->cskhResponsive->getOrderNotCSKH($request)->count();
         // return $numberNotCSKH;
         $offsetWeek = $this->cskhResponsive->getOffsetWeek($toDate);
-        return Inertia::render('Modules/CSKH/ScheduleDetail', compact('list_cskh','offsetWeek','orderPackagesNot','numberNotCSKH'));
+        return Inertia::render('Modules/CSKH/Distribute/ScheduleDetail', compact('list_cskh','offsetWeek','orderPackagesNot','numberNotCSKH'));
     }
     public function getCSKH($request,$fromDate,$toDate){
         $cskh = User::with(['distribute_call' => function($q) use ($fromDate,$toDate){

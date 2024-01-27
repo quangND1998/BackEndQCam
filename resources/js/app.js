@@ -6,6 +6,7 @@ import { useDarkModeStore } from '@/stores/darkMode.js'
 import { useTreeStore } from '@/stores/tree'
 import { useProfileStore } from '@/stores/profile'
 import { useCartStore } from '@/stores/cart'
+import { usePopOverStore } from '@/stores/popover.js'
 import { darkModeKey } from '@/config'
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -35,8 +36,10 @@ import "v3-infinite-loading/lib/style.css";
 import VueCountdown from '@chenfengyuan/vue-countdown';
 import "@vueform/multiselect/themes/default.css"
 import VueApexCharts from "vue3-apexcharts";
-
-// import 'vue3-carousel/dist/carousel.css'
+import vClickOutside from "click-outside-vue3"
+import { Fancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
+Fancybox.bind("[data-fancybox]", {});
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`,
@@ -53,6 +56,7 @@ createInertiaApp({
             .component('vue-countdown', VueCountdown)
             .use(VueApexCharts)
             .use(VueSweetalert2)
+            .use(vClickOutside)
             .directive('tooltip', Tooltip)
             .mixin(helper, base)
             .mount(el);
@@ -66,6 +70,7 @@ const darkModeStore = useDarkModeStore(pinia)
 const treeStore = useTreeStore(pinia)
 const profileStore = useProfileStore(pinia)
 const cartStore = useCartStore(pinia)
+const popOverStore = usePopOverStore(pinia)
 document.documentElement.classList.forEach((token) => {
         if (token.indexOf('style') === 0) {
             document.documentElement.classList.replace(token, `style-basic`)

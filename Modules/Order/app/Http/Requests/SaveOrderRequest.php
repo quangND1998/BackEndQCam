@@ -26,7 +26,7 @@ class SaveOrderRequest extends FormRequest
             'shipping_fee' => 'nullable|nullable|gt:-1',
             'amount_paid' => 'nullable|nullable|gt:-1',
             'receive_at' =>'required',
-            'shipper_id' =>'required',
+            // 'shipper_id' =>'required',
         
            
         ];

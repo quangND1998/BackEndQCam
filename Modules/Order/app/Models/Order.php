@@ -15,6 +15,7 @@ use Modules\Order\Database\factories\OrderFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Modules\CustomerService\app\Models\DistributeDate;
+
 class Order extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -29,7 +30,7 @@ class Order extends Model implements HasMedia
         "payment_method", // 0 - cash, 1 - bank, 2 - payoo
         "grand_total", // Full price
         "discount",
-        "shipping_fee",// in VND
+        "shipping_fee", // in VND
         "last_price", // Price after discount, vat, shipping fee
         "notes",
         "reason",
@@ -47,13 +48,16 @@ class Order extends Model implements HasMedia
         'sale_id',
         'receive_at',
         'status_transport',
-        'wards',
-        'delivery_no',
-        'phone_number',
         'shipper_status',
         'state_document',
+        'state',
+        'wards',  "created_at", "updated_at",
+        'delivery_no',
+        'phone_number',
         'wards',  "created_at", "updated_at",
         'delivery_appointment',
+        'order_transport_number',
+
     ];
 
     public function customer()
@@ -71,7 +75,8 @@ class Order extends Model implements HasMedia
 
         if (isset($filters['search']) && isset($filters['search'])) {
 
-            $query->where('order_number', 'like', '%' . $filters['search'] . '%');
+            $query->where('order_number', 'like', '%' . $filters['search'] . '%')->orWhere('order_transport_number', 'like', '%' . $filters['search'] . '%')
+                ->orWhere('phone_number', 'like', '%' . $filters['search'] . '%');;
         }
         if (isset($filters['fromDate']) && isset($filters['toDate'])) {
 
@@ -81,6 +86,17 @@ class Order extends Model implements HasMedia
         if (isset($filters['payment_status'])) {
 
             $query->where('payment_status', $filters['payment_status']);
+        }
+
+        if (isset($filters['market'])) {
+           
+            $query->with(['product_service.order_package' => function ($q) use ($filters) {
+                $q->where('market', $filters['market']);
+            }]);
+        }
+        if (isset($filters['status'])) {
+
+            $query->where('status', $filters['status']);
         }
 
 
@@ -245,6 +261,6 @@ class Order extends Model implements HasMedia
     }
     public function distributeDate()
     {
-        return $this->hasOne(DistributeDate::class,'order_id');
+        return $this->hasOne(DistributeDate::class, 'order_id');
     }
 }

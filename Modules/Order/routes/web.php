@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Order\app\Http\Controllers\CSKH\CallDistributeController;
+use Modules\Order\app\Http\Controllers\API\GetOrders;
+use Modules\Order\app\Http\Controllers\API\GetStausOrders;
 use Modules\Order\app\Http\Controllers\CSKH\CSKHOrderController;
 use Modules\Order\app\Http\Controllers\CSKH\DetailCallDistributeController;
 use Modules\Order\app\Http\Controllers\CSKH\GiftDistributeController;
@@ -147,14 +149,26 @@ Route::middleware(['auth'])->group(
                 Route::post('shipperOwner', [CSKHOrderController::class, 'shipperOwner'])->name('shipperOwner');
 
                 Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
+
                 Route::get('packing', [CSKHOrderController::class, 'packing'])->name('packing');
-                Route::get('packed', [CSKHOrderController::class, 'packed'])->name('packed');
-                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
-                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
-                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
-                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
-                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
-                // Route::get('pending', [CSKHOrderController::class, 'pending'])->name('pending');
+                Route::get('shipping', [CSKHOrderController::class, 'shipping'])->name('shipping');
+                Route::get('completed', [CSKHOrderController::class, 'completed'])->name('completed');
+                Route::get('refunding', [CSKHOrderController::class, 'refunding'])->name('refunding');
+                Route::get('refund', [CSKHOrderController::class, 'refund'])->name('refund');
+                Route::get('decline', [CSKHOrderController::class, 'decline'])->name('decline');
+                Route::get('notShipperReceive', [CSKHOrderController::class, 'not_shipper_receive'])->name('notShipperReceive');
+
+                Route::prefix('order')->as('order.')->group(function () {
+                    Route::post('/{order}/decline', [CSKHOrderController::class, 'orderDecline'])->name('decline');
+                    Route::post('/{order}/refunding', [CSKHOrderController::class, 'orderRefunding'])->name('refunding');
+                    Route::post('refund', [CSKHOrderController::class, 'orderRefund'])->name('refund');
+                });
+                Route::post('/confirm-document', [CSKHOrderController::class, 'confirmStateDocument'])->name('confirm-document');
+
+                Route::post('{order}/uploadImages', [CSKHOrderController::class, 'updloadImages'])->name('updloadImages');
+
+                Route::get('fetchOrders', GetOrders::class)->name('fetch-orders');
+                Route::get('fetchStatusOrders', GetStausOrders::class)->name('fetchStatusOrders');
             });
             Route::prefix('gift_distribute')->as('gift_distribute.')->group(function () {
                 Route::get('index', [GiftDistributeController::class, 'index'])->name('index');

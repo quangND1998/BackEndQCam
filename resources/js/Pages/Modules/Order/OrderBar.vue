@@ -13,7 +13,7 @@ const totalOrder = (status) => {
     }
 }
 
-const handleNativeClick =()=>{
+const handleNativeClick = () => {
     console.log("Native click event");
     router.post(route("admin.orders.pending"), query, {
         // preserveState: false
@@ -48,13 +48,13 @@ const handleNativeClick =()=>{
 
             <Link v-if="hasAnyPermission(['order-completed'])" :href="route('admin.orders.completed')"
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                :class="{ 'bg-white  text-blue-500': $page.url.includes( '/admin/orders/completed') }">
+                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/orders/completed') }">
             Giao thành công
             <span class="text-gray-400 ml-1">({{ totalOrder('completed') }})</span>
             </Link>
             <Link v-if="hasAnyPermission(['order-refund'])" :href="route('admin.orders.refund')"
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                :class="{ 'bg-white  text-blue-500': $page.url.includes( '/admin/orders/refund') }">
+                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/orders/refund') }">
             Hoàn đơn
             <span class="text-gray-400 ml-1">({{ totalOrder('refund') }})</span>
             </Link>

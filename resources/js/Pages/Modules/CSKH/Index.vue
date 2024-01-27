@@ -1,50 +1,26 @@
 <script setup>
 import { computed, ref, inject, reactive, toRef } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import Pagination from "@/Components/Pagination.vue";
+import Pagination from "@/Pages/Modules/CSKH/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import CardBox from "@/Components/CardBox.vue";
-import CardBoxModal from "@/Components/CardBoxModal.vue";
-import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
+import BaseIcon from "@/Components/BaseIcon.vue";
 import VueDatepickerUi from 'vue-datepicker-ui'
 import 'vue-datepicker-ui/lib/vuedatepickerui.css';
 import ModelShipping from './ModelShipping.vue'
-// import ModalDecline from "./ModalDecline.vue";
-// import ModelRefund from "./ModelRefund.vue";
-// import ModalShipping from "./ModalShipping.vue";
+
 import {
-    mdiEye,
-    mdiAccountLockOpen,
-    mdiPlus,
-    mdiFilter,
-    mdiMagnify,
-    mdiDotsVertical,
-    mdiTrashCanOutline,
-    mdiCodeBlockBrackets,
-    mdiPencil,
-    mdiLandFields,
     mdiSquareEditOutline,
     mdiArrowLeftBoldCircleOutline,
     mdiLayersTripleOutline,
     mdiPhone
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
-import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 
-import Dropdown from '@/Components/Dropdown.vue';
-import BaseIcon from '@/Components/BaseIcon.vue'
-import SearchInput from "vue-search-input";
-import "vue-search-input/dist/styles.css";
-import MazInputPrice from 'maz-ui/components/MazInputPrice'
-import { initFlowbite } from 'flowbite'
-import OrderHome from "@/Pages/Test/OrderHome.vue"
-import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
-import { emitter } from '@/composable/useEmitter';
+import OrderStatus from "./OrderStatus.vue";
+import { usePopOverStore } from '@/stores/popover.js'
+import OrdersTable from '@/Pages/Modules/CSKH/OrdersTable.vue'
 const props = defineProps({
     orders: Object,
     status: String,
@@ -54,6 +30,8 @@ const props = defineProps({
     statusGroup: Array,
     shippers: Array
 });
+const { openPopover,
+    closePopover } = usePopOverStore();
 
 const list_order = toRef(props.orders.data)
 const filter = reactive({
@@ -67,8 +45,6 @@ const filter = reactive({
     type: null,
     per_page: 10,
     selectedDate: null
-
-
 })
 const customer = ref()
 const searchVal = ref("");
@@ -82,23 +58,7 @@ const form = useForm({
         new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)]
     ,
 });
-const isModalActive = ref(false);
-const editMode = ref(false);
-const isModalDangerActive = ref(false);
 
-const state = reactive({
-    content: '<p>2333</p>',
-    _content: '',
-    editorOption: {
-        placeholder: 'core',
-        modules: {
-
-        },
-
-    },
-    disabled: false
-})
-initFlowbite();
 
 const searchCustomer = () => {
     router.get(route(`admin.orders.${props.status}`),
@@ -139,13 +99,6 @@ const search = () => {
     );
 }
 
-const contents = ref([
-    { id: 1, text: 'Content 1' },
-    { id: 2, text: 'Content 2' },
-    { id: 3, text: 'Content 3' },
-]);
-
-
 
 const changeDate = () => {
     router.get(route(`admin.orders.${props.status}`),
@@ -157,32 +110,7 @@ const changeDate = () => {
     );
 }
 
-const loadOrder = async $state => {
-    // console.log("loading...");
 
-
-    // router.get(route(`admin.orders.${props.status}`),
-    //     filter,
-    //     {
-    //         preserveState: true,
-    //         preserveScroll: true,
-    //         onSuccess: page => {
-    //             if (props.orders.current_page == props.orders.last_page) $state.complete();
-    //             else {
-
-
-    //                 $state.loaded();
-    //             }
-    //             filter.per_page += 10;
-    //         },
-    //         onError: errors => {
-    //             $state.error();
-    //         },
-    //     },
-
-    // );
-
-};
 const pushOrder = (order) => {
     let query = {
         ids: [order.id]
@@ -237,10 +165,7 @@ const pushOrders = () => {
         }
     });
 }
-const openSHippingDetail = (order) => {
-    console.log("ModelShipping");
-    emitter.emit('ModelShipping', order);
-}
+
 const selected = ref([])
 const selectAll = computed({
     get() {
@@ -253,6 +178,7 @@ const selectAll = computed({
 
         if (value) {
             props.orders.data.forEach(function (order) {
+
                 array_selected.push(order.id);
             });
         }
@@ -265,6 +191,8 @@ const selectAll = computed({
 <template>
     <LayoutAuthenticated>
         <ModelShipping></ModelShipping>
+
+
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -366,6 +294,7 @@ const selectAll = computed({
                                         <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -413,12 +342,13 @@ const selectAll = computed({
                                             hộp
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <span class="px-1 py-1 border rounded-sm " :class="order?.status_transport == 'pending' ? 'border-[#FF6100]' :
-                                                order?.status_transport == 'packing' ? 'Chờ đóng gói' :
-                                                    order?.status_transport == 'packed' ? 'Đã đóng gói' : null">{{order?.status_transport == 'pending' ? "Chưa đẩy đơn": order?.status_transport == 'packing' ? 'Chờ đóng gói': order?.status_transport == 'packed' ? 'Đã đóng gói' : null}}</span>
+                                            <OrderStatus :order="order" />
+
+
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <BaseIcon :path="mdiArrowLeftBoldCircleOutline" @click="pushOrder(order)" v-if="order.status_transport=='pending'"
+                                            <BaseIcon :path="mdiArrowLeftBoldCircleOutline" @click="pushOrder(order)"
+                                                v-if="order.state == 0"
                                                 class="rotate-90 text-gray-400 rounded-lg mr-2 text-[#1D75FA] hover:text-blue-700"
                                                 v-tooltip.top="'Đẩy đơn'" size="22">
                                             </BaseIcon>
@@ -441,27 +371,45 @@ const selectAll = computed({
                                                 formatTimeDayMonthyear(order?.delivery_appointment) : "Chưa cập nhật" }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @click="openSHippingDetail(order)" data-toggle="modal"
-                                                data-target="#ModelShipping">xem</button>
+                                            <button @mouseover="openPopover(order)" @mouseleave="closePopover">
+                                                xem
+                                            </button>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            xem
+                                            {{ order.saler?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order?.order_number }}
                                         </td>
+
                                     </tr>
                                 </tbody>
                             </table>
 
                         </div>
                     </div>
-                </div>
+                    <div class="w-full flex  justify-between items-center">
+                        <div class="flex items-center">
+                            <span class="mr-2">Hiển thị</span>
+                            <select
+                                class="bg-gray-50 border   text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  mx-auto px-4 py-1   dark:bg-gray-700 dark:border-gray-600 ">
+                                <option :value="50">50</option>
+                                <option :value="100">100</option>
+                                <option :value="200">200</option>
+                            </select>
+                        </div>
 
+                        <Pagination :links="orders.meta.links" />
+                    </div>
+
+                </div>
 
             </div>
 
         </SectionMain>
+
+
+        <OrdersTable />
     </LayoutAuthenticated>
 </template>
 <style >
