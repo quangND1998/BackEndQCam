@@ -21,7 +21,7 @@ class GetDistributeCall extends Controller
         $distributeCalls->each(function ($distributeCall) use (&$orderPackagePlans) {
             if (isset($orderPackagePlans[$distributeCall->order_package_id])) {
                 $dayOfWeek = Carbon::parse($distributeCall->date_call)->dayOfWeek ? Carbon::parse($distributeCall->date_call)->dayOfWeek : 7;
-                $orderPackagePlans[$distributeCall->order_package_id]['plans'][$dayOfWeek] = true;
+                $orderPackagePlans[$distributeCall->order_package_id]['plans'][$dayOfWeek] = $distributeCall->state;
             } else {
                 $dayOfWeek = Carbon::parse($distributeCall->date_call)->dayOfWeek? Carbon::parse($distributeCall->date_call)->dayOfWeek : 7;
                 $orderPackagePlans[$distributeCall->order_package_id] = [
@@ -29,8 +29,9 @@ class GetDistributeCall extends Controller
                     'lifeTime' => $distributeCall->orderPackage->product_service->life_time,
                     'customerName' => $distributeCall->orderPackage->customer->name,
                     'activeDate' => $distributeCall->orderPackage->time_approve,
+                    'customerId' => $distributeCall->orderPackage->customer->id,
                     'plans' => [
-                        $dayOfWeek => true,
+                        $dayOfWeek => $distributeCall->state,
                     ],
                 ];
             }

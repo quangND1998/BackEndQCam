@@ -28,7 +28,7 @@
       </li>
     </ul>
     <div class="flex gap-3">
-      <button class="px-3 py-1 rounded-sm bg-gray-300">Tuần {{ fromDate.value.week() }} (T{{ fromDate.value.month() + 1 }})</button>
+      <button class="px-3 py-1 rounded-sm bg-gray-300">Tuần {{ Math.ceil(fromDate.date() / 7) }} (T{{ fromDate.month() + 1 }})</button>
       <button class="px-4 py-1 rounded-sm bg-sky-600 text-white font-semibold">Xem</button>
     </div>
   </div>

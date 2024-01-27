@@ -10,12 +10,14 @@ import PlanTableDescription from '@/Components/CustomerService/Table/PlanTableDe
 import RemindTable from '@/Components/CustomerService/Table/RemindTable.vue';
 
 const props = defineProps({
-  plans: Array,
   orderPackagePlans: Array,
+  remindData: Array,
 });
 
-const fromDate = ref(moment().startOf('week'));
-const toDate = ref(moment().endOf('week'));
+
+const planList = ref(props.orderPackagePlans);
+const fromDate = ref(moment().startOf('isoWeek'));
+const toDate = ref(moment().endOf('isoWeek'));
 const { isLoading, executeQuery } = useQuery(
   CUSTOMER_SERVICE_API_MAKER.GET_PLAN(),
   undefined,
@@ -37,7 +39,7 @@ const onMoveToPreviousWeek = () => {
 }
 provide('PLAN', {
   isLoading,
-  orderPackagePlans: props.orderPackagePlans,
+  orderPackagePlans: planList,
   fromDate,
   toDate,
   onMoveToNextWeek,

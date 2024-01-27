@@ -35,17 +35,18 @@ class GetWeeklyPlan extends Controller
                     'lifeTime' => $distributeCall->orderPackage->product_service->life_time,
                     'customerName' => $distributeCall->orderPackage->customer->name,
                     'activeDate' => $distributeCall->orderPackage->time_approve,
+                    'customerId' => $distributeCall->orderPackage->customer->id,
                     'plans' => [
                         $dayOfWeek => $distributeCall->state,
                     ],
                 ];
             }
         });
-        $distributeCalls = collect($distributeCalls)->values()->all();
+        $orderPackagePlans = collect($orderPackagePlans)->values()->all();
 
         return Inertia::render('Modules/CustomerService/weekly-plan', compact(
-            'plans',
-            'orderPackagePlans'
+            'orderPackagePlans',
+            'remindData'
         ));
     }
 }
