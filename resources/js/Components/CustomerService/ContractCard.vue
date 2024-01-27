@@ -75,7 +75,7 @@ const onOpenOrderDialog = () => {
           >
             Tạo đơn ({{ numberOfCreatableOrder }})
           </button>
-        <RemindDialog :packageId="orderPackage.idPackage" :productServiceOwnerId="orderPackage.product_service_owner.id" />
+        <RemindDialog :index="index" :packageId="orderPackage.idPackage" :productServiceOwnerId="orderPackage.product_service_owner.id" />
       </div>
       <p class="mt-3 mb-2">Khách hàng muốn booking tham quan?</p>
       <BookingDialog :index="index" :packageId="orderPackage.idPackage" :productServiceOwnerId="orderPackage.product_service_owner.id" />

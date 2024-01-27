@@ -14,6 +14,8 @@ import ContractCard from '@/Components/CustomerService/ContractCard.vue';
 import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '@/Components/CustomerService/composables/useQuery';
 import PhoneCall from '@/Components/CustomerService/PhoneCall.vue';
 import RecentActivity from '@/Components/CustomerService/Table/RecentActivity.vue';
+import useMultipleComponent from '@/Components/CustomerService/composables/useMultipleComponent';
+import { v4 as uuid } from 'uuid'
 
 const props = defineProps({
   customerId: String,
@@ -76,12 +78,14 @@ const updateOrder = (order) => {
 }
 
 const { data, cities, districts } = useCity();
+const [retailOrderDialog, actions] = useMultipleComponent();
 
 const orderDialogVisible = ref(false);
 const targetOrderPackage = ref();
 const deliveryNo = ref(undefined);
 const orderPackageIndex = ref();
 const onOpenOrderDialog = (orderPackage, nextDeliveryNo, index) => {
+  actions.reset();
   targetOrderPackage.value = orderPackage;
   orderDialogVisible.value = true;
   deliveryNo.value = nextDeliveryNo;
@@ -91,6 +95,7 @@ const onOpenOrderDialog = (orderPackage, nextDeliveryNo, index) => {
 const targetOrder = ref();
 const orderIndex = ref();
 const onOpenEditOrderDialog = (order, ordIndex, ordPIndex) => {
+  actions.reset();
   orderDialogVisible.value = true;
   targetOrder.value = order;
   orderIndex.value = ordIndex;
@@ -107,8 +112,8 @@ const onCloseDialog = () => {
 }
 
 const onOpenRetailOrderDialog = () => {
-  orderDialogVisible.value = true;
-  deliveryNo.value = undefined;
+  const id = uuid();
+  actions.add(id, { id });
 }
 
 provide('COMPLAINT', {
@@ -144,11 +149,40 @@ watch(orderDialogVisible, (newValue) => {
 });
 
 const showRecentActivityDialog = ref(false);
+
+const displayRemindDialogOrder = ref([])
+const addRemindDialog = (packageId) => {
+  if (displayRemindDialogOrder.value.includes(packageId)) return;
+  displayRemindDialogOrder.value.push(packageId);
+}
+const removeRemindDialog = (index) => {
+  displayRemindDialogOrder.value.splice(index, 1);
+}
+provide('REMIND', {
+  displayRemindDialogOrder,
+  addRemindDialog,
+  removeRemindDialog,
+})
+
+const displayBookingDialogOrder = ref([])
+const addBookingDialog = (packageId) => {
+  if (displayBookingDialogOrder.value.includes(packageId)) return;
+  displayBookingDialogOrder.value.push(packageId);
+}
+const removeBookingDialog = (index) => {
+  displayBookingDialogOrder.value.splice(index, 1);
+}
+provide('BOOKING', {
+  displayBookingDialogOrder,
+  addBookingDialog,
+  removeBookingDialog,
+});
+
 </script>
 
 <template>
     <Head title="Customer Order Packages" />
-    <div class="pt-3 pb-20 px-10 bg-slate-100 relative min-h-screen">
+    <div class="pt-3 pb-24 px-10 bg-slate-100 relative min-h-screen">
       <a class="mb-3 font-bold inline-block cursor-pointer hover:!text-sky-600">
         <i class="fa fa-arrow-left mr-2" aria-hidden="true"></i> Quay lại
       </a>
@@ -161,7 +195,7 @@ const showRecentActivityDialog = ref(false);
         :deliveryNo="deliveryNo"
         :order="targetOrder"
         @onCloseDialog="onCloseDialog" />
-      <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] gap-4 mt-3">
+      <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] gap-4 mt-3 relative">
         <div class="col-span-4">
           <p class="font-bold mb-3">Giao kế hoạch giao quà cho khách</p>
           <ContractCard v-for="(orderPackage, index) in orderPackages"
@@ -183,6 +217,17 @@ const showRecentActivityDialog = ref(false);
             <ExtraServiceDialog />
           </div>
           <RecentActivity v-if="showRecentActivityDialog" class="mt-4" />
+          <div class="relative w-[calc(100vw/18*14+4*13px)] left-[calc(-100vw/18+68px)] mt-2 z-50">
+            <OrderDialog
+              v-for="([key], index) in retailOrderDialog"
+              :key="key"
+              :orderPackage="null"
+              :deliveryNo="undefined"
+              :order="null"
+              :marginTop="index === 0 ? 0 : 16"
+              @onCloseDialog="() => { actions.remove(key) }"
+            />
+          </div>
         </div>
       </div>
     </div>

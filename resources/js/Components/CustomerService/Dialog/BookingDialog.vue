@@ -44,14 +44,31 @@
     },
     'Book lịch thành công',
   );
+
+  const { displayBookingDialogOrder, addBookingDialog, removeBookingDialog } = inject('BOOKING');
+  const positionIndex = computed(() => displayBookingDialogOrder.value.findIndex((id) => id === props.packageId))
+  const leftPosition = computed(() => `calc(100%/18*4 - 96px + ${positionIndex.value * 700 + positionIndex.value * 16}px)`)
+  const onOpenDialog = () => {
+    visible.value = true;
+    addBookingDialog(props.packageId);
+  }
+  const onCloseDialog = () => {
+    visible.value = false;
+    removeBookingDialog(positionIndex.value);
+  }
 </script>
 
 <template>
-  <div v-if="visible" class="fixed w-screen h-screen bg-black/40 top-0 left-0 z-50 overflow-hidden flex items-center justify-center rounded-lg">
-    <div class="mt-4 w-[700px] rounded-xl bg-white shadow-lg z-10">
+    <div
+      v-if="visible"
+      class="absolute top-10 w-[700px] rounded-xl bg-white shadow-lg z-10"
+      :style="{
+        left: leftPosition
+      }"
+    >
       <div class="flex items-center justify-between rounded-t-lg bg-yellow-500 pr-3 pl-4 py-2">
         <p class="font-semibold">Booking theo HD {{ packageId }}</p>
-        <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="visible = false"/>
+        <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="onCloseDialog"/>
       </div>
       <div class="px-4 py-2 relative">
         <div class="flex items-center mb-3">
@@ -72,7 +89,7 @@
           <p class="w-28">Dịch vụ</p>
           <div class="flex gap-5 !flex-wrap">
             <div v-for="service in activeService" :key="service.id" class="flex items-center">
-              <input v-model="bookingForm.services" :id="`service_${service.id}`" :value="service.id" type="checkbox" class="focus:outline-none focus:ring-0" />
+              <input v-model="bookingForm.services" :id="`service_${service.id}`" :value="service.id" type="checkbox" class="focus:outline-none focus:ring-0 rounded" />
               <label :for="`service_${service.id}`" class="m-0 select-none pl-2">{{ service.name }}</label>
             </div>
           </div>
@@ -89,6 +106,5 @@
         <DialogLoading v-if="isLoading" text="Booking" />
       </div>
     </div>
-  </div>
-  <button class="rounded-full bg-sky-600 text-white font-medium px-3 py-2 mb-2" @click="visible = !visible">Booking</button>
+  <button class="rounded-full bg-sky-600 text-white font-medium px-3 py-2 mb-2" @click="onOpenDialog">Booking</button>
 </template>

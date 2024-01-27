@@ -8,7 +8,7 @@ const props = defineProps({
 });
 
 const topPosition = computed(() => {
-  return `calc(${props.tableHeight + 56}px) `;
+  return `calc(${props.tableHeight + 72}px) `;
 });
 const hidePhoneNumber = computed(() => {
   if (customer.phone_number) {
