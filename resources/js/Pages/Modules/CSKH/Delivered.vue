@@ -23,7 +23,7 @@ import { usePopOverStore } from '@/stores/popover.js';
 import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
 import OrderDocument from '@/Pages/Modules/CSKH/Dialog/OrderDocument.vue';
 import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
-
+import Icon from '@/Components/Icon.vue'
 const props = defineProps({
     order_transports: Object,
     status: String,
@@ -128,7 +128,27 @@ const openSHippingDetail = (order) => {
     emitter.emit("ModelShipping", order);
 };
 const selected = ref([]);
+const selected_refund = ref([]);
 const selectAll = computed({
+    get() {
+        return props.order_transports.data ? selected.value.length == props.order_transports.data : false;
+    },
+    set(value) {
+        var array_selected = [];
+
+        if (value) {
+            props.order_transports.data.forEach(function (order_transport) {
+                if (order_transport.order.state_document == 'not_approved') {
+                    array_selected.push(order_transport.id);
+                }
+
+            });
+        }
+        selected.value = array_selected;
+    },
+});
+
+const selectAllRefund = computed({
     get() {
         return props.order_transports.data ? selected.value.length == props.order_transports.data : false;
     },
@@ -143,9 +163,13 @@ const selectAll = computed({
 
             });
         }
-        selected.value = array_selected;
+        selected_refund.value = array_selected;
     },
 });
+
+const orderRefunding = () => {
+
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -214,10 +238,18 @@ const selectAll = computed({
                 </div>
                 <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders" state="state"></OrderStatusBar>
                 <div class="my-3 w-full flex justify-between">
-                    <button v-if="selected.length > 0" @click="ordersConfirm()"
-                        class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
-                        Xác nhận duyệt hàng loạt ({{ selected.length }})
-                    </button>
+                    <div>
+                        <button v-if="selected.length > 0" @click="ordersConfirm()"
+                            class="px-2 py-2 inline-flex items-center text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
+                            Xác nhận duyệt hàng loạt ({{ selected.length }})
+                        </button>
+
+                        <button v-if="selected_refund.length > 0" @click="orderRefunding()"
+                            class=" inline-flex items-center px-2 py-2 text-sm bg-[#1D75FA] hover:bg-[#1D75FA] text-white p-2 rounded-lg border mx-1">
+                            <Icon icon="flip" />Tạo yêu cầu hoàn ({{ selected.length }})
+                        </button>
+                    </div>
+
                     <div class="flex">
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
                             label="Tất cả (11)" />
@@ -232,10 +264,21 @@ const selectAll = computed({
                             <table class="table_stripe min-w-full text-center text-sm font-light overflow-x-auto">
                                 <thead class="font-medium">
                                     <tr>
-                                        <th scope="col" class="px-6 py-2 text-left">
+                                        <th scope="col" class="px-6 py-2 text-left ">
+                                            <label class="text-[#4F8D06]">Duyệt</label>
                                             <input id="default-checkbox" type="checkbox" v-model="selectAll"
                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
+
+
                                         </th>
+                                        <th scope="col" class="px-6 py-2 text-left ">
+                                            <label class="text-red-600">Hoàn</label>
+                                            <input id="default-checkbox" type="checkbox" v-model="selectAllRefund"
+                                                class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
+
+                                        </th>
+
+
                                         <th scope="col" class="px-3 py-2 text-left">STT</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã HĐ</th>
                                         <th scope="col" class="px-3 py-2 text-left">Loại HĐ</th>
@@ -257,10 +300,20 @@ const selectAll = computed({
                                     <tr v-for="(order_transport, index) in order_transports?.data" :key="index">
                                         <th scope="col" class="px-6 py-3">
                                             <div class="flex items-center">
+
                                                 <input id="default-checkbox" type="checkbox" v-model="selected"
-                                                    :disabled="order_transport.order.state_document == 'approved' ? true : false"
+                                                    :disabled="order_transport.order.state_document == 'approved' ? false : true"
                                                     :value="order_transport.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
+                                            </div>
+                                        </th>
+
+                                        <th scope="col" class="px-6 py-3">
+                                            <div class="flex items-center">
+                                                <input id="default-checkbox" type="checkbox" v-model="selected_refund"
+                                                    :disabled="order_transport.order.state_document !== 'approved' ? false : true"
+                                                    :value="order_transport.id"
+                                                    class="w-4 h-4 text-red-600 bg-red-100 border-gray-300 rounded focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
                                             </div>
                                         </th>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">

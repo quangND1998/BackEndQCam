@@ -321,24 +321,29 @@ class CSKHOrderController extends Controller
         return back()->with('success', "Đơn hàng đã hủy");
     }
 
-    public function orderRefunding(Request $request, Order $order)
+    public function orderRefunding(Request $request)
     {
 
         $this->validate(
             $request,
             [
                 'reason' => 'required',
-
+                'ids' => 'required|array'
             ]
         );
-
-        $order->update([
-            'status' => OrderStatusEnum::refunding,
-            'shipper_status' => OrderTransportState::refunding,
-            'reason' => $request->reason,
-
-        ]);
-        return back()->with('success', "Đơn hàng đang chuyển về chờ hoàn");
+        if ($request->ids && count($request->ids) > 0) {
+            $order_transports = OrderTransport::find($request->ids);
+            foreach ($order_transports as $order_transport) {
+                if ($order_transports->order->state_document !== OrderDocument::approved) {
+                    $order_transport->update([
+                        'state' => OrderTransportState::refunding,
+                        'status' => OrderTransportStatus::wait_refund
+                    ]);
+                }
+            }
+            return back()->with('success', "Đơn hàng đang chuyển về chờ hoàn");
+        }
+        return back()->with('warning', "Hãy chọn select box");
     }
 
     public function orderRefund(Request $request)
@@ -394,13 +399,15 @@ class CSKHOrderController extends Controller
         if ($request->ids && count($request->ids) > 0) {
             $order_transports = OrderTransport::find($request->ids);
             foreach ($order_transports as $order_transport) {
-                $order_transport->order->update([
-                    'state_document' => OrderDocument::approved,
+                if ($order_transports->order->state_document == OrderDocument::not_approved) {
+                    $order_transport->order->update([
+                        'state_document' => OrderDocument::approved,
 
-                ]);
-                $order_transport->order->update([
-                    'status' => OrderStatusEnum::completed
-                ]);
+                    ]);
+                    $order_transport->order->update([
+                        'status' => OrderStatusEnum::completed
+                    ]);
+                }
             }
             return back()->with('success', "Đã duyệt hồ sơ thành công");
         }

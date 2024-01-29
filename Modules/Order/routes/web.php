@@ -160,7 +160,7 @@ Route::middleware(['auth'])->group(
 
                 Route::prefix('order')->as('order.')->group(function () {
                     Route::post('/{order}/decline', [CSKHOrderController::class, 'orderDecline'])->name('decline');
-                    Route::post('/{order}/refunding', [CSKHOrderController::class, 'orderRefunding'])->name('refunding');
+                    Route::post('/{order_transport}/refunding', [CSKHOrderController::class, 'orderRefunding'])->name('refunding');
                     Route::post('refund', [CSKHOrderController::class, 'orderRefund'])->name('refund');
                 });
                 Route::post('/confirm-document', [CSKHOrderController::class, 'confirmStateDocument'])->name('confirm-document');
