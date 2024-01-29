@@ -4,22 +4,13 @@ namespace App\Enums;
 
 enum OrderTransportStatus: string
 {
-    case pending = 'pending';
-    case packed = 'packed';
-    case not_shipper_receive = 'not_shipper_receive';
-    case delivering = 'delivering';
-    case delivered = 'delivered';
-    case refunding = 'refunding';
-    case refund = 'refund';
-    case decline = 'decline';
-
-
-    //     case pending = 'pending';
-    //     case packed = 'packed';
-    //     case not_shipper_receive = 'not_shipper_receive';
-    //     case delivering = 'delivering';
-    //     case delivered = 'delivered';
-    //     case refunding = 'refunding';
-    //     case refund = 'refund';
-    //     case decline = 'decline';
+    case wait_package = 'wait_package'; //Chờ đóng gói
+    case not_shipper_owner = 'not_shipper_owner'; //Chưa giao shipper
+    case not_shipping = 'not_shipping'; //Chưa giao
+    case not_delivered = 'not_delivered'; //Chưa vận chuyển
+    case delivered = 'delivered'; //Đã giao hàng
+    case wait_refund = 'wait_refund'; //Chờ hoàn
+    case refund = 'refund'; //Đã hoàn
+    case wait_decline = 'wait_decline'; //Chờ hủy
+    case decline = 'decline'; //Đã hủy
 }

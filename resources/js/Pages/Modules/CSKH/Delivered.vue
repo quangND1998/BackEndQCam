@@ -20,10 +20,12 @@ import { initFlowbite } from "flowbite";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
 import { usePopOverStore } from '@/stores/popover.js';
-import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue'
-import OrderDocument from '@/Pages/Modules/CSKH/Dialog/OrderDocument.vue'
+import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
+import OrderDocument from '@/Pages/Modules/CSKH/Dialog/OrderDocument.vue';
+import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
+
 const props = defineProps({
-    orders: Object,
+    order_transports: Object,
     status: String,
     status: String,
     from: String,
@@ -128,15 +130,15 @@ const openSHippingDetail = (order) => {
 const selected = ref([]);
 const selectAll = computed({
     get() {
-        return props.orders.data ? selected.value.length == props.orders.data : false;
+        return props.order_transports.data ? selected.value.length == props.order_transports.data : false;
     },
     set(value) {
         var array_selected = [];
 
         if (value) {
-            props.orders.data.forEach(function (order) {
-                if (order.state_document == 'not_approved') {
-                    array_selected.push(order.id);
+            props.order_transports.data.forEach(function (order_transport) {
+                if (order_transport.order.state_document == 'not_approved') {
+                    array_selected.push(order_transport.id);
                 }
 
             });
@@ -210,7 +212,7 @@ const selectAll = computed({
                         </div>
                     </div>
                 </div>
-                <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders"></OrderStatusBar>
+                <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders" state="state"></OrderStatusBar>
                 <div class="my-3 w-full flex justify-between">
                     <button v-if="selected.length > 0" @click="ordersConfirm()"
                         class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
@@ -252,12 +254,12 @@ const selectAll = computed({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(order, index) in orders?.data" :key="index">
+                                    <tr v-for="(order_transport, index) in order_transports?.data" :key="index">
                                         <th scope="col" class="px-6 py-3">
                                             <div class="flex items-center">
                                                 <input id="default-checkbox" type="checkbox" v-model="selected"
-                                                    :disabled="order.state_document == 'not_approved' ? false : true"
-                                                    :value="order.id"
+                                                    :disabled="order_transport.order.state_document == 'not_approved' ? false : true"
+                                                    :value="order_transport.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
                                             </div>
                                         </th>
@@ -265,20 +267,20 @@ const selectAll = computed({
                                             {{ index + 1 }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.product_service?.order_package?.idPackage }}
+                                            {{ order_transport.order?.product_service?.order_package?.idPackage }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.product_service?.product?.name }}
+                                            {{ order_transport.order?.product_service?.order_package?.idPackage }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.customer?.name }}
+                                            {{ order_transport.order?.customer?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="flex items-center">
                                                 {{
                                                     hasAnyPermission(["super-admin"])
-                                                    ? order?.customer?.phone_number
-                                                    : hidePhoneNumber(order?.customer?.phone_number)
+                                                    ? order_transport.order?.customer?.phone_number
+                                                    : hidePhoneNumber(order_transport.order?.customer?.phone_number)
                                                 }}
                                                 <!-- mdiPhone  -->
                                                 <BaseIcon :path="mdiPhone"
@@ -288,12 +290,12 @@ const selectAll = computed({
                                             </p>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order.order_items" :key="index2">
+                                            <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
                                                 {{ item?.product?.name }}
                                             </p>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order.order_items" :key="index2">
+                                            <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
                                                 {{ item?.quantity }}
                                             </p>
                                         </td>
@@ -301,33 +303,34 @@ const selectAll = computed({
                                             hộp
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <OrderStatus :order="order" />
+                                            <OrderTransportStatus :order_transport="order_transport" />
                                         </td>
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.shipper ? order?.shipper?.name : "NA" }}
+                                            {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
+                                            }}
                                         </td>
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{
-                                                order?.delivery_appointment
-                                                ? formatTimeDayMonthyear(order?.delivery_appointment)
+                                                order_transport.delivery_appointment
+                                                ? formatTimeDayMonthyear(order_transport.delivery_appointment)
                                                 : "Chưa cập nhật"
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500 ">
-                                            <button @mouseover="openPopover(order)" class="cursor-pointer">
+                                            <button @mouseover="openPopover(order_transport)" class="cursor-pointer">
                                                 xem
                                             </button>
 
 
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <StateDocument :order="order" />
+                                            <StateDocument :order="order_transport.order" />
                                         </td>
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.order_transport_number }}
+                                            {{ order_transport.order_transport_number }}
                                         </td>
                                     </tr>
                                 </tbody>

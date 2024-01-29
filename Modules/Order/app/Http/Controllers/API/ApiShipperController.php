@@ -5,6 +5,7 @@ namespace Modules\Order\app\Http\Controllers\API;
 use App\Contracts\OrderContract;
 use App\Enums\OrderDocument;
 use App\Enums\OrderStatusEnum;
+use App\Enums\OrderTransportState;
 use App\Enums\OrderTransportStatus;
 use App\Enums\ShipperStatusEnum;
 use App\Http\Controllers\Controller;
@@ -15,26 +16,42 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Modules\Order\app\Models\Order;
+use Modules\Order\app\Models\OrderTransport;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Modules\Order\Repositories\OrderTransportRepository;
 
 class ApiShipperController extends Controller
 {
+    protected $orderTransportRepository;
+    public function __construct(OrderTransportRepository $orderTransportRepository)
+    {
+
+        $this->orderTransportRepository = $orderTransportRepository;
+    }
     public function getOrderStatus(Request $request)
     {
         $user = Auth::user();
-        $statusGroup = Order::whereHas('orderItems')->fillterTime($request->only('date', 'day'))->where('shipper_id', $user->id)
-            ->select('shipper_status', DB::raw('count(*) as total'))
-            ->groupBy('shipper_status')
-            ->get();
-        $orderNotHaveImages = Order::fillterTime($request->only('date', 'day'))->where('state_document', OrderDocument::not_push)->where('shipper_status', ShipperStatusEnum::delivered)->where('shipper_id', $user->id)
-            ->count();
-        foreach (ShipperStatusEnum::cases() as $status) {
 
-            $filtered = $statusGroup->where('shipper_status', $status->value)->first();
+
+
+        $orderNotHaveImages = OrderTransport::whereHas('order', function ($q) use ($user) {
+            $q->where('shipper_id', $user->id)->where('state_document', OrderDocument::not_push);
+        })->where('state', 'delivered')->fillterTime($request->only('date', 'day'))
+            ->count();
+
+
+        $statusGroup = OrderTransport::whereHas('order', function ($q) use ($user) {
+            $q->where('shipper_id', $user->id);
+        })->fillterTime($request->only('date', 'day'))->select('status', DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->get();
+        $array_status =  [OrderTransportStatus::not_shipping->value, OrderTransportStatus::not_delivered->value, OrderTransportStatus::delivered->value,  OrderTransportStatus::refund->value, OrderTransportStatus::decline->value];
+        foreach ($array_status as $status) {
+            $filtered = $statusGroup->where('status', $status)->first();
             if ($filtered == null) {
 
                 $newCollections[] = array(
-                    'shipper_status' => $status,
+                    'status' => $status,
                     'total' => 0,
 
 
@@ -42,14 +59,14 @@ class ApiShipperController extends Controller
             } else {
 
                 $newCollections[] = array(
-                    'shipper_status' => $status,
+                    'status' => $status,
                     'total' => $filtered->total,
 
                 );
             }
         }
         $newCollections[]    = [
-            'shipper_status' => 'addition_document',
+            'status' => 'addition_document',
             'total' => $orderNotHaveImages
         ];
         return response()->json($newCollections, 200);
@@ -58,21 +75,22 @@ class ApiShipperController extends Controller
     public function fetchOrders(Request $request)
     {
         $user = Auth::user();
-        $orders = Order::with('customer')->where('shipper_id', $user->id)->fillterApi($request->only('search', 'date', 'day', 'shipper_status'))->paginate(15);
+        $orders = OrderTransport::with('order', 'order.customer', 'order.orderItems.product', 'order.shipping_history', 'order.shipper')->whereHas('order', function ($q) use ($user, $request) {
+            $q->where('shipper_id', $user->id);
+        })->search($request->search, null, true)->fillterApi($request->only('date', 'day', 'status'))->paginate(15);
         return response()->json($orders, 200);
     }
 
     public function confirmShipping(Request $request, $id)
     {
-        $order = Order::find($id);
-        if ($order) {
-            $order->update([
-                'status' => OrderStatusEnum::shipping,
-                'shipper_status' => ShipperStatusEnum::shipping,
-                'status_transport' => OrderTransportStatus::delivering
+        $order_transport = OrderTransport::find($id);
+        if ($order_transport) {
+            $order_transport->update([
+                'status' => OrderTransportStatus::not_delivered,
+                'state' => OrderTransportState::shipping
             ]);
 
-            return response()->json($order->load('product_service.product', 'orderItems.product', 'discount', 'customer', 'order_shipper_images'), 200);
+            return response()->json($order_transport->load('order.product_service.product', 'order.orderItems.product', 'order.discount', 'order.customer', 'order.order_shipper_images'), 200);
         } else {
             return response()->json('Không tìm thấy đơn hàng', 404);
         }
@@ -84,10 +102,10 @@ class ApiShipperController extends Controller
             $order->update([
                 'shipper_id' => null,
                 'shipper_status' => ShipperStatusEnum::pending,
-                'status_transport' => OrderTransportStatus::not_shipper_receive
+                'status_transport' => OrderTransportState::not_shipper_receive
             ]);
 
-            return response()->json($order->load('product_service.product', 'orderItems.product', 'discount', 'customer', 'order_shipper_images'), 200);
+            return response()->json($order->load('order.product_service.product', 'order.orderItems.product', 'order.discount', 'order.customer', 'order.order_shipper_images'), 200);
         } else {
             return response()->json('Không tìm thấy đơn hàng', 404);
         }
@@ -96,30 +114,29 @@ class ApiShipperController extends Controller
 
     public function confirmCustomerRecive(Request $request, $id)
     {
-        $order = Order::find($id);
-        if ($order) {
-            $order->update([
-                'status' => OrderStatusEnum::completed,
-                'shipper_status' => ShipperStatusEnum::delivered,
-                'status_transport' => OrderTransportStatus::delivered
+        $order_transport = OrderTransport::find($id);
+        if ($order_transport) {
+            $order_transport->update([
+                'state' => ShipperStatusEnum::delivered,
+                'status' => OrderTransportStatus::delivered,
             ]);
             if ($request->images) {
                 foreach ($request->images as $image) {
-                    $order->addMedia($image)->toMediaCollection('order_shipper_images');
+                    $order_transport->order->addMedia($image)->toMediaCollection('order_shipper_images');
                 }
-                $order->update([
+                $order_transport->order->update([
                     'state_document' => OrderDocument::not_approved
                 ]);
             } else {
-                if (count($order->order_shipper_images) == 0) {
-                    $order->update([
+                if (count($order_transport->order->order_shipper_images) == 0) {
+                    $order_transport->order->update([
                         'state_document' => OrderDocument::not_push
                     ]);
                 }
             }
 
 
-            return response()->json($order->load('product_service.product', 'orderItems.product', 'discount', 'customer', 'order_shipper_images'), 200);
+            return response()->json($order_transport->load('order.product_service.product', 'order.orderItems.product', 'order.discount', 'order.customer', 'order.order_shipper_images'), 200);
         } else {
             return response()->json('Không tìm thấy đơn hàng', 404);
         }
@@ -137,23 +154,23 @@ class ApiShipperController extends Controller
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-        $order = Order::find($id);
-        if ($order) {
-            if ($order->state_document == OrderDocument::approved) {
+        $order_transport = OrderTransport::find($id);
+        if ($order_transport) {
+            if ($order_transport->order->state_document == OrderDocument::approved) {
                 return response()->json('Đơn hàng đã duyệt hồ sơ không thể up thêm ', 404);
             } else {
                 if ($request->images) {
                     foreach ($request->images as $image) {
-                        $order->addMedia($image)->toMediaCollection('order_shipper_images');
+                        $order_transport->order->addMedia($image)->toMediaCollection('order_shipper_images');
                     }
-                    $order->update([
+                    $order_transport->order->update([
                         'state_document' => OrderDocument::not_approved
                     ]);
                 }
             }
 
 
-            return response()->json($order->load('product_service.product', 'orderItems.product', 'discount', 'customer', 'order_shipper_images'), 200);
+            return response()->json($order_transport->load('order.product_service.product', 'order.orderItems.product', 'order.discount', 'order.customer', 'order.order_shipper_images'), 200);
         } else {
             return response()->json('Không tìm thấy đơn hàng', 404);
         }
@@ -163,16 +180,16 @@ class ApiShipperController extends Controller
     public function deleteImage(Request $request, $id, $media_id)
     {
 
-        $order = Order::find($id);
-        if ($order) {
-            if ($order->state_document == OrderDocument::approved) {
+        $order_transport = OrderTransport::find($id);
+        if ($order_transport) {
+            if ($order_transport->order->state_document == OrderDocument::approved) {
                 return response()->json('Đơn hàng đã duyệt hồ sơ không thể up thêm ', 404);
             } else {
                 $mediaTodelete = Media::where('id', $media_id)->first();
                 if ($mediaTodelete) {
-                    $order->deleteMedia($media_id);
-                    if (count($order->order_shipper_images) == 0) {
-                        $order->update([
+                    $order_transport->order->deleteMedia($media_id);
+                    if (count($order_transport->order->order_shipper_images) == 0) {
+                        $$order_transport->order->update([
                             'state_document' => OrderDocument::not_push
                         ]);
                     }
@@ -182,9 +199,26 @@ class ApiShipperController extends Controller
             }
 
 
-            return response()->json($order->load('product_service.product', 'orderItems.product', 'discount', 'customer', 'order_shipper_images'), 200);
+            return response()->json($order_transport->load('order.product_service.product', 'order.orderItems.product', 'order.discount', 'order.customer', 'order.order_shipper_images'), 200);
         } else {
             return response()->json('Không tìm thấy đơn hàng', 404);
         }
+    }
+
+
+
+    public function orderTransportDetail($id)
+    {
+        $user = Auth::user();
+
+        $order_transport = OrderTransport::with('order', 'order.product_service.product', 'order.orderItems.product', 'order.discount', 'order.customer', 'order.order_shipper_images')->whereHas('order', function ($q) use ($user) {
+            $q->where('shipper_id', $user->id);
+        })->find($id);
+
+
+        if ($order_transport) {
+            return response()->json($order_transport, 200);
+        }
+        return response()->json('Không tìm thấy', 404);
     }
 }

@@ -7,7 +7,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
 import ModelShipping from "./ModelShipping.vue";
-import OrderStatus from "./OrderStatus.vue";
+
 import {
 
     mdiLayersTripleOutline,
@@ -19,20 +19,21 @@ import "vue-search-input/dist/styles.css";
 import { initFlowbite } from "flowbite";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
-import StatusBar from '@/Pages/Modules/CSKH/Status/StatusBar.vue'
+import OrderTransportBar from '@/Pages/Modules/CSKH/Status/OrderTransportBar.vue'
 import { usePopOverStore } from '@/stores/popover.js';
 import Icon from '@/Components/Icon.vue'
 import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
 import { useOrderStore } from '@/stores/order.js'
 import { useCSKHStore } from '@/stores/cskh.js'
 import DialogLoading from '@/Components/CustomerService/Dialog/DialogLoading.vue';
-import Pagination from '@/Pages/Modules/CSKH/Components/Pagination.vue'
+import Pagination from '@/Pages/Modules/CSKH/Components/Pagination.vue';
+import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
 const { openPopover,
     closePopover } = usePopOverStore();
 const { showDetailOrder } = useOrderStore();
 
-const orders = computed(() => {
-    return store.orders;
+const orders_transport = computed(() => {
+    return store.orders_transport;
 });
 const statusGroup = computed(() => {
     return store.statusGroup;
@@ -44,15 +45,15 @@ const isLoading = computed(() => {
     return store.isLoading;
 });
 const store = useCSKHStore();
-const fetchOrders = () => {
+const fetchOrdersTransport = () => {
 
-    store.fetchOrders();
+    store.fetchOrdersTransport();
 }
-const fetchStatusOrders = () => {
-    store.fetchStatusOrders();
+const fetchStatusOrdersTransport = () => {
+    store.fetchStatusOrdersTransport();
 }
-fetchStatusOrders();
-fetchOrders();
+fetchStatusOrdersTransport();
+fetchOrdersTransport();
 const filter = reactive({
     customer: null,
     name: null,
@@ -64,7 +65,7 @@ const filter = reactive({
     type: null,
     per_page: 10,
     selectedDate: null,
-    status: null,
+    state: null,
     market: null,
     page: null
 });
@@ -80,12 +81,12 @@ const form = useForm({
 initFlowbite();
 
 const searchCustomer = () => {
-    store.fetchOrders(filter)
+    store.fetchOrdersTransport(filter)
 };
 
 
 const search = () => {
-    store.fetchOrders(filter)
+    store.fetchOrdersTransport(filter)
 };
 
 
@@ -98,29 +99,29 @@ const changeDate = () => {
 
 
 const changeStatus = (status) => {
-    filter.status = status
-    store.fetchOrders(filter)
+    filter.state = status
+    store.fetchOrdersTransport(filter)
 }
 watch(() => [filter.per_page], (newVal) => {
-    store.fetchOrders(filter)
+    store.fetchOrdersTransport(filter)
 });
 watch(() => [filter.type], (newVal) => {
-    store.fetchOrders(filter)
+    store.fetchOrdersTransport(filter)
 });
 
 watch(() => [form.selectedDate], (newVal) => {
     // console.log(newVal[0][0])
     filter.fromDate = newVal[0][0]
     filter.toDate = newVal[0][1]
-    store.fetchOrders(filter)
+    store.fetchOrdersTransport(filter)
 });
 watch(() => [filter.market], (newVal) => {
-    store.fetchOrders(filter)
+    store.fetchOrdersTransport(filter)
 });
 
 const changePage = (page) => {
     filter.page = page;
-    store.fetchOrders(filter)
+    store.fetchOrdersTransport(filter)
 }
 
 </script>
@@ -193,8 +194,8 @@ const changePage = (page) => {
                     </div>
                 </div>
 
-                <StatusBar v-if="statusGroup" :statusGroup="statusGroup" :count_orders="count_orders"
-                    :status="filter.status" @change-status="changeStatus"></StatusBar>
+                <OrderTransportBar v-if="statusGroup" :statusGroup="statusGroup" :count_orders="count_orders"
+                    :status="filter.state" @change-status="changeStatus"></OrderTransportBar>
 
 
                 <div class="w-full mt-2">
@@ -214,7 +215,7 @@ const changePage = (page) => {
                                         <th scope="col" class="px-3 py-2 text-left">Loại hàng</th>
                                         <th scope="col" class="px-3 py-2 text-left">SL</th>
                                         <th scope="col" class="px-3 py-2 text-left">DVT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Trạng thái</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Tình trạng</th>
 
                                         <th scope="col" class="px-3 py-2 text-left">Shipper</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hẹn giao</th>
@@ -225,26 +226,26 @@ const changePage = (page) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(order, index) in orders?.data" :key="index">
+                                    <tr v-for="(order_transport, index) in orders_transport?.data" :key="index">
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ index + 1 }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.product_service?.order_package?.idPackage }}
+                                            {{ order_transport.order?.product_service?.order_package?.idPackage }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.product_service?.product?.name }}
+                                            {{ order_transport.order?.product_service?.product?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.customer?.name }}
+                                            {{ order_transport.order?.customer?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="flex items-center">
                                                 {{
                                                     hasAnyPermission(["super-admin"])
-                                                    ? order?.customer?.phone_number
-                                                    : hidePhoneNumber(order?.customer?.phone_number)
+                                                    ? order_transport.order?.customer?.phone_number
+                                                    : hidePhoneNumber(order_transport.order?.customer?.phone_number)
                                                 }}
                                                 <!-- mdiPhone  -->
                                                 <BaseIcon :path="mdiPhone"
@@ -254,12 +255,12 @@ const changePage = (page) => {
                                             </p>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order.order_items" :key="index2">
+                                            <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
                                                 {{ item?.product?.name }}
                                             </p>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order.order_items" :key="index2">
+                                            <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
                                                 {{ item?.quantity }}
                                             </p>
                                         </td>
@@ -267,33 +268,34 @@ const changePage = (page) => {
                                             hộp
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <OrderStatus :order="order" />
+                                            <OrderTransportStatus :order_transport="order_transport" />
                                         </td>
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.shipper ? order?.shipper?.name : "NA" }}
+                                            {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
+                                            }}
                                         </td>
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{
-                                                order?.delivery_appointment
-                                                ? formatTimeDayMonthyear(order?.delivery_appointment)
+                                                order_transport.order?.delivery_appointment
+                                                ? formatTimeDayMonthyear(order_transport.order?.delivery_appointment)
                                                 : "Chưa cập nhật"
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @mouseover="openPopover(order)" @mouseleave="closePopover">
+                                            <button @mouseover="openPopover(order_transport)" @mouseleave="closePopover">
                                                 xem
                                             </button>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order.saler?.name }}
+                                            {{ order_transport.order.saler?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.order_number }}
+                                            {{ order_transport.order?.order_number }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.order_transport_number }}
+                                            {{ order_transport?.order_transport_number }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -315,7 +317,7 @@ const changePage = (page) => {
                     </select>
                 </div>
 
-                <Pagination v-if="orders" :data="orders.meta" @change-page="changePage" />
+                <Pagination v-if="orders_transport" :data="orders_transport" @change-page="changePage" />
             </div>
         </SectionMain>
     </div>

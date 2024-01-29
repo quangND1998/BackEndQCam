@@ -17,8 +17,8 @@ import {
     mdiPhone
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
+import OrderStatus from "@/Pages/Modules/CSKH/Status/OrderStatus.vue";
 
-import OrderStatus from "./OrderStatus.vue";
 import { usePopOverStore } from '@/stores/popover.js'
 import OrdersTable from '@/Pages/Modules/CSKH/OrdersTable.vue'
 const props = defineProps({
@@ -27,7 +27,6 @@ const props = defineProps({
     status: String,
     from: String,
     to: String,
-    statusGroup: Array,
     shippers: Array
 });
 const { openPopover,
@@ -291,7 +290,7 @@ const selectAll = computed({
                                         <th scope="col" class="px-3 py-2 text-left">Hành động</th>
                                         <th scope="col" class="px-3 py-2 text-left">Shipper</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hẹn giao</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
+                                        <!-- <th scope="col" class="px-3 py-2 text-left">Chi tiết</th> -->
                                         <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
 
@@ -348,7 +347,7 @@ const selectAll = computed({
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <BaseIcon :path="mdiArrowLeftBoldCircleOutline" @click="pushOrder(order)"
-                                                v-if="order.state == 0"
+                                                v-if="order.status == 'create' || order.status == 'pending'"
                                                 class="rotate-90 text-gray-400 rounded-lg mr-2 text-[#1D75FA] hover:text-blue-700"
                                                 v-tooltip.top="'Đẩy đơn'" size="22">
                                             </BaseIcon>
@@ -370,11 +369,11 @@ const selectAll = computed({
                                             {{ order?.delivery_appointment ?
                                                 formatTimeDayMonthyear(order?.delivery_appointment) : "Chưa cập nhật" }}
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                        <!-- <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <button @mouseover="openPopover(order)" @mouseleave="closePopover">
                                                 xem
                                             </button>
-                                        </td>
+                                        </td> -->
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order.saler?.name }}
                                         </td>

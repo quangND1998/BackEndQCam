@@ -11,37 +11,17 @@ import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
 import ModelShipping from "./ModelShipping.vue";
-// import ModalDecline from "./ModalDecline.vue";
-// import ModelRefund from "./ModelRefund.vue";
-// import ModalShipping from "./ModalShipping.vue";
 import {
-    mdiEye,
-    mdiAccountLockOpen,
-    mdiPlus,
-    mdiFilter,
-    mdiMagnify,
-    mdiDotsVertical,
-    mdiTrashCanOutline,
-    mdiCodeBlockBrackets,
-    mdiPencil,
-    mdiLandFields,
-    mdiSquareEditOutline,
-    mdiArrowLeftBoldCircleOutline,
-    mdiLayersTripleOutline,
+
     mdiPhone,
     mdiPackageVariantClosed,
 } from "@mdi/js";
-import BaseButton from "@/Components/BaseButton.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
+
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 
 import Dropdown from "primevue/dropdown";
 import BaseIcon from "@/Components/BaseIcon.vue";
-import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
-import MazInputPrice from "maz-ui/components/MazInputPrice";
 import { initFlowbite } from "flowbite";
 import OrderHome from "@/Pages/Test/OrderHome.vue";
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue";
@@ -245,6 +225,7 @@ const selectAll = computed({
 <template>
     <LayoutAuthenticated>
         <ModelShipping></ModelShipping>
+
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">

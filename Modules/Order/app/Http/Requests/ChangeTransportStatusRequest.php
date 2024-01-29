@@ -2,7 +2,7 @@
 
 namespace Modules\Order\app\Http\Requests;
 
-use App\Enums\OrderTransportStatus;
+use App\Enums\OrderTransportState;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ChangeTransportStatusRequest extends FormRequest

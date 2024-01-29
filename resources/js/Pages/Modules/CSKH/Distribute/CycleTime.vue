@@ -2,7 +2,7 @@
 import { computed, inject, ref } from 'vue';
 import moment from 'moment';
 
-import { SCHEDULE_VISIT_STATE, CYCLE_TIME } from '@/Components/CustomerService/stuffs/constants';
+import { SCHEDULE_GIFT_DELIVERY_STATE, CYCLE_TIME } from '@/Components/CustomerService/stuffs/constantsGift';
 import { arrow, useFloating, autoUpdate } from '@floating-ui/vue';
 
 const props = defineProps({
@@ -46,12 +46,13 @@ const date = computed(() => {
   return nextDate.weekday() !== 7 ? nextDate : nextDate.subtract(1, 'day');
 });
 const cellStyle = computed(() => {
-  if (props.data && props.data?.status === 'complete') return 'bg-emerald-600 text-white';
+  if (props.data && props.data?.status === 'complete') return 'bg-[#4F8D06] text-white';
   if (!props.data && props.showEmpty) return 'bg-zinc-700 text-zinc-700 select-none';
-  if (props.data && props.data?.state === SCHEDULE_VISIT_STATE.COMPLETE) return 'bg-emerald-600 text-white';
-  if (props.data && props.data?.state === SCHEDULE_VISIT_STATE.CANCEL) return 'bg-red-600 text-white';
-  if (props.data && props.data?.state === SCHEDULE_VISIT_STATE.PENDING && date.value.diff(new Date(), 'days') < 0) return 'bg-red-600 text-white';
-  if (props.data && date.value.diff(new Date(), 'days') >= 0) return 'bg-yellow-600 text-white';
+  if (props.data && props.data?.status === SCHEDULE_GIFT_DELIVERY_STATE.PROCESSING) return 'bg-[#FF0303] text-white';
+  if (props.data && props.data?.status === SCHEDULE_GIFT_DELIVERY_STATE.COMPLETE) return 'bg-[#4F8D06] text-white';
+  if (props.data && props.data?.status === SCHEDULE_GIFT_DELIVERY_STATE.CANCEL) return 'bg-red-600 text-white';
+//   if (0 < date.value.diff(new Date(), 'days') < 10) return 'bg-[#FF0303] text-white';
+  if (props.data && date.value.diff(new Date(), 'days') >= 0) return 'bg-[#FF6100] text-white';
   if (date.value.diff(new Date(), 'days') < 0 && !props.allowEmpty) return 'bg-red-600 text-white';
   if (!props.data) return 'bg-zinc-700 text-white';
 });

@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Contracts\OrderContract;
-use App\Enums\OrderTransportStatus;
+use App\Enums\OrderTransportState;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Modules\Landingpage\app\Models\Contact;
@@ -77,8 +77,8 @@ class HandleInertiaRequests extends Middleware
             },
             'company_infor' => Contact::first(),
             'author' => 'Quang Nguyens',
-            'order_status' => $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport'),
-            'count_orders' => Order::where('state', true)->count()
+            // 'order_status' => $this->orderRepository->groupByOrderByStatus(OrderTransportState::cases(), 'status_transport'),
+            // 'count_orders' => Order::where('state', true)->count()
         ];
     }
 }

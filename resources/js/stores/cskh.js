@@ -5,32 +5,30 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 export const useCSKHStore = defineStore("cskh", {
     state: () => ({
-        orders: null,
+        orders_transport: null,
         per_page: 10,
         statusGroup: null,
         count_orders: null,
         isLoading: false
     }),
     getters: {
-        getOrders(state) {
-            return state.users
-        }
+      
     },
     actions: {
-        async fetchOrders(params) {
+        async fetchOrdersTransport(params) {
             this.isLoading = true
             try {
-                const data = await axios.get('/admin/cskh/fetchOrders', { params })
-                this.orders = data.data
+                const data = await axios.get('/admin/cskh/fetchOrdersTransport', { params })
+                this.orders_transport = data.data
                 this.isLoading = false
             } catch (error) {
                 this.isLoading = false
                 console.log(error)
             }
         },
-        async fetchStatusOrders() {
+        async fetchStatusOrdersTransport() {
             try {
-                const data = await axios.get('/admin/cskh/fetchStatusOrders')
+                const data = await axios.get('/admin/cskh/fetchOrdersTransportGroup')
                 this.statusGroup = data.data.statusGroup
                 this.count_orders = data.data.count_orders
             } catch (error) {

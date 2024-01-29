@@ -11,6 +11,7 @@ use Modules\Order\Repositories\ShipperRepository;
 use App\Contracts\OrderContract;
 use App\Enums\OrderDocument;
 use App\Enums\OrderStatusEnum;
+use App\Enums\OrderTransportState;
 use App\Enums\OrderTransportStatus;
 use App\Enums\ShipperStatusEnum;
 use App\Http\Resources\OrderResource;
@@ -19,19 +20,22 @@ use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Modules\Order\app\Http\Requests\ChangeShipperStatusRequest;
 use Modules\Order\app\Models\Order;
+use Modules\Order\app\Models\OrderTransport;
 use Modules\Order\app\Models\RefundProducts;
 use Modules\Tree\app\Models\ProductRetail;
+use Modules\Order\Repositories\OrderTransportRepository;
 
 class CSKHOrderController extends Controller
 {
-    protected $orderRepository, $shipperRepository;
+    protected $orderRepository, $shipperRepository, $orderTransportRepository;
 
 
-    public function __construct(OrderContract $orderRepository, ShipperRepository $shipperRepository)
+    public function __construct(OrderContract $orderRepository, ShipperRepository $shipperRepository, OrderTransportRepository $orderTransportRepository)
     {
 
         $this->orderRepository = $orderRepository;
         $this->shipperRepository = $shipperRepository;
+        $this->orderTransportRepository = $orderTransportRepository;
         // $this->middleware('permission:users-manager', ['only' => ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline']]);
         $this->middleware('permission:order-pending|order-packing|order-shipping|order-completed|order-refund|order-decline', ['only' => ['index']]);
 
@@ -48,7 +52,7 @@ class CSKHOrderController extends Controller
 
         $this->middleware('permission:order-packing', ['only' => ['packedOrder']]);
 
-        $this->middleware('role:leader-shipper', ['only' => ['shipperOwner']]);
+        $this->middleware('permission:add-order-shipper', ['only' => ['shipperOwner']]);
     }
 
     public function all(Request $request)
@@ -57,14 +61,18 @@ class CSKHOrderController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
+
+
         $orders = OrderResource::collection($this->orderRepository->getAllOrderGift($request));
 
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
+        // $order_transports =   $this->orderTransportRepository->getOrdersTransport($request);
+
+        // $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'transport_state');
         $shippers = $this->shipperRepository->getShipper();
 
         // return $orders;
         // dd($statusGroup);
-        return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+        return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to', 'shippers'));
     }
     public function index(Request $request)
     {
@@ -73,42 +81,38 @@ class CSKHOrderController extends Controller
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
         $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportState::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
 
-        // return $orders;
+
         // dd($statusGroup);
         return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
     public function pending(Request $request)
     {
-        $count_orders = Order::where('state', true)->count();
+        $count_orders = OrderTransport::count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = OrderStatusEnum::pending;
-        $orders =  OrderResource::collection($this->orderRepository->getOrderGift($request, $status));
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderStatusEnum::cases(), 'status');
+        $status = OrderTransportState::pending;
+        $order_transports = $this->orderTransportRepository->getOrdersTransportbyState($request, $status);
+        $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'state');
 
         $shippers = $this->shipperRepository->getShipper();
-
-        // dd($statusGroup);
-        return Inertia::render('Modules/CSKH/Pending', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders'));
+        return Inertia::render('Modules/CSKH/Pending', compact('order_transports', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders'));
     }
 
     public function packing(Request $request)
     {
-        $count_orders = Order::where('state', true)->count();
+        $count_orders = OrderTransport::count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = OrderStatusEnum::packing;
-        $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderStatusEnum::cases(), 'status');
+        $status = OrderTransportState::packing;
+        $order_transports = $this->orderTransportRepository->getOrdersTransportbyState($request, $status);
+        $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'state');
+
         $shippers = $this->shipperRepository->getShipper();
-        return Inertia::render(
-            'Modules/CSKH/Packed',
-            compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
-        );
+        return Inertia::render('Modules/CSKH/Packed', compact('order_transports', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders'));
     }
 
 
@@ -117,9 +121,9 @@ class CSKHOrderController extends Controller
         $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = OrderTransportStatus::not_shipper_receive;
+        $status = OrderTransportState::not_shipper_receive;
         $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportStatus::cases(), 'status_transport');
+        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportState::cases(), 'status_transport');
         $shippers = $this->shipperRepository->getShipper();
         return Inertia::render(
             'Modules/CSKH/NotShipperReceive',
@@ -132,13 +136,13 @@ class CSKHOrderController extends Controller
         $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = OrderStatusEnum::shipping;
-        $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderStatusEnum::cases(), 'status');
+        $status = OrderTransportState::shipping;
+        $order_transports = $this->orderTransportRepository->getOrdersTransportbyState($request, $status);
+        $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'state');
         $shippers = $this->shipperRepository->getShipper();
         return Inertia::render(
             'Modules/CSKH/Shipping',
-            compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+            compact('order_transports', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
         );
     }
 
@@ -148,13 +152,13 @@ class CSKHOrderController extends Controller
         $count_orders = Order::where('state', true)->count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = OrderStatusEnum::completed;
-        $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderStatusEnum::cases(), 'status');
+        $status = OrderTransportState::delivered;
+        $order_transports = $this->orderTransportRepository->getOrdersTransportbyState($request, $status);
+        $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'state');
         $shippers = $this->shipperRepository->getShipper();
         return Inertia::render(
             'Modules/CSKH/Delivered',
-            compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+            compact('order_transports', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
         );
     }
 
@@ -215,26 +219,32 @@ class CSKHOrderController extends Controller
 
         if ($request->ids && count($request->ids) > 0) {
 
-            $orders = Order::whereIn('id', $request->ids)->whereNull('order_transport_number')->get();
+            $orders = Order::whereIn('id', $request->ids)->get();
 
             foreach ($orders as $key => $order) {
-                $order->state = true;
-                $order->save();
 
-                if ($order->product_service) {
-                    $order_package = $order->product_service->order_package;
 
-                    $total_orders_not_null = Order::where('product_service_owner_id', $order->product_service_owner_id)->whereNotNull('order_transport_number')->count();
-                    $total_order = Order::where('product_service_owner_id', $order->product_service_owner_id)->count();
-                    if ($order_package) {
-                        $order->order_transport_number = $order_package->order_number . "-" . ($total_orders_not_null + 1) . "-" . $order_package->market;
+                if ($order->status == OrderStatusEnum::pending->value || $order->status == OrderStatusEnum::create->value) {
+
+                    if ($order->product_service) {
+
+                        $order->status = OrderStatusEnum::processing;
                         $order->save();
+                        $order_package = $order->product_service->order_package;
+
+
+                        $order_transport = OrderTransport::create([
+                            'order_id' => $order->id,
+                            'state' => OrderTransportState::pending,
+                            'status' => OrderTransportStatus::wait_package,
+                            'delivery_appointment' => $order->delivery_appointment
+                        ]);
+                        $number = OrderTransport::where('order_id', $order->id)->count();
+
+                        $order_transport->order_transport_number = $order_package->idPackage . '-' . ($number) . $order->index . '-' . $order_package->market;
+                        $order_transport->save();
                     }
                 }
-
-
-                // $this->orderRepository->changeTransportStatus($order, OrderTransportStatus::packing);
-
             }
             return back()->with('success', "Đã đẩy đơn thành công");
         }
@@ -246,12 +256,12 @@ class CSKHOrderController extends Controller
     {
 
         if ($request->ids && count($request->ids) > 0) {
-            $orders = Order::find($request->ids);
-            foreach ($orders as $order) {
-                $order->update([
-                    'status' => 'packing'
+            $order_transports = OrderTransport::find($request->ids);
+            foreach ($order_transports as $order_transport) {
+                $order_transport->update([
+                    'state' => OrderTransportState::packing,
+                    'status' => OrderTransportStatus::not_shipper_owner
                 ]);
-                $this->orderRepository->changeTransportStatus($order, OrderTransportStatus::packed);
             }
             return back()->with('success', "Đã đóng gói thành công");
         }
@@ -266,13 +276,18 @@ class CSKHOrderController extends Controller
 
         if ($shipper) {
             if ($request->ids && count($request->ids) > 0) {
-                $orders = Order::find($request->ids);
+                $order_transports = OrderTransport::find($request->ids);
 
-                foreach ($orders as $order) {
+                foreach ($order_transports as $order_transport) {
+                    $order_transport->order->update([
+                        'shipper_id' => $shipper->id
+                    ]);
+                    $order_transport->update([
 
-                    $this->orderRepository->changeShipperStatus($order, $shipper, ShipperStatusEnum::pending);
+                        'status' => OrderTransportStatus::not_shipping
+                    ]);
                 }
-                return back()->with('success', "Đã giao shipper thành công công");
+                return back()->with('success', "Đã giao shipper thành công ");
             }
             return back()->with('warning', "Hãy chọn select box");
         }
@@ -297,8 +312,8 @@ class CSKHOrderController extends Controller
 
         $order->update([
             'status' => OrderStatusEnum::decline,
-            'status_transport' => OrderTransportStatus::decline,
-            'shipper_status' => OrderTransportStatus::decline,
+            'status_transport' => OrderTransportState::decline,
+            'shipper_status' => OrderTransportState::decline,
             'reason' => $request->reason,
             'delivery_appointment' => $request->delivery_appointment
         ]);
@@ -319,7 +334,7 @@ class CSKHOrderController extends Controller
 
         $order->update([
             'status' => OrderStatusEnum::refunding,
-            'shipper_status' => OrderTransportStatus::refunding,
+            'shipper_status' => OrderTransportState::refunding,
             'reason' => $request->reason,
 
         ]);
@@ -343,8 +358,8 @@ class CSKHOrderController extends Controller
             foreach ($orders as $order) {
                 $order->update([
                     'status' => OrderStatusEnum::refund,
-                    'status_transport' => OrderTransportStatus::refund,
-                    'shipper_status' => OrderTransportStatus::refund,
+                    'status_transport' => OrderTransportState::refund,
+                    'shipper_status' => OrderTransportState::refund,
 
                 ]);
                 if ($request->check) {
@@ -377,11 +392,14 @@ class CSKHOrderController extends Controller
     public function confirmStateDocument(Request $request)
     {
         if ($request->ids && count($request->ids) > 0) {
-            $orders = Order::find($request->ids);
-            foreach ($orders as $order) {
-                $order->update([
+            $order_transports = OrderTransport::find($request->ids);
+            foreach ($order_transports as $order_transport) {
+                $order_transport->order->update([
                     'state_document' => OrderDocument::approved,
 
+                ]);
+                $order_transport->order->update([
+                    'status' => OrderStatusEnum::completed
                 ]);
             }
             return back()->with('success', "Đã duyệt hồ sơ thành công");
@@ -389,7 +407,7 @@ class CSKHOrderController extends Controller
         return back()->with('warning', "Hãy chọn select box");
     }
 
-    public function updloadImages(Request $request, Order $order)
+    public function updloadImages(Request $request, OrderTransport $order_transport)
     {
         $validator = Validator::make($request->all(), [
             'images' => 'nullable',
@@ -404,9 +422,9 @@ class CSKHOrderController extends Controller
 
         if ($request->images) {
             foreach ($request->images as $image) {
-                $order->addMedia($image)->toMediaCollection('order_shipper_images');
+                $order_transport->order->addMedia($image)->toMediaCollection('order_shipper_images');
             }
-            $order->update([
+            $order_transport->order->update([
                 'state_document' => OrderDocument::not_approved
             ]);
         }

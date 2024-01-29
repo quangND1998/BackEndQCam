@@ -39,8 +39,8 @@ const cycleYear = computed(() => getCycleYear(
             <CycleTime :data="order" :position="orderIndex" :packageIndex="index"  :startDate="orderPackage.product_service_owner.time_approve" :allowPopover="true" />
         </div>
         <div v-if="lifeTime === 1 || cycleYear === lifeTime" class="bg-zinc-700 col-span-2" />
-        <div v-else class="col-span-2">
-            <CycleTime :data="undefined" :position="12" :packageIndex="index" :startDate="orderPackage.product_service_owner.time_approve" :allowPopover="true" class="indent-2" />
+        <div v-else >
+            <CycleTime :data="undefined" :position="12" :packageIndex="index" :startDate="orderPackage.product_service_owner.time_approve" :allowPopover="true" class="text-center indent-2" />
         </div>
     </div>
 </template>

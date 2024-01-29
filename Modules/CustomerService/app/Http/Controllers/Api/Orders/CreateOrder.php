@@ -63,7 +63,12 @@ class CreateOrder extends Controller
                 'delivery_no' => $deliveryNo,
                 'delivery_appointment' => $request->delivery_appointment,
             ]);
-
+            $product_service_owner = ProductServiceOwner::find($request->productServiceOwnerId);
+            if ($product_service_owner) {
+                $count = $product_service_owner->orders()->count();
+                $order->index =  $count;
+                $order->save();
+            }
 
             $orderItems = [];
             foreach ($data['map'] as $productId => $quantity) {

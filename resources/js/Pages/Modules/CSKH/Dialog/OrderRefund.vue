@@ -74,73 +74,43 @@
                 </div>
                 <div class="modal-body  mx-1 mb-6">
                     <div class="flex items-center ">
-
-
                         <div class="relative overflow-x-auto">
+                            <p class="text-[#000000] text-base font-semibold mr-4 mb-3">Chọn sản phẩm hoàn
+                            </p>
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead
                                     class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
-                                            Product name
+                                            Sản phẩm
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Color
+                                            ĐVT
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Category
+                                            SL Hoàn
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Price
-                                        </th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+
+                                    <tr v-for="(item, index) in order?.order_items" :key="index"
+                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row"
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            Apple MacBook Pro 17"
+                                            {{ item.product.name }}
                                         </th>
                                         <td class="px-6 py-4">
-                                            Silver
+                                            {{ item.product.unit }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            Laptop
+                                            <MazInputNumber placeholder="Enter number" :min="1" :max="10000" size="md"
+                                                color="secondary" style="width: 200px;" />
                                         </td>
-                                        <td class="px-6 py-4">
-                                            $2999
-                                        </td>
+
                                     </tr>
-                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                        <th scope="row"
-                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            Microsoft Surface Pro
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            White
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Laptop PC
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            $1999
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white dark:bg-gray-800">
-                                        <th scope="row"
-                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            Magic Mouse 2
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Black
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Accessories
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            $99
-                                        </td>
-                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -193,6 +163,7 @@ import { storeToRefs } from 'pinia'
 import { useForm, router } from "@inertiajs/vue3";
 import { useOrderStore } from '@/stores/order.js'
 import OrderStatus from '@/Pages/Modules/CSKH/OrderStatus.vue'
+import MazInputNumber from 'maz-ui/components/MazInputNumber'
 const swal = inject("$swal");
 const props = defineProps({
     ids: Array
@@ -202,9 +173,9 @@ const { order
 const { closeModal } = useOrderStore()
 const form = useForm({
     check: false,
-
+    products: {}
 })
-
+const selectedProducts = ref({});
 onMounted(() => {
 
     emitter.on('OrderRefund', (order) => {
@@ -280,4 +251,5 @@ onUnmounted(() => {
 
 .active:before {
     background-color: #FF6100;
-}</style>
+}
+</style>
