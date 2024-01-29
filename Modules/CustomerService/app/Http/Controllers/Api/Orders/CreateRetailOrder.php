@@ -32,7 +32,10 @@ class CreateRetailOrder extends Controller
             'delivery_appointment' => 'required|date|after:today',
         ]);
 
-        $orderPackage = OrderPackage::where('idPackage', $request->otherPayment['order_code'])->first();
+        $orderPackage = OrderPackage::where('idPackage', $request
+            ->with('product_service_owner')
+            ->otherPayment['order_code'])
+            ->first();
         abort_if(!$orderPackage, 442, 'Mã hợp đồng không tồn tại');
         $data = $this->validateProductCondition((array) $request->products);
         $products = $data['products'];
@@ -46,7 +49,8 @@ class CreateRetailOrder extends Controller
             DB::beginTransaction();
             $order = Order::create([
                 'order_number' => 'ORD-' . strtoupper(uniqid()),
-                'status' => 'pending',
+                'status' => 'create',
+                'user_id' => $orderPackage->user_id,
                 'item_count' => Collection::make($request->products)->sum('quantity'),
                 'payment_status' => 0,
                 'grand_total' => $grandTotal,

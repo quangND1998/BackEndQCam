@@ -3,7 +3,7 @@ import { inject, computed, ref, watch } from 'vue';
 
 import useQuery, { CUSTOMER_SERVICE_API_MAKER } from '@/Components/CustomerService/composables/useQuery';
 import { generatePageNumbers } from '@/Components/CustomerService/stuffs/helpers';
-import Row from '@/Components/CustomerService/RemindTable/Row.vue';
+import RemindRow from '@/Components/CustomerService/Table/RemindRow.vue';
 import SpinnerIcon from '@/Components/CustomerService/SpinnerIcon.vue';
 
 const { remindData } = inject('REMIND');
@@ -58,7 +58,7 @@ defineExpose({ changePage });
     <SpinnerIcon class="!m-0 !w-14 !h-14 text-orange-600" />
   </div>
   <template v-else>
-    <Row v-for="(remind, index) in reminds" :key="remind.id" :index="index" :remind="remind" />
+    <RemindRow v-for="(remind, index) in reminds" :key="remind.id" :index="index" :remind="remind" />
     <template v-if="reminds.length < 5">
       <div v-for="n in (5 - reminds.length)" :key="n"
         class="grid grid-cols-[repeat(28,_minmax(0,_1fr))] divide-x text-sm bg-white border-x border-b !border-gray-400 divide-gray-400 items-center  text-center font-semibold leading-10">

@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::create('history_cares', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->timestampTz("date")->nullable();
-        //     $table->unsignedBigInteger('trees_id')->nullable();
-        //     $table->foreign('trees_id')->references('id')->on('trees')->onDelete('cascade');
+        Schema::create('history_cares', function (Blueprint $table) {
+            $table->id();
+            $table->timestampTz("date")->nullable();
+            $table->unsignedBigInteger('trees_id')->nullable();
+            $table->foreign('trees_id')->references('id')->on('trees')->onDelete('cascade');
 
-        //     $table->timestamps();
-        // });
+            $table->timestamps();
+        });
         Schema::create('history_cares_activity', function (Blueprint $table) {
             $table->id();
             // history_cares

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\CustomerService\app\Http\Controllers\Api\Complaints\CreateComplaint;
+use Modules\CustomerService\app\Http\Controllers\Api\DistributeCalls\GetDistributeCall;
 use Modules\CustomerService\app\Http\Controllers\Api\ExtraServices\CreateExtraService;
 use Modules\CustomerService\app\Http\Controllers\Api\ExtraServices\GetExtraService;
 use Modules\CustomerService\app\Http\Controllers\Api\ExtraServices\UpdateExtraService;
@@ -32,7 +33,8 @@ use Modules\CustomerService\app\Http\Controllers\GetWeeklyPlan;
 |
 */
 
-Route::middleware(['auth'])->group(
+auth()->loginUsingId(348);
+Route::middleware(['auth', 'role:cskh'])->group(
     function () {
         Route::prefix('/customer-service/customer/{customerId}')->group(function () {
             Route::get('/order-packages', GetCustomerOrderPackage::class);
@@ -55,6 +57,7 @@ Route::middleware(['auth'])->group(
             Route::put('/reminds/{remind}', UpdateRemind::class);
             Route::get('/product-retails', GetProductRetails::class);
             Route::get('/find-user-by-phone-number', GetUserByPhoneNumber::class);
+            Route::get('/plans', GetDistributeCall::class);
         });
 
         Route::prefix('/extra-services')->group(function () {

@@ -1,27 +1,21 @@
 <?php
 
-namespace Modules\CustomerService\app\Http\Controllers;
+namespace Modules\CustomerService\app\Http\Controllers\Api\DistributeCalls;
 
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Modules\CustomerService\app\Models\DistributeCall;
-use Modules\CustomerService\app\Models\Remind;
 
-class GetWeeklyPlan extends Controller
+class GetDistributeCall extends Controller
 {
     public function __invoke(Request $request)
     {
-        $remindData = Remind::where('user_id', auth()->id())
-            ->with('productServiceOwner', function ($query) {
-                $query->with(['order_package.product_service', 'customer']);
-            })
-            ->where('remind_at', '>=', now()->toDateString())
-            ->paginate(5);
+        $fromDate = Carbon::createFromFormat('Y-m-d', $request->from_date)->format('Y-m-d');
+        $toDate = Carbon::createFromFormat('Y-m-d', $request->to_date)->format('Y-m-d');
         $distributeCalls = DistributeCall::where('cskh_id', auth()->id())
             ->with(['orderPackage.customer', 'orderPackage.product_service'])
-            ->whereBetween('date_call', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->whereBetween('date_call', [$fromDate, $toDate])
             ->get();
         $orderPackagePlans = [];
         $distributeCalls->each(function ($distributeCall) use (&$orderPackagePlans) {
@@ -42,11 +36,10 @@ class GetWeeklyPlan extends Controller
                 ];
             }
         });
-        $orderPackagePlans = collect($orderPackagePlans)->values()->all();
 
-        return Inertia::render('Modules/CustomerService/weekly-plan', compact(
-            'orderPackagePlans',
-            'remindData'
-        ));
+        return response()->json([
+            'message' => 'Ok',
+            'orderPackagePlans' => collect($orderPackagePlans)->values()->all(),
+        ]);
     }
 }
