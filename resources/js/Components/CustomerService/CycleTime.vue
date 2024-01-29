@@ -74,12 +74,18 @@ const onUpdateOrder = () => {
   if (!props.data) return;
   onOpenEditOrderDialog(props.data, props.position, props.packageIndex);
 }
+const isFirstOrderDelivery = computed(() => {
+  return props.allowPopover && props.position === 0;
+})
 </script>
 
 <template>
   <div @mouseover="openPopover" @mouseleave="closePopover">
-    <p ref="reference" class="text-xs leading-5 cursor-pointer" :class="cellStyle">{{ displayText }}</p>
-
+    <p ref="reference" class="text-xs leading-5 cursor-pointer" :class="cellStyle">
+      {{ isFirstOrderDelivery
+        ? props.data ? moment(data.date_time, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY') : 'dd/mm/yy'
+        : displayText }}
+    </p>
     <div v-if="data && data.order_number && allowPopover" v-show="showPopover" ref="floating" :style="floatingStyles"
       class="bg-white rounded-lg border !border-gray-400 py-3 z-50">
       <div ref="floatingArrow" class="triangle" :style="{

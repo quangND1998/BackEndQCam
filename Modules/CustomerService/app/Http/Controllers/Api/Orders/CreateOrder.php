@@ -44,7 +44,7 @@ class CreateOrder extends Controller
             $order = Order::create([
                 'order_number' => 'ORD-' . strtoupper(uniqid()),
                 'user_id' => $customer->id,
-                'status' => 'pending',
+                'status' => 'create',
                 'item_count' => Collection::make($request->products)->sum('quantity'),
                 'payment_status' => 0,
                 'grand_total' => 0,

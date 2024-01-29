@@ -86,6 +86,12 @@ export const CUSTOMER_SERVICE_API_MAKER = {
       method: 'get',
     }
   },
+  GET_PLAN: () => {
+    return {
+      url: '/customer-service/plans?from_date=$fromDate&to_date=$toDate',
+      method: 'get',
+    }
+  }
 }
 
 const updateUrl = (url, data) => {
