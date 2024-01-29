@@ -39,12 +39,11 @@ const { floatingStyles, middlewareData } = useFloating(reference, floating, {
 });
 
 const date = computed(() => {
-  if (props.data && props.data.state) {
+  if (props.data && props.data.booKing_type) {
     return moment(props.data.date_time, 'YYYY-MM-DD HH:mm:ss');
   }
 
   const nextDate = moment(props.startDate, 'YYYY-MM-DD HH:mm:ss').add(((props.position + 1) * CYCLE_TIME), 'days');
-
   return nextDate.weekday() !== 7 ? nextDate : nextDate.subtract(1, 'day');
 });
 const cellStyle = computed(() => {
@@ -83,7 +82,7 @@ const isFirstOrderDelivery = computed(() => {
   <div @mouseover="openPopover" @mouseleave="closePopover">
     <p ref="reference" class="text-xs leading-5 cursor-pointer" :class="cellStyle">
       {{ isFirstOrderDelivery
-        ? props.data ? moment(data.date_time, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY') : 'dd/mm/yy'
+        ? 'dd/mm/yy'
         : displayText }}
     </p>
     <div v-if="data && data.order_number && allowPopover" v-show="showPopover" ref="floating" :style="floatingStyles"

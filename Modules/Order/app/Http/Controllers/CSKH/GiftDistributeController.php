@@ -21,7 +21,7 @@ class GiftDistributeController extends Controller
     public function index(Request $request)
     {
         $orderPackages = $this->getOrderPackage($request);
-        //  return $orderPackages;
+        // return $orderPackages;
 
         $this->distributeDate($orderPackages);
 
@@ -40,7 +40,16 @@ class GiftDistributeController extends Controller
 
     }
     public function getOrderPackage($request){
-        $results = OrderPackage::with(['customer','product_service','distributeDate','product_service_owner.product'])->role()->whereHas(
+        $results = OrderPackage::with(['customer','product_service','distributeDate'])
+        ->with('product_service_owner', function ($query) {
+            $query->with('orders', function ($orderQuery) {
+                $orderQuery->orderBy('receive_at', 'desc')
+                    ->where('type', 'gift_delivery')
+                    ->whereNotIn('status', ['decline', 'refund']);
+            })->with('product');
+        })
+        ->role()
+        ->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('phone_number','LIKE','%' . $request->search . '%');

@@ -197,7 +197,7 @@ provide('BOOKING', {
         @onCloseDialog="onCloseDialog" />
       <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] gap-4 mt-3 relative">
         <div class="col-span-4">
-          <p class="font-bold mb-3">Giao kế hoạch giao quà cho khách</p>
+          <p class="font-bold mb-3">Lên kế hoạch giao quà cho khách</p>
           <ContractCard v-for="(orderPackage, index) in orderPackages"
             :key="orderPackage.id"
             :index="index"

@@ -139,6 +139,16 @@ const totalOrder = (status) => {
         return 0;
     }
 }
+const cellStyle = computed((order) => {
+  if (order?.status === 'complete') return 'bg-emerald-600 text-white';
+  if (!props.data && props.showEmpty) return 'bg-zinc-700 text-zinc-700 select-none';
+  if (order?.state === SCHEDULE_VISIT_STATE.COMPLETE) return 'bg-emerald-600 text-white';
+  if (order?.state === SCHEDULE_VISIT_STATE.CANCEL) return 'bg-red-600 text-white';
+  if (order?.state === SCHEDULE_VISIT_STATE.PENDING && date.value.diff(new Date(), 'days') < 0) return 'bg-red-600 text-white';
+  if (props.data && date.value.diff(new Date(), 'days') >= 0) return 'bg-yellow-600 text-white';
+  if (date.value.diff(new Date(), 'days') < 0 && !props.allowEmpty) return 'bg-red-600 text-white';
+  if (!props.data) return 'bg-zinc-700 text-white';
+});
 </script>
 <template>
     <LayoutAuthenticated>
