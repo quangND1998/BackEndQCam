@@ -14,6 +14,8 @@ import ModelShipping from '../ModelShipping.vue'
 // import ModalDecline from "./ModalDecline.vue";
 // import ModelRefund from "./ModelRefund.vue";
 // import ModalShipping from "./ModalShipping.vue";
+import OrderTable from './OrderTable.vue';
+
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -140,14 +142,14 @@ const totalOrder = (status) => {
     }
 }
 const cellStyle = computed((order) => {
-  if (order?.status === 'complete') return 'bg-emerald-600 text-white';
-  if (!props.data && props.showEmpty) return 'bg-zinc-700 text-zinc-700 select-none';
-  if (order?.state === SCHEDULE_VISIT_STATE.COMPLETE) return 'bg-emerald-600 text-white';
-  if (order?.state === SCHEDULE_VISIT_STATE.CANCEL) return 'bg-red-600 text-white';
-  if (order?.state === SCHEDULE_VISIT_STATE.PENDING && date.value.diff(new Date(), 'days') < 0) return 'bg-red-600 text-white';
-  if (props.data && date.value.diff(new Date(), 'days') >= 0) return 'bg-yellow-600 text-white';
-  if (date.value.diff(new Date(), 'days') < 0 && !props.allowEmpty) return 'bg-red-600 text-white';
-  if (!props.data) return 'bg-zinc-700 text-white';
+    if (order?.status === 'complete') return 'bg-emerald-600 text-white';
+    if (!props.data && props.showEmpty) return 'bg-zinc-700 text-zinc-700 select-none';
+    if (order?.state === SCHEDULE_VISIT_STATE.COMPLETE) return 'bg-emerald-600 text-white';
+    if (order?.state === SCHEDULE_VISIT_STATE.CANCEL) return 'bg-red-600 text-white';
+    if (order?.state === SCHEDULE_VISIT_STATE.PENDING && date.value.diff(new Date(), 'days') < 0) return 'bg-red-600 text-white';
+    if (props.data && date.value.diff(new Date(), 'days') >= 0) return 'bg-yellow-600 text-white';
+    if (date.value.diff(new Date(), 'days') < 0 && !props.allowEmpty) return 'bg-red-600 text-white';
+    if (!props.data) return 'bg-zinc-700 text-white';
 });
 </script>
 <template>
@@ -236,7 +238,7 @@ const cellStyle = computed((order) => {
                         <div v-for="n in 12" :key="n" class="text-center py-2 border-0">Lần {{ n }}</div>
                         <div class="text-center py-2 border-0"></div>
                     </div>
-                    <div v-for="(orderPackage, index) in orderPackages.data" :key="orderPackage.id" :index="index"
+                    <!-- <div v-for="(orderPackage, index) in orderPackages.data" :key="orderPackage.id" :index="index"
                         :orderPackage="orderPackage"
                         class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
                         <div class="text-center border">{{ index + orderPackages.from }}</div>
@@ -252,40 +254,39 @@ const cellStyle = computed((order) => {
                                 </div>
                             </div>
                         </div>
-
-
-                    </div>
+                    </div> -->
+                    <OrderTable v-for="(orderPackage, index) in orderPackages.data" :key="orderPackage.id" :index="index" :orderPackage="orderPackage" :orderPackages="orderPackages" />
                 </div>
                 <div class="w-full flex items-center justify-between  my-3">
                     <pagination :links="orderPackages.links" />
 
                 </div>
                 <div class="w-full flex items-center justify-center mx-auto ">
-                        <div class="flex ">
-                            <BaseIcon :path="mdiCalendarRange" class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
-                                size="20"></BaseIcon>
-                            <label>{{ currentDate() }}</label>
-                        </div>
-                        <div class="flex px-2 items-center mx-2">
-                            <div class="flex items-center">
-                                <div class="bg-[#4F8D06] w-4 h-4 mx-2 rounded"></div>
-                                Thành công
-                            </div>
-                            <div class="flex items-center mx-2">
-                                <div class="bg-[#FF0303] w-4 h-4 mx-2 rounded"></div>
-                                Chưa nhận
-                            </div>
-                            <div class="flex items-center">
-                                <div class="bg-[#FFD600] w-4 h-4 mx-2 rounded"></div>
-                                Dự kiến trước 10 ngày
-                            </div>
-                            <div class="flex items-center mx-2">
-                                <div class="bg-[#FF6100] w-4 h-4 mx-2 rounded"></div>
-                                Đã lên đơn
-                            </div>
-                        </div>
-
+                    <div class="flex ">
+                        <BaseIcon :path="mdiCalendarRange" class=" text-gray-400 rounded-lg  mr-2 hover:text-red-700"
+                            size="20"></BaseIcon>
+                        <label>{{ currentDate() }}</label>
                     </div>
+                    <div class="flex px-2 items-center mx-2">
+                        <div class="flex items-center">
+                            <div class="bg-[#4F8D06] w-4 h-4 mx-2 rounded"></div>
+                            Thành công
+                        </div>
+                        <div class="flex items-center mx-2">
+                            <div class="bg-[#FF0303] w-4 h-4 mx-2 rounded"></div>
+                            Chưa nhận
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-[#FFD600] w-4 h-4 mx-2 rounded"></div>
+                            Dự kiến trước 10 ngày
+                        </div>
+                        <div class="flex items-center mx-2">
+                            <div class="bg-[#FF6100] w-4 h-4 mx-2 rounded"></div>
+                            Đã lên đơn
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
         </SectionMain>

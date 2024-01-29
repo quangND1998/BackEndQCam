@@ -5,8 +5,6 @@ import moment from 'moment';
 import { SCHEDULE_VISIT_STATE, CYCLE_TIME } from '@/Components/CustomerService/stuffs/constants';
 import { arrow, useFloating, autoUpdate } from '@floating-ui/vue';
 
-const { onOpenEditOrderDialog } = inject('ORDER')
-
 const props = defineProps({
   data: Object,
   position: Number,
@@ -62,64 +60,44 @@ const displayText = computed(() => {
   return date.value.format('DD/MM/YYYY');
 })
 
-const openPopover = () => {
-  clearTimeout(timeoutRef.value);
-  timeoutRef.value = setTimeout(() => { showPopover.value = true }, 200);
-}
-const closePopover = () => {
-  clearTimeout(timeoutRef.value);
-  showPopover.value = false;
-}
-const onUpdateOrder = () => {
-  if (!props.data) return;
-  onOpenEditOrderDialog(props.data, props.position, props.packageIndex);
-}
 const isFirstOrderDelivery = computed(() => {
   return props.allowPopover && props.position === 0;
 })
+const distantDate = (dateInput) =>{
+    console.log(date.value);
+    var date1Input =  moment(dateInput, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD') ;
+    var date2Input = date.value.format('YYYY-MM-DD');
+
+    var date1 = new Date(date1Input);
+    var date2 = new Date(date2Input);
+    console.log(date1);
+    console.log(date2);
+
+    var khoangCachNgay = Math.floor((date2 - date1) / (1000 * 60 * 60 * 24));
+    console.log(khoangCachNgay)
+
+    var offsetText = '';
+    if(date2 > date1){
+        offsetText = '+';
+    }else if(date2 < date1){
+        offsetText = '-';
+    }
+
+
+    return offsetText + khoangCachNgay;
+}
 </script>
 
 <template>
-  <div @mouseover="openPopover" @mouseleave="closePopover">
-    <p ref="reference" class="text-xs leading-5 cursor-pointer" :class="cellStyle">
-      {{ isFirstOrderDelivery
-        ? (data && data?.delivery_appointment) ? moment(data.delivery_appointment, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY') : 'dd/mm/yy'
-        : displayText  }}
-    </p>
-    <div v-if="data && data.order_number && allowPopover" v-show="showPopover" ref="floating" :style="floatingStyles"
-      class="bg-white rounded-lg border !border-gray-400 py-3 z-50">
-      <div ref="floatingArrow" class="triangle" :style="{
-        position: 'absolute',
-        left:
-          middlewareData.arrow?.x != null
-            ? `${middlewareData.arrow.x}px`
-            : '',
-        top: `calc(${-floatingArrow?.offsetWidth}px + 26px)`,
-      }"></div>
-      <div></div>
-      <div class="mb-2 px-3 flex items-center justify-between">
-        <p class="text-left l-3 font-semibold">Lịch sử nhận quà lần {{ position + 1 }}</p>
-        <button
-          class="rounded-md bg-orange-600 text-white relative font-medium px-3 py-2"
-          @click="onUpdateOrder"
-        >
-          Cập nhật đơn
-        </button>
-      </div>
-      <div class="grid grid-cols-12 items-center bg-gray-400 text-white font-bold leading-6 w-[700px]">
-        <div>STT</div>
-        <div class="col-span-3">Ngày</div>
-        <div class="col-span-8 text-left pl-2">Mô tả</div>
-      </div>
-      <div class="h-[300px] overflow-y-auto">
-        <div v-for="(history, index) in data?.shipping_history || []" :key="history.id"
-          class="grid grid-cols-12  divide-x divide-gray-400 border-gray-400 border-b border-x text-sm">
-          <div>{{ index + 1 }}</div>
-          <div class="col-span-3">{{ moment(history.created_at, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY') }}</div>
-          <div class="col-span-8 text-left pl-2">{{ history.note }}</div>
+  <div >
+    <p ref="reference" class="text-xs leading-5 cursor-pointer m-1 px-1 py-1 " :class="cellStyle">
+        <div> {{ isFirstOrderDelivery
+            ? (data && data?.delivery_appointment) ? moment(data.delivery_appointment, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY') : 'dd/mm/yy'
+            : displayText  }}
         </div>
-      </div>
-    </div>
+        <div>{{ isFirstOrderDelivery
+            ?  0 : (data && data?.delivery_appointment) ? distantDate(data.delivery_appointment) : 0  }} </div>
+    </p>
   </div>
 </template>
 
