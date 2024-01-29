@@ -5,7 +5,7 @@ namespace App\Enums;
 enum OrderTransportState: string
 {
     case pending = 'pending';
-    case packing = 'packed';
+    case packing = 'packing';
     case shipping = 'shipping';
     case delivered = 'delivered';
     case refunding = 'refunding';

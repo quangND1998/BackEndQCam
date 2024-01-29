@@ -23,6 +23,7 @@ use Modules\Order\app\Http\Requests\OrderGiftPostRequest;
 use Modules\Order\app\Http\Requests\SaveOrderRequest;
 use Modules\Order\app\Models\OrderItem;
 use Illuminate\Support\Facades\Notification;
+use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Landingpage\app\Models\Contact;
 use Modules\Order\Repositories\ShipperRepository;
 use Modules\Order\app\Http\Requests\Order\UpdateOrderReuquest;
@@ -581,6 +582,12 @@ class OrderController extends Controller
                 'shipper_id' => $request->shipper_id
             ]);
             $order->save();
+            $product_service_owner = ProductServiceOwner::find($request->product_service_owner_id);
+            if ($product_service_owner) {
+                $count = $product_service_owner->orders()->count();
+                $order->index =  $count;
+                $order->save();
+            }
 
             if ($order) {
 

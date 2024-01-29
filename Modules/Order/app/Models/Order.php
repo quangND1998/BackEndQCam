@@ -57,6 +57,7 @@ class Order extends Model implements HasMedia
         'wards',  "created_at", "updated_at",
         'delivery_appointment',
         'order_transport_number',
+        'index'
 
     ];
 

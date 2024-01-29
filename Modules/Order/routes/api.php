@@ -26,6 +26,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function 
 
     Route::prefix('shipper')->as('shipper.')->group(function () {
 
+
+        Route::get('/{id}/orderTransportDetail', [ApiShipperController::class, 'orderTransportDetail'])->name('orderTransportDetail');
         Route::put('/{id}/confirm-shipping', [ApiShipperController::class, 'confirmShipping'])->name('confirm-shipping');
         Route::put('/{id}/confirm-not-shipping', [ApiShipperController::class, 'confirmNotShipping'])->name('confirm-not-shipping');
         Route::post('/{id}/confirm-recive', [ApiShipperController::class, 'confirmCustomerRecive'])->name('confirm-recive');

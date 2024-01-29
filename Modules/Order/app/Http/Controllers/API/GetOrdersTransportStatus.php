@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Modules\Order\app\Models\Order;
 use Modules\Order\app\Models\OrderTransport;
 use Modules\Order\Repositories\OrderTransportRepository;
+
 class GetOrdersTransportStatus extends Controller
 {
     protected $orderTransportRepository;
@@ -25,7 +26,6 @@ class GetOrdersTransportStatus extends Controller
     {
 
         $this->orderTransportRepository = $orderTransportRepository;
-     
     }
     public function __invoke(Request $request)
     {
@@ -33,7 +33,7 @@ class GetOrdersTransportStatus extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
 
-        $statusGroup =$this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'transport_state');
+        $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'state');
         $response = [
 
             'statusGroup' => $statusGroup,

@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('order_transports', function (Blueprint $table) {
             $table->id();
             $table->string('order_transport_number')->nullable();
-            $table->string('transport_state')->nullable();
+            $table->timestampTz("delivery_appointment")->nullable();
+            $table->string('state')->nullable();
             $table->string('status')->nullable();
             $table->unsignedBigInteger('order_id')->nullable()->index();
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->text('notes')->nullable();
+            $table->text('reason')->nullable();
             $table->timestamps();
         });
     }

@@ -165,7 +165,7 @@ Route::middleware(['auth'])->group(
                 });
                 Route::post('/confirm-document', [CSKHOrderController::class, 'confirmStateDocument'])->name('confirm-document');
 
-                Route::post('{order}/uploadImages', [CSKHOrderController::class, 'updloadImages'])->name('updloadImages');
+                Route::post('{order_transport}/uploadImages', [CSKHOrderController::class, 'updloadImages'])->name('updloadImages');
 
                 Route::get('fetchOrdersTransport', GetOrdersTransport::class)->name('fetchOrdersTransport');
                 Route::get('fetchOrdersTransportGroup', GetOrdersTransportStatus::class)->name('fetchStatusOrders');

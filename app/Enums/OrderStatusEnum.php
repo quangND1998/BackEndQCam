@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum OrderStatusEnum: string
 {
+    
         // case pending = 'pending';
         // case packing = 'packing';
         // case shipping = 'shipping';

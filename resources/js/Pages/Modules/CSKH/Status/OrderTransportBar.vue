@@ -14,7 +14,7 @@ const props = defineProps({
     status: String
 })
 const totalOrder = (status) => {
-    var findStatus = props.statusGroup.find(e => e.transport_state == status);
+    var findStatus = props.statusGroup.find(e => e.state == status);
     console.log(props.statusGroup)
     if (findStatus) {
         return findStatus.total;

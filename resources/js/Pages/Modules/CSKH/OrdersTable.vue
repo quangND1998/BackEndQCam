@@ -7,7 +7,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
 import ModelShipping from "./ModelShipping.vue";
-import OrderStatus from "./OrderStatus.vue";
+
 import {
 
     mdiLayersTripleOutline,
@@ -26,7 +26,8 @@ import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
 import { useOrderStore } from '@/stores/order.js'
 import { useCSKHStore } from '@/stores/cskh.js'
 import DialogLoading from '@/Components/CustomerService/Dialog/DialogLoading.vue';
-import Pagination from '@/Pages/Modules/CSKH/Components/Pagination.vue'
+import Pagination from '@/Pages/Modules/CSKH/Components/Pagination.vue';
+import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
 const { openPopover,
     closePopover } = usePopOverStore();
 const { showDetailOrder } = useOrderStore();
@@ -64,7 +65,7 @@ const filter = reactive({
     type: null,
     per_page: 10,
     selectedDate: null,
-    transport_state: null,
+    state: null,
     market: null,
     page: null
 });
@@ -98,7 +99,7 @@ const changeDate = () => {
 
 
 const changeStatus = (status) => {
-    filter.transport_state = status
+    filter.state = status
     store.fetchOrdersTransport(filter)
 }
 watch(() => [filter.per_page], (newVal) => {
@@ -194,7 +195,7 @@ const changePage = (page) => {
                 </div>
 
                 <OrderTransportBar v-if="statusGroup" :statusGroup="statusGroup" :count_orders="count_orders"
-                    :status="filter.transport_state" @change-status="changeStatus"></OrderTransportBar>
+                    :status="filter.state" @change-status="changeStatus"></OrderTransportBar>
 
 
                 <div class="w-full mt-2">
@@ -237,7 +238,7 @@ const changePage = (page) => {
                                             {{ order_transport.order?.product_service?.product?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{order_transport.order?.customer?.name }}
+                                            {{ order_transport.order?.customer?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="flex items-center">
@@ -267,11 +268,12 @@ const changePage = (page) => {
                                             hộp
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <!-- <OrderStatus :order="order" /> -->
+                                            <OrderTransportStatus :order_transport="order_transport" />
                                         </td>
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA" }}
+                                            {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
+                                            }}
                                         </td>
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
@@ -282,7 +284,7 @@ const changePage = (page) => {
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @mouseover="openPopover(order_transport.order)" @mouseleave="closePopover">
+                                            <button @mouseover="openPopover(order_transport)" @mouseleave="closePopover">
                                                 xem
                                             </button>
                                         </td>
@@ -314,7 +316,7 @@ const changePage = (page) => {
                         <option :value="200">200</option>
                     </select>
                 </div>
-            
+
                 <Pagination v-if="orders_transport" :data="orders_transport" @change-page="changePage" />
             </div>
         </SectionMain>
