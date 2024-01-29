@@ -246,7 +246,7 @@ const orderRefunding = () => {
 
                         <button v-if="selected_refund.length > 0" @click="orderRefunding()"
                             class=" inline-flex items-center px-2 py-2 text-sm bg-[#1D75FA] hover:bg-[#1D75FA] text-white p-2 rounded-lg border mx-1">
-                            <Icon icon="flip" />Tạo yêu cầu hoàn ({{ selected.length }})
+                            <Icon icon="flip" />Tạo yêu cầu hoàn ({{ selected_refund.length }})
                         </button>
                     </div>
 

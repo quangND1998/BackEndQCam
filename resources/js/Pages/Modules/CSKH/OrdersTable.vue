@@ -86,6 +86,7 @@ const searchCustomer = () => {
 
 
 const search = () => {
+    filter.page = 1
     store.fetchOrdersTransport(filter)
 };
 
