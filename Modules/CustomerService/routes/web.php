@@ -32,11 +32,6 @@ use Modules\CustomerService\app\Http\Controllers\GetWeeklyPlan;
 | contains the "web" middleware group. Now create something great!
 |
 */
-<<<<<<< Updated upstream
-
-auth()->loginUsingId(348);
-=======
->>>>>>> Stashed changes
 Route::middleware(['auth', 'role:cskh'])->group(
     function () {
         Route::prefix('/customer-service/customer/{customerId}')->group(function () {
