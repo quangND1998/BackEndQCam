@@ -29,7 +29,7 @@ const onMoveToNextWeek = () => {
   if (isLoading.value) return;
   fromDate.value = moment(fromDate.value).add(1, 'week');
   toDate.value = moment(toDate.value).add(1, 'week');
-  executeQuery({ fromDate: fromDate.value, toDate: toDate.value });
+  executeQuery({ fromDate: fromDate.value.format('YYYY-MM-DD'), toDate: toDate.value.format('YYYY-MM-DD') });
 }
 const onMoveToPreviousWeek = () => {
   if (isLoading.value) return;
@@ -66,18 +66,18 @@ const changePage = (diffPageNo) => {
         <PlanTableDescription />
       </div>
       <div class="mt-10">
-        <p class="font-semibold mb-1">Danh sách pending của bạn</p>
+        <p class="font-semibold mb-1 text-black">Danh sách pending của bạn</p>
         <div class="flex items-center justify-between mb-2">
           <div class="flex items-center gap-3">
-            <i class="fa fa-arrow-circle-o-left text-3xl cursor-pointer" aria-hidden="true" @click="changePage(-1)"></i>
-            <i class="fa fa-arrow-circle-o-right text-3xl cursor-pointer" aria-hidden="true" @click="changePage(1)"></i>
+            <i class="fa fa-arrow-circle-o-left text-3xl cursor-pointer text-black" aria-hidden="true" @click="changePage(-1)"></i>
+            <i class="fa fa-arrow-circle-o-right text-3xl cursor-pointer text-black" aria-hidden="true" @click="changePage(1)"></i>
           </div>
           <div class="flex items-center gap-20">
             <div class="flex items-center gap-2">
-              <div class="w-6 h-6 bg-orange-600 rounded-sm" />
+              <div class="w-6 h-6 bg-[#FF6100] rounded-sm" />
               <p>Đã đến lịch hẹn</p>
             </div>
-            <button class="px-4 py-1 rounded-sm bg-zinc-900 text-white font-semibold">Xuất</button>
+            <button class="px-4 py-1 rounded-sm bg-black text-white font-semibold">Xuất</button>
           </div>
         </div>
         <RemindTable ref="tableRef" />

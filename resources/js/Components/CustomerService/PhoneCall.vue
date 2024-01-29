@@ -68,7 +68,7 @@ onUnmounted(() => {
       '!right-0': phoneCallReady
     }"
   >
-    <div class="w-10 h-10 flex items-center justify-center bg-emerald-500 rounded-full">
+    <div class="w-10 h-10 flex items-center justify-center bg-[#27AE60] rounded-full">
       <i class="fa fa-phone text-white text-2xl" aria-hidden="true"></i>
     </div>
     <div>

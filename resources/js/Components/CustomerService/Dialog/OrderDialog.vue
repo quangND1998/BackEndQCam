@@ -95,7 +95,7 @@ watch(addressType, (newType) => {
 });
 
 // Other
-const deliveryAppointment = ref(new Date(new Date().setDate(new Date().getDate() + 2)));
+const deliveryAppointment = ref(props.order ? props.order.delivery_appointment : new Date(new Date().setDate(new Date().getDate() + 2)));
 const showDateError = ref(false);
 watch(deliveryAppointment, (newVal) => {
   if (newVal) showDateError.value = false;
@@ -172,22 +172,22 @@ const onCreateOrder = () => {
     delivery_appointment: deliveryAppointment.value ? moment(deliveryAppointment.value).format('YYYY-MM-DD HH:mm:ss') : undefined,
   }
 
-  let haveError = false;
+  let hasError = false;
   if (!order.delivery_appointment) {
     showDateError.value = true;
-    haveError = true;
+    hasError = true;
   }
 
   if (order.products.length === 0) {
     showProductError.value = true
-    haveError = true;
+    hasError = true;
   }
   if (!order.address.detail || !order.address.city || !order.address.district || !order.address.ward) {
     showAddressError.value = true;
-    haveError = true;
+    hasError = true;
   }
 
-  if (haveError) return;
+  if (hasError) return;
 
   if (isRetailOrder.value) return onCreateRetailOrder();
   if (!props.order) {
@@ -248,19 +248,19 @@ const onCreateRetailOrder = () => {
     delivery_appointment: deliveryAppointment.value ? moment(deliveryAppointment.value).format('YYYY-MM-DD HH:mm:ss') : undefined,
   }
 
-  const haveError = false;
+  let hasError = false;
   if (isRetailOrder.value) {
     if (!priceForm.order_code) {
       retailOrderError.other_code = true;
-      haveError = true;
+      hasError = true;
     }
     if (!subPhoneNumber.value) {
       retailOrderError.phone_number = true;
-      haveError = true;
+      hasError = true;
     }
   }
 
-  if (haveError) return;
+  if (hasError) return;
 
   createRetailOrder(undefined, order);
 }
@@ -303,20 +303,20 @@ onMounted(() => {
         '!w-full !shadow-none border': isRetailOrder
       }"
     >
-      <div class="flex items-center justify-between rounded-t-lg bg-orange-500 pr-3 pl-4 py-2">
+      <div class="flex items-center justify-between rounded-t-lg bg-[#FF6100] pr-3 pl-4 py-2">
         <p v-if="!isRetailOrder" class="font-semibold text-white">Lên đơn cho hợp đồng {{ orderPackage?.idPackage }}</p>
         <p v-else class="font-semibold text-white">Lên đơn bán lẻ</p>
         <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="emit('onCloseDialog')"/>
       </div>
       <div class="grid grid-cols-12 p-3 pt-4 gap-8">
         <div class="col-span-6">
-          <div class="flex items-center justify-between border-b border-gray-400 pb-2 mb-3">
+          <div class="flex items-center justify-between border-b border-[#AEAEAE] pb-2 mb-3">
             <p v-if="!isRetailOrder" class="font-semibold text-sm">Lần: {{ deliveryNo }}</p>
             <div v-else class="flex items-center">
               <p class="font-semibold text-sm mr-2 required">Chọn mã HĐ</p>
-              <select v-model="priceForm.order_code" class="rounded p-2 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-sm"
+              <select v-model="priceForm.order_code" class="rounded p-2 focus:outline-none focus:ring-0 focus:border-[#AEAEAE] border-[#AEAEAE] text-sm"
                 :class="{
-                  '!border-red-600': retailOrderError.other_code && priceForm.order_code === ''
+                  '!border-[#FF0000]': retailOrderError.other_code && priceForm.order_code === ''
                 }"
               >
                 <option disabled selected :value="undefined"> -- Chọn hợp đồng -- </option>
@@ -327,7 +327,7 @@ onMounted(() => {
             </div>
               <button
                 :disabled="isDisable"
-                class="disabled:!bg-gray-400 rounded-full bg-sky-600 text-white font-medium px-2 py-1 text-sm"
+                class="disabled:!bg-[#AEAEAE] rounded-full bg-sky-600 text-white font-medium px-2 py-1 text-sm"
                 :class="{
                   'cursor-not-allowed': isDisable,
                 }"
@@ -336,8 +336,8 @@ onMounted(() => {
                 Thêm
               </button>
           </div>
-          <div class="border-x border-gray-400 ">
-            <div class="grid grid-cols-12 bg-gray-400 divide-x divide-white leading-6 text-sm font-medium text-white text-center border-x border-gray-400">
+          <div class="border-x border-[#AEAEAE] ">
+            <div class="grid grid-cols-12 bg-[#AEAEAE] divide-x divide-white leading-6 text-sm font-medium text-white text-center border-x border-[#AEAEAE]">
               <div class="col-span-1">STT</div>
               <div
                 class="col-span-6"
@@ -368,8 +368,8 @@ onMounted(() => {
               <div class="col-span-1"></div>
             </div>
             <div class="product-detail max-h-[calc(100vh-600px)] overflow-y-auto">
-              <div v-for="(rowNumber, index) in productRows" :key="rowNumber" class="relative grid grid-cols-12 divide-x divide-gray-400 border-b border-gray-400 text-sm text-center items-center">
-                <div v-if="isDisable" class="absolute w-full h-full left-0 top-0 bg-gray-400/30 cursor-not-allowed"/>
+              <div v-for="(rowNumber, index) in productRows" :key="rowNumber" class="relative grid grid-cols-12 divide-x divide-[#AEAEAE] border-b border-[#AEAEAE] text-sm text-center items-center">
+                <div v-if="isDisable" class="absolute w-full h-full left-0 top-0 bg-[#AEAEAE]/30 cursor-not-allowed"/>
                 <div class="col-span-1">{{ index + 1 }}</div>
                 <div
                   class="col-span-6"
@@ -378,7 +378,7 @@ onMounted(() => {
                   }"
                 >
                   <div class="p-1">
-                    <select :value="selectedProducts[`product_${rowNumber}`] ? selectedProducts[`product_${rowNumber}`].id : undefined" @input="(e) => handleChangeProduct(e.target.value, rowNumber)" class="w-full rounded pl-1 focus:outline-none focus:ring-0 focus:border-gray-400 border-gray-400 text-xs">
+                    <select :value="selectedProducts[`product_${rowNumber}`] ? selectedProducts[`product_${rowNumber}`].id : undefined" @input="(e) => handleChangeProduct(e.target.value, rowNumber)" class="w-full rounded pl-1 focus:outline-none focus:ring-0 focus:border-[#AEAEAE] border-[#AEAEAE] text-xs">
                       <option disabled selected value> -- Chọn sản phẩm -- </option>
                       <option v-for="product in productRetails" :key="product.id" :value="product.id">{{ product.name }} ({{ product.available_quantity }})</option>
                     </select>
@@ -406,7 +406,7 @@ onMounted(() => {
                     :max="selectedProducts[`product_${rowNumber}`] ? selectedProducts[`product_${rowNumber}`].available : 1"
                     :value="selectedProducts[`product_${rowNumber}`] ? selectedProducts[`product_${rowNumber}`].quantity : 1"
                     type="number"
-                    class="pl-1 py-1 pr-1 rounded w-full border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0" />
+                    class="pl-1 py-1 pr-1 rounded w-full border-[#AEAEAE] focus:border-[#AEAEAE] focus:outline-none focus:ring-0" />
                 </div>
                 <div v-if="isRetailOrder" class="col-span-2 leading-[42px]">
                   {{ selectedProducts[`product_${rowNumber}`] ? formatMoney(selectedProducts[`product_${rowNumber}`].price) : 0 }}
@@ -436,8 +436,8 @@ onMounted(() => {
                 <button
                   class="w-24 leading-6 py-1 border !border-gray-600 rounded-l-lg"
                   :class="{
-                    '!bg-orange-600 !text-white !border-orange-600': priceForm.payment_method === 0,
-                    '!border-r-orange-600': priceForm.payment_method === 1,
+                    '!bg-[#1D75FA] !text-white !border-[#1D75FA]': priceForm.payment_method === 0,
+                    '!border-r-[#1D75FA]': priceForm.payment_method === 1,
                   }"
                   @click="changePaymentMethod(0)"
                 >
@@ -446,7 +446,7 @@ onMounted(() => {
                 <button
                   class="w-24 leading-6 py-1 border !border-gray-600 !border-x-0"
                   :class="{
-                    '!bg-orange-600 !text-white !border-orange-600': priceForm.payment_method === 1
+                    '!bg-[#1D75FA] !text-white !border-[#1D75FA]': priceForm.payment_method === 1
                   }"
                   @click="changePaymentMethod(1)"
                 >
@@ -455,8 +455,8 @@ onMounted(() => {
                 <button
                   class="w-24 leading-6 py-1 border !border-gray-600 rounded-r-lg"
                   :class="{
-                    '!bg-orange-600 !text-white !border-orange-600': priceForm.payment_method === 2,
-                    '!border-l-orange-600': priceForm.payment_method === 1,
+                    '!bg-[#1D75FA] !text-white !border-[#1D75FA]': priceForm.payment_method === 2,
+                    '!border-l-[#1D75FA]': priceForm.payment_method === 1,
                   }"
                   @click="changePaymentMethod(2)"
                 >
@@ -468,7 +468,7 @@ onMounted(() => {
               <div class="grid grid-cols-6 leading-8">
                 <div class="col-span-3 font-semibold !leading-8 text-sm flex items-center justify-between">
                   <span>VAT (%)</span>
-                  <input v-model="priceForm.vat" type="number" min="0" max="100" class="px-1 w-18 h-7 rounded-sm border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0 text-sm font-normal" />
+                  <input v-model="priceForm.vat" type="number" min="0" max="100" class="px-1 w-18 h-7 rounded-sm border-[#AEAEAE] focus:border-[#AEAEAE] focus:outline-none focus:ring-0 text-sm font-normal" />
                 </div>
                 <div class="col-span-2 text-right">
                   {{ formatMoney(productPrice * (priceForm.vat / 100)) }}
@@ -478,7 +478,7 @@ onMounted(() => {
               <div class="grid grid-cols-6 leading-8">
                 <div class="col-span-3 font-semibold !leading-8 text-sm flex items-center justify-between">
                   <span>Vận chuyển</span>
-                  <input v-model="priceForm.shipping_fee" type="number" min="0" max="100" class="px-1 w-18 h-7 rounded-sm border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0 text-sm font-normal" />
+                  <input v-model="priceForm.shipping_fee" type="number" min="0" max="100" class="px-1 w-18 h-7 rounded-sm border-[#AEAEAE] focus:border-[#AEAEAE] focus:outline-none focus:ring-0 text-sm font-normal" />
                 </div>
                 <div class="col-span-2 text-right">
                   {{  formatMoney(priceForm.shipping_fee) }}
@@ -488,7 +488,7 @@ onMounted(() => {
               <div class="grid grid-cols-6 leading-8">
                 <div class="col-span-3 font-semibold !leading-8 text-sm flex items-center justify-between">
                   <span>Ưu đãi (%)</span>
-                  <input v-model="priceForm.discount_deal" type="number" min="0" max="100" class="px-1 w-18 h-7 rounded-sm border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0 text-sm font-normal" />
+                  <input v-model="priceForm.discount_deal" type="number" min="0" max="100" class="px-1 w-18 h-7 rounded-sm border-[#AEAEAE] focus:border-[#AEAEAE] focus:outline-none focus:ring-0 text-sm font-normal" />
                 </div>
                 <div class="col-span-2 text-right">
                   {{ formatMoney(productPrice * (priceForm.discount_deal / 100)) }}
@@ -507,7 +507,7 @@ onMounted(() => {
         </div>
 
         <div class="col-span-3">
-          <div class="grid grid-cols-3 gap-4 mb-3 pb-2 border-b border-gray-400">
+          <div class="grid grid-cols-3 gap-4 mb-3 pb-2 border-b border-[#AEAEAE]">
             <p
               class="font-semibold text-sm leading-7"
               :class="{
@@ -517,11 +517,11 @@ onMounted(() => {
               Địa chỉ nhận hàng
             </p>
             <div v-if="!isRetailOrder" class="flex justify-end items-center">
-              <input :disabled="isDisable" v-model="addressType" id="default" value="default" type="radio" class="disabled:cursor-not-allowed focus:outline-none focus:ring-0 disabled:bg-gray-400 disabled:hover:bg-gray-400" />
+              <input :disabled="isDisable" v-model="addressType" id="default" value="default" type="radio" class="disabled:cursor-not-allowed focus:outline-none focus:ring-0 disabled:bg-[#AEAEAE] disabled:hover:bg-[#AEAEAE]" />
               <label for="default" class="pl-2 m-0 select-none">Hiện tại</label>
             </div>
             <div v-if="!isRetailOrder" class="flex justify-end items-center">
-              <input :disabled="isDisable" v-model="addressType" id="change" value="change" type="radio" class="disabled:cursor-not-allowed focus:outline-none focus:ring-0 disabled:bg-gray-400 disabled:hover:bg-gray-400" />
+              <input :disabled="isDisable" v-model="addressType" id="change" value="change" type="radio" class="disabled:cursor-not-allowed focus:outline-none focus:ring-0 disabled:bg-[#AEAEAE] disabled:hover:bg-[#AEAEAE]" />
               <label for="change" class="pl-2 m-0 select-none">Thay đổi</label>
             </div>
           </div>
@@ -563,24 +563,24 @@ onMounted(() => {
           <div class="!mt-[18px]">
             <p class="text-sm font-semibold mb-1 required">
               Địa chỉ chi tiết
-              <span v-if="showAddressError && address.detail === ''" class="text-red-600 pl-2">
+              <span v-if="showAddressError && address.detail === ''" class="text-[#FF0000] pl-2">
                 Hãy nhập địa chỉ chi tiết
               </span>
             </p>
             <textarea v-model="address.detail" :disabled="disabledAdressEdit || isDisable"
-              class="w-full resize-none rounded bg-white disabled:!bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-600 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
+              class="w-full resize-none rounded bg-white disabled:!bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-600 focus:border-[#AEAEAE] border-[#AEAEAE] px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
           </div>
         </div>
 
         <div class="col-span-3">
-          <div class="flex pb-1 mb-3 border-b border-gray-400 items-center justify-between">
+          <div class="flex pb-1 mb-3 border-b border-[#AEAEAE] items-center justify-between">
             <div class="date-appointment flex gap-1 items-center">
               <p class="text-[13px] font-semibold w-20 required">Dự kiến GH</p>
               <VueDatePicker
                 :class="{
-                  'border-red-600': showDateError && !deliveryAppointment
+                  'border-[#FF0000]': showDateError && !deliveryAppointment
                 }"
-                class="!w-32 text-xs" v-model="deliveryAppointment" :min-date="minDate" :clearable="false" :enable-time-picker="false" format="dd/MM/yyyy" />
+                class="!w-32 text-xs custom-xs" v-model="deliveryAppointment" :min-date="minDate" :clearable="false" :enable-time-picker="false" format="dd/MM/yyyy" />
             </div>
             <div class="relative">
               <div class="flex items-center gap-1">
@@ -592,10 +592,10 @@ onMounted(() => {
                 >
                   SĐT {{ isRetailOrder ? '' : 'phụ' }}
                 </p>
-                <input :disabled="isDisable" v-model="subPhoneNumber" type="text" placeholder="Số điện thoại" class="phone disabled:cursor-not-allowed w-28 px-1 h-8 rounded-sm border-gray-400 disabled:!bg-gray-200 disabled:text-gray-600 focus:border-gray-400 focus:outline-none focus:ring-0"
+                <input :disabled="isDisable" v-model="subPhoneNumber" type="text" placeholder="Số điện thoại" class="phone disabled:cursor-not-allowed w-28 px-1 h-8 rounded-sm border-[#AEAEAE] disabled:!bg-gray-200 disabled:text-gray-600 focus:border-[#AEAEAE] focus:outline-none focus:ring-0"
                   :class="{
                   '!text-[13px] !w-24': isRetailOrder,
-                    '!border-red-600': retailOrderError.phone_number && subPhoneNumber === '' && isRetailOrder,
+                    '!border-[#FF0000]': retailOrderError.phone_number && subPhoneNumber === '' && isRetailOrder,
                   }"
                 />
               </div>
@@ -603,7 +603,7 @@ onMounted(() => {
                 v-if="foundedUser"
                 @click="fillFoundedUserData"
                 title="Điền địa chỉ"
-                class="cursor-pointer !mt-1 absolute bg-white !border-gray-400 rounded-lg p-2 w-max right-0 border">
+                class="cursor-pointer !mt-1 absolute bg-white !border-[#AEAEAE] rounded-lg p-2 w-max right-0 border">
                 {{ foundedUser.name }} ({{ foundedUser.phone_number }})
                 <i class="fa fa-times ml-4 inline-block" aria-hidden="true" @click="(e) => { e.stopPropagation(); foundedUser = null }"></i>
               </p>
@@ -611,20 +611,20 @@ onMounted(() => {
           </div>
           <div class="mt-3">
             <p class="text-sm font-semibold mb-1">Ghi chú đơn hàng (giờ nhận...)</p>
-            <textarea :disabled="isDisable" v-model="note" class="disabled:cursor-not-allowed w-full resize-none rounded bg-white disabled:!bg-gray-200 disabled:text-gray-600 focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="9"></textarea>
+            <textarea :disabled="isDisable" v-model="note" class="disabled:cursor-not-allowed w-full resize-none rounded bg-white disabled:!bg-gray-200 disabled:text-gray-600 focus:border-[#AEAEAE] border-[#AEAEAE] px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="9"></textarea>
           </div>
         </div>
       </div>
-      <div class="mx-3 border-b border-gray-400"></div>
+      <div class="mx-3 border-b border-[#AEAEAE]"></div>
       <div class="flex justify-end items-center pr-3 py-6">
-        <button class="rounded-md bg-orange-600 text-white relative font-medium px-3 py-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        <button class="rounded-md bg-[#1D75FA] text-white relative font-medium px-3 py-2 disabled:bg-[#AEAEAE] disabled:cursor-not-allowed"
           :disabled="isDisable"
           :class="{
             '!cursor-wait': isLoading || isUpdating || isCreateRetailOrder
           }"
           @click="onCreateOrder"
         >
-          <span v-if="isLoading || isUpdating || isCreateRetailOrder" class="absolute w-full h-full left-0 top-0 flex items-center justify-center bg-gray-400/40">
+          <span v-if="isLoading || isUpdating || isCreateRetailOrder" class="absolute w-full h-full left-0 top-0 flex items-center justify-center bg-[#AEAEAE]/40">
             <SpinnerIcon class="!m-0" />
           </span>
           {{ order ? 'Cập nhật' : 'Tạo đơn' }}
@@ -635,7 +635,7 @@ onMounted(() => {
 </template>
 
 <style>
-.text-xs .dp__input_readonly {
+.custom-xs .dp__input_readonly {
   font-size: 13px !important;
   width: 106px;
 }
@@ -645,7 +645,7 @@ onMounted(() => {
 .date-appointment .dp__input_icons {
   padding: 4px !important;
 }
-.date-appointment .border-red-600 .dp__input {
+.date-appointment .border-[#FF0000] .dp__input {
   border-color: theme('colors.red.600') !important;
 }
 .product-detail {

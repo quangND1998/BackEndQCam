@@ -44,7 +44,7 @@ defineExpose({ changePage });
 
 <template>
   <div
-    class="grid grid-cols-[repeat(28,_minmax(0,_1fr))] divide-x text-sm bg-gray-400 text-white divide-white items-center  text-center font-semibold leading-10">
+    class="grid grid-cols-[repeat(28,_minmax(0,_1fr))] divide-x text-sm bg-[#AEAEAE] text-white divide-white items-center text-center font-semibold leading-10">
     <div>STT</div>
     <div class="col-span-3">Mã HĐ</div>
     <div class="col-span-2">Loại HĐ</div>
@@ -55,13 +55,13 @@ defineExpose({ changePage });
     <div class="col-span-2">Chăm sóc</div>
   </div>
   <div v-if="isLoading" class="w-full h-[200px] flex items-center justify-center">
-    <SpinnerIcon class="!m-0 !w-14 !h-14 text-orange-600" />
+    <SpinnerIcon class="!m-0 !w-14 !h-14 text-[#FF6100]" />
   </div>
   <template v-else>
     <RemindRow v-for="(remind, index) in reminds" :key="remind.id" :index="index" :remind="remind" />
     <template v-if="reminds.length < 5">
       <div v-for="n in (5 - reminds.length)" :key="n"
-        class="grid grid-cols-[repeat(28,_minmax(0,_1fr))] divide-x text-sm bg-white border-x border-b !border-gray-400 divide-gray-400 items-center  text-center font-semibold leading-10">
+        class="grid grid-cols-[repeat(28,_minmax(0,_1fr))] divide-x text-sm bg-white border-x border-b !border-[#AEAEAE] divide-[#AEAEAE] items-center  text-center font-semibold leading-10">
         <div>&#8203;</div>
         <div class="col-span-3">&#8203;</div>
         <div class="col-span-2">&#8203;</div>
@@ -76,7 +76,7 @@ defineExpose({ changePage });
       <div class="flex items-center gap-4">
         <p>Hiển thị</p>
         <select v-model="itemPerPage"
-          class="border !border-gray-400 rounded-sm px-2 py-1 !w-20 focus:outline-none focus:!border-gray-400 focus:ring-0">
+          class="border !border-[#AEAEAE] rounded-sm px-2 py-1 !w-20 focus:outline-none focus:!border-[#AEAEAE] focus:ring-0">
           <option :value="5">5</option>
           <option :value="10">10</option>
           <option :value="20">20</option>
@@ -100,10 +100,10 @@ defineExpose({ changePage });
 
 <style scoped>
 .page-number {
-  @apply !px-3 !py-2 rounded-lg duration-150 hover:text-white hover:bg-orange-600;
+  @apply !px-3 !py-2 rounded-lg duration-150 hover:text-white hover:bg-[#FF6100];
 }
 
 .active {
-  @apply bg-orange-600 text-white font-medium;
+  @apply bg-[#FF6100] text-white font-medium;
 }
 </style>

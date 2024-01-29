@@ -41,7 +41,7 @@ const displayStatus = computed(() => {
       '!text-yellow-500 !border-yellow-500':  status === 'packing' || status === 'normal',
       '!text-sky-500 !border-sky-500': status === 'shipping',
       '!text-emerald-500 !border-emerald-500': status === 'completed' || status === 'complete' || status === 1,
-      '!text-orange-500 !border-orange-500': status === 'refund' || status === 'urgent',
+      '!text-[#FF6100] !border-[#FF6100]': status === 'refund' || status === 'urgent',
       '!text-red-500 !border-red-500': status === 'decline' || status === 'cancel' || status === 0 || status === 'critical',
     }"
   >
