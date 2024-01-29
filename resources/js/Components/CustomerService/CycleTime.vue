@@ -39,12 +39,12 @@ const { floatingStyles, middlewareData } = useFloating(reference, floating, {
 });
 
 const date = computed(() => {
-  if (props.data && props.data.state) {
+  // Is schedule visit
+  if (props.data && props.data.booking_type) {
     return moment(props.data.date_time, 'YYYY-MM-DD HH:mm:ss');
   }
 
   const nextDate = moment(props.startDate, 'YYYY-MM-DD HH:mm:ss').add(((props.position + 1) * CYCLE_TIME), 'days');
-
   return nextDate.weekday() !== 7 ? nextDate : nextDate.subtract(1, 'day');
 });
 const cellStyle = computed(() => {
