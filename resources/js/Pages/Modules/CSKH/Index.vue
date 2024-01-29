@@ -153,6 +153,7 @@ const pushOrders = () => {
     }).then(result => {
         if (result.isConfirmed) {
             router.post(route('admin.cskh.pushOrder'), query, {
+                preserveState: false,
                 onError: () => {
                 },
                 onSuccess: () => {

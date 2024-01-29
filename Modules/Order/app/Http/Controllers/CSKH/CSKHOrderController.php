@@ -52,7 +52,7 @@ class CSKHOrderController extends Controller
 
         $this->middleware('permission:order-packing', ['only' => ['packedOrder']]);
 
-        $this->middleware('role:leader-shipper', ['only' => ['shipperOwner']]);
+        $this->middleware('permission:add-order-shipper', ['only' => ['shipperOwner']]);
     }
 
     public function all(Request $request)

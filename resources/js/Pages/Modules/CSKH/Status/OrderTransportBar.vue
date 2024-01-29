@@ -31,7 +31,6 @@ const changeStatus = (status) => {
 </script>
 <template>
     <div class="my-3">
-
         <div
             class="min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
             <div v-if="hasAnyPermission(['order-pending'])" @click="changeStatus()"
@@ -65,12 +64,12 @@ const changeStatus = (status) => {
                 <Icon icon="rocket-ship"></Icon>
                 <span class="text-gray-400 ml-2"> Đang vận chuyển({{ totalOrder('shipping') }})</span>
             </div>
-            <div v-if="hasAnyPermission(['order-completed'])" @click="changeStatus('completed')"
+            <div v-if="hasAnyPermission(['order-completed'])" @click="changeStatus('delivered')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
-                :class="{ 'bg-white  text-blue-500': status == 'completed' }">
+                :class="{ 'bg-white  text-blue-500': status == 'delivered' }">
                 <Icon icon="check-green"></Icon>
 
-                <span class="text-gray-400 ml-2"> Đã giao ({{ totalOrder('completed') }})</span>
+                <span class="text-gray-400 ml-2"> Đã giao ({{ totalOrder('delivered') }})</span>
             </div>
             <div v-if="hasAnyPermission(['order-refund'])" @click="changeStatus('refunding')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"

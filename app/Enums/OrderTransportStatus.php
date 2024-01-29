@@ -4,6 +4,9 @@ namespace App\Enums;
 
 enum OrderTransportStatus: string
 {
+
+
+        // là status trong bảng order_transports
     case wait_package = 'wait_package'; //Chờ đóng gói
     case not_shipper_owner = 'not_shipper_owner'; //Chưa giao shipper
     case not_shipping = 'not_shipping'; //Chưa giao
