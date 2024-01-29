@@ -83,7 +83,7 @@ const isFirstOrderDelivery = computed(() => {
   <div @mouseover="openPopover" @mouseleave="closePopover">
     <p ref="reference" class="text-xs leading-5 cursor-pointer" :class="cellStyle">
       {{ isFirstOrderDelivery
-        ? props.data ? moment(data.date_time, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY') : 'dd/mm/yy'
+        ? (data && data?.delivery_appointment) ? moment(data.delivery_appointment, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY') : 'dd/mm/yy'
         : displayText }}
     </p>
     <div v-if="data && data.order_number && allowPopover" v-show="showPopover" ref="floating" :style="floatingStyles"
