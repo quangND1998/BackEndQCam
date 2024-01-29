@@ -69,7 +69,7 @@ class GetWeeklyPlan extends Controller
                                 'plan' => null,
                                 'order' => true
                         ],
-                ];
+                    ];
                 }
             });
         
