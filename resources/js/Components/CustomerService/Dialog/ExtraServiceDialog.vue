@@ -38,7 +38,7 @@ const handelUpdateService = (id, index, newValue) => {
       v-if="visible"
       class="mt-4 w-[700px] rounded-lg bg-white shadow-lg fixed left-[calc((100vw_-_540px)/2)] top-[calc((100vh-700px)/2)] h-[700px] z-10"
     >
-      <div class="flex items-center justify-between rounded-t-lg bg-orange-600 pr-3 pl-4 py-2">
+      <div class="flex items-center justify-between rounded-t-lg bg-[#FF6100] pr-3 pl-4 py-2">
         <p class="font-semibold text-white">Thêm dịch vụ booking</p>
         <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="visible = false"/>
       </div>
@@ -51,7 +51,7 @@ const handelUpdateService = (id, index, newValue) => {
             placeholder="Tên dịch vụ" />
           <button
             :disabled="!extraServiceForm.name"
-            class="rounded-md bg-orange-500 text-white font-medium px-3 py-2 relative"
+            class="rounded-md bg-[#FF6100] text-white font-medium px-3 py-2 relative"
             :class="{
               'cursor-not-allowed !bg-gray-400 !text-gray-200': !extraServiceForm.name,
             }"
@@ -93,7 +93,7 @@ const handelUpdateService = (id, index, newValue) => {
                   }
                   "
                 />
-                <div class="w-11 h-6 bg-gray-400 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                <div class="w-11 h-6 bg-gray-400 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF6100]"></div>
               </label>
             </div>
           </div>
@@ -102,7 +102,7 @@ const handelUpdateService = (id, index, newValue) => {
 
     </div>
     <button
-      class="leading-5 rounded-full bg-orange-600 font-semibold text-white px-3 py-1"
+      class="leading-5 rounded-full bg-[#FF6100] font-semibold text-white px-3 py-1"
       @click="visible = !visible"
     >
       Thêm dịch vụ booking

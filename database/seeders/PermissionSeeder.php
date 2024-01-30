@@ -96,5 +96,12 @@ class PermissionSeeder extends Seeder
 
         Permission::create(['name' => 'setting-commersion']);
         Permission::create(['name' => 'view-commersion']);
+
+        Permission::create(['name' => 'cskh-booking']);
+        Permission::create(['name' => 'cskh-gift-delivery']);
+        Permission::create(['name' => 'cskh-role-package']);
+        Permission::create(['name' => 'cskh-distribute-call']);
+        Permission::create(['name' => 'cskh-pending']);
+        Permission::create(['name' => 'cskh-call-center']);
     }
 }

@@ -352,9 +352,10 @@ onMounted(() => {
             sipOnly: true,
             sipDomain: 'demo.cgvtelecom.vn:5060',
             wsServer: "wss://cgvcall.mobilesip.vn:7444",
-            sipPassword: "Cgv@@2023##"
+            sipPassword: "Cgv@@2023##",
+            contactName: '216',
         }
-        pitelSDK = new PitelSDK('xxx', 'xxx', '102', {}, sdkOptions)
+        pitelSDK = new PitelSDK('xxx', 'xxx', '216', {}, sdkOptions)
 
     }, 500);
 })

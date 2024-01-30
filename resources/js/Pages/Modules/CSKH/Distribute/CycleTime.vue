@@ -21,6 +21,10 @@ const props = defineProps({
   allowPopover: {
     required: false,
     default: false,
+  },
+  multipler: {
+    required: false,
+    default: 0,
   }
 });
 
@@ -37,13 +41,14 @@ const { floatingStyles, middlewareData } = useFloating(reference, floating, {
 });
 
 const date = computed(() => {
-  // Is schedule visit
   if (props.data && props.data.booking_type) {
     return moment(props.data.date_time, 'YYYY-MM-DD HH:mm:ss');
   }
 
-  const nextDate = moment(props.startDate, 'YYYY-MM-DD HH:mm:ss').add(((props.position + 1) * CYCLE_TIME), 'days');
-  return nextDate.weekday() !== 7 ? nextDate : nextDate.subtract(1, 'day');
+  const additionalDate = props.multipler * 12 * CYCLE_TIME
+  const nextDate = moment(props.startDate, 'YYYY-MM-DD HH:mm:ss').add(((props.position + 1) * CYCLE_TIME + additionalDate), 'days');
+
+  return nextDate.weekday() === 0 ? nextDate.subtract(1, 'day') : nextDate;
 });
 const cellStyle = computed(() => {
   if (props.data && props.data?.status === 'complete') return 'bg-[#4F8D06] text-white';
@@ -83,8 +88,6 @@ const distantDate = (dateInput) =>{
     }else if(date2 < date1){
         offsetText = '-';
     }
-
-
     return offsetText + khoangCachNgay;
 }
 </script>

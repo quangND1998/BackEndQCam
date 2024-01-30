@@ -12,10 +12,10 @@ const props = defineProps({
 
 const orders = computed(() => {
     return [
-        ...props.orderPackage.product_service_owner.orders,
-        ...(new Array(12 - props.orderPackage.product_service_owner.orders.length).fill(undefined))
+      ...props.orderPackage.product_service_owner.orders,
+      ...(new Array(12 - props.orderPackage.product_service_owner.orders.length).fill(undefined))
     ];
-});
+  });
 
 const lifeTime = computed(() => {
     return props.orderPackage.product_service.life_time;
@@ -25,6 +25,10 @@ const cycleYear = computed(() => getCycleYear(
     lifeTime.value,
     props.orderPackage.product_service_owner.time_approve
 ));
+const multipler = computed(() => {
+    const orderLength = props.orderPackage.product_service_owner.orders.length;
+    return orderLength === 0 ? 0 : Math.ceil(orderLength / 12) - 1;
+  })
 </script>
 
 <template>
@@ -36,11 +40,11 @@ const cycleYear = computed(() => getCycleYear(
         <div class="text-center border">{{ orderPackage.customer?.name }}</div>
         <div class="text-center border">{{ orderPackage.time_approve }}</div>
         <div v-for="(order, orderIndex) in orders" :key="order" class="text-center">
-            <CycleTime :data="order" :position="orderIndex" :packageIndex="index"  :startDate="orderPackage.product_service_owner.time_approve" :allowPopover="true" />
+        <CycleTime :data="order" :position="orderIndex" :packageIndex="index"  :startDate="orderPackage.time_approve" :allowPopover="true" :multipler="multipler" />
         </div>
-        <div v-if="lifeTime === 1 || cycleYear === lifeTime" class="bg-zinc-700 col-span-2" />
-        <div v-else >
-            <CycleTime :data="undefined" :position="12" :packageIndex="index" :startDate="orderPackage.product_service_owner.time_approve" :allowPopover="true" class="text-center indent-2" />
+        <div v-if="lifeTime === 1 || cycleYear === lifeTime" class="bg-[#3D3C3C] col-span-2" />
+        <div v-else class="col-span-2">
+        <CycleTime :data="undefined" :position="12" :packageIndex="index" :startDate="orderPackage.time_approve" :allowPopover="true" class="indent-2" />
         </div>
     </div>
 </template>

@@ -208,7 +208,7 @@ provide('BOOKING', {
           <div class="grid gap-4 grid-cols-2">
             <div>
               <button
-                class="leading-5 rounded-full bg-orange-600 font-semibold text-white px-3 py-1"
+                class="leading-5 rounded-full bg-[#FF6100] font-semibold text-white px-3 py-1"
                 @click="onOpenRetailOrderDialog"
               >
                 Tạo đơn bán lẻ sản phẩm
@@ -231,7 +231,7 @@ provide('BOOKING', {
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-3 gap-8 py-6 fixed bottom-0 bg-white border border-t-gray-500 w-full right-0">
+    <div class="grid grid-cols-3 gap-8 py-6 fixed bottom-0 bg-white border border-t-[#AEAEAE] w-full right-0">
       <div class="flex justify-center">
         <NoteDialog />
       </div>

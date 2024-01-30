@@ -48,7 +48,6 @@ class GiftDistributeController extends Controller
                     ->whereNotIn('status', ['decline', 'refund']);
             })->with('product');
         })
-        ->role()
         ->whereHas(
             'customer',
             function ($q) use ($request) {
@@ -73,13 +72,13 @@ class GiftDistributeController extends Controller
                     $date = Carbon::parse($order->time_approve)->addDays($dayDistant);
                     $datecall = Carbon::parse($date)->subDays(2);
 
-                    if($date->isSunday()){
-                        $date = $date->addDays(1);
-                    }
-                    $distributeDate = new DistributeDate;
-                    $distributeDate->date_recevie = $date;
-                    $distributeDate->order_package_id = $order->id;
-                    $distributeDate->save();
+                    // if($date->isSunday()){
+                    //     $date = $date->addDays(1);
+                    // }
+                    // $distributeDate = new DistributeDate;
+                    // $distributeDate->date_recevie = $date;
+                    // $distributeDate->order_package_id = $order->id;
+                    // $distributeDate->save();
 
 
                     // distributeCall = ngây kich hoat + 23

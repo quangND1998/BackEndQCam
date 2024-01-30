@@ -45,8 +45,8 @@ watch(visible, (newValue) => {
 <template>
   <div class="relative">
     <div v-if="visible" class="w-96 rounded-lg bg-white shadow-lg absolute -top-[330px]">
-      <div class="flex items-center justify-between rounded-t-lg bg-yellow-500 pr-3 pl-4 py-2">
-        <p class="font-semibold">Yêu cầu khiếu nại</p>
+      <div class="flex items-center justify-between rounded-t-lg bg-[#B7AD75] pr-3 pl-4 py-2">
+        <p class="font-semibold text-black">Yêu cầu khiếu nại</p>
         <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="visible = false"/>
       </div>
       <div class="px-4 py-3 relative">
@@ -72,7 +72,7 @@ watch(visible, (newValue) => {
         </div>
         <div class="mt-3 flex justify-end">
           <button
-            class="relative rounded bg-red-600 px-3 py-2 text-sm font-semibold text-white"
+            class="relative rounded bg-[#FF0000] px-3 py-2 text-sm font-semibold text-white"
             :class="{
               'cursor-wait': isLoading
             }"
@@ -87,7 +87,7 @@ watch(visible, (newValue) => {
         <DialogLoading v-if="isLoading" text="Đang thêm khiếu nại" />
       </div>
     </div>
-    <button class="w-96 bg-orange-500 rounded-full font-semibold text-white py-2" @click="visible = !visible">
+    <button class="w-96 bg-[#FF6100] rounded-full font-semibold text-white py-2" @click="visible = !visible">
       Tạo yêu cầu khiếu nại
     </button>
   </div>

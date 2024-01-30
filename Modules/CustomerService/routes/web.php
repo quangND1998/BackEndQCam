@@ -48,8 +48,8 @@ Route::middleware(['auth'])->group(
         });
 
 
-        Route::prefix('/customer-service')->group(function () {
-            Route::get('/weekly-plan', GetWeeklyPlan::class);
+        Route::prefix('/customer-service')->as('customer-service.')->group(function () {
+            Route::get('/weekly-plan', GetWeeklyPlan::class)->name('weekly-plan');
             Route::post('/orders', CreateRetailOrder::class);
             Route::get('/reminds', GetRemind::class);
             Route::put('/reminds/{remind}', UpdateRemind::class);

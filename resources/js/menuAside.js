@@ -144,43 +144,49 @@ export default [{
         // chưởng phòng CSKH
         label: 'CSKH',
         icon: mdiFileTreeOutline,
-        permissions: ['super-admin', 'cskh'],
+        permissions: ['super-admin', 'cskh-booking','cskh-gift-delivery','cskh-role-package','cskh-distribute-call','cskh-pending','cskh-call-center'],
         route_list: ['admin.booking.index', 'admin.booking.detail'],
         menu: [{
                 route: 'admin.booking.index',
                 label: 'QLHS',
-
-                permissions: ['super-admin', 'cskh'],
+                // phat ma booking
+                permissions: ['super-admin', 'cskh-booking'],
                 route_list: ['admin.booking.index', 'admin.booking.detail']
             },
             {
                 route: 'admin.gift_distribute.index',
                 label: 'Bảng PB quà',
-                permissions: ['super-admin', 'cskh'],
+                permissions: ['super-admin', 'cskh-gift-delivery'],
                 route_list: null
             },
             {
                 route: 'admin.gift_distribute.role',
                 label: 'Quyền hợp đồng',
-                permissions: ['super-admin', 'cskh'],
+                permissions: ['super-admin', 'cskh-role-package'],
                 route_list: null
             },
             {
                 route: 'admin.call_distribute.schedule',
                 label: 'Lên KH',
-                permissions: ['super-admin', 'cskh'],
+                permissions: ['super-admin', 'cskh-distribute-call'],
+                route_list: null
+            },
+            {
+                route: 'customer-service.weekly-plan',
+                label: 'Kế hoạch CS',
+                permissions: ['super-admin', 'cskh-detail'],
                 route_list: null
             },
             {
                 route: 'admin.orders.package.all',
                 label: 'Pending',
-                permissions: ['super-admin', 'cskh'],
+                permissions: ['super-admin', 'cskh-pending'],
                 route_list: null
             },
             {
                 route: 'admin.orders.package.all',
                 label: 'Call Center',
-                permissions: ['super-admin', 'cskh'],
+                permissions: ['super-admin', 'cskh-call-center'],
                 route_list: null
             },
         ]
@@ -293,7 +299,33 @@ export default [{
 
         ]
     },
+    {
+        label: 'Quản lý kho',
+        icon: mdiSale,
+        permissions: ['super-admin'],
+        route_list: ['admin.land.index'],
+        menu: [{
+                route: 'admin.land.index',
+                permissions: ['super-admin', 'create-land', 'create-land', 'update-land', 'delete-land'],
+                label: 'Đơn tiếp nhận',
+                permissions: ['super-admin', 'create-land', 'create-land', 'update-land', 'delete-land'],
+                route_list: null
+            },
+            {
+                route: 'admin.activity-care.index',
+                label: 'Sản phẩm',
+                permissions: ['view-care', 'create-care', 'update-care', 'delete-care'],
+                route_list: null
+            },
+            {
+                route: 'admin.product-retail.index',
+                label: 'Quản lý kho',
+                permissions: ['view-product', 'create-product', 'update-product', 'delete-product'],
+                route_list: null
+            },
 
+        ]
+    },
     {
         label: 'Quản lý người dùng',
         icon: mdiFileTreeOutline,
