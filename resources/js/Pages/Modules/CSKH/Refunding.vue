@@ -191,7 +191,7 @@ const selectAll = computed({
                 <div class="my-3 w-full flex justify-between">
                     <button v-if="selected.length > 0" @click="refundOrders()" data-toggle="modal"
                         data-target="#OrderRefund"
-                        class=" inline-flex px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
+                        class=" inline-flex items-center px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
                         <Icon icon="flip" />
                         Xác nhận hoàn ({{ selected.length }})
                     </button>
