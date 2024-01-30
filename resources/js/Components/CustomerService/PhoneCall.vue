@@ -19,12 +19,12 @@ const hidePhoneNumber = computed(() => {
 
 const onCall = () => {
   pitelSDK.value.call(customer.phone_number, {
-    extraHeaders: ['x-PROCESS-ID: 123']
-  })
+    extraHeaders: ['CALL-FROM: Cam mặt trời'],
+  });
 }
 
 const pitelSDK = ref(null);
-const phoneCallReady = ref(false);
+const phoneCallReady = ref(true);
 onMounted(() => {
   (function (a,b) {
     var s = document.createElement('script');
@@ -39,31 +39,33 @@ onMounted(() => {
   });
   setTimeout(function () {
     const sdkOptions = {
-      enableWidget: true,
+      enableWidget: false,
       sipOnly: true,
       sipDomain: 'greenholidays.vn',
       wsServer: "wss://cgvcall.mobilesip.vn:7444",
       sipPassword: "Agent@@2023!!",
-      contactName: '2200'
+      contactName: 'Cam mặt trời'
     }
     const sdkHook = {
       onRegistered: () => {
+        console.log('onRegistered');
         phoneCallReady.value = true;
       },
       onUnregistered: () => {
+        console.log('onUnregistered');
         phoneCallReady.value = false;
       },
-      onCallStateChange: (callState) => {
-        console.log('callState', callState);
+      onCallCreated: () => {
+        console.log('onCallCreated');
+      },
+      onCallAnswered: () => {
+        console.log('onCallAnswered');
       },
       onCallHangup: () => {
         console.log('onCallHangup');
       },
     }
     pitelSDK.value = new PitelSDK('xxx', 'xxx', '2200', sdkHook, sdkOptions);
-    pitelSDK.value.onCallStateChange = (callState) => {
-      console.log('callState', callState);
-    }
   }, 500);
 });
 
@@ -86,4 +88,5 @@ onUnmounted(() => {
       <p class="font-medium">{{ hidePhoneNumber }}</p>
     </div>
   </div>
+
 </template>
