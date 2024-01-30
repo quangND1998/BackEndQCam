@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Tree\app\Http\Controllers\ActivityCareController;
 use Modules\Tree\app\Http\Controllers\HistoryCareController;
 use Modules\Tree\app\Http\Controllers\LandController;
+use Modules\Tree\app\Http\Controllers\ProductAddController;
 use Modules\Tree\app\Http\Controllers\ProductRetailController;
 use Modules\Tree\app\Http\Controllers\ProductServiceController;
 use Modules\Tree\app\Http\Controllers\TreeController;
@@ -68,6 +69,11 @@ Route::middleware(['auth'])->group(
                 Route::post('{tree}/store', [HistoryCareController::class, 'store'])->name('store');
                 Route::post('storeLand', [HistoryCareController::class, 'storeLand'])->name('storeLand');
                 Route::delete('/{historyCare}/destroy', [HistoryCareController::class, 'destroy'])->name('destroy');
+            });
+            Route::prefix('importProduct')->as('importProduct.')->group(function () {
+                Route::get('index', [ProductAddController::class, 'index'])->name('index');
+                Route::post('store', [ProductAddController::class, 'store'])->name('store');
+                Route::post('update', [ProductAddController::class, 'update'])->name('update');
             });
         });
     }
