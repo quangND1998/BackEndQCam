@@ -11,10 +11,13 @@ import CycleTime from '@/Components/CustomerService/CycleTime.vue';
   });
 
   const orders = computed(() => {
-    return [
-      ...props.orderPackage.product_service_owner.orders,
-      ...(new Array(12 - props.orderPackage.product_service_owner.orders.length).fill(undefined))
-    ];
+    if (props.orderPackage.product_service_owner.orders.length < 12)
+      return [
+        ...props.orderPackage.product_service_owner.orders,
+        ...(new Array(12 - props.orderPackage.product_service_owner.orders.length).fill(undefined))
+      ];
+
+    return props.orderPackage.product_service_owner.orders.slice(-12);
   });
 
   const lifeTime = computed(() => {
