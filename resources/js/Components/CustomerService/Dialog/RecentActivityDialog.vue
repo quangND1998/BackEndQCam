@@ -11,9 +11,6 @@ const visible = ref(false);
 const { data, executeQuery } = useQuery(
   CUSTOMER_SERVICE_API_MAKER.GET_RECENT_ACTIVITY(customerId),
   undefined,
-  (response) => {
-    console.log(response);
-  }
 );
 
 onMounted(() => {
