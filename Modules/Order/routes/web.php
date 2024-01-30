@@ -159,9 +159,11 @@ Route::middleware(['auth'])->group(
                 Route::get('notShipperReceive', [CSKHOrderController::class, 'not_shipper_receive'])->name('notShipperReceive');
 
                 Route::prefix('order')->as('order.')->group(function () {
-                    Route::post('/{order}/decline', [CSKHOrderController::class, 'orderDecline'])->name('decline');
-                    Route::post('/{order_transport}/refunding', [CSKHOrderController::class, 'orderRefunding'])->name('refunding');
+                    Route::post('/{order_transport}/decline', [CSKHOrderController::class, 'orderDecline'])->name('decline');
+                    Route::post('/refunding', [CSKHOrderController::class, 'orderRefunding'])->name('refunding');
                     Route::post('refund', [CSKHOrderController::class, 'orderRefund'])->name('refund');
+
+                    Route::post('/cancel', [CSKHOrderController::class, 'orderCancel'])->name('cancel');
                 });
                 Route::post('/confirm-document', [CSKHOrderController::class, 'confirmStateDocument'])->name('confirm-document');
 

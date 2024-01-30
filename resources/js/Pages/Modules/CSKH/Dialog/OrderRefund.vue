@@ -29,10 +29,10 @@
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/loading-svgrepo-com.png" alt="" class="w-12 h-12 p-2">
                             <p class=" text-xl"
-                                :class="isActive(['pending', 'packed', 'delivering', 'delivered']) ? 'text-[#FF0000]' : ''">
+                                :class="isActive(['pending', 'packing', 'delivering', 'delivered']) ? 'text-[#FF0000]' : ''">
                                 Chuẩn bị</p>
                         </div>
-                        <div class=" arrow mx-1  " :class="isActive(['packed', 'delivering', 'delivered']) ? 'active' : ''">
+                        <div class=" arrow mx-1  " :class="isActive(['packing', 'delivering', 'delivered']) ? 'active' : ''">
                         </div>
                         <div class=" mx-1 flex flex-col items-center">
                             <img src="/assets/icon/box.png" alt="" class="w-12 h-12 p-2">

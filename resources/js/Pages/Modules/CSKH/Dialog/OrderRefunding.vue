@@ -4,37 +4,49 @@
         <div class="modal-dialog modal-xl rounded-2xl mx-auto mt-10 shadow-lg max-h-modal w-8/12   md:w-9/12 lg:w-8/12 xl:w-5/12 z-50 "
             role="document">
             <div class="modal-content">
-                <div class="modal-header">
+
+                <div class="modal-header" v-if="ids.length > 1">
                     <div class="w-full flex justify-between">
-                        <h3 class="text-black font-semibold my-1 text-[16px]">Đơn hàng #{{ order?.order_number }}</h3>
+                        <h3 class="text-black font-semibold my-1 text-[16px]">Xác nhận hoàn đơn</h3>
+
+                    </div>
+                    <button type="button" class="close" @click="closeModal" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-header" v-if="order_transport">
+                    <div class="w-full flex justify-between">
+                        <h3 class="text-black font-semibold my-1 text-[16px]">Đơn hàng #{{
+                            order_transport.order?.order_number }}</h3>
                         <h3 class="text-black font-semibold my-1 text-[16px]">Ngày nhận đơn {{
-                            formatDateOnly(order?.delivery_appointment) }}</h3>
+                            formatDateOnly(order_transport.order?.delivery_appointment) }}</h3>
                     </div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body  mx-1 mb-6">
+
+                <div class="modal-body  mx-1 mb-6" v-if="order_transport">
                     <div class="flex items-center ">
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/loading-svgrepo-com.png" alt="" class="w-12 h-12 p-2">
                             <p class=" text-xl"
-                                :class="isActive(['pending', 'packed', 'delivering', 'delivered']) ? 'text-[#FF0000]' : ''">
+                                :class="isActive(['pending', 'packing', 'shipping', 'delivered']) ? 'text-[#FF0000]' : ''">
                                 Chuẩn bị</p>
                         </div>
-                        <div class=" arrow mx-1  " :class="isActive(['packed', 'delivering', 'delivered']) ? 'active' : ''">
+                        <div class=" arrow mx-1  " :class="isActive(['packing', 'shipping', 'delivered']) ? 'active' : ''">
                         </div>
                         <div class=" mx-1 flex flex-col items-center">
                             <img src="/assets/icon/box.png" alt="" class="w-12 h-12 p-2">
                             <p class="text-base"
-                                :class="isActive(['packed', 'delivering', 'delivered']) ? 'text-[#FF0000]' : ''">
+                                :class="isActive(['packing', 'shipping', 'delivered']) ? 'text-[#FF0000]' : ''">
                                 Đóng gói</p>
                         </div>
-                        <div class="arrow mx-1" :class="isActive(['delivering', 'delivered']) ? 'active' : ''">
+                        <div class="arrow mx-1" :class="isActive(['shipping', 'delivered']) ? 'active' : ''">
                         </div>
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/ship.png" alt="" class="w-12 h-12 p-2">
-                            <p class=" text-base" :class="isActive(['delivering', 'delivered']) ? 'text-[#FF0000]' : ''">
+                            <p class=" text-base" :class="isActive(['shipping', 'delivered']) ? 'text-[#FF0000]' : ''">
                                 Vận chuyển</p>
                         </div>
                         <div class="arrow mx-1" :class="isActive(['delivered']) ? 'active' : ''">
@@ -57,7 +69,7 @@
 
                         <p class="text-[#000000] text-base mr-4">Trạng thái hiện tại
                         </p>
-                        <OrderStatus v-if="order" :order="order" />
+                        <OrderTransportState v-if="order_transport" :order_transport="order_transport" />
                     </div>
                     <div class="w-full flex flex-col  mx-auto mt-4">
 
@@ -72,12 +84,13 @@
                     </div>
 
 
-                    <div class="modal-footer">
+                </div>
 
-                        <button type="submit" @click.prevent="orderRefunding()"
-                            class="inline-block px-2 py-3 bg-red-600 text-white font-black text-sm leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Yêu
-                            cầu hoàn đơn đơn</button>
-                    </div>
+                <div class="modal-footer">
+
+                    <button type="submit" @click.prevent="orderRefunding()" v-if="ids.length > 0"
+                        class="inline-block rounded-2xl px-2 py-3 bg-[#4F8D06] text-white font-black text-sm leading-tight uppercase  shadow-md hover:bg-[#4F8D06] hover:shadow-lg focus:bg-[#4F8D06] focus:shadow-lg focus:outline-none focus:ring-0 active:bg-[#4F8D06] active:shadow-lg transition duration-150 ease-in-out">Tạo
+                        yêu cầu hoàn đơn</button>
                 </div>
             </div>
         </div>
@@ -91,26 +104,20 @@ import { storeToRefs } from 'pinia'
 import { useForm, router } from "@inertiajs/vue3";
 import { useOrderStore } from '@/stores/order.js'
 import OrderStatus from '@/Pages/Modules/CSKH/OrderStatus.vue'
-
-
-const { order
+import OrderTransportState from '@/Pages/Modules/CSKH/Status/OrderTransportState.vue'
+const props = defineProps({
+    ids: Array
+})
+const { order, order_transport
 } = storeToRefs(useOrderStore())
 const form = useForm({
     reason: null,
-    delivery_appointment: null
+
 })
 
-onMounted(() => {
 
-    emitter.on('OrderRefunding', (order) => {
-        console.log(order.reason)
-
-        form.reason = order.reason,
-            form.delivery_appointment = order.delivery_appointment
-    })
-});
 const isActive = (status) => {
-    if (order.value && status.includes(order.value.status_transport)) {
+    if (order_transport.value && status.includes(order_transport.value.state)) {
         return true
     }
     return false
@@ -119,18 +126,20 @@ const isActive = (status) => {
 
 const orderRefunding = () => {
 
-    form.post(route("admin.cskh.order.refunding", order.value.id), {
-        preserveState: true,
-        onError: errors => {
-            if (Object.keys(errors).length > 0) {
+    let query = {
+        ids: props.ids,
+        reason: form.reason
+    };
 
-            }
-        },
-        onSuccess: page => {
-            $("#OrderRefunding").modal("hide");
+
+    router.post(route("admin.cskh.order.refunding"), query, {
+        onError: () => { },
+        onSuccess: () => {
             form.reset();
-        }
+        },
     });
+
+
 }
 const listener = () => {
 }

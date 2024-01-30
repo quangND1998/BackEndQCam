@@ -1,14 +1,12 @@
 <script setup>
-import { computed, ref, inject, reactive, toRef } from "vue";
+import { computed, ref, inject, reactive, toRef, watch } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import Pagination from "@/Components/Pagination.vue";
+import Pagination from "@/Pages/Modules/CSKH/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
-
-import OrderStatus from "./OrderStatus.vue";
 import {
     mdiLayersTripleOutline,
     mdiPhone,
@@ -16,13 +14,14 @@ import {
 import BaseButton from "@/Components/BaseButton.vue";
 import BaseIcon from "@/Components/BaseIcon.vue";
 import "vue-search-input/dist/styles.css";
-import { initFlowbite } from "flowbite";
+import { useOrderStore } from '@/stores/order.js'
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
 import { usePopOverStore } from '@/stores/popover.js';
 import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
 import OrderDocument from '@/Pages/Modules/CSKH/Dialog/OrderDocument.vue';
 import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
+import OrderRefunding from '@/Pages/Modules/CSKH/Dialog/OrderRefunding.vue'
 import Icon from '@/Components/Icon.vue'
 const props = defineProps({
     order_transports: Object,
@@ -37,17 +36,19 @@ const props = defineProps({
 
 const { openPopover,
     closePopover } = usePopOverStore();
+const { showDetailOrderTransport, closeModal } = useOrderStore();
 const filter = reactive({
     customer: null,
     name: null,
     fromDate: null,
     toDate: null,
     search: null,
+    market: null,
     payment_status: null,
     payment_method: null,
     type: null,
     per_page: 10,
-    selectedDate: null,
+    selectedDate: null
 });
 const swal = inject("$swal");
 const form = useForm({
@@ -58,42 +59,26 @@ const form = useForm({
 });
 
 
-initFlowbite();
-
-const searchCustomer = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
-
-const Fillter = (event) => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
-
-const fillterPaymentMethod = (event) => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
 const search = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
+    router.get(route(`admin.cskh.completed`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 
+watch(() => [filter.market], (newVal) => {
+    search()
+});
 
-const changeDate = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
+watch(() => [filter.type], (newVal) => {
+    search()
+});
+watch(() => [filter.per_page], (newVal) => {
+    search()
+});
 
 
 
@@ -122,10 +107,6 @@ const ordersConfirm = () => {
                 return;
             }
         });
-};
-const openSHippingDetail = (order) => {
-
-    emitter.emit("ModelShipping", order);
 };
 const selected = ref([]);
 const selected_refund = ref([]);
@@ -168,13 +149,22 @@ const selectAllRefund = computed({
 });
 
 const orderRefunding = () => {
+    closeModal()
+    if (selected_refund.value.length == 1) {
 
+        const found = props.order_transports.data.find((element) => element.id == selected_refund.value[0]);
+        console.log(found)
+        if (found) {
+            showDetailOrderTransport(found)
+        }
+    }
 }
 </script>
 <template>
     <LayoutAuthenticated>
 
         <OrderDocument />
+        <OrderRefunding v-if="selected_refund.length > 0" :ids="selected_refund" />
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -216,17 +206,17 @@ const orderRefunding = () => {
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
+                                <select id="countries" v-model="filter.market"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả kho hàng</option>
-                                    <option value="gift_delivery">Giao quà</option>
-                                    <option value="order">Đơn lẻ</option>
+                                    <option value="MB">Miền Bắc</option>
+                                    <option value="MN">Miền Nam</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
+                                <select id="countries" v-model="filter.type"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
                                     <option value="gift_delivery">Giao quà</option>
@@ -244,7 +234,8 @@ const orderRefunding = () => {
                             Xác nhận duyệt hàng loạt ({{ selected.length }})
                         </button>
 
-                        <button v-if="selected_refund.length > 0" @click="orderRefunding()"
+                        <button v-if="selected_refund.length > 0" @click="orderRefunding()" data-target="#OrderRefunding"
+                            data-toggle="modal"
                             class=" inline-flex items-center px-2 py-2 text-sm bg-[#1D75FA] hover:bg-[#1D75FA] text-white p-2 rounded-lg border mx-1">
                             <Icon icon="flip" />Tạo yêu cầu hoàn ({{ selected_refund.length }})
                         </button>
@@ -277,23 +268,22 @@ const orderRefunding = () => {
                                                 class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
 
                                         </th>
-
-
                                         <th scope="col" class="px-3 py-2 text-left">STT</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã HĐ</th>
                                         <th scope="col" class="px-3 py-2 text-left">Loại HĐ</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tên KH</th>
                                         <th scope="col" class="px-3 py-2 text-left">SĐT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Loại hàng</th>
-                                        <th scope="col" class="px-3 py-2 text-left">SL</th>
-                                        <th scope="col" class="px-3 py-2 text-left">DVT</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Sản phẩm</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tình Trạng</th>
-
                                         <th scope="col" class="px-3 py-2 text-left">Shipper</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hẹn giao</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Địa bàn</th>
+                                        <th scope="col" class="px-3 py-2 text-left">KV</th>
                                         <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hồ sơ</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Mã Vận Đơn</th>
+                                        <th scope="col" class="px-3 py-2 text-left">CS</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã vận đơn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -344,16 +334,8 @@ const orderRefunding = () => {
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
-                                                {{ item?.product?.name }}
+                                                {{ item?.product?.name }} {{ item?.product?.unit }}X{{ item?.quantity }}
                                             </p>
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
-                                                {{ item?.quantity }}
-                                            </p>
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            hộp
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <OrderTransportStatus :order_transport="order_transport" />
@@ -363,12 +345,23 @@ const orderRefunding = () => {
                                             {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
                                             }}
                                         </td>
-
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{
                                                 order_transport.delivery_appointment
                                                 ? formatTimeDayMonthyear(order_transport.delivery_appointment)
                                                 : "Chưa cập nhật"
+                                            }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order_transport.order.address + ',' + order_transport.order.wards + ',' +
+                                                order_transport.order.district +
+                                                ',' +
+                                                order_transport.order.city }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{
+                                                order_transport.order.product_service.order_package.market
+
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500 ">
@@ -381,7 +374,12 @@ const orderRefunding = () => {
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <StateDocument :order="order_transport.order" />
                                         </td>
-
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order_transport.order?.saler.name }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order_transport.order?.order_number }}
+                                        </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order_transport.order_transport_number }}
                                         </td>
@@ -389,6 +387,19 @@ const orderRefunding = () => {
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div class="w-full flex  justify-between items-center">
+                        <div class="flex items-center">
+                            <span class="mr-2">Hiển thị</span>
+                            <select v-model="filter.per_page"
+                                class="bg-gray-50 border   text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  mx-auto px-4 py-1   dark:bg-gray-700 dark:border-gray-600 ">
+                                <option :value="50">50</option>
+                                <option :value="100">100</option>
+                                <option :value="200">200</option>
+                            </select>
+                        </div>
+
+                        <Pagination :links="order_transports.links" />
                     </div>
                 </div>
             </div>

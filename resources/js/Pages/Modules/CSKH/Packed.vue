@@ -1,13 +1,10 @@
 <script setup>
-import { computed, ref, inject, reactive, toRef } from "vue";
+import { computed, ref, inject, reactive, toRef, watch } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import Pagination from "@/Components/Pagination.vue";
+import Pagination from "@/Pages/Modules/CSKH/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import CardBox from "@/Components/CardBox.vue";
-import CardBoxModal from "@/Components/CardBoxModal.vue";
-import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
 import ModelShipping from "./ModelShipping.vue";
@@ -24,6 +21,7 @@ import { emitter } from "@/composable/useEmitter";
 import { usePopOverStore } from '@/stores/popover.js'
 import OrderStatusBar from "./OrderStatusBar.vue";
 import OrderStatus from "./OrderStatus.vue";
+import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
 const props = defineProps({
     order_transports: Object,
     status: String,
@@ -43,11 +41,12 @@ const filter = reactive({
     fromDate: null,
     toDate: null,
     search: null,
+    market: null,
     payment_status: null,
     payment_method: null,
     type: null,
     per_page: 10,
-    selectedDate: null,
+    selectedDate: null
 });
 
 const swal = inject("$swal");
@@ -60,42 +59,36 @@ const form = useForm({
 });
 
 
+watch(() => [form.selectedDate], (newVal) => {
+    // console.log(newVal[0][0])
+    filter.fromDate = newVal[0][0]
+    filter.toDate = newVal[0][1]
+    search()
+});
 
-const searchCustomer = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
-
-const Fillter = (event) => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
-
-const fillterPaymentMethod = (event) => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
 const search = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
+    router.get(route(`admin.cskh.packing`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
+
+watch(() => [filter.market], (newVal) => {
+    search()
+});
+
+watch(() => [filter.type], (newVal) => {
+    search()
+});
+watch(() => [filter.per_page], (newVal) => {
+    search()
+});
 
 
 
-const changeDate = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
 
 
 const packedOrder = (order) => {
@@ -226,17 +219,17 @@ const selectAll = computed({
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
+                                <select id="countries" v-model="filter.market"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả kho hàng</option>
-                                    <option value="gift_delivery">Giao quà</option>
-                                    <option value="order">Đơn lẻ</option>
+                                    <option value="MB">Miền Bắc</option>
+                                    <option value="MN">Miền Nam</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
+                                <select id="countries" v-model="filter.type"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
                                     <option value="gift_delivery">Giao quà</option>
@@ -289,15 +282,17 @@ const selectAll = computed({
                                         <th scope="col" class="px-3 py-2 text-left">Loại HĐ</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tên KH</th>
                                         <th scope="col" class="px-3 py-2 text-left">SĐT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Loại hàng</th>
-                                        <th scope="col" class="px-3 py-2 text-left">SL</th>
-                                        <th scope="col" class="px-3 py-2 text-left">DVT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Tình Trạng </th>
+                                        <th scope="col" class="px-3 py-2 text-left">Sản phẩm</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Tình Trạng</th>
                                         <th scope="col" class="px-3 py-2 text-left">Shipper</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hẹn giao</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Địa bàn</th>
+                                        <th scope="col" class="px-3 py-2 text-left">KV</th>
                                         <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Hồ sơ</th>
+                                        <th scope="col" class="px-3 py-2 text-left">CS</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã vận đơn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -342,16 +337,8 @@ const selectAll = computed({
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
-                                                {{ item?.product?.name }}
+                                                {{ item?.product?.name }} {{ item?.product?.unit }}X{{ item?.quantity }}
                                             </p>
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
-                                                {{ item?.quantity }}
-                                            </p>
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            hộp
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <OrderTransportStatus :order_transport="order_transport" />
@@ -361,7 +348,6 @@ const selectAll = computed({
                                             {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
                                             }}
                                         </td>
-
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{
                                                 order_transport.delivery_appointment
@@ -370,12 +356,27 @@ const selectAll = computed({
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order_transport.order.address + ',' + order_transport.order.wards + ',' +
+                                                order_transport.order.district +
+                                                ',' +
+                                                order_transport.order.city }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{
+                                                order_transport.order.product_service.order_package.market
+
+                                            }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <button @mouseover="openPopover(order_transport)" @mouseleave="closePopover">
                                                 xem
                                             </button>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            xem
+                                            <StateDocument :order="order_transport.order" />
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order_transport.order?.saler.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order_transport.order?.order_number }}
@@ -387,6 +388,19 @@ const selectAll = computed({
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div class="w-full flex  justify-between items-center">
+                        <div class="flex items-center">
+                            <span class="mr-2">Hiển thị</span>
+                            <select v-model="filter.per_page"
+                                class="bg-gray-50 border   text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  mx-auto px-4 py-1   dark:bg-gray-700 dark:border-gray-600 ">
+                                <option :value="50">50</option>
+                                <option :value="100">100</option>
+                                <option :value="200">200</option>
+                            </select>
+                        </div>
+
+                        <Pagination :links="order_transports.links" />
                     </div>
                 </div>
             </div>

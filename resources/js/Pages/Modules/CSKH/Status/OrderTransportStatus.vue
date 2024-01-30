@@ -37,7 +37,7 @@ const status_transport_color = {
     wait_refund: 'bg-[#27AE60] text-white',
     refund: 'bg-[#00327F] text-white',
     wait_decline: ' text-[#FF0000]',
-    decline: 'bg-[#FF0000] text - white',
+    decline: 'bg-[#FF0000] text-white',
 
 }
 

@@ -213,12 +213,7 @@ export default [{
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
-            {
-                route: 'admin.cskh.notShipperReceive',
-                label: 'Shipper không nhận',
-                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
-                route_list: null
-            },
+
             {
                 route: 'admin.cskh.shipping',
                 label: 'Vận chuyển',

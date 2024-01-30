@@ -152,6 +152,7 @@ class Order extends Model implements HasMedia
 
     public function saler()
     {
+        //  là chăm sóc khách hàng
         return $this->belongsTo(User::class, 'sale_id');
     }
     public function scopeRole($query)

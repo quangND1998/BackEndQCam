@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive, toRef } from "vue";
+import { computed, ref, inject, reactive, toRef, watch } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Pages/Modules/CSKH/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
@@ -39,6 +39,7 @@ const filter = reactive({
     fromDate: null,
     toDate: null,
     search: null,
+    market: null,
     payment_status: null,
     payment_method: null,
     type: null,
@@ -47,8 +48,6 @@ const filter = reactive({
 
 
 })
-const customer = ref()
-const searchVal = ref("");
 const swal = inject("$swal");
 const form = useForm({
     id: null,
@@ -61,37 +60,15 @@ const form = useForm({
 });
 
 
-const searchCustomer = () => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
+watch(() => [form.selectedDate], (newVal) => {
+    // console.log(newVal[0][0])
+    filter.fromDate = newVal[0][0]
+    filter.toDate = newVal[0][1]
+    search()
+});
 
-const Fillter = (event) => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
-
-const fillterPaymentMethod = (event) => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
 const search = () => {
-    router.get(route(`admin.orders.${props.status}`),
+    router.get(route(`admin.cskh.all`),
         filter,
         {
             preserveState: true,
@@ -100,16 +77,16 @@ const search = () => {
     );
 }
 
+watch(() => [filter.market], (newVal) => {
+    search()
+});
 
-const changeDate = () => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
+watch(() => [filter.type], (newVal) => {
+    search()
+});
+watch(() => [filter.per_page], (newVal) => {
+    search()
+});
 
 
 const pushOrder = (order) => {
@@ -237,18 +214,18 @@ const selectAll = computed({
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                <select id="countries" v-model="filter.market"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả kho hàng</option>
-                                    <option value="gift_delivery">Giao quà</option>
-                                    <option value="order">Đơn lẻ</option>
+                                    <option value="MB">Miền Bắc</option>
+                                    <option value="MN">Miền Nam</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                <select id="countries" v-model="filter.type"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
                                     <option value="gift_delivery">Giao quà</option>
                                     <option value="order">Đơn lẻ</option>
@@ -393,7 +370,7 @@ const selectAll = computed({
                     <div class="w-full flex  justify-between items-center">
                         <div class="flex items-center">
                             <span class="mr-2">Hiển thị</span>
-                            <select
+                            <select v-model="filter.per_page"
                                 class="bg-gray-50 border   text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  mx-auto px-4 py-1   dark:bg-gray-700 dark:border-gray-600 ">
                                 <option :value="50">50</option>
                                 <option :value="100">100</option>

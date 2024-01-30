@@ -125,13 +125,14 @@ class OrderRepository implements OrderContract
         )->whereHas(
             'product_service.order_package',
             function ($q) use ($request) {
-                if (isset($request['market'])) {
+
+                if ($request->market) {
 
                     $q->where('market', $request->market);
                 }
             }
 
-        )->fillter($request->only('market', 'status', 'search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+        )->fillter($request->only('status', 'search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
     }
 
 
