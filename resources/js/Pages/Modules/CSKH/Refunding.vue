@@ -40,7 +40,7 @@ const props = defineProps({
 });
 const { openPopover,
     closePopover } = usePopOverStore();
-const { showDetailOrder, closeModal } = useOrderStore();
+const { showDetailOrder, closeModal, showDetailOrderTransport } = useOrderStore();
 
 const filter = reactive({
     customer: null,
@@ -98,9 +98,10 @@ const refundOrders = () => {
     closeModal()
     if (selected.value.length == 1) {
         console.log(selected.value[0])
-        const found = props.orders.data.find((element) => element.id == selected.value[0]);
+        const found = props.order_transports.data.find((element) => element.id == selected.value[0]);
         if (found) {
-            showDetailOrder(found)
+            showDetailOrderTransport(found)
+            emitter.emit('OrderRefund', found)
         }
     }
 

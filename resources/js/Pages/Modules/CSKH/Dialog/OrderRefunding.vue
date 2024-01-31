@@ -136,6 +136,7 @@ const orderRefunding = () => {
         onError: () => { },
         onSuccess: () => {
             form.reset();
+            $("#OrderRefunding").modal("hide");
         },
     });
 
