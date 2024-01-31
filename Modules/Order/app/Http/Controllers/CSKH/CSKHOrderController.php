@@ -392,7 +392,7 @@ class CSKHOrderController extends Controller
             foreach ($order_transports as $order_transport) {
                 $order_transport->update([
                     'state' => OrderTransportState::refund,
-                    'status' => OrderTransportStatus::wait_warehouse,
+                    'status' => OrderTransportStatus::refund,
                 ]);
                 $order_transport->order->update([
                     'status' => OrderStatusEnum::pending,
@@ -409,7 +409,7 @@ class CSKHOrderController extends Controller
                                     'state' => 'pending',
                                     'code' => $product->code,
                                     'time' => Carbon::now(),
-                                    // 'type' => $product->type,
+                                    'type' => $product->type == true ? 'H' : 'B',
                                     'unit' => $product->unit,
                                     'quantity' => $item['quantity'],
                                     'reason' => $order_transport->reason,
@@ -430,7 +430,7 @@ class CSKHOrderController extends Controller
                                     'state' => 'pending',
                                     'code' => $product->code,
                                     'time' => Carbon::now(),
-                                    // 'type' => $product->type,
+                                    'type' => $product->type == true ? 'H' : 'B',
                                     'unit' => $product->unit,
                                     'quantity' => $item->quantity,
                                     'reason' => $order_transport->reason,

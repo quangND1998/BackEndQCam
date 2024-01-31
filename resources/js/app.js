@@ -40,6 +40,8 @@ import vClickOutside from "click-outside-vue3"
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 Fancybox.bind("[data-fancybox]", {});
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`,
@@ -56,7 +58,7 @@ createInertiaApp({
             .component('vue-countdown', VueCountdown)
             .use(VueApexCharts)
             .use(VueSweetalert2)
-            .use(vClickOutside)
+            .use(vClickOutside).use(Toast)
             .directive('tooltip', Tooltip)
             .mixin(helper, base)
             .mount(el);

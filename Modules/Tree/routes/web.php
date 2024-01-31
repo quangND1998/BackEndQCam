@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Tree\app\Http\Controllers\ActivityCareController;
+use Modules\Tree\app\Http\Controllers\API\ProductRefundController;
 use Modules\Tree\app\Http\Controllers\HistoryCareController;
 use Modules\Tree\app\Http\Controllers\LandController;
 use Modules\Tree\app\Http\Controllers\ProductAddController;
@@ -74,6 +75,12 @@ Route::middleware(['auth'])->group(
                 Route::get('index', [ProductAddController::class, 'index'])->name('index');
                 Route::post('store', [ProductAddController::class, 'store'])->name('store');
                 Route::post('update/{id}', [ProductAddController::class, 'update'])->name('update');
+            });
+
+
+            Route::prefix('warehouse')->as('warehouse.')->group(function () {
+                Route::get('', ProductRefundController::class)->name('index');
+                Route::post('product/{id}/confirm', [ProductRefundController::class, 'confirm'])->name('confirm');
             });
         });
     }

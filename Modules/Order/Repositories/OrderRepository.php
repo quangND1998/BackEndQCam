@@ -4,6 +4,7 @@ namespace Modules\Order\Repositories;
 
 use App\BaseRepository;
 use App\Contracts\OrderContract;
+use App\Enums\OrderStatusEnum;
 use App\Models\User;
 use Cart;
 use Illuminate\Support\Facades\Auth;
@@ -139,20 +140,19 @@ class OrderRepository implements OrderContract
     public function groupByOrderStatus()
     {
 
-        $array_status = ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline'];
+        $array_status = OrderStatusEnum::cases();
         $statusGroup = Order::role()->whereHas('orderItems')
             ->select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
             ->get();
         foreach ($array_status as $status) {
-
-            $filtered = $statusGroup->where('status', $status)->first();
-
+            $filtered = $statusGroup->where('status', $status->value)->first();
             if ($filtered == null) {
 
                 $newCollections[] = array(
                     'status' => $status,
                     'total' => 0,
+
 
                 );
             } else {

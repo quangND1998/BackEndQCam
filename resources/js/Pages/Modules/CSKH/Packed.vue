@@ -22,6 +22,7 @@ import { usePopOverStore } from '@/stores/popover.js'
 import OrderStatusBar from "./OrderStatusBar.vue";
 import OrderStatus from "./OrderStatus.vue";
 import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
+import Icon from "@/Components/Icon.vue"
 const props = defineProps({
     order_transports: Object,
     status: String,

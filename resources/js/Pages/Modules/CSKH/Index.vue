@@ -212,7 +212,7 @@ const selectAll = computed({
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.market"
+                                <select id="market" v-model="filter.market"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả kho hàng</option>
                                     <option value="MB">Miền Bắc</option>
@@ -222,7 +222,7 @@ const selectAll = computed({
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.type"
+                                <select id="type" v-model="filter.type"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
                                     <option value="gift_delivery">Giao quà</option>

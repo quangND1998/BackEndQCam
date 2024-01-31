@@ -1,72 +1,45 @@
 <script setup>
 import { computed, ref, inject, reactive, toRef, watch } from "vue";
-import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
+
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
-import ModelShipping from "./ModelShipping.vue";
-
 import {
-
-    mdiLayersTripleOutline,
     mdiPhone,
 } from "@mdi/js";
-
 import BaseIcon from "@/Components/BaseIcon.vue";
 import "vue-search-input/dist/styles.css";
-import { initFlowbite } from "flowbite";
 import { emitter } from "@/composable/useEmitter";
-import OrderStatusBar from "./OrderStatusBar.vue";
-import OrderTransportBar from '@/Pages/Modules/CSKH/Status/OrderTransportBar.vue'
-import { usePopOverStore } from '@/stores/popover.js';
+import { useWareHousetore } from "@/stores/warehouse"
 import Icon from '@/Components/Icon.vue'
 import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
-import { useOrderStore } from '@/stores/order.js'
-import { useCSKHStore } from '@/stores/cskh.js'
 import DialogLoading from '@/Components/CustomerService/Dialog/DialogLoading.vue';
 import Pagination from '@/Pages/Modules/CSKH/Components/Pagination.vue';
-import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
-const { openPopover,
-    closePopover } = usePopOverStore();
-const { showDetailOrder } = useOrderStore();
+const store = useWareHousetore();
+const products = computed(() => {
+    return store.products;
+});
 
-const orders_transport = computed(() => {
-    return store.orders_transport;
-});
-const statusGroup = computed(() => {
-    return store.statusGroup;
-});
-const count_orders = computed(() => {
-    return store.count_orders;
-});
 const isLoading = computed(() => {
     return store.isLoading;
 });
-const store = useCSKHStore();
-const fetchOrdersTransport = () => {
 
-    store.fetchOrdersTransport();
+const fetchProducts = () => {
+
+    store.fetchProducts();
 }
-const fetchStatusOrdersTransport = () => {
-    store.fetchStatusOrdersTransport();
-}
-fetchStatusOrdersTransport();
-fetchOrdersTransport();
+
+fetchProducts();
 const filter = reactive({
-    customer: null,
-    name: null,
     fromDate: null,
     toDate: null,
     search: null,
-    payment_status: null,
-    payment_method: null,
     type: null,
     per_page: 10,
     selectedDate: null,
     state: null,
-    market: null,
     page: null
 });
 
@@ -78,57 +51,64 @@ const form = useForm({
     selectedDate: [new Date(), new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)],
 });
 
-initFlowbite();
 
-const searchCustomer = () => {
-    store.fetchOrdersTransport(filter)
-};
 
 
 const search = () => {
     filter.page = 1
-    store.fetchOrdersTransport(filter)
+    store.fetchProducts(filter)
 };
 
 
-const changeDate = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
 
 
-const changeStatus = (status) => {
-    filter.state = status
-    store.fetchOrdersTransport(filter)
-}
 watch(() => [filter.per_page], (newVal) => {
-    store.fetchOrdersTransport(filter)
+    store.fetchProducts(filter)
+});
+
+watch(() => [filter.state], (newVal) => {
+    store.fetchProducts(filter)
 });
 watch(() => [filter.type], (newVal) => {
-    store.fetchOrdersTransport(filter)
+    store.fetchProducts(filter)
 });
 
 watch(() => [form.selectedDate], (newVal) => {
     // console.log(newVal[0][0])
     filter.fromDate = newVal[0][0]
     filter.toDate = newVal[0][1]
-    store.fetchOrdersTransport(filter)
-});
-watch(() => [filter.market], (newVal) => {
-    store.fetchOrdersTransport(filter)
+    store.fetchProducts(filter)
 });
 
 const changePage = (page) => {
     filter.page = page;
-    store.fetchOrdersTransport(filter)
+    store.fetchProducts(filter)
+}
+
+const confirm = (id) => {
+    swal
+        .fire({
+            title: "Thông báo?",
+            text: "Xác nhận hàng đã nhập kho!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                store.confirm(id)
+
+            } else {
+                return;
+            }
+        });
 }
 
 </script>
 <template>
     <div>
-        <ModelShipping></ModelShipping>
+
         <OrderCancel />
 
 
@@ -138,7 +118,7 @@ const changePage = (page) => {
             <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
                 <div>
                     <h2 class="font-semibold flex mr-2">
-                        Quản lý đơn hàng
+                        Chi tiết xuất/ hoàn đơn
                         <!-- <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p> -->
                     </h2>
                 </div>
@@ -174,11 +154,11 @@ const changePage = (page) => {
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="market" v-model="filter.market"
+                                <select id="state" v-model="filter.state"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
-                                    <option :value="null">Tất cả kho hàng</option>
-                                    <option value="MB">Miền Bắc</option>
-                                    <option value="MN">Miền Nam</option>
+                                    <option :value="null">Tất cả </option>
+                                    <option value="pending">Chờ xác nhận</option>
+                                    <option value="completed">Đã xác nhận</option>
                                 </select>
                             </div>
                         </div>
@@ -187,18 +167,14 @@ const changePage = (page) => {
                                 <select id="type" v-model="filter.type"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
-                                    <option value="gift_delivery">Giao quà</option>
-                                    <option value="order">Đơn lẻ</option>
+                                    <option value="H">Hoàn</option>
+                                    <option value="X">Xuất</option>
+                                    <option value="B">Hỏng</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <OrderTransportBar v-if="statusGroup" :statusGroup="statusGroup" :count_orders="count_orders"
-                    :status="filter.state" @change-status="changeStatus"></OrderTransportBar>
-
-
                 <div class="w-full mt-2">
                     <div class="flex flex-col">
                         <div class="overflow-x-auto inline-block min-w-full sm:px-6 lg:px-8 m-0 p-0 h-[60vh] relative">
@@ -209,94 +185,61 @@ const changePage = (page) => {
                                     <tr>
 
                                         <th scope="col" class="px-3 py-2 text-left">STT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Mã HĐ</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Loại HĐ</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Tên KH</th>
-                                        <th scope="col" class="px-3 py-2 text-left">SĐT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Loại hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mặt hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã </th>
                                         <th scope="col" class="px-3 py-2 text-left">SL</th>
                                         <th scope="col" class="px-3 py-2 text-left">DVT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Tình trạng</th>
-
-                                        <th scope="col" class="px-3 py-2 text-left">Shipper</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Hẹn giao</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Ngày nhập/xuất</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Loại</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Lý do</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã vận đơn </th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Tình trạng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(order_transport, index) in orders_transport?.data" :key="index">
+                                    <tr v-for="(product, index) in products?.data" :key="index">
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ index + 1 }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport.order?.product_service?.order_package?.idPackage }}
+                                            {{ product.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport.order?.product_service?.product?.name }}
+                                            {{ product.code }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport.order?.customer?.name }}
+                                            {{ product.quantity }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p class="flex items-center">
-                                                {{
-                                                    hasAnyPermission(["super-admin"])
-                                                    ? order_transport.order?.customer?.phone_number
-                                                    : hidePhoneNumber(order_transport.order?.customer?.phone_number)
-                                                }}
-                                                <!-- mdiPhone  -->
-                                                <BaseIcon :path="mdiPhone"
-                                                    class="rounded-lg mr-2 text-[#4F8D06] hover:text-[#4F8D06]"
-                                                    v-tooltip.top="'gọi điện'" size="22">
-                                                </BaseIcon>
-                                            </p>
+                                            {{ product.unit }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
-                                                {{ item?.product?.name }}
-                                            </p>
+                                            {{ product.time }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
-                                                {{ item?.quantity }}
-                                            </p>
+                                            {{ product.type }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            hộp
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <OrderTransportStatus :order_transport="order_transport" />
+                                            {{ product.reason }}
                                         </td>
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
-                                            }}
+                                            {{ product.order_transport_number }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ product.order_number }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ product.state == 'pending' ? 'Chờ xác nhận' : "Đã xác nhận" }}
                                         </td>
 
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{
-                                                order_transport.order?.delivery_appointment
-                                                ? formatTimeDayMonthyear(order_transport.order?.delivery_appointment)
-                                                : "Chưa cập nhật"
-                                            }}
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @mouseover="openPopover(order_transport)" @mouseleave="closePopover">
-                                                xem
-                                            </button>
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport.order.saler?.name }}
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport.order?.order_number }}
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport?.order_transport_number }}
+                                            <button v-if="product.state == 'pending'" @click="confirm(product.id)"
+                                                class="bg-[#4F8D06] text-white rounded-md px-1 py-2 hover:bg-btn_green ">Xác
+                                                nhận</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -318,7 +261,7 @@ const changePage = (page) => {
                     </select>
                 </div>
 
-                <Pagination v-if="orders_transport" :data="orders_transport" @change-page="changePage" />
+                <Pagination v-if="products" :data="products" @change-page="changePage" />
             </div>
         </SectionMain>
     </div>

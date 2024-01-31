@@ -28,6 +28,7 @@ use Modules\Landingpage\app\Models\Contact;
 use Modules\Order\Repositories\ShipperRepository;
 use Modules\Order\app\Http\Requests\Order\UpdateOrderReuquest;
 use Modules\Order\app\Http\Requests\OrderGiftUpdateRequest;
+use App\Enums\OrderStatusEnum;
 
 class OrderController extends Controller
 {
@@ -45,7 +46,7 @@ class OrderController extends Controller
         $this->middleware('permission:order-pending|order-packing|order-shipping|order-completed|order-refund|order-decline', ['only' => ['index']]);
         $this->middleware('permission:add-new-package', ['only' => ['create', 'update']]);
         $this->middleware('permission:order-pending', ['only' => ['pending']]);
-        $this->middleware('permission:order-packing', ['only' => ['packing']]);
+        $this->middleware('permission:order-packing', ['only' => ['processing']]);
         $this->middleware('permission:order-shipping', ['only' => ['shipping']]);
         $this->middleware('permission:order-completed', ['only' => ['completed']]);
         $this->middleware('permission:order-refund', ['only' => ['refund']]);
@@ -73,7 +74,7 @@ class OrderController extends Controller
     {
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = 'pending';
+        $status = OrderStatusEnum::pending;
         $orders =  $this->orderRepository->getOrder($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
         $shippers = $this->shipperRepository->getShipper();
@@ -84,12 +85,27 @@ class OrderController extends Controller
         return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
-    public function packing(Request $request)
+    public function create(Request $request)
+    {
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = OrderStatusEnum::create;
+        $orders =  $this->orderRepository->getOrder($request, $status);
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+        $shippers = $this->shipperRepository->getShipper();
+
+        // if ($request->wantsJson()) {
+        //     return $products;
+        // }
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+    }
+
+    public function processing(Request $request)
     {
 
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = 'packing';
+        $status = OrderStatusEnum::processing;
         $orders = $this->orderRepository->getOrder($request, $status);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
 
@@ -119,7 +135,7 @@ class OrderController extends Controller
 
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = 'completed';
+        $status = OrderStatusEnum::completed;
         $orders = $this->orderRepository->getOrder($request, $status);
 
         $statusGroup = $this->orderRepository->groupByOrderStatus();
@@ -165,13 +181,6 @@ class OrderController extends Controller
         return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('order::create');
-    }
 
     /**
      * Store a newly created resource in storage.
