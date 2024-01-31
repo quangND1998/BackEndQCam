@@ -19,6 +19,8 @@ return new class extends Migration
             $table->dateTime('time')->nullable();
             $table->string('type')->nullable();
             $table->text('reason')->nullable();
+            $table->unsignedBigInteger('quantity')->nullable();
+            $table->string('unit')->nullable();
             $table->string('order_transport_number')->nullable();
             $table->string('order_number')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();

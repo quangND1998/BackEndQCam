@@ -22,7 +22,9 @@ class RefundProducts extends Model
         "order_transport_number",
         "order_number",
         "order_id",
-        'product_id'
+        'product_id',
+        'quantity',
+        'unit'
 
 
     ];

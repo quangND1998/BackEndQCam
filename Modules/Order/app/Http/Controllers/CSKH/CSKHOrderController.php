@@ -360,7 +360,8 @@ class CSKHOrderController extends Controller
                 if ($order_transport->order?->state_document !== OrderDocument::approved->value) {
                     $order_transport->update([
                         'state' => OrderTransportState::refunding,
-                        'status' => OrderTransportStatus::wait_refund
+                        'status' => OrderTransportStatus::wait_refund,
+                        'reason' => $request->reason
                     ]);
                 }
             }
@@ -376,37 +377,65 @@ class CSKHOrderController extends Controller
             $request,
             [
                 'check' => 'required',
-
+                // 'products' => 'required_if:check,true'
 
             ]
         );
 
         if ($request->ids && count($request->ids) > 0) {
-            $orders = Order::find($request->ids);
-            foreach ($orders as $order) {
-                $order->update([
-                    'status' => OrderStatusEnum::refund,
-                    'status_transport' => OrderTransportState::refund,
-                    'shipper_status' => OrderTransportState::refund,
+            $order_transports = OrderTransport::find($request->ids);
+            foreach ($order_transports as $order_transport) {
+                $order_transport->update([
+                    'state' => OrderTransportState::refund,
+                    'status' => OrderTransportStatus::wait_warehouse,
+                ]);
+                $order_transport->order->update([
+                    'status' => OrderStatusEnum::pending,
 
                 ]);
                 if ($request->check) {
-                    foreach ($order->orderItems as $item) {
-                        $product = ProductRetail::find($item->product_id);
-                        if ($product) {
-                            RefundProducts::create([
-                                'name' => $product->name,
-                                'state' => 'pending',
-                                'code' => $product->code,
-                                'time' => Carbon::now(),
-                                // 'type' => $product->type,
-                                'reason' => $order->reason,
-                                'order_transport_number' => $order->order_transport_number,
-                                'order_number' => $order->order_number,
-                                'order_id' => $order->id,
-                                'product_id' => $product->id
 
-                            ]);
+                    if ($request->products && count($request->ids) == 1) {
+                        foreach ($request->products as $item) {
+                            $product = ProductRetail::find($item['id']);
+                            if ($product) {
+                                RefundProducts::create([
+                                    'name' => $product->name,
+                                    'state' => 'pending',
+                                    'code' => $product->code,
+                                    'time' => Carbon::now(),
+                                    // 'type' => $product->type,
+                                    'unit' => $product->unit,
+                                    'quantity' => $item['quantity'],
+                                    'reason' => $order_transport->reason,
+                                    'order_transport_number' => $order_transport->order_transport_number,
+                                    'order_number' => $order_transport->order->order_number,
+                                    'order_id' => $order_transport->order->id,
+                                    'product_id' => $product->id
+
+                                ]);
+                            }
+                        }
+                    } else {
+                        foreach ($order_transport->order->orderItems as $item) {
+                            $product = ProductRetail::find($item->product_id);
+                            if ($product) {
+                                RefundProducts::create([
+                                    'name' => $product->name,
+                                    'state' => 'pending',
+                                    'code' => $product->code,
+                                    'time' => Carbon::now(),
+                                    // 'type' => $product->type,
+                                    'unit' => $product->unit,
+                                    'quantity' => $item->quantity,
+                                    'reason' => $order_transport->reason,
+                                    'order_transport_number' => $order_transport->order_transport_number,
+                                    'order_number' => $order_transport->order->order_number,
+                                    'order_id' => $order_transport->order->id,
+                                    'product_id' => $product->id
+
+                                ]);
+                            }
                         }
                     }
                 }

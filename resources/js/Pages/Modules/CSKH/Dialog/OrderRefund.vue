@@ -74,8 +74,8 @@
 
 
                 </div>
-                <div class="modal-body  mx-1 mb-6" v-if="order_transport">
-                    <div class="flex items-center ">
+                <div class="modal-body  mx-1 mb-6">
+                    <div class="flex items-center " v-if="order_transport">
                         <div class="relative overflow-x-auto">
                             <p class="text-[#000000] text-base font-semibold mr-4 mb-3">Chọn sản phẩm hoàn
                             </p>
@@ -183,7 +183,9 @@ const form = useForm({
 const selectedProducts = ref([]);
 
 onMounted(() => {
+
     emitter.on('OrderRefund', (data) => {
+        form.products = []
         data.order.order_items.forEach(item => {
             form.products.push({
                 id: item.product.id,
@@ -207,7 +209,8 @@ const isActive = (status) => {
 const orderRefund = () => {
     let query = {
         ids: props.ids,
-        check: form.check
+        check: form.check,
+        products: form.products
     };
 
     router.post(route("admin.cskh.order.refund"), query, {
