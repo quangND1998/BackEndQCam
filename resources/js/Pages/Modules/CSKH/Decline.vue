@@ -125,7 +125,7 @@ const selectAll = computed({
 
         if (value) {
             props.order_transports.data.forEach(function (order_transport) {
-                if (order_transport.state !== 'decline') {
+                if (order_transport.status !== 'decline') {
                     array_selected.push(order_transport.id);
                 }
 
@@ -246,7 +246,7 @@ const selectAll = computed({
                                         <th scope="col" class="px-6 py-3">
                                             <div class="flex items-center">
                                                 <input id="default-checkbox" type="checkbox" v-model="selected"
-                                                    :disabled="order_transport.state == 'decline' ? true : false"
+                                                    :disabled="order_transport.status == 'decline' ? true : false"
                                                     :value="order_transport.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
                                             </div>

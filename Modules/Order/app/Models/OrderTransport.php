@@ -68,6 +68,11 @@ class OrderTransport extends Model
 
             $query->where('state', $filters['state']);
         }
+
+        if (isset($filters['status'])) {
+
+            $query->where('status', $filters['status']);
+        }
     }
 
 

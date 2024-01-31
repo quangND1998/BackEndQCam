@@ -24,6 +24,7 @@ import { usePopOverStore } from '@/stores/popover.js';
 import Icon from '@/Components/Icon.vue'
 import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
 import { useOrderStore } from '@/stores/order.js'
+import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
 import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
 const props = defineProps({
     order_transports: Object,

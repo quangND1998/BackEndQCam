@@ -99,6 +99,11 @@ class Order extends Model implements HasMedia
 
             $query->where('payment_method', $filters['payment_method']);
         }
+
+        if (isset($filters['state_document'])) {
+
+            $query->where('state_document', $filters['state_document']);
+        }
         if (isset($filters['type'])) {
 
             $query->where('type', $filters['type']);

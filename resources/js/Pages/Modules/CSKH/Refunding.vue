@@ -36,7 +36,8 @@ const props = defineProps({
     to: String,
     statusGroup: Array,
     shippers: Array,
-    count_orders: Number
+    count_orders: Number,
+
 });
 const { openPopover,
     closePopover } = usePopOverStore();
@@ -189,6 +190,7 @@ const selectAll = computed({
                     </div>
                 </div>
                 <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders" state="state"></OrderStatusBar>
+               
                 <div class="my-3 w-full flex justify-between">
                     <button v-if="selected.length > 0" @click="refundOrders()" data-toggle="modal"
                         data-target="#OrderRefund"
@@ -279,10 +281,7 @@ const selectAll = computed({
                                             {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
                                             }}
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
-                                            }}
-                                        </td>
+
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{
                                                 order_transport.delivery_appointment

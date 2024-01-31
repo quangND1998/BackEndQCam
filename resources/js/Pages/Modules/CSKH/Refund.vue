@@ -29,7 +29,8 @@ const props = defineProps({
     to: String,
     statusGroup: Array,
     shippers: Array,
-    count_orders: Number
+    count_orders: Number,
+    order_warehouse: Number
 });
 
 const { openPopover,
@@ -114,10 +115,15 @@ const packedOrders = () => {
             }
         });
 };
-const openSHippingDetail = (order) => {
-    console.log("ModelShipping");
-    emitter.emit("ModelShipping", order);
-};
+const filterOrder = (state) => {
+    router.get(route(`admin.cskh.refund`),
+        { status: state },
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 const selected = ref([]);
 const selectAll = computed({
     get() {
@@ -200,6 +206,13 @@ const selectAll = computed({
                     </div>
                 </div>
                 <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders" state="state"></OrderStatusBar>
+                <div class="flex" v-if="order_warehouse > 0">
+                    <span class="text-red-500 font-semibold">=>Có {{ order_warehouse }} đơn chờ hoàn bạn chưa xác
+                        nhận</span>
+                    <span @click="filterOrder('wait_warehouse')"
+                        class="ml-2 text-[#27AE60] font-semibold cursor-pointer">Xem
+                        ngay</span>
+                </div>
                 <div class="my-3 w-full flex justify-between">
                     <button v-if="selected.length > 0" @click="packedOrders()"
                         class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">

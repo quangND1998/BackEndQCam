@@ -45,7 +45,7 @@ class ApiShipperController extends Controller
         })->fillterTime($request->only('date', 'day'))->select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
             ->get();
-        $array_status =  [OrderTransportStatus::not_shipping->value, OrderTransportStatus::not_delivered->value, OrderTransportStatus::delivered->value, OrderTransportStatus::wait_refund->value, OrderTransportStatus::wait_decline->value, OrderTransportStatus::refund->value, OrderTransportStatus::wait_warehouse->value, OrderTransportStatus::decline->value];
+        $array_status =  [OrderTransportStatus::not_shipping->value, OrderTransportStatus::not_delivered->value, OrderTransportStatus::delivered->value, OrderTransportStatus::wait_refund->value, OrderTransportStatus::wait_warehouse->value, OrderTransportStatus::refund->value, OrderTransportStatus::wait_decline->value, OrderTransportStatus::decline->value];
         foreach ($array_status as $status) {
             $filtered = $statusGroup->where('status', $status)->first();
             if ($filtered == null) {

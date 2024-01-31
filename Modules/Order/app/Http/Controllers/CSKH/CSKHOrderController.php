@@ -151,15 +151,19 @@ class CSKHOrderController extends Controller
     {
 
         $count_orders = Order::where('state', true)->count();
-        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
-        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $order_not_push = OrderTransport::whereHas('order', function ($q) {
+            $q->where('state_document', 'not_push');
+        })->where('state', 'delivered')->count();
+        $order_not_approved = OrderTransport::whereHas('order', function ($q) {
+            $q->where('state_document', 'not_approved');
+        })->where('state', 'delivered')->count();
         $status = OrderTransportState::delivered;
         $order_transports = $this->orderTransportRepository->getOrdersTransportbyState($request, $status);
         $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'state');
         $shippers = $this->shipperRepository->getShipper();
         return Inertia::render(
             'Modules/CSKH/Delivered',
-            compact('order_transports', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+            compact('order_transports', 'status', 'statusGroup', 'order_not_push', 'order_not_approved',  'shippers', 'count_orders')
         );
     }
 
@@ -186,12 +190,13 @@ class CSKHOrderController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportState::refund;
+        $order_warehouse = OrderTransport::where('status', 'wait_warehouse')->count();
         $order_transports = $this->orderTransportRepository->getOrdersTransportbyState($request, $status);
         $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'state');
         $shippers = $this->shipperRepository->getShipper();
         return Inertia::render(
             'Modules/CSKH/Refund',
-            compact('order_transports', 'status', 'from', 'to', 'statusGroup', 'shippers', 'count_orders')
+            compact('order_transports', 'status', 'from', 'to', 'statusGroup', 'order_warehouse', 'shippers', 'count_orders')
         );
     }
 

@@ -26,12 +26,12 @@ import Icon from '@/Components/Icon.vue'
 const props = defineProps({
     order_transports: Object,
     status: String,
-    status: String,
-    from: String,
-    to: String,
     statusGroup: Array,
     shippers: Array,
-    count_orders: Number
+    count_orders: Number,
+    order_not_push: Number,
+    order_not_approved: Number
+
 });
 
 const { openPopover,
@@ -79,7 +79,15 @@ watch(() => [filter.type], (newVal) => {
 watch(() => [filter.per_page], (newVal) => {
     search()
 });
-
+const filterDocument = (state) => {
+       router.get(route(`admin.cskh.completed`),
+        {state_document :state },
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 
 
 const ordersConfirm = () => {
@@ -227,6 +235,20 @@ const orderRefunding = () => {
                     </div>
                 </div>
                 <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders" state="state"></OrderStatusBar>
+                <div class="flex">
+                    <span class="text-red-500 font-semibold">=>Có {{ order_not_approved }} đơn chờ bạn hoàn thiện hồ
+                        sơ</span>
+                    <span @click="filterDocument('not_approved')"
+                        class="ml-2 text-[#27AE60] font-semibold cursor-pointer">Xem ngay</span>
+                </div>
+                <div class="flex">
+                    <span class="text-red-500 font-semibold">=>Có {{ order_not_push }} đơn hồ sơ chưa được up</span>
+                    <span @click="filterDocument('not_push')" class="ml-2 text-[#27AE60] font-semibold cursor-pointer">Xem
+                        ngay</span>
+                </div>
+
+
+
                 <div class="my-3 w-full flex justify-between">
                     <div>
                         <button v-if="selected.length > 0" @click="ordersConfirm()"
