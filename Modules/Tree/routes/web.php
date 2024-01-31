@@ -73,7 +73,7 @@ Route::middleware(['auth'])->group(
             Route::prefix('importProduct')->as('importProduct.')->group(function () {
                 Route::get('index', [ProductAddController::class, 'index'])->name('index');
                 Route::post('store', [ProductAddController::class, 'store'])->name('store');
-                Route::post('update', [ProductAddController::class, 'update'])->name('update');
+                Route::post('update/{id}', [ProductAddController::class, 'update'])->name('update');
             });
         });
     }

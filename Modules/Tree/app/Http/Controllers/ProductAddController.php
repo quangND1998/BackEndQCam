@@ -38,8 +38,10 @@ class ProductAddController extends Controller
         return back()->with('success', 'Create succesfully');
     }
 
-    public function update(Request $request, ProductHistory $productHistory)
+    public function update(Request $request, $id)
     {
+        // dd($id);
+        $productHistory = ProductHistory::findOrFail($id);
         $productHistory->update($request->all());
         return back()->with('success', 'update succesfully');
     }
