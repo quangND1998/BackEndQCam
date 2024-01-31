@@ -18,7 +18,10 @@ const hidePhoneNumber = computed(() => {
 })
 
 const onCall = () => {
-  pitelSDK.value.call(customer.phone_number, {
+//   pitelSDK.value.call(customer.phone_number, {
+//     extraHeaders: ['CALL-FROM: Cam mặt trời'],
+//   });
+pitelSDK.value.call('0968967624', {
     extraHeaders: ['CALL-FROM: Cam mặt trời'],
   });
 }
@@ -56,12 +59,15 @@ onMounted(() => {
         phoneCallReady.value = false;
       },
       onCallCreated: () => {
+        // Chỗ này để đổi UI thành đang gọi
         console.log('onCallCreated');
       },
       onCallAnswered: () => {
+        // Chỗ này đổi UI thành đang nói chuyện
         console.log('onCallAnswered');
       },
       onCallHangup: () => {
+        // Chỗ này đổi UI thành ngắt cuộc gọi
         console.log('onCallHangup');
       },
     }
