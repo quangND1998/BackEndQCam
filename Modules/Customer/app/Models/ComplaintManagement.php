@@ -16,7 +16,7 @@ class ComplaintManagement extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id", "user_id", 'type',    "description",    "state",    "date", "data", "star",   "created_at", "updated_at"];
+    protected $fillable = ["id", "user_id", 'type',    "description",  "severity",  "state",    "date", "data", "star", "role_id",  "created_at", "updated_at"];
 
     protected static function newFactory(): ComplaintManagementFactory
     {

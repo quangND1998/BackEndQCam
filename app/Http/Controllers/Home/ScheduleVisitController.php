@@ -15,9 +15,6 @@ class ScheduleVisitController extends Controller
 
     public function __construct()
     {
-
-
-
         $this->middleware('permission:create-schedule', ['only' => ['createShedule']]);
     }
     public function getAll()
@@ -79,7 +76,7 @@ class ScheduleVisitController extends Controller
 
 
     public function saveShedule(Request $request)
-    { 
+    {
         $this->validate(
             $request,
             [
@@ -109,19 +106,19 @@ class ScheduleVisitController extends Controller
         if($schedule->state =='pending')
         {
             return Inertia::render('Home/visit/Update', compact('schedule'));
-        }      
+        }
         return back()->with('warning', 'Lịch đặt này không thể cập nhật');
     }
     public function updateShedule(Request $request, ScheduleVisit $schedule)
     {
-        
+
         $this->validate(
             $request,
             [
                 'date_time' => 'required|date|after:tomorrow',
                 'number_adult' => 'required|gt:0',
                 'number_children' => 'nullable|gt:-1',
-              
+
             ]
         );
         $schedule->update([
@@ -131,6 +128,6 @@ class ScheduleVisitController extends Controller
         ]);
 
         return redirect()->route('visit.pending')->with('success', 'Cập nhật đặt lịch thành công');
-      
+
     }
 }
