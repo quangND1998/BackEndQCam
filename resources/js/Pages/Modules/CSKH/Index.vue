@@ -45,8 +45,6 @@ const filter = reactive({
     type: null,
     per_page: 10,
     selectedDate: null
-
-
 })
 const swal = inject("$swal");
 const form = useForm({

@@ -12,24 +12,18 @@
 
     return headingSegments.join('  ');
   })
-  const numberOfFreeContract = ref(1);
-  const formatNumerOfFreeContract = computed(() => numberOfFreeContract.value < 10 ? `0${numberOfFreeContract.value}` : numberOfFreeContract.value);
 </script>
 
 <template>
-  <p class="font-semibold mb-1">{{ heading }}</p>
+  <p class="font-semibold mb-1 text-black">{{ heading }}</p>
   <div class="flex items-center justify-between mb-2">
     <div class="flex items-center gap-3">
-      <i class="fa fa-arrow-circle-o-left text-3xl cursor-pointer" aria-hidden="true" @click="onMoveToPreviousWeek"></i>
-      <i class="fa fa-arrow-circle-o-right text-3xl cursor-pointer" aria-hidden="true" @click="onMoveToNextWeek"></i>
+      <i class="fa fa-arrow-circle-o-left text-3xl cursor-pointer text-black" aria-hidden="true" @click="onMoveToPreviousWeek"></i>
+      <i class="fa fa-arrow-circle-o-right text-3xl cursor-pointer text-black" aria-hidden="true" @click="onMoveToNextWeek"></i>
     </div>
-    <ul class="list-disc text-red-600 font-medium">
-      <li>Có <span class="font-bold">{{ formatNumerOfFreeContract }}</span> hợp đồng mới thêm hiện chưa được phân công
-      </li>
-    </ul>
     <div class="flex gap-3">
-      <button class="px-3 py-1 rounded-sm bg-gray-300">Tuần {{ Math.ceil(fromDate.date() / 7) }} (T{{ fromDate.month() + 1 }})</button>
-      <button class="px-4 py-1 rounded-sm bg-sky-600 text-white font-semibold">Xem</button>
+      <button class="px-3 py-1 rounded-sm bg-[#E9E9E9] text-black">Tuần {{ Math.ceil(fromDate.date() / 7) }} (T{{ fromDate.month() + 1 }})</button>
+      <button class="px-4 py-1 rounded-sm bg-[#1D75FA] text-white font-semibold">Xem</button>
     </div>
   </div>
 </template>

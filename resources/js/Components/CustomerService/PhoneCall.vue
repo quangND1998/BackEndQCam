@@ -18,42 +18,60 @@ const hidePhoneNumber = computed(() => {
 })
 
 const onCall = () => {
-  pitelSDK.value.call(customer.phone_number, {
-    extraHeaders: ["CALL-FROM: PitelSDK"]
-  })
+//   pitelSDK.value.call(customer.phone_number, {
+//     extraHeaders: ['CALL-FROM: Cam mặt trời'],
+//   });
+pitelSDK.value.call('0968967624', {
+    extraHeaders: ['CALL-FROM: Cam mặt trời'],
+  });
 }
 
 const pitelSDK = ref(null);
-const phoneCallReady = ref(false);
+const phoneCallReady = ref(true);
 onMounted(() => {
-  (function (a, b) {
+  (function (a,b) {
     var s = document.createElement('script');
     s.type = 'text/javascript';
     s.async = true;
-    s.onload = () => { PitelSDK.k = a; b() };
-    s.src = '/assets/js/sdk-1.1.test.min.js';
+    s.onload = ()=>{PitelSDK.k=a;b()};
+    s.src = 'https://portal.tel4vn.com/pitelsdk/sdk-1.1.5.min.js';
     var x = document.getElementsByTagName('script')[0];
     x.parentNode.insertBefore(s, x);
-  })('d1ca84ac-2d98-4faa-92d4-699a6ce14eb7', () => {
-      console.log('Pitel SDK Loaded');
+  })('d1ca84ac-2d98-4faa-92d4-699a6ce14eb7', ()=>{
+    console.log('Pitel SDK Loaded');
   });
   setTimeout(function () {
     const sdkOptions = {
-      enableWidget: true,
+      enableWidget: false,
       sipOnly: true,
-      sipDomain: 'demo.cgvtelecom.vn:5060',
+      sipDomain: 'greenholidays.vn',
       wsServer: "wss://cgvcall.mobilesip.vn:7444",
-      sipPassword: "Cgv@@2023##",
+      sipPassword: "Agent@@2023!!",
+      contactName: 'Cam mặt trời'
     }
     const sdkHook = {
       onRegistered: () => {
+        console.log('onRegistered');
         phoneCallReady.value = true;
       },
       onUnregistered: () => {
+        console.log('onUnregistered');
         phoneCallReady.value = false;
       },
+      onCallCreated: () => {
+        // Chỗ này để đổi UI thành đang gọi
+        console.log('onCallCreated');
+      },
+      onCallAnswered: () => {
+        // Chỗ này đổi UI thành đang nói chuyện
+        console.log('onCallAnswered');
+      },
+      onCallHangup: () => {
+        // Chỗ này đổi UI thành ngắt cuộc gọi
+        console.log('onCallHangup');
+      },
     }
-    pitelSDK.value = new PitelSDK('xxx', 'xxx', '102', sdkHook, sdkOptions);
+    pitelSDK.value = new PitelSDK('xxx', 'xxx', '2200', sdkHook, sdkOptions);
   }, 500);
 });
 
@@ -68,7 +86,7 @@ onUnmounted(() => {
       '!right-0': phoneCallReady
     }"
   >
-    <div class="w-10 h-10 flex items-center justify-center bg-emerald-500 rounded-full">
+    <div class="w-10 h-10 flex items-center justify-center bg-[#27AE60] rounded-full">
       <i class="fa fa-phone text-white text-2xl" aria-hidden="true"></i>
     </div>
     <div>
@@ -76,4 +94,5 @@ onUnmounted(() => {
       <p class="font-medium">{{ hidePhoneNumber }}</p>
     </div>
   </div>
+
 </template>

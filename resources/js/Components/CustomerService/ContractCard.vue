@@ -55,22 +55,22 @@ const onOpenOrderDialog = () => {
 
 <template>
   <div class="bg-white rounded-xl max-w-[300px] border mb-3 text-sm">
-    <p class="font-semibold text-white bg-red-600 rounded-t-lg leading-8 pl-3">
+    <p class="font-semibold text-white bg-[#EE2736] rounded-t-lg leading-8 pl-3">
       Hợp đồng {{ orderPackage.idPackage }}
     </p>
-    <div class="px-3 py-2">
-      <p class="mb-1">
+    <div class="px-3 py-2 text-[13px]">
+      <p class="mb-1 text-black">
         <span class="font-semibold">Đã nhận quà: </span>
         {{ orderPackage.product_service_owner.number_deliveries_current || 0 }}/{{ numberOfDelivery }}
       </p>
       <p class="mb-1"><span class="font-semibold">Quá hạn: </span>{{ outOfDateCount }}</p>
-      <p><span class="font-semibold">Lần kế tiếp: </span>{{ nextDeliveryDate }} (lần {{ nextDeliveryNo }})</p>
-      <p class="mt-3 mb-2">Khách hàng có nhận quà lần kế tiêp không?</p>
+      <p class="text-black"><span class="font-semibold">Lần kế tiếp: </span>{{ nextDeliveryDate }} (lần {{ nextDeliveryNo }})</p>
+      <p class="mt-3 mb-2 text-black">Khách hàng có nhận quà lần kế tiêp không?</p>
       <div class="flex justify-between">
           <button
             :disabled="isDisableCreateOrder"
             :title="isDisableCreateOrder ? 'Chỉ tạo được tối đa 12 đơn mỗi lần' : undefined"
-            class="rounded-full bg-emerald-600 text-white font-medium px-2 py-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            class="rounded-full bg-[#4F8D06] text-white font-semibold px-2 py-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
             @click="onOpenOrderDialog"
           >
             Tạo đơn ({{ numberOfCreatableOrder }})

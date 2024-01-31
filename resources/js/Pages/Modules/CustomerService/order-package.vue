@@ -197,7 +197,7 @@ provide('BOOKING', {
         @onCloseDialog="onCloseDialog" />
       <div class="grid grid-cols-[repeat(18,_minmax(0,_1fr))] gap-4 mt-3 relative">
         <div class="col-span-4">
-          <p class="font-bold mb-3">Giao kế hoạch giao quà cho khách</p>
+          <p class="font-bold mb-3">Lên kế hoạch giao quà cho khách</p>
           <ContractCard v-for="(orderPackage, index) in orderPackages"
             :key="orderPackage.id"
             :index="index"
@@ -208,7 +208,7 @@ provide('BOOKING', {
           <div class="grid gap-4 grid-cols-2">
             <div>
               <button
-                class="leading-5 rounded-full bg-orange-600 font-semibold text-white px-3 py-1"
+                class="leading-5 rounded-full bg-[#FF6100] font-semibold text-white px-3 py-1"
                 @click="onOpenRetailOrderDialog"
               >
                 Tạo đơn bán lẻ sản phẩm
@@ -231,7 +231,7 @@ provide('BOOKING', {
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-3 gap-8 py-6 fixed bottom-0 bg-white border border-t-gray-500 w-full right-0">
+    <div class="grid grid-cols-3 gap-8 py-6 fixed bottom-0 bg-white border border-t-[#AEAEAE] w-full right-0">
       <div class="flex justify-center">
         <NoteDialog />
       </div>
@@ -256,8 +256,5 @@ provide('BOOKING', {
   content: '*';
   color: theme('colors.red.600');
   margin-right: 2px;
-}
-#pwBackground {
-  visibility: hidden !important;
 }
 </style>

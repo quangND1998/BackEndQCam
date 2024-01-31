@@ -175,7 +175,6 @@ Route::middleware(['auth'])->group(
             Route::prefix('gift_distribute')->as('gift_distribute.')->group(function () {
                 Route::get('index', [GiftDistributeController::class, 'index'])->name('index');
                 Route::get('role', [GiftDistributeController::class, 'getRolePackage'])->name('role');
-                Route::get('schedule', [GiftDistributeController::class, 'getSchedule'])->name('schedule');
             });
             Route::prefix('call_distribute')->as('call_distribute.')->group(function () {
                 Route::get('schedule', [CallDistributeController::class, 'getSchedule'])->name('schedule');

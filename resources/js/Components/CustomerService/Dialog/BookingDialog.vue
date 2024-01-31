@@ -66,7 +66,7 @@
         left: leftPosition
       }"
     >
-      <div class="flex items-center justify-between rounded-t-lg bg-yellow-500 pr-3 pl-4 py-2">
+      <div class="flex items-center justify-between rounded-t-lg bg-[#B7AD75] pr-3 pl-4 py-2">
         <p class="font-semibold">Booking theo HD {{ packageId }}</p>
         <i class="fa fa-times text-2xl cursor-pointer text-white" aria-hidden="true" @click="onCloseDialog"/>
       </div>
@@ -79,11 +79,11 @@
         </div>
         <div class="flex items-center mb-3">
           <p class="w-28">Người lớn</p>
-          <input v-model="bookingForm.number_adult" type="number" min="1" class="w-28 h-8 rounded-sm border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0" />
+          <input v-model="bookingForm.number_adult" type="number" min="1" class="w-28 h-8 rounded-sm border-[#AEAEAE] focus:border-[#AEAEAE] focus:outline-none focus:ring-0" />
         </div>
         <div class="flex items-center mb-3">
           <p class="w-28">Trẻ em</p>
-          <input v-model="bookingForm.number_children" type="number" min="0" class="w-28 h-8 rounded-sm border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0" />
+          <input v-model="bookingForm.number_children" type="number" min="0" class="w-28 h-8 rounded-sm border-[#AEAEAE] focus:border-[#AEAEAE] focus:outline-none focus:ring-0" />
         </div>
         <div class="flex items-center mb-3">
           <p class="w-28">Dịch vụ</p>
@@ -96,15 +96,15 @@
         </div>
         <div class="flex mb-4">
           <p class="w-28">Ghi chú</p>
-          <textarea v-model="bookingForm.description" class="flex-1 resize-none rounded focus:border-gray-400 border-gray-400 px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
+          <textarea v-model="bookingForm.description" class="flex-1 resize-none rounded focus:border-[#AEAEAE] border-[#AEAEAE] px-2 py-1 text-sm focus:outline-none focus:ring-0" rows="5"></textarea>
         </div>
         <div class="flex justify-end">
-          <button class="rounded-md bg-sky-600 text-white font-medium px-3 py-2 mb-2" @click="executeQuery">
+          <button class="rounded-md bg-[#1D75FA] text-white font-semibold px-3 py-2 mb-2" @click="executeQuery">
             {{ scheduleVisitId ? 'Cập nhật' : 'Book' }}
           </button>
         </div>
         <DialogLoading v-if="isLoading" text="Booking" />
       </div>
     </div>
-  <button class="rounded-full bg-sky-600 text-white font-medium px-3 py-2 mb-2" @click="onOpenDialog">Booking</button>
+  <button class="rounded-full bg-[#1D75FA] text-white font-semibold px-3 py-2 mb-2" @click="onOpenDialog">Booking</button>
 </template>

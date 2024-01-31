@@ -41,7 +41,7 @@ class CallDistributeController extends Controller
             }
         )->get();
         // return $orderPackages;
-        return Inertia::render('Modules/CSKH/Schedule', compact('orderPackages','cskh','packageNotDistribute','offsetWeek'));
+        return Inertia::render('Modules/CSKH/Distribute/Schedule', compact('orderPackages','cskh','packageNotDistribute','offsetWeek'));
     }
 
     public function deviceSchedule(Request $request){
