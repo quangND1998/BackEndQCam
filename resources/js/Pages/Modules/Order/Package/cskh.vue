@@ -350,12 +350,12 @@ onMounted(() => {
         let sdkOptions = {
             enableWidget: true,
             sipOnly: true,
-            sipDomain: 'demo.cgvtelecom.vn:5060',
+            sipDomain: 'greenholidays.vn',
             wsServer: "wss://cgvcall.mobilesip.vn:7444",
-            sipPassword: "Cgv@@2023##",
-            contactName: '216',
+            sipPassword: "Agent@@2023!!",
+            contactName: '2200',
         }
-        pitelSDK = new PitelSDK('xxx', 'xxx', '216', {}, sdkOptions)
+        pitelSDK = new PitelSDK('xxx', 'xxx', '2200', {}, sdkOptions)
 
     }, 500);
 })
@@ -706,12 +706,12 @@ onMounted(() => {
                                                 v-if="hasAnyPermission(['create-contract-complete']) && order.status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
                                                 @click="orderChangePacking(order)" size="20">
                                             </BaseIcon>
-                                            <!-- <BaseIcon :path="mdiPhone"
+                                            <BaseIcon :path="mdiPhone"
                                                 class=" text-gray-400 rounded-lg  mr-2 hover:text-blue-700"
                                                 v-tooltip.top="'Call'"
-                                                v-if="hasAnyPermission(['create-contract-complete']) && order.status == 'pending' && (order.payment_check == true && (order.price_percent >= order.grand_total))"
+
                                                 @click="callPhone(order)" size="20">
-                                            </BaseIcon> -->
+                                            </BaseIcon>
                                         </td>
                                     </tr>
 
