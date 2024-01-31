@@ -300,10 +300,10 @@ export default [{
         permissions: ['super-admin'],
         route_list: ['admin.land.index'],
         menu: [{
-                route: 'admin.land.index',
-                permissions: ['super-admin', 'create-land', 'create-land', 'update-land', 'delete-land'],
+                route: 'admin.importProduct.index',
+                permissions: ['super-admin'],
                 label: 'Đơn tiếp nhận',
-                permissions: ['super-admin', 'create-land', 'create-land', 'update-land', 'delete-land'],
+                permissions: ['super-admin'],
                 route_list: null
             },
             {

@@ -35,12 +35,24 @@ class ProductAddController extends Controller
     public function store(Request $request)
     {
         $productHistory = ProductHistory::create($request->all());
+        $product_retail = ProductRetail::findOrFail($request->product_retail_id);
+        if($product_retail){
+            $product_retail->avaliable_quantity += $request->actual_quantity;
+            $product_retail->save();
+        }
         return back()->with('success', 'Create succesfully');
     }
 
-    public function update(Request $request, ProductHistory $productHistory)
+    public function update(Request $request, $id)
     {
+        // dd($id);
+        $productHistory = ProductHistory::findOrFail($id);
         $productHistory->update($request->all());
+        $product_retail = ProductRetail::findOrFail($request->product_retail_id);
+        if($product_retail){
+            $product_retail->avaliable_quantity += $request->actual_quantity;
+            $product_retail->save();
+        }
         return back()->with('success', 'update succesfully');
     }
 

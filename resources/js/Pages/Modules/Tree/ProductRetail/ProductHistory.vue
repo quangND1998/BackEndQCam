@@ -17,9 +17,11 @@ import {
     mdiTrashCanOutline,
     mdiCodeBlockBrackets,
     mdiPencil,
-    mdiLandFields
+    mdiLandFields,
+    mdiPencilOutline, mdiTrashCan
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
+import BaseButtons from '@/Components/BaseButtons.vue';
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -76,7 +78,7 @@ const edit = (historyAdd) => {
     form.state = historyAdd.state;
     form.state_confirm = historyAdd.state_confirm;
     form.product_retail_id = historyAdd.product_retail_id;
-    product_retail.value= historyAdd;
+    product_retail.value = historyAdd;
 };
 
 const save = () => {
@@ -150,27 +152,27 @@ const Delete = (id) => {
             <div class="flex my-2">
                 <div class="right">
                     <Button color="info" class="bg-[#4F8D06] text-white py-2 px-3 rounded "
-                     @click="isModalActive = true;form.reset();"  >Thêm nhập hàng</Button>
+                        @click="isModalActive = true; form.reset();">Thêm nhập hàng</Button>
                 </div>
             </div>
-            <div v-if="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
-                :title="editMode ? 'Sửa' : 'Nhập hàng'" >
+            <div v-if="isModalActive" buttonLabel="Save" has-cancel @confirm="save" :title="editMode ? 'Sửa' : 'Nhập hàng'">
                 <div class="flex  ">
                     <div class="w-[300px]">
                         <InputLabel for="ballot_code" value="Mặt hàng" />
-                        <Multiselect v-model="form.product_retail_id" :searchable="true" label="name" valueProp="id" trackBy="name" placeholder="Chọn mặt hàng"  :options="product_retails" :classes="{
-                            tagsSearch: 'absolute bg-[#E9E9E9]  inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
-                            container: 'relative border_round mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-[#E9E9E9] text-sm  '
-                            }" >
-                                <template v-slot:singlelabel="{ value }">
-                                    <div class="multiselect-single-label">
-                                        {{ value.name }} ({{ value.code }})
-                                    </div>
-                                </template>
+                        <Multiselect v-model="form.product_retail_id" :searchable="true" label="name" valueProp="id"
+                            trackBy="name" placeholder="Chọn mặt hàng" :options="product_retails" :classes="{
+                                tagsSearch: 'absolute bg-[#E9E9E9]  inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans  w-full',
+                                container: 'relative  mx-auto w-full bg-gray-50  items-center  box-border cursor-pointer border border-gray-300 rounded bg-[#E9E9E9] text-sm  '
+                            }">
+                            <template v-slot:singlelabel="{ value }">
+                                <div class="multiselect-single-label">
+                                    {{ value.name }} ({{ value.code }})
+                                </div>
+                            </template>
 
-                                <template v-slot:option="{ option }">
-                                    {{ option.name }} ({{ option.code }})
-                                </template>
+                            <template v-slot:option="{ option }">
+                                {{ option.name }} ({{ option.code }})
+                            </template>
                         </Multiselect>
                     </div>
                     <div class=" px-2">
@@ -179,17 +181,17 @@ const Delete = (id) => {
                     </div>
                     <div class=" px-2">
                         <InputLabel for="ballot_code" value="Số lượng thực tế" />
-                        <input type="number" class="border rounded-xl " :min="0" v-model="form.actual_quantity">
+                        <input type="number" class="border rounded " :min="0" v-model="form.actual_quantity">
                     </div>
                     <div class=" px-2">
                         <InputLabel for="ballot_code" value="Ngày nhập" />
-                        <VueDatePicker class="py-1" v-model="form.date_add" time-picker-inline>
-                                        </VueDatePicker>
+                        <VueDatePicker class="py-1 date_round" v-model="form.date_add" time-picker-inline>
+                        </VueDatePicker>
                     </div>
                     <div class=" px-2">
                         <InputLabel for="ballot_code" value="Hạn sử dụng" />
-                        <VueDatePicker class="py-1" v-model="form.date_expire" time-picker-inline>
-                                        </VueDatePicker>
+                        <VueDatePicker class="py-1 date_round" v-model="form.date_expire" time-picker-inline>
+                        </VueDatePicker>
                     </div>
                     <div class=" px-2">
                         <button class="p-2 mt-[32px] bg-[#4F8D06] rounded text-white" @click="save()">Thêm</button>
@@ -199,37 +201,41 @@ const Delete = (id) => {
             <div class="mt-3">
 
                 <div class="w-full mt-2 ">
-                    <div class="bg-[#AEAEAE] text-white  grid grid-cols-12 divide-x">
-                        <div class="text-center py-2 border">STT</div>
-                        <div class="text-center py-2 border">Mã</div>
-                        <div class="text-center py-2 border">Mặt hàng dự kiến</div>
-                        <div class="text-center py-2 border">SL dự kiến</div>
-                        <div class="text-center py-2 border">Đơn vị tính</div>
-                        <div class="text-center py-2 border">Date về kho</div>
-                        <div class="text-center py-2 border">Hạn sử dụng</div>
-                        <div class="text-center py-2 border">Tình trạng</div>
-                        <div class="text-center py-2 border">Số lượng về</div>
-                        <div class="text-center py-2 border">Trạng thái</div>
-                        <div class="text-center py-2 border">Chi tiết</div>
-                        <div class="text-center py-2 border">Xác nhận</div>
+                    <div class="bg-[#AEAEAE] text-black  grid grid-cols-12 divide-x">
+                        <div class="text-center py-2 ">STT</div>
+                        <div class="text-center py-2 ">Mã</div>
+                        <div class="text-center py-2 ">Mặt hàng dự kiến</div>
+                        <div class="text-center py-2 ">SL dự kiến</div>
+                        <div class="text-center py-2 ">Đơn vị tính</div>
+                        <div class="text-center py-2 ">Date về kho</div>
+                        <div class="text-center py-2">Hạn sử dụng</div>
+                        <div class="text-center py-2">Tình trạng</div>
+                        <div class="text-center py-2">Số lượng về</div>
+                        <div class="text-center py-2">Trạng thái</div>
+                        <div class="text-center py-2">Chi tiết</div>
+                        <div class="text-center py-2">Xác nhận</div>
 
                     </div>
                     <div v-for="(history, index) in historyAdds.data" :key="history.id"
-                    class="grid grid-cols-12 divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
-                        <div class="text-center border">{{ index + historyAdds.from }}</div>
-                        <div class="pl-2 text-[#FF0000] border">{{ history.product_retail?.cod }}</div>
-                        <div class="text-center border">{{ history.product_retail?.name }}</div>
-                        <div class="text-center border">{{ history.expected_quantity }}</div>
-                        <div class="text-center border">{{ history.unit }}</div>
-                        <div class="text-center border">
+                        class="grid grid-cols-12 text-center  divide-x divide-black border-gray-400 border text-sm bg-white">
+                        <div class="text-center px-2 py-2">{{ index + historyAdds.from }}</div>
+                        <div class="text-center text-[#FF0000] px-2 py-2">{{ history.product_retail?.code }}</div>
+                        <div class="text-center text-[#FF0000] px-2 py-2">{{ history.product_retail?.name }}</div>
+                        <div class="text-center px-2 py-2">{{ history.expected_quantity }}</div>
+                        <div class="text-center px-2 py-2">hộp</div>
+                        <div class="text-center px-2 py-2">
                             {{ history.date_add }}
                         </div>
-                        <div class="text-center border">{{ history.date_expire }}</div>
-                        <div class="text-center border">{{ history.state }}</div>
-                        <div class="text-center border">{{ history.actual_quantity }}</div>
-                        <div class="text-center border">{{ history.state_confirm }}</div>
-                        <div class="text-center border">xem</div>
-                        <div class="text-center border"></div>
+                        <div class="text-center px-2 py-2">{{ history.date_expire }}</div>
+                        <div class="text-center px-2 py-2">{{ history.state }}</div>
+                        <div class="text-center px-2 py-2">{{ history.actual_quantity }}</div>
+                        <div class="text-center px-2 py-2">{{ history.state_confirm }}</div>
+                        <div class="text-center px-2 py-2">xem</div>
+                        <div class="text-center px-2 py-2">
+                            <BaseButton color="contrast" :icon="mdiPencilOutline"  @click="edit(history)"
+                                        type="button" data-toggle="modal" data-target="#exampleModal" />
+                                    <BaseButton color="danger" :icon="mdiTrashCan"  @click="Delete(history.id)" />
+                        </div>
                     </div>
                 </div>
                 <pagination :links="historyAdds.links" />
@@ -241,3 +247,8 @@ const Delete = (id) => {
 </template>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
+<style scope>
+.dp__input {
+    border-radius: 5px !important;
+}
+</style>
