@@ -6,7 +6,7 @@ import { useForm } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
-import CardBoxModal from "@/Components/CardBoxModal.vue";
+import CardBoxModalFull from "@/Components/CardBoxModalFull.vue";
 import PillTag from '@/Components/PillTag.vue'
 
 import {
@@ -35,9 +35,10 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import LayoutBar from '@/Layouts/LayoutBar.vue';
-
+import FilterBar from "./FilterBar.vue";
 defineProps({
     complains: Object,
+    statusGroup: Array
 });
 const searchVal = ref("");
 const swal = inject("$swal");
@@ -86,9 +87,7 @@ const cancelState = (visit) => {
             <SectionTitleLineWithButton class="font-semibold flex mr-2" title="Quản lý khiếu nại" main>
             </SectionTitleLineWithButton>
             <div>
-                <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
-
-                </div>
+                <FilterBar :statusGroup="statusGroup"></FilterBar>
                 <div class="p-2 rounded-lg col-md-12">
                     <div class="panel panel-default">
                         <div class="overflow-x-auto relative  sm:rounded-lg ">
@@ -96,14 +95,19 @@ const cancelState = (visit) => {
                                 <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="py-3 px-6 text-xs">STT</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Mức độ nghiêm trọng</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Thời gian tạo</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Khách hàng</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Mã HĐ</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Loại HĐ</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Ngày tạo</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Tên KH</th>
                                         <th scope="col" class="py-3 px-6 text-xs">SĐT</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Nội dung</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Trạng thái xử lý</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Phòng ban</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Hoạt động</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Cấp độ</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Nguồn</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">NVTV</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Phân cấp xử lý</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Phương án xử lý</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Xử lý</th>
+                                        <th scope="col" class="py-3 px-6 text-xs">Mã phiếu</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="complains">
@@ -113,12 +117,15 @@ const cancelState = (visit) => {
                                             class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ index + complains.from }}
                                         </th>
-                                        <th class="py-3 px-6 text-xs">
-                                            <div class="px-1 py-1 border rounded-2xl w-20 text-center text-[10px]"
-                                                :class="complain.severity == 'urgent' ? 'bg-red' : complain.severity == 'critical' ? 'bg-[#FF6100] text-white' : 'bg-[#FCFBB4]'">
-                                                {{ complain.severity == 'urgent' ? 'Xử lý sớm' : complain.severity ==
-                                                    'critical' ? 'Nghiêm trọng' : 'Thông thường' }}</div>
+                                        <th scope="row"
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{ complain.product_service_owner?.order_package?.idPackage }}
                                         </th>
+                                        <th scope="row"
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{ complain.product_service_owner?.product?.life_time }}
+                                        </th>
+
                                         <th class="py-3 px-6 text-xs">
                                             <div>{{ formatDateOnly(complain.created_at) }}</div>
                                         </th>
@@ -132,16 +139,42 @@ const cancelState = (visit) => {
                                                 hidePhoneNumber(complain?.user?.phone_number) }}
                                         </th>
                                         <th class="py-3 px-6 text-xs">
-                                            <div>{{ complain.description }}</div>
-                                        </th>
-                                        <th class="py-3 px-6 text-xs" >
-                                            <div class="px-2 w-20 text-center py-1 rounded opacity-35" :class="complain.state == 0 ? 'bg-green' : 'đã xử lý'">{{ complain.state == 0 ? 'Chờ xử lý' : 'đã xử lý' }}</div>
+                                            <div class="px-1 py-1 border rounded-2xl w-20 text-center text-[10px]"
+                                                :class="complain.severity == 'urgent' ? 'bg-red' : complain.severity == 'critical' ? 'bg-[#FF6100] text-white' : 'bg-[#cacaca]'">
+                                                {{ complain.severity == 'urgent' ? 'Xử lý sớm' : complain.severity ==
+                                                    'critical' ? 'Nghiêm trọng' : 'Thông thường' }}</div>
                                         </th>
                                         <th scope="row"
                                             class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{ complain?.resource }}
+                                        </th>
+                                        <th scope="row"
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{ complain?.counselor_staff?.name }}
+                                        </th>
+                                        <th scope="row"
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+
+                                        </th>
+
+                                        <th class="py-3 px-6 text-xs" >
+                                            <div class="px-2 w-20 text-center py-1 rounded opacity-35"
+                                            :class="complain.status == 'no_process' ? 'text-[#EE2736]' : complain.status == 'pending' ? 'text-[#F29C1F]' : complain.status == 'planning' ? 'text-[#1D75FA]'
+                                                : complain.status == 'complete' ? 'text-[#4F8D06]' : 'text-[#FF6100]'">
+                                                {{ complain.status == "no_process" ? 'Chưa xử lý' : complain.status == "pending" ? 'đang xử lý' : complain.status == "planning" ? 'Xem phương án'
+                                                : complain.status == "complete" ? 'Đã giải quyết' : 'Hủy' }}
+                                            </div>
+                                        </th>
+                                        <th class="py-3 px-6 text-xs">
+                                            <div>Chi tiết</div>
+                                        </th>
+                                        <th scope="row"
+                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            <div class="text-[#1D75FA]" data-toggle="modal" data-target="#exampleModal" @click="detail(complain)">Xử lý</div>
                                         </th>
 
                                         <th class="py-1 px-6 text-right flex justify-end my-1">
+                                            {{ complain.code }}
                                         </th>
                                     </tr>
                                     <pagination :links="complains.links" />
