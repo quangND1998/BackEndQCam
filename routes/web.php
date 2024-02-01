@@ -17,6 +17,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OtpTestController;
 use App\Http\Controllers\CommissionsPackagesController;
 use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\Home\ComplaintController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -92,6 +94,9 @@ Route::middleware(['auth'])->group(
             Route::post('saveShedule', [ScheduleVisitController::class, 'saveShedule'])->name('saveShedule');
             Route::post('updateShedule/{schedule}', [ScheduleVisitController::class, 'updateShedule'])->name('updateShedule');
 
+        });
+        Route::prefix('complaint')->as('complaint.')->group(function () {
+            Route::get('index', [ComplaintController::class, 'index'])->name('index');
         });
 
 

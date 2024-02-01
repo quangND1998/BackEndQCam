@@ -6,7 +6,7 @@ import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
-import CardBoxModal from "@/Components/CardBoxModal.vue";
+import CardBoxModalFull from "@/Components/CardBoxModalFull.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -39,6 +39,8 @@ const swal = inject("$swal");
 const form = useForm({
     id: null,
     name: null,
+    unit: null,
+    code: null,
     description: null,
     available_quantity: null,
     price: null,
@@ -68,8 +70,10 @@ const edit = (product) => {
     form.name = product.name;
     form.price = product.price;
     form.description = product.description;
+    form.unit = product.unit;
+    form.code = product.code;
     form.available_quantity = product.available_quantity;
-    product_retail.value= product;
+    product_retail.value = product;
 };
 
 const save = () => {
@@ -81,7 +85,7 @@ const save = () => {
                 editMode.value = true;
             },
             onSuccess: () => {
-                form.reset('id', 'name', 'price', 'description', 'images','available_quantity');
+                form.reset('id', 'name', 'price', 'description', 'images', 'available_quantity');
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -93,7 +97,7 @@ const save = () => {
                 editMode.value = false;
             },
             onSuccess: () => {
-                form.reset('id', 'name', 'price', 'description', 'images','available_quantity');
+                form.reset('id', 'name', 'price', 'description', 'images', 'available_quantity');
                 isModalActive.value = false;
                 editMode.value = false;
             },
@@ -175,10 +179,6 @@ const Delete = (id) => {
             <SectionTitleLineWithButton title="Sản phẩm lẻ" main></SectionTitleLineWithButton>
 
             <!-- Modal -->
-            <CardBoxModal v-model="isModalDangerActive" title="Please confirm" button="danger" has-cancel>
-                <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-                <p>This is sample modal</p>
-            </CardBoxModal>
             <div class="flex justify-between">
                 <div class="left">
                     <div class="flex content-center items-center">
@@ -188,69 +188,85 @@ const Delete = (id) => {
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small
-                        @click="
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]"
+                        :icon="mdiPlus" small @click="
                             isModalActive = true;
-                            editMode= false;
-                            form.reset();
-                        " label="Create Product Retail" />
+                        editMode = false;
+                        form.reset();
+                        " label="Thêm mặt hàng mới" />
                 </div>
             </div>
-            <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
-                classSize="shadow-lg max-h-modal w-11/12 md:w-3/5 lg:w-2/5 xl:w-5/12 z-50 overflow-auto"
-                :title="editMode ? 'Update Product Retail' : 'Create Product Retail'">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <div class="mb-2">
-                            <InputLabel for="name" value="Name" />
-                            <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
-                                autocomplete="name" />
-                            <InputError class="mt-2" :message="form.errors.name" />
-                        </div>
-                        <div class="">
-                            <label class="input w-full" for="recipient-name">
+            <CardBoxModalFull v-model="isModalActive" buttonLabel="Save" has-cancel has-save @confirm="save"
+                classSize="shadow-lg max-h-modal w-11/12 md:w-4/5 lg:w-4/5 xl:w-8/12 z-50 overflow-auto"
+                :title="editMode ? 'Chỉnh sửa' : 'Thêm mặt hàng mới'">
+                <div class="w-full mx-3">
+                    <div class="flex mr-4">
+                        <div class="flex w-1/2 ">
+                            <div class="flex flex-col mr-4  ">
+                                <div class="mb-2 w-full">
+                                    <InputLabel for="name" value="Tên mặt hàng" />
+                                    <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required
+                                        autofocus autocomplete="name" />
+                                    <InputError class="mt-2" :message="form.errors.name" />
+                                </div>
+                                <div class="mt-3">
+                                    <!-- <label class="input w-full" for="recipient-name">
 
-                                <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giá
-                                </span>
-                                <MazInputPrice v-model="form.price" label="Enter your price" currency="VND" locale="vi-VN"
-                                    :min="0" @formatted="formattedPrice = $event" />
-                            </label>
-                            <InputError class="mt-2" :message="form.errors.price" />
-                        </div>
-                        <div class="mt">
+                                        <span class="input__label bg-gray-50 text-lg" style="background-color: #fff;">Giá
+                                        </span>
+                                        <MazInputPrice v-model="form.price" label="Enter your price" currency="VND"
+                                            locale="vi-VN" :min="0" @formatted="formattedPrice = $event" />
+                                    </label> -->
+                                    <InputLabel for="name" value="Giá" />
+                                    <TextInput id="name" v-model="form.price" type="number" min="0"
+                                        class="mt-1 block w-full" required autofocus autocomplete="name" />
+                                    <InputError class="mt-2" :message="form.errors.price" />
+                                </div>
+                            </div>
 
-                            <!-- <input @input="form.images = $event.target.files" multiple accept="image/*"
-                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                id="multiple_files" type="file"> -->
+                            <div class="flex flex-col">
+                                <div class="mb-2">
+                                    <InputLabel for="name" value="Mã hàng" />
+                                    <TextInput id="name" v-model="form.code" type="text" class="mt-1 block w-full"
+                                        required />
+                                    <InputError class="mt-2" :message="form.errors.code" />
+                                </div>
+                                <div class="mt-3">
+                                    <InputLabel for="unit" value="DVT" />
+                                    <TextInput id="unit" v-model="form.unit" type="text" class="mt-1 block w-full"
+                                        required />
+                                    <InputError class="mt-2" :message="form.errors.unit" />
+                                </div>
+                            </div>
 
-                            <UploadImage v-if="editMode ==false" :max_files="4" v-model="form.images" :multiple="true" :label="`Upload Images`" />
-                            <UploadImage v-else :max_files="4" v-model="form.images" :multiple="true" :old_images="product_retail?.images"  :label="`Upload Images`" />
-                            <InputError class="mt-2" :message="form.errors.images" />
                         </div>
 
-                    </div>
-                    <div>
-                        <div class="flex flex-col">
-                                <InputLabel for="name" value="Số lượng" />
-                                <input v-model="form.available_quantity" type="number" class="border rounded mb-2"
-                                    :min="0"  />
-                                <InputError class="mt-2" :message="form.errors.available_quantity" />
-                        </div>
-                        <div class="">
-                            <InputLabel for="name" value="Description" />
-                            <label class="input w-full" for="recipient-name">
+
+                        <div class="w-1/2 ">
+                            <InputLabel for="name" value="Nội dung" />
+                            <label class="input w-full h-[100px]" for="recipient-name">
                                 <quill-editor v-model:content="form.description" contentType="html"></quill-editor>
                             </label>
                             <InputError class="mt-2" :message="form.errors.description" />
                         </div>
+
+                    </div>
+                    <div class="w-1/2 mb-2">
+                        <InputLabel for="name" value="Số lượng" />
+                        <TextInput v-model="form.available_quantity" type="number" class="mt-1 block " :min="0" />
+                        <InputError class="mt-2" :message="form.errors.available_quantity" />
+                    </div>
+
+                    <div class="mt">
+
+                        <UploadImage v-if="editMode == false" :max_files="4" v-model="form.images" :multiple="true"
+                            :label="`Upload Images`" />
+                        <UploadImage v-else :max_files="4" v-model="form.images" :multiple="true"
+                            :old_images="product_retail?.images" :label="`Upload Images`" />
+                        <InputError class="mt-2" :message="form.errors.images" />
                     </div>
                 </div>
-
-
-
-
-
-            </CardBoxModal>
+            </CardBoxModalFull>
             <!-- End Modal -->
             <div class="mt-2">
                 <div class="relative mt-2 ">

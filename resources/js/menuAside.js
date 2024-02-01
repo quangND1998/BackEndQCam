@@ -125,7 +125,7 @@ export default [{
                 route_list: ['visit.pending', 'visit.confirm', 'visit.completed']
             },
             {
-                route: 'visit.pending',
+                route: 'complaint.index',
                 label: 'Khiếu nại',
 
                 permissions: ['super-admin'],
