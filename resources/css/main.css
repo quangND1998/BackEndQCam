@@ -8,7 +8,7 @@
 @import 'styles/_basic.css';
 @import 'styles/_white.css';
 @import 'styles/input.css';
-
+@import '../../public/assets/css/sdk-1.1.0.min.css';
 :root {
     --primary-50: 236 253 245;
     --primary-100: 209 250 229;

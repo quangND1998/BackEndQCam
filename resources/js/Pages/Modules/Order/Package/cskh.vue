@@ -325,9 +325,9 @@ const deleteOrder = (order) => {
 }
 const callPhone = (order) => {
 
-    pitelSDK.call('0968967624', {
+    pitelSDK.callCustom('0968967624', {
         extraHeaders: ["CALL-FROM: PitelSDK"]
-    })
+    },false)
     // pitelSDK.call(order?.customer?.phone_number, {
     //     extraHeaders: ["CALL-FROM: PitelSDK"]
     // })
@@ -339,7 +339,7 @@ onMounted(() => {
         s.async = true;
         s.onload = () => { PitelSDK.k = a; b() };
         s.src = '/assets/js/sdk-1.1.test.min.js';
-
+        // s.src = 'https://portal.tel4vn.com/pitelsdk/sdk-1.1.5.min.js'
         var x = document.getElementsByTagName('script')[0];
         x.parentNode.insertBefore(s, x);
     })('d1ca84ac-2d98-4faa-92d4-699a6ce14eb7', () => {
