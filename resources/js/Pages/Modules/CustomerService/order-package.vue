@@ -257,4 +257,10 @@ provide('BOOKING', {
   color: theme('colors.red.600');
   margin-right: 2px;
 }
+#pwBackground {
+  visibility: hidden !important;
+}
+#ppContainer {
+  visibility: hidden !important;
+}
 </style>
