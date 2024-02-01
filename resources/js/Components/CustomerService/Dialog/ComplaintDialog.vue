@@ -25,12 +25,13 @@ const { isLoading, executeQuery } = useQuery(
     complaintForm.description = '';
     complaintForm.severity = 'normal';
     complaintForm.role_id = undefined;
+    complaintForm.package_id = undefined;
   },
   'Tạo khiếu nại thành công'
 );
 
 const onCreateComplaint = () => {
-  if (!complaintForm.description || !complaintForm.role_id) return;
+  if (!complaintForm.description || !complaintForm.role_id || !complaintForm.package_id) return;
   executeQuery();
 }
 
@@ -39,6 +40,7 @@ watch(visible, (newValue) => {
     complaintForm.description = '';
     complaintForm.severity = 'normal';
     complaintForm.role_id = undefined;
+    complaintForm.package_id = undefined;
   }
 })
 
