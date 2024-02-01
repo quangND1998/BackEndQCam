@@ -11,15 +11,18 @@ use Modules\Order\app\Models\OrderPackage;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class ComplaintManagement extends Model
+class ComplaintManagement extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     protected $table = 'complaint_management';
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id", "user_id", 'type',    "description",  "severity",  "state",
-    "date", "data", "star", "role_id",  "created_at", "updated_at",
-    "product_service_owner_id",'resource','code','counselor_staff_id','status'];
+    protected $fillable = [
+        "id", "user_id", 'type',    "description",  "severity",  "state",
+        "date", "data", "star", "role_id",  "created_at", "updated_at",
+        "product_service_owner_id", 'resource', 'code', 'counselor_staff_id', 'status'
+    ];
 
     protected static function newFactory(): ComplaintManagementFactory
     {
@@ -47,10 +50,15 @@ class ComplaintManagement extends Model
     }
     public function counselor_staff()
     {
-        return $this->belongsTo(User::class,'counselor_staff_id');
+        return $this->belongsTo(User::class, 'counselor_staff_id');
     }
     public function problem_solution()
     {
-        return $this->hasMany(ProblemSolution::class,'complaint_management_id');
+        return $this->hasMany(ProblemSolution::class, 'complaint_management_id');
+    }
+
+    public function complaint_images()
+    {
+        return $this->media()->where('collection_name', 'complaint_images');
     }
 }
