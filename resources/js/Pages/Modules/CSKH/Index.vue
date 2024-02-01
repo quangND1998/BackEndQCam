@@ -27,7 +27,9 @@ const props = defineProps({
     status: String,
     from: String,
     to: String,
-    shippers: Array
+    shippers: Array,
+    total: Number,
+    statusGroup: Object
 });
 const { openPopover,
     closePopover } = usePopOverStore();
@@ -44,6 +46,7 @@ const filter = reactive({
     payment_method: null,
     type: null,
     per_page: 10,
+    status: null,
     selectedDate: null
 })
 const swal = inject("$swal");
@@ -86,6 +89,13 @@ watch(() => [filter.per_page], (newVal) => {
     search()
 });
 
+watch(() => [filter.status], (newVal) => {
+    search()
+});
+
+const fillterStatus = (status) => {
+    filter.status = status
+}
 
 const pushOrder = (order) => {
     let query = {
@@ -101,9 +111,12 @@ const pushOrder = (order) => {
     }).then(result => {
         if (result.isConfirmed) {
             router.post(route('admin.cskh.pushOrder'), query, {
+                preserveState: false,
                 onError: () => {
                 },
                 onSuccess: () => {
+                    filter.toDate = null;
+                    filter.fromDate = null;
                     form.reset()
 
                 }
@@ -132,6 +145,8 @@ const pushOrders = () => {
                 onError: () => {
                 },
                 onSuccess: () => {
+                    filter.toDate = null;
+                    filter.fromDate = null;
                     form.reset()
 
                 }
@@ -163,7 +178,15 @@ const selectAll = computed({
 
     }
 });
+const totalOrder = (status) => {
+    var findStatus = props.statusGroup.find(e => e.status == status);
 
+    if (findStatus) {
+        return findStatus.total;
+    } else {
+        return 0;
+    }
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -240,9 +263,14 @@ const selectAll = computed({
                     </button>
                     <div class="flex">
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
-                            label="Tất cả (11)" />
+                            @click="fillterStatus(null)" :label="`Tất cả (${total})`" />
+                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#4F8D06]"
+                            @click="fillterStatus('create')" class="mr-2" :label="`Tạo mới (${totalOrder('create')})`" />
+                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#F0C419]"
+                            @click="fillterStatus('processing')" class="mr-2"
+                            :label="`Đang xử lý cả (${totalOrder('processing')})`" />
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
-                            label="Pending" />
+                            @click="fillterStatus('pending')" :label="`Pending (${totalOrder('pending')})`" />
                     </div>
                 </div>
 
@@ -376,7 +404,7 @@ const selectAll = computed({
                             </select>
                         </div>
 
-                        <Pagination :links="orders.meta.links" />
+                        <Pagination :links="orders.links" />
                     </div>
 
                 </div>

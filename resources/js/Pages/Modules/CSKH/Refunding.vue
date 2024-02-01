@@ -198,12 +198,12 @@ const selectAll = computed({
                         <Icon icon="flip" />
                         Xác nhận hoàn ({{ selected.length }})
                     </button>
-                    <div class="flex">
+                    <!-- <div class="flex">
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
                             label="Tất cả (11)" />
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
                             label="Pending" />
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="w-full mt-2">

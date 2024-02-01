@@ -75,9 +75,9 @@ class ApiShipperController extends Controller
     public function fetchOrders(Request $request)
     {
         $user = Auth::user();
-        $orders = OrderTransport::with('order', 'order.customer', 'order.orderItems.product', 'order.shipping_history', 'order.shipper')->whereHas('order', function ($q) use ($user, $request) {
+        $orders = OrderTransport::with('order', 'order.customer',  'order.shipper')->whereHas('order', function ($q) use ($user, $request) {
             $q->where('shipper_id', $user->id);
-        })->search($request->search, null, true)->fillterApi($request->only('date', 'day', 'status'))->paginate(15);
+        })->search($request->search, null, true)->fillterApi($request->only('date', 'day', 'status'))->paginate(10);
         return response()->json($orders, 200);
     }
 
@@ -156,8 +156,8 @@ class ApiShipperController extends Controller
         }
         $order_transport = OrderTransport::find($id);
         if ($order_transport) {
-            if ($order_transport->order->state_document == OrderDocument::approved) {
-                return response()->json('Đơn hàng đã duyệt hồ sơ không thể up thêm ', 404);
+            if ($order_transport->order->state_document == OrderDocument::approved->value) {
+                return response()->json('Đơn hàng đã duyệt hồ sơ không thể xóa hoặc up thêm ', 404);
             } else {
                 if ($request->images) {
                     foreach ($request->images as $image) {
@@ -182,7 +182,7 @@ class ApiShipperController extends Controller
 
         $order_transport = OrderTransport::find($id);
         if ($order_transport) {
-            if ($order_transport->order->state_document == OrderDocument::approved) {
+            if ($order_transport->order->state_document == OrderDocument::approved->value) {
                 return response()->json('Đơn hàng đã duyệt hồ sơ không thể up thêm ', 404);
             } else {
                 $mediaTodelete = Media::where('id', $media_id)->first();

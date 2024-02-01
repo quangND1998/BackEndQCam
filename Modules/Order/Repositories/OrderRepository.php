@@ -133,7 +133,7 @@ class OrderRepository implements OrderContract
                 }
             }
 
-        )->fillter($request->only('status', 'search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+        )->fillter($request->only('status', 'search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10)->appends(['status' => $request->status, 'search' => $request->search, 'fromDate' => $request->fromDate, 'toDate' => $request->toDate, 'payment_status' => $request->payment_status, 'payment_method' => $request->payment_method, 'type' => $request->type, 'market' => $request->market]);
     }
 
 

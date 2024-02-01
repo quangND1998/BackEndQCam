@@ -205,12 +205,12 @@ const selectAll = computed({
                         class="px-2 py-2 text-sm bg-[#FF0000] hover:bg-[#FF0000] text-white p-2 rounded-lg border mx-1">
                         Xác nhận hủy hàng loạt hàng loạt ({{ selected.length }})
                     </button>
-                    <div class="flex">
+                    <!-- <div class="flex">
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
                             label="Tất cả (11)" />
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
                             label="Pending" />
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="w-full mt-2">

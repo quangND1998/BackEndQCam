@@ -20,9 +20,10 @@ import "vue-search-input/dist/styles.css";
 import { emitter } from "@/composable/useEmitter";
 import { usePopOverStore } from '@/stores/popover.js'
 import OrderStatusBar from "./OrderStatusBar.vue";
-import OrderStatus from "./OrderStatus.vue";
+import { useOrderStore } from '@/stores/order.js'
 import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
-import Icon from "@/Components/Icon.vue"
+import Icon from "@/Components/Icon.vue";
+import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
 const props = defineProps({
     order_transports: Object,
     status: String,
@@ -36,6 +37,7 @@ const props = defineProps({
 
 const { openPopover,
     closePopover } = usePopOverStore();
+const { showDetailOrderTransport } = useOrderStore();
 const filter = reactive({
     customer: null,
     name: null,
@@ -155,9 +157,11 @@ const ownerOrders = () => {
             });
     }
 };
-const openSHippingDetail = (order) => {
-    console.log("ModelShipping");
-    emitter.emit("ModelShipping", order);
+const openOrderCancel = (order_transport) => {
+
+    console.log(order_transport)
+    showDetailOrderTransport(order_transport)
+    emitter.emit("OrderCancel", order_transport);
 };
 const selected = ref([]);
 const selectAll = computed({
@@ -179,6 +183,7 @@ const selectAll = computed({
 <template>
     <LayoutAuthenticated>
         <ModelShipping></ModelShipping>
+        <OrderCancel />
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">

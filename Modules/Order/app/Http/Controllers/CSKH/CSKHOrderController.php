@@ -46,13 +46,8 @@ class CSKHOrderController extends Controller
         $this->middleware('permission:order-completed', ['only' => ['completed']]);
         $this->middleware('permission:order-refund', ['only' => ['refund']]);
         $this->middleware('permission:order-decline', ['only' => ['decline']]);
-
-
         $this->middleware('permission:order-pending', ['only' => ['pushOrder']]);
         $this->middleware('permission:order-packing', ['only' => ['packedOrder']]);
-
-        $this->middleware('permission:order-packing', ['only' => ['packedOrder']]);
-
         $this->middleware('permission:add-order-shipper', ['only' => ['shipperOwner']]);
     }
 
@@ -62,9 +57,9 @@ class CSKHOrderController extends Controller
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = 'pending';
-
-
-        $orders = OrderResource::collection($this->orderRepository->getAllOrderGift($request));
+        $total = Order::count();
+        $orders = $this->orderRepository->getAllOrderGift($request);
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
 
         // $order_transports =   $this->orderTransportRepository->getOrdersTransport($request);
 
@@ -73,7 +68,7 @@ class CSKHOrderController extends Controller
 
         // return $orders;
         // dd($statusGroup);
-        return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to', 'shippers'));
+        return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to', 'shippers', 'statusGroup', 'total'));
     }
     public function index(Request $request)
     {
@@ -456,8 +451,10 @@ class CSKHOrderController extends Controller
 
         if ($request->ids && count($request->ids) > 0) {
             $order_transports = OrderTransport::find($request->ids);
+
             foreach ($order_transports as $order_transport) {
-                if ($order_transport->order->state_document == OrderDocument::not_approved) {
+                if ($order_transport->order->state_document == OrderDocument::not_approved->value) {
+
                     $order_transport->order->update([
                         'state_document' => OrderDocument::approved,
 

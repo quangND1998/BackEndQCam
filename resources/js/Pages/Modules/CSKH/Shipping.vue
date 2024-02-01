@@ -25,6 +25,7 @@ import { useOrderStore } from '@/stores/order.js'
 import Icon from '@/Components/Icon.vue'
 import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
 import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
+import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
 const props = defineProps({
     order_transports: Object,
     status: String,
@@ -37,8 +38,8 @@ const props = defineProps({
 });
 const { openPopover,
     closePopover } = usePopOverStore();
-const { showDetailOrder } = useOrderStore();
 
+const { showDetailOrderTransport } = useOrderStore();
 const filter = reactive({
     customer: null,
     name: null,
@@ -119,11 +120,12 @@ const packedOrders = () => {
             }
         });
 };
-const openOrderRefunding = (order) => {
-    showDetailOrder(order)
-    emitter.emit("OrderRefunding", order);
-};
+const openOrderCancel = (order_transport) => {
 
+    console.log(order_transport)
+    showDetailOrderTransport(order_transport)
+    emitter.emit("OrderCancel", order_transport);
+};
 const selected = ref([]);
 const selectAll = computed({
     get() {
@@ -145,6 +147,7 @@ const selectAll = computed({
     <LayoutAuthenticated>
         <ModelShipping></ModelShipping>
         <!-- <OrderRefunding /> -->
+        <OrderCancel />
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -212,12 +215,12 @@ const selectAll = computed({
                         class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
                         Xác nhận đóng gói hàng loạt ({{ selected.length }})
                     </button>
-                    <div class="flex">
+                    <!-- <div class="flex">
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
                             label="Tất cả (11)" />
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
                             label="Pending" />
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="w-full mt-2">
