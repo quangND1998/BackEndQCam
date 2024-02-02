@@ -76,12 +76,11 @@ onMounted(() => {
     s.async = true;
     s.onload = ()=>{PitelSDK.k=a;b()};
     s.src = '/assets/js/sdk-1.1.test.min.js';
+    // s.src = 'https://portal.tel4vn.com/pitelsdk/sdk-1.1.5.min.js';
     var x = document.getElementsByTagName('script')[0];
     x.parentNode.insertBefore(s, x);
   })('d1ca84ac-2d98-4faa-92d4-699a6ce14eb7', ()=>{
     console.log('Pitel SDK Loaded');
-  });
-  setTimeout(function () {
     const sdkOptions = {
       enableWidget: true,
       sipOnly: true,
@@ -90,30 +89,8 @@ onMounted(() => {
       sipPassword: "Agent@@2023!!",
       contactName: 2200,
     }
-    const sdkHook = {
-      onRegistered: () => {
-        console.log('onRegistered');
-        phoneCallReady.value = true;
-      },
-      onUnregistered: () => {
-        console.log('onUnregistered');
-        phoneCallReady.value = false;
-      },
-      onCallCreated: () => {
-        // Chỗ này để đổi UI thành đang gọi
-        console.log('onCallCreated');
-      },
-      onCallAnswered: () => {
-        // Chỗ này đổi UI thành đang nói chuyện
-        console.log('onCallAnswered');
-      },
-      onCallHangup: () => {
-        // Chỗ này đổi UI thành ngắt cuộc gọi
-        console.log('onCallHangup');
-      },
-    }
     pitelSDK.value = new PitelSDK('xxx', 'xxx', '2200', {}, sdkOptions);
-  }, 500);
+  });
 
   document.addEventListener('CMT_CALL_READY', onPhoneCallRead);
   document.addEventListener('CMT_CALL_CREATED', onCallCreated);

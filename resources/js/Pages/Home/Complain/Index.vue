@@ -8,7 +8,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import CardBoxModalFull from "@/Components/CardBoxModalFull.vue";
 import PillTag from '@/Components/PillTag.vue'
-
+import Model from "./Model.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -86,6 +86,7 @@ const cancelState = (visit) => {
         <SectionMain class="p-3 mt-16">
             <SectionTitleLineWithButton class="font-semibold flex mr-2" title="Quản lý khiếu nại" main>
             </SectionTitleLineWithButton>
+
             <div>
                 <FilterBar :statusGroup="statusGroup"></FilterBar>
                 <div class="p-2 rounded-lg col-md-12">

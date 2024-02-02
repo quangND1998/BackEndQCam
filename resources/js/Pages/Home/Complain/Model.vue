@@ -3,23 +3,8 @@
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <!-- <div class="modal-header">
-                    <div class="flex">
-                        <div class="ml-2">
-                            <h3 class="text-black font-bold my-1 text-base">Bạn có muốn Hủy gói ?</h3>
-                            <p class="text-gray-500 text-sm">Đơn hàng sẽ được chuyển đến tab "Đơn hủy"</p>
-                        </div>
-                    </div>
-
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div> -->
                 <div class="modal-body">
                     <form @submit.prevent="orderCancel">
-                        
-
                         <div class="form-group" :class="form.errors.reason ? 'has-error' : ''">
 
                             <label for="message" class="  block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lý
