@@ -8,7 +8,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import CardBoxModalFull from "@/Components/CardBoxModalFull.vue";
 import PillTag from '@/Components/PillTag.vue'
-import Model from "./Model.vue";
+import ModelComplain from "./ModelComplain.vue";
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -36,9 +36,11 @@ import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import { initFlowbite } from 'flowbite'
 import LayoutBar from '@/Layouts/LayoutBar.vue';
 import FilterBar from "./FilterBar.vue";
+import { emitter } from '@/composable/useEmitter';
 defineProps({
     complains: Object,
-    statusGroup: Array
+    statusGroup: Array,
+    roles: Object
 });
 const searchVal = ref("");
 const swal = inject("$swal");
@@ -78,6 +80,9 @@ const cancelState = (visit) => {
         },
     });
 }
+const OpenModalHandle = (order) => {
+    emitter.emit('OpenModalHandle', order)
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -89,6 +94,7 @@ const cancelState = (visit) => {
 
             <div>
                 <FilterBar :statusGroup="statusGroup"></FilterBar>
+                <ModelComplain :roles="roles"></ModelComplain>
                 <div class="p-2 rounded-lg col-md-12">
                     <div class="panel panel-default">
                         <div class="overflow-x-auto relative  sm:rounded-lg ">
@@ -171,7 +177,7 @@ const cancelState = (visit) => {
                                         </th>
                                         <th scope="row"
                                             class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            <div class="text-[#1D75FA]" data-toggle="modal" data-target="#exampleModal" @click="detail(complain)">Xử lý</div>
+                                            <div class="text-[#1D75FA]" data-toggle="modal" data-target="#exampleModal" @click="OpenModalHandle(complain)">Xử lý</div>
                                         </th>
 
                                         <th class="py-1 px-6 text-right flex justify-end my-1">

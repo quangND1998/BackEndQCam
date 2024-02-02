@@ -97,8 +97,8 @@ Route::middleware(['auth'])->group(
         });
         Route::prefix('complaint')->as('complaint.')->group(function () {
             Route::get('index', [ComplaintController::class, 'index'])->name('index');
+            Route::post('saveSolution/{id}', [ComplaintController::class, 'saveSolution'])->name('saveSolution');
         });
-
 
         Route::prefix('notification')->as('notification.')->group(function () {
             Route::get('all', [NotificationController::class, 'index'])->name('all');
