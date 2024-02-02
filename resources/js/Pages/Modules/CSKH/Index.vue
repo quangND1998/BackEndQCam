@@ -361,11 +361,12 @@ const totalOrder = (status) => {
                                                 class=" text-gray-400 rounded-lg  mr-2 text-[#FF6100] hover:text-red-700"
                                                 v-tooltip.top="'Đơn nháp'" size="20">
                                             </BaseIcon>
+                                            <Link :href="`/customer-service/customer/${order.customer.id}/order-packages`">
                                             <BaseIcon :path="mdiSquareEditOutline"
                                                 class=" text-gray-400 rounded-lg mr-2 text-[#FF6100] hover:text-blue-700"
                                                 v-tooltip.top="'Chỉnh sửa'" size="20">
                                             </BaseIcon>
-
+                                            </Link>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order?.shipper ? order?.shipper?.name : "NA" }}

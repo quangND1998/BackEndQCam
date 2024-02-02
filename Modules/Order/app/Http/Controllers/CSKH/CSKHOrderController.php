@@ -129,7 +129,7 @@ class CSKHOrderController extends Controller
     public function shipping(Request $request)
     {
 
-        $count_orders = Order::where('state', true)->count();
+        $count_orders = OrderTransport::count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportState::shipping;
@@ -145,7 +145,7 @@ class CSKHOrderController extends Controller
     public function completed(Request $request)
     {
 
-        $count_orders = Order::where('state', true)->count();
+        $count_orders = OrderTransport::count();
         $order_not_push = OrderTransport::whereHas('order', function ($q) {
             $q->where('state_document', 'not_push');
         })->where('state', 'delivered')->count();
@@ -165,7 +165,7 @@ class CSKHOrderController extends Controller
     public function refunding(Request $request)
     {
 
-        $count_orders = Order::where('state', true)->count();
+        $count_orders = OrderTransport::count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportState::refunding;
@@ -181,7 +181,7 @@ class CSKHOrderController extends Controller
     public function refund(Request $request)
     {
 
-        $count_orders = Order::where('state', true)->count();
+        $count_orders = OrderTransport::count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportState::refund;
@@ -198,7 +198,7 @@ class CSKHOrderController extends Controller
     public function decline(Request $request)
     {
 
-        $count_orders = Order::where('state', true)->count();
+        $count_orders = OrderTransport::count();
         $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
         $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
         $status = OrderTransportState::decline;
