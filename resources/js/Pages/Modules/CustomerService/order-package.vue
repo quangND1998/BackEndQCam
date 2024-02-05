@@ -248,7 +248,7 @@ provide('BOOKING', {
         </button> -->
       </div>
     </div>
-    <PhoneCall :tableHeight="tableHeight" />
+    <PhoneCall :tableHeight="tableHeight" :customer="customer" :isCallable="true" />
 </template>
 
 <style>

@@ -1,19 +1,20 @@
 <script setup>
-import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import useQuery, { CUSTOMER_SERVICE_API_MAKER } from './composables/useQuery';
 
-const { customer } = inject('ORDER_PACKAGE_PAGE');
-
 const props = defineProps({
+  isCallable: Boolean,
+  customer: Object,
   tableHeight: Number
 });
 
 const topPosition = computed(() => {
+  if (!props.tableHeight) return;
   return `calc(${props.tableHeight + 72}px) `;
 });
 const hidePhoneNumber = computed(() => {
-  if (customer.phone_number) {
-    return customer.phone_number.slice(0, -4).padEnd(customer.phone_number.length, '*');
+  if (props.customer.phone_number) {
+    return props.customer.phone_number.slice(0, -4).padEnd(props.customer.phone_number.length, '*');
   }
   return '';
 })
@@ -29,6 +30,7 @@ const onCallCreated = () => {
 const onCallAnswered = () => {
   phoneCallStatus.value = 'ANSWERED';
   isActiveCall.value = true;
+  phoneCallStatus.value = true;
   if (intervalRef.value) clearInterval(intervalRef.value);
   intervalRef.value = setInterval(() => {
     callDuration.value += 1;
@@ -151,32 +153,34 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div title="Gọi cho khách hàng" @click="onCall" class="fixed right-[-100%] transition-position duration-700 p-2 w-[200px] bg-white border !border-gray-400 rounded-l-full flex items-center gap-3 cursor-pointer" :style="`top: ${topPosition}`"
-    :class="{
-      '!right-0': phoneCallReady,
-      '!w-[250px]': phoneCallStatus === 'ANSWERED' && isActiveCall
-    }"
-  >
-    <div class="w-10 h-10 flex items-center justify-center bg-[#27AE60] rounded-full relative"
+  <template v-if="isCallable">
+    <div title="Gọi cho khách hàng" @click="onCall" class="fixed right-[-100%] transition-position duration-700 p-2 w-[200px] bg-white border !border-gray-400 rounded-l-full flex items-center gap-3 cursor-pointer" :style="`top: ${topPosition}`"
       :class="{
-        '!bg-[#EE2736]': phoneCallStatus === 'ANSWERED' && isActiveCall
+        '!right-0': phoneCallReady,
+        '!w-[250px]': phoneCallStatus === 'ANSWERED' && isActiveCall
       }"
     >
-      <span v-if="phoneCallStatus === 'CREATED'" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#27AE60] opacity-75"></span>
-      <i class="fa fa-phone text-white text-2xl " aria-hidden="true"></i>
-    </div>
-    <div class="flex-1">
-      <p class="font-medium">{{ customer.name }}</p>
-      <p v-if="phoneCallStatus === 'CREATED' && isActiveCall" class="animate-pulse">Đang gọi</p>
-      <div v-else class="flex items-center justify-between w-full">
-        <p class="font-medium">{{ hidePhoneNumber }}</p>
-        <p v-if="phoneCallStatus === 'ANSWERED' && isActiveCall">{{ formatedTime }}</p>
+      <div class="w-10 h-10 flex items-center justify-center bg-[#27AE60] rounded-full relative"
+        :class="{
+          '!bg-[#EE2736]': phoneCallStatus === 'ANSWERED' && isActiveCall
+        }"
+      >
+        <span v-if="phoneCallStatus === 'CREATED'" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#27AE60] opacity-75"></span>
+        <i class="fa fa-phone text-white text-2xl " aria-hidden="true"></i>
+      </div>
+      <div class="flex-1">
+        <p class="font-medium">{{ customer?.name }}</p>
+        <p v-if="phoneCallStatus === 'CREATED' && isActiveCall" class="animate-pulse">Đang gọi</p>
+        <div v-else class="flex items-center justify-between w-full">
+          <p class="font-medium">{{ hidePhoneNumber }}</p>
+          <p v-if="phoneCallStatus === 'ANSWERED' && isActiveCall">{{ formatedTime }}</p>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="invisible">
-    <div id="cs-customer-phone-number">{{  customer.phone_number }}</div>
-  </div>
+    <div class="invisible">
+      <div id="cs-customer-phone-number">{{ customer?.phone_number }}</div>
+    </div>
+  </template>
   <div v-if="phoneCallStatus === 'RECEIVE_CALL'" class="fixed w-[200px] !right-0 h-[65px] bg-gray-200/40 cursor-not-allowed z-10 rounded-l-full" :style="`top: ${topPosition}`" />
   <div v-if="hasInCommingCall" class="fixed w-[302px] rounded-[10px] bottom-[100px] right-[30px]">
     <div class="rounded-t-[10px] bg-[#EE2736] py-2 px-3 text-white text-base font-semibold">
@@ -190,7 +194,7 @@ onUnmounted(() => {
             {{ userData ? userData.user.name : 'Chưa có trong hệ thống' }}
           </p>
           <p class="text-black text-base font-semibold mb-4">
-            {{ userData ? userData.user.phone_number.slice(0, -4).padEnd(customer.phone_number.length, '*') : callingPhoneNumber }}
+            {{ userData ? userData.user.phone_number.slice(0, -4).padEnd(customer?.phone_number.length, '*') : callingPhoneNumber }}
           </p>
         </template>
         <p v-if="intervalRef" class="text-black font-medium text-2xl mb-3">{{ formatedTime }}</p>
