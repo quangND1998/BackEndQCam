@@ -28,6 +28,7 @@ const onCallCreated = () => {
 
 const onCallAnswered = () => {
   phoneCallStatus.value = 'ANSWERED';
+  isActiveCall.value = true;
   if (intervalRef.value) clearInterval(intervalRef.value);
   intervalRef.value = setInterval(() => {
     callDuration.value += 1;
@@ -144,7 +145,7 @@ onUnmounted(() => {
   document.removeEventListener('CMT_CALL_READY', onPhoneCallReady);
   document.removeEventListener('CMT_CALL_CREATED', onCallCreated);
   document.removeEventListener('CMT_CALL_ANSWERED', onCallAnswered);
-  document.addEventListener('CMT_CALL_HANGUP', onCallHangup);
+  document.removeEventListener('CMT_CALL_HANGUP', onCallHangup);
   document.removeEventListener('CMT_RECEIVE_CALL', onReceiveCall);
 });
 </script>
@@ -174,7 +175,7 @@ onUnmounted(() => {
     </div>
   </div>
   <div class="invisible">
-    <div id="cs-customer-phone-number">{{ customer.phone_number }}</div>
+    <div id="cs-customer-phone-number">{{  customer.phone_number }}</div>
   </div>
   <div v-if="phoneCallStatus === 'RECEIVE_CALL'" class="fixed w-[200px] !right-0 h-[65px] bg-gray-200/40 cursor-not-allowed z-10 rounded-l-full" :style="`top: ${topPosition}`" />
   <div v-if="hasInCommingCall" class="fixed w-[302px] rounded-[10px] bottom-[100px] right-[30px]">
