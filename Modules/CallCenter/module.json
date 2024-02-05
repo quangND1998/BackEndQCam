@@ -1,0 +1,11 @@
+{
+    "name": "CallCenter",
+    "alias": "callcenter",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\CallCenter\\app\\Providers\\CallCenterServiceProvider"
+    ],
+    "files": []
+}

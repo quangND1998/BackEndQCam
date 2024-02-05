@@ -25,12 +25,12 @@ const onPhoneCallReady = () => {
 
 const onCallCreated = () => {
   phoneCallStatus.value = 'CREATED';
+  isActiveCall.value = true;
 }
 
 const onCallAnswered = () => {
   phoneCallStatus.value = 'ANSWERED';
   isActiveCall.value = true;
-  phoneCallStatus.value = true;
   if (intervalRef.value) clearInterval(intervalRef.value);
   intervalRef.value = setInterval(() => {
     callDuration.value += 1;
