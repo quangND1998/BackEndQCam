@@ -9,6 +9,7 @@ import PlanTable from '@/Components/CustomerService/Table/PlanTable.vue';
 import PlanTableDescription from '@/Components/CustomerService/Table/PlanTableDescription.vue';
 import RemindTable from '@/Components/CustomerService/Table/RemindTable.vue';
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
+import PhoneCall from '@/Components/CustomerService/PhoneCall.vue';
 const props = defineProps({
   orderPackagePlans: Array,
   remindData: Array,
@@ -85,5 +86,6 @@ const changePage = (diffPageNo) => {
       </div>
     </div>
   </div>
+  <PhoneCall :isCallable="false" />
 </LayoutAuthenticated>
 </template>
