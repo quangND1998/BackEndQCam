@@ -89,3 +89,12 @@ const changePage = (diffPageNo) => {
   <PhoneCall :isCallable="false" />
 </LayoutAuthenticated>
 </template>
+
+<style>
+#pwBackground {
+  visibility: hidden !important;
+}
+#ppContainer {
+  visibility: hidden !important;
+}
+</style>
