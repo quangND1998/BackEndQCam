@@ -194,7 +194,7 @@ onUnmounted(() => {
             {{ userData ? userData.user.name : 'Chưa có trong hệ thống' }}
           </p>
           <p class="text-black text-base font-semibold mb-4">
-            {{ userData ? userData.user.phone_number.slice(0, -4).padEnd(customer?.phone_number.length, '*') : callingPhoneNumber }}
+            {{ userData ? userData.user.phone_number.slice(0, -4).padEnd(userData.user.phone_number.length, '*') : callingPhoneNumber }}
           </p>
         </template>
         <p v-if="intervalRef" class="text-black font-medium text-2xl mb-3">{{ formatedTime }}</p>
