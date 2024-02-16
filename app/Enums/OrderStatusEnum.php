@@ -10,4 +10,5 @@ enum OrderStatusEnum: string
     case pending = 'pending'; //Pending
     case processing = 'processing'; //Đang xử lý
     case completed = 'completed'; //Thành công
+    case draft = 'draft'; //Thành công
 }

@@ -163,7 +163,23 @@ class OrderController extends Controller
         return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
     }
 
+    public function draft(Request $request)
+    {
 
+
+        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+        $status = 'draft';
+
+
+        $orders = $this->orderRepository->getOrder($request, $status);
+
+        $statusGroup = $this->orderRepository->groupByOrderStatus();
+
+
+        $shippers = $this->shipperRepository->getShipper();
+        return Inertia::render('Modules/Order/OrderWait', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+    }
 
 
     public function decline(Request $request)

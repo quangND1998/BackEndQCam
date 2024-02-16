@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="OrderCancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="OrderTransportRefunding" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true" v-if="order_transport">
         <div class="modal-dialog modal-xl rounded-2xl mx-auto mt-10 shadow-lg max-h-modal w-8/12   md:w-9/12 lg:w-8/12 xl:w-5/12 z-50 "
             role="document">
@@ -8,8 +8,8 @@
                     <div class="w-full flex justify-between">
                         <h3 class="text-black font-semibold my-1 text-[16px]">Đơn hàng #{{
                             order_transport.order?.order_number }}</h3>
-                        <h3 class="text-black font-semibold my-1 text-[16px]">Ngày nhận đơn {{
-                            formatDateOnly(order_transport.delivery_appointment) }}</h3>
+                        <!-- <h3 class="text-black font-semibold my-1 text-[16px]">Ngày nhận đơn {{
+                            formatDateOnly(order_transport.delivery_appointment) }}</h3> -->
                     </div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -60,37 +60,26 @@
                         </p>
                         <OrderTransportState v-if="order_transport" :order_transport="order_transport" />
                     </div>
+                   
                     <div class="w-full flex flex-col  mx-auto mt-4">
 
-                        <h1 class="text-[#000000] text-[16px] font-semibold mr-2">Đơn có vẫn đề?
-                        </h1>
+                    <h1 class="text-[#000000] text-[16px] font-semibold mr-2">Yêu cầu hoàn đơn?
+                    </h1>
 
-                        <textarea v-model="form.reason" name="" id="" cols="30" rows="5"
-                            :class="form.errors.reason ? ' border-red-500' : null"
-                            class="rounded-md border border-[0.5]"></textarea>
-                        <div class="text-red-500" v-if="form.errors.reason">{{ form.errors.reason }}
-                        </div>
+                    <textarea v-model="form.reason" name="" id="" cols="30" rows="5"
+                        :class="form.errors.reason ? ' border-red-500' : null"
+                        class="rounded-md border border-[0.5]"></textarea>
+                  
+                    <div class="text-red-500" v-if="errors.reason">{{ errors.reason }}
+                    </div>
                     </div>
 
-                    <div class="w-full flex justify-between mt-3">
-                        <div class="text-black font-semibold my-1 text-[16px]">Chuyển ngày giao đến </div>
-                        <div class="text-black font-semibold my-1 text-[16px]">
-
-                            <VueDatePicker v-model="form.delivery_appointment"
-                                :class="form.errors.delivery_appointment ? 'border-red-500' : ''" :min-date="minDate"
-                                :max-date="maxDate" :clearable="true" :enable-time-picker="false" format="dd/MM/yyyy">
-
-                            </VueDatePicker>
-                            <div class="text-red-500" v-if="form.errors.delivery_appointment">{{
-                                form.errors.delivery_appointment }}
-                            </div>
-                        </div>
-                    </div>
+               
                     <div class="modal-footer">
 
                         <button type="submit" @click.prevent="orderCancel()"
-                            class="inline-block px-3 py-4 bg-red-600 text-white font-black text-sm leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Xác
-                            nhận hủy đơn</button>
+                            class="inline-block px-2 py-3 bg-red-600 text-white font-black text-sm leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Xác
+                            nhận hoàn đơn</button>
                     </div>
                 </div>
             </div>
@@ -109,19 +98,20 @@ import moment from 'moment';
 import { useCSKHStore } from '@/stores/cskh.js'
 const { order, order_transport
 } = storeToRefs(useOrderStore())
-
+const props = defineProps({
+    errors:Object
+})
 const store = useCSKHStore();
 const form = useForm({
     reason: null,
-    delivery_appointment: null
+
 })
 
 onMounted(() => {
-    emitter.on('OrderCancel', (order_transport) => {
+    emitter.on('OrderTransportRefunding', (order_transport) => {
         console.log(order_transport)
-
-        form.reason = order_transport.reason,
-            form.delivery_appointment = order_transport.delivery_appointment
+        form.reason = order_transport.reason
+          
     })
 });
 const isActive = (status) => {
@@ -130,56 +120,34 @@ const isActive = (status) => {
     }
     return false
 }
-const minDate = computed(() => {
-    if (form.delivery_appointment) {
-        // return new Date()
-        return new Date(moment(new Date(form.delivery_appointment), "DD-MM-YYYY").add(2, 'days'))
-    }
-    else {
-        return new Date(moment(new Date(), "DD-MM-YYYY").add(2, 'days'))
-
-    }
-}
-
-);
-const maxDate = computed(() => {
-    if (form.delivery_appointment) {
-        // return new Date()
-        return new Date(moment(new Date(minDate.value), "DD-MM-YYYY").add(25, 'days'))
-    }
-    else {
-        return new Date(moment(new Date(minDate.value), "DD-MM-YYYY").add(25, 'days'))
-
-    }
-}
-
-);
 
 
 
 
 const orderCancel = () => {
+    let query = {
+        ids: [order_transport.value.id],
+        reason: form.reason
+    };
 
-    form.post(route("admin.cskh.order.decline", order_transport.value.id), {
-        preserveState: true,
-        onError: errors => {
-            if (Object.keys(errors).length > 0) {
 
-            }
-        },
-        onSuccess: page => {
-            $("#OrderCancel").modal("hide");
+    router.post(route("admin.cskh.order.refunding"), query, {
+        onError: () => { },
+        onSuccess: () => {
+   
+            $("#OrderTransportRefunding").modal("hide");
             store.fetchOrdersTransport();
             store.fetchStatusOrdersTransport();
             form.reset();
-        }
+        },
     });
+
 }
 const listener = () => {
 }
 onUnmounted(() => {
 
-    emitter.off('OrderCancel', listener)
+    emitter.off('OrderTransportRefunding', listener)
 })
 </script>
 

@@ -49,6 +49,7 @@ class CSKHOrderController extends Controller
         $this->middleware('permission:order-pending', ['only' => ['pushOrder']]);
         $this->middleware('permission:order-packing', ['only' => ['packedOrder']]);
         $this->middleware('permission:add-order-shipper', ['only' => ['shipperOwner']]);
+        $this->middleware('permission:contract-complete', ['only' => ['confirmStateDocument','updloadImages']]);
     }
 
     public function all(Request $request)
@@ -321,6 +322,7 @@ class CSKHOrderController extends Controller
             'state' => OrderTransportState::decline,
             'status' => OrderTransportStatus::wait_decline,
             'reason' => $request->reason,
+            'delivery_appointment' => $request->delivery_appointment
         ]);
 
         return back()->with('success', "Đơn hàng đã hủy");
@@ -337,16 +339,19 @@ class CSKHOrderController extends Controller
                         'state' => OrderTransportState::decline,
                         'status' => OrderTransportStatus::decline
                     ]);
+                    $order_transport->order->update([
+                        'status' => OrderStatusEnum::pending
+                    ]);
                 }
             }
-            return back()->with('success', "Đơn hàng đang chuyển về chờ hoàn");
+            return back()->with('success', "Đơn hàng đã hủy");
         }
         return back()->with('warning', "Hãy chọn select box");
     }
 
     public function orderRefunding(Request $request)
     {
-
+       
         $this->validate(
             $request,
             [
@@ -354,6 +359,7 @@ class CSKHOrderController extends Controller
                 'ids' => 'required|array'
             ]
         );
+        
         if ($request->ids && count($request->ids) > 0) {
             $order_transports = OrderTransport::find($request->ids);
             foreach ($order_transports as $order_transport) {
@@ -491,5 +497,30 @@ class CSKHOrderController extends Controller
             ]);
         }
         return back()->with('success', 'upload hồ sơ thành công');
+    }
+
+
+    public function draftOrder(Request $request)
+    {
+       
+        $this->validate(
+            $request,
+            [
+             
+                'ids' => 'required|array'
+            ]
+        );
+        if ($request->ids && count($request->ids) > 0) {
+            $orders = Order::find($request->ids);
+            foreach ($orders as $order) {
+                if ($order->state_document !== OrderDocument::approved->value) {
+                    $order->update([
+                       'status' =>  OrderStatusEnum::draft
+                    ]);
+                }
+            }
+            return back()->with('success', "Đã chuyển thành đơn nháp");
+        }
+        return back()->with('warning', "Hãy chọn select box");
     }
 }

@@ -11,6 +11,7 @@ const status_text = {
     processing: 'Đang xử lý',
     completed: 'Thành công',
     create: 'Tạo mới',
+    draft: "Đơn nháp"
 
 
 }
@@ -19,7 +20,7 @@ const status_color = {
     processing: 'bg-[#FF6100] text-white',
     completed: 'bg-[#4F8D06] text-white',
     create: 'bg-[#27AE60] text-white',
-
+    draft: "bg-[#b4b9bf] text-white"
 
 
 }

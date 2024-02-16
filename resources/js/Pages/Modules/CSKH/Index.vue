@@ -187,6 +187,36 @@ const totalOrder = (status) => {
         return 0;
     }
 }
+const draftOrder=(order)=>{
+    let query = {
+        ids: [order.id]
+    };
+    swal.fire({
+        title: "Thông báo?",
+        text: "Bạn nháp đơn hàng này!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+    }).then(result => {
+        if (result.isConfirmed) {
+            router.post(route('admin.cskh.order.draftOrder'), query, {
+                preserveState: false,
+                onError: () => {
+                },
+                onSuccess: () => {
+                    filter.toDate = null;
+                    filter.fromDate = null;
+                    form.reset()
+
+                }
+            });
+
+        } else {
+            return
+        }
+    });
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -357,7 +387,7 @@ const totalOrder = (status) => {
                                                 class="rotate-90 text-gray-400 rounded-lg mr-2 text-[#1D75FA] hover:text-blue-700"
                                                 v-tooltip.top="'Đẩy đơn'" size="22">
                                             </BaseIcon>
-                                            <BaseIcon :path="mdiLayersTripleOutline"
+                                            <BaseIcon :path="mdiLayersTripleOutline" @click="draftOrder(order)" v-if="order.status !=='completed'"
                                                 class=" text-gray-400 rounded-lg  mr-2 text-[#FF6100] hover:text-red-700"
                                                 v-tooltip.top="'Đơn nháp'" size="20">
                                             </BaseIcon>

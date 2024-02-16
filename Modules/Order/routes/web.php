@@ -67,7 +67,7 @@ Route::middleware(['auth'])->group(
                 Route::get('/completed', [OrderController::class, 'completed'])->name('completed');
                 // Route::get('/refund', [OrderController::class, 'refund'])->name('refund');
                 // Route::get('/decline', [OrderController::class, 'decline'])->name('decline');
-
+                Route::get('/draft', [OrderController::class, 'draft'])->name('draft');
 
                 Route::post('orderCancel/{order}', [OrderController::class, 'orderCancel'])->name('orderCancel');
                 Route::post('orderRefund/{order}', [OrderController::class, 'orderRefund'])->name('orderRefund');
@@ -165,6 +165,7 @@ Route::middleware(['auth'])->group(
                     Route::post('refund', [CSKHOrderController::class, 'orderRefund'])->name('refund');
 
                     Route::post('/cancel', [CSKHOrderController::class, 'orderCancel'])->name('cancel');
+                    Route::post('draftOrder',[CSKHOrderController::class, 'draftOrder'])->name('draftOrder');
                 });
                 Route::post('/confirm-document', [CSKHOrderController::class, 'confirmStateDocument'])->name('confirm-document');
 
@@ -172,6 +173,8 @@ Route::middleware(['auth'])->group(
 
                 Route::get('fetchOrdersTransport', GetOrdersTransport::class)->name('fetchOrdersTransport');
                 Route::get('fetchOrdersTransportGroup', GetOrdersTransportStatus::class)->name('fetchStatusOrders');
+
+       
             });
             Route::prefix('gift_distribute')->as('gift_distribute.')->group(function () {
                 Route::get('index', [GiftDistributeController::class, 'index'])->name('index');
