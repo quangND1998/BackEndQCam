@@ -33,7 +33,7 @@ use Modules\CustomerService\app\Http\Controllers\GetWeeklyPlan;
 |
 */
 auth()->loginUsingId(348);
-Route::middleware(['auth', 'role:cskh'])->group(
+Route::middleware(['auth'])->group(
     function () {
         Route::prefix('/customer-service/customer/{customerId}')->group(function () {
             Route::get('/order-packages', GetCustomerOrderPackage::class);

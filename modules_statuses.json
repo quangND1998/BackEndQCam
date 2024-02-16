@@ -5,5 +5,6 @@
     "Landingpage": true,
     "CustomerService": true,
     "Booking": true,
-    "Shipper": true
+    "Shipper": true,
+    "CallCenter": true
 }

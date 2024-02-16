@@ -248,7 +248,7 @@ provide('BOOKING', {
         </button> -->
       </div>
     </div>
-    <PhoneCall :tableHeight="tableHeight" />
+    <PhoneCall :tableHeight="tableHeight" :customer="customer" :isCallable="true" />
 </template>
 
 <style>
@@ -256,5 +256,11 @@ provide('BOOKING', {
   content: '*';
   color: theme('colors.red.600');
   margin-right: 2px;
+}
+#pwBackground {
+  visibility: hidden !important;
+}
+#ppContainer {
+  visibility: hidden !important;
 }
 </style>
