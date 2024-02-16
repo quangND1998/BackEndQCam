@@ -5,7 +5,7 @@ namespace Modules\Customer\app\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Modules\CustomerService\app\Models\VisitExtraService;
-
+use Illuminate\Support\Carbon;
 class ScheduleVisit extends Model
 {
     protected $table = 'schedule_visits';
@@ -35,5 +35,26 @@ class ScheduleVisit extends Model
     public function extraServices()
     {
         return $this->belongsToMany(VisitExtraService::class, 'visit_service', 'schedule_visit_id', 'visit_extra_service_id');
+    }
+    public function scopeFillter($query, array $filters)
+    {
+        if (isset($filters['search'])) {
+            // $query->whereHas(
+            //     'product_owner_service.customer',
+            //     function ($q) use ($filters) {
+            //         $q->where('phone_number','LIKE','%' . $filters['search'] . '%');
+            //     }
+            // );
+            $query->whereHas(
+                'product_owner_service.order_package',
+                function ($q) use ($filters) {
+                    $q->where('idPackage','LIKE','%' . $filters['search'] . '%');
+                }
+            );
+        }
+        if (isset($filters['from']) && isset($filters['to'])) {
+
+            $query->whereBetween('created_at', [Carbon::parse($filters['from'])->format('Y-m-d H:i:s'), Carbon::parse($filters['to'])->format('Y-m-d H:i:s')]);
+        }
     }
 }

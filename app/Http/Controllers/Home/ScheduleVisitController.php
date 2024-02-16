@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ScheduleVisit;
-
+use Illuminate\Support\Facades\DB;
 class ScheduleVisitController extends Controller
 {
 
@@ -17,15 +17,20 @@ class ScheduleVisitController extends Controller
     {
         $this->middleware('permission:create-schedule', ['only' => ['createShedule']]);
     }
-    public function getAll()
+    public function getAll(Request $request)
     {
+        $filters = $request->all('search');
+        $scheduleVisits = $this->getVisitSchedule('',$request);
+        $statusGroup = $this->groupByStatus();
+        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup'));
     }
     //state : pending, confirm, compelete, cancel
     public function getPending(Request $request)
     {
         $filters = $request->all('search');
-        $scheduleVisits = ScheduleVisit::with('product_owner_service.customer')->where('state', 'pending')->orderBy('created_at', 'desc')->paginate('20');
-        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits'));
+        $scheduleVisits = $this->getVisitSchedule('pending',$request);        // return $scheduleVisits;
+        $statusGroup = $this->groupByStatus();
+        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup'));
     }
     public function changeState(Request $request, $id)
     {
@@ -55,14 +60,18 @@ class ScheduleVisitController extends Controller
     public function getCancel(Request $request)
     {
         $filters = $request->all('search');
-        $scheduleVisits = ScheduleVisit::with('product_owner_service.customer')->where('state', 'cancel')->orderBy('created_at', 'desc')->paginate('20');
-        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits'));
+        $scheduleVisits = $this->getVisitSchedule('cancel',$request);        // return $scheduleVisits;
+        $statusGroup = $this->groupByStatus();
+        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup'));
     }
     public function getComplete(Request $request)
     {
         $filters = $request->all('search');
-        $scheduleVisits = ScheduleVisit::with('product_owner_service.customer')->where('state', 'complete')->orderBy('created_at', 'desc')->paginate('20');
-        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits'));
+        $state = 'complete';
+        $scheduleVisits = $this->getVisitSchedule($state,$request);        // return $scheduleVisits;
+        $statusGroup = $this->groupByStatus();
+      //  return $scheduleVisits;
+        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup'));
     }
 
 
@@ -128,6 +137,55 @@ class ScheduleVisitController extends Controller
         ]);
 
         return redirect()->route('visit.pending')->with('success', 'Cập nhật đặt lịch thành công');
+
+    }
+    public function groupByStatus()
+    {
+        $array_status = ['pending','complete', 'cancel'];
+
+        $datas = ScheduleVisit::select('state', DB::raw('count(*) as total'));
+        $statusGroup = $datas->groupBy('state')->get();
+
+
+        foreach ($array_status as $status) {
+
+            $filtered = $statusGroup->where('state', $status)->first();
+
+            if ($filtered == null) {
+
+                $newCollections[] = array(
+                    'status' => $status,
+                    'total' => 0,
+                );
+            } else {
+
+                $newCollections[] = array(
+                    'status' => $status,
+                    'total' => $filtered->total,
+                );
+
+            }
+        }
+        $newCollections[] = array(
+            'status' => 'all',
+            'total' => ScheduleVisit::all()->count(),
+        );
+
+        return $newCollections;
+    }
+    public function getVisitSchedule($state,$request){
+        // dd($state);
+        $scheduleVisits = ScheduleVisit::with('extraServices','product_owner_service.customer','product_owner_service.order_package')
+        ->orderBy('created_at', 'desc')
+        ->fillter($request->only('search','from', 'to'));
+
+        if($state != null){
+            $scheduleVisits = $scheduleVisits->where('state', $state);
+
+        }
+        $datas = $scheduleVisits->paginate('20');
+        
+        return $datas;
 
     }
 }
