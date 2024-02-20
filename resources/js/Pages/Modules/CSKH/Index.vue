@@ -187,7 +187,7 @@ const totalOrder = (status) => {
         return 0;
     }
 }
-const draftOrder=(order)=>{
+const draftOrder = (order) => {
     let query = {
         ids: [order.id]
     };
@@ -347,10 +347,10 @@ const draftOrder=(order)=>{
                                         }}</td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
                                             order?.product_service?.product?.name
-                                        }}</td>
+                                        }} </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
                                             order?.customer?.name
-                                        }}</td>
+                                        }} ({{ order.index }}/{{ order.customer.orders_count }})</td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="flex items-center">
                                                 {{ hasAnyPermission(['super-admin']) ? order?.customer?.phone_number :
@@ -387,7 +387,8 @@ const draftOrder=(order)=>{
                                                 class="rotate-90 text-gray-400 rounded-lg mr-2 text-[#1D75FA] hover:text-blue-700"
                                                 v-tooltip.top="'Đẩy đơn'" size="22">
                                             </BaseIcon>
-                                            <BaseIcon :path="mdiLayersTripleOutline" @click="draftOrder(order)" v-if="order.status !=='completed'"
+                                            <BaseIcon :path="mdiLayersTripleOutline" @click="draftOrder(order)"
+                                                v-if="order.status !== 'completed'"
                                                 class=" text-gray-400 rounded-lg  mr-2 text-[#FF6100] hover:text-red-700"
                                                 v-tooltip.top="'Đơn nháp'" size="20">
                                             </BaseIcon>

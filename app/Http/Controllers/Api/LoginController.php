@@ -203,7 +203,7 @@ class LoginController extends Base2Controller
 
             if ($response->ok()) {
 
-                return response()->json('We send otp to your phone ' . $user->phone_number, 200);
+                return response()->json('Mã OTP đã được gửi đến số điện thoại ' . $user->phone_number, 200);
             } else {
                 $response = $response->json();
                 if ($response['error'] == 1014) {

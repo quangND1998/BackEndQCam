@@ -116,7 +116,9 @@ class OrderRepository implements OrderContract
     }
     public function getAllOrderGift($request)
     {
-        return  Order::with(['customer', 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler', 'product_service.order_package'])->whereHas(
+        return  Order::with(['customer' => function ($q) {
+            $q->withCount('orders');
+        }, 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler', 'product_service.order_package'])->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');

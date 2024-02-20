@@ -52,7 +52,9 @@ class OrderTransportRepository
     public function getOrdersTransport($request)
     {
 
-        return OrderTransport::with('order', 'order.customer', 'order.product_service.product', 'order.orderItems.product', 'order.shipping_history',  'order.shipper', 'order.saler', 'order.product_service.order_package', 'order.order_shipper_images', 'order.saler')->whereHas(
+        return OrderTransport::with(['order', 'order.customer' => function ($q) {
+            $q->withCount('orders');
+        }, 'order.product_service.product', 'order.orderItems.product', 'order.shipping_history',  'order.shipper', 'order.saler', 'order.product_service.order_package', 'order.order_shipper_images', 'order.saler'])->whereHas(
             'order.product_service.order_package',
             function ($q) use ($request) {
                 if ($request->market) {
@@ -71,7 +73,9 @@ class OrderTransportRepository
     public function getOrdersTransportbyState($request, $state)
     {
 
-        return OrderTransport::with('order', 'order.customer', 'order.product_service.product', 'order.orderItems.product', 'order.shipping_history', 'order.shipper', 'order.saler', 'order.product_service.order_package', 'order.order_shipper_images', 'order.saler')->where('order_transports.state', $state)->whereHas(
+        return OrderTransport::with(['order', 'order.customer' => function ($q) {
+            $q->withCount('orders');
+        },  'order.product_service.product', 'order.orderItems.product', 'order.shipping_history', 'order.shipper', 'order.saler', 'order.product_service.order_package', 'order.order_shipper_images', 'order.saler'])->where('order_transports.state', $state)->whereHas(
             'order.product_service.order_package',
             function ($q) use ($request) {
                 if ($request->market) {
