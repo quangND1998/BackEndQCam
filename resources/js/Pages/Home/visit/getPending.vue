@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive } from "vue";
+import { computed, ref, inject, reactive, watch } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
@@ -24,10 +24,6 @@ import {
   mdiSquareEditOutline,
   mdiCheckCircle
 } from "@mdi/js";
-import BaseButton from "@/Components/BaseButton.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
 
 import Dropdown from "@/Components/Dropdown.vue";
@@ -100,12 +96,13 @@ const search = () => {
 
         <Head title="Quản lý đặt lịch tham quan" />
         <SectionMain class="p-3 mt-16">
-            <SectionTitleLineWithButton class="font-semibold flex mr-2" title="Quản lý đặt lịch tham quan" main></SectionTitleLineWithButton>
+            <SectionTitleLineWithButton class="font-semibold flex mr-2" title="Quản lý đặt lịch tham quan" main>
+            </SectionTitleLineWithButton>
             <div>
-                
+
                 <div class="px-2 flex items-center">
                         <div class=" px-3 mb-6 md:mb-0">
-                            
+
                             <div class="min-[320px]:w-full form_search sm:w-9/12  md:w-9/12">
                                 <form v-on:submit.prevent>
                                     <div class="relative">
@@ -156,7 +153,20 @@ const search = () => {
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="Ngày kết thúc" />
                                     </div>
+                                    <input type="search" id="default-search" name="search" data-toggle="hideseek"
+                                        v-model="filter.search" @keyup="search" laceholder="Search Menus"
+                                        data-list=".menu-category"
+                                        class="block w-full p-2 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="    Tìm lịch bằng tên hoặc sđt khách hàng" required />
                                 </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                        <div class="min-[320px]:w-full sm:w-3/12 md:w-3/12 mr-3 text-gray-500">
+                            <label for>Đặt lịch ngày</label>
+                            <div class="w-[320px]">
+                                <VueDatepickerUi range v-model="form.selectedDate" lang="vn"></VueDatepickerUi>
                             </div>
                         </div>
                         <div>
@@ -180,8 +190,7 @@ const search = () => {
                     <div class="panel panel-default">
                         <div class="overflow-x-auto relative  sm:rounded-lg ">
                             <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
-                                <thead
-                                    class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="py-3 px-6 text-xs">STT</th>
                                         <th scope="col" class="py-3 px-6 text-xs">Mã HĐ</th>
@@ -194,7 +203,7 @@ const search = () => {
                                         <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
                                         <th scope="col" class="py-3 px-6 text-xs">Note</th>
                                         <th scope="col" class="py-3 px-6 text-xs">Hạnh động</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Log</th> 
+                                        <th scope="col" class="py-3 px-6 text-xs">Log</th>
                                         <th scope="col" class="py-3 px-6 text-xs">Code</th>
                                     </tr>
                                 </thead>
@@ -220,7 +229,7 @@ const search = () => {
                                         </th>
                                         <th scope="row"
                                             class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-col">
-                                           <span>NL: {{ visit.number_adult }} </span> 
+                                           <span>NL: {{ visit.number_adult }} </span>
                                            <span>TE: {{ visit.number_children }}</span>
                                         </th>
                                         <th scope="row"
@@ -228,7 +237,7 @@ const search = () => {
                                            <span v-for="sevice in visit.extra_services" :key="sevice.id" class="flex flex-col">
                                             {{ sevice.name }}
                                             </span>
-                                           
+
                                         </th>
                                         <th scope="row"
                                             class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">

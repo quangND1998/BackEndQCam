@@ -197,7 +197,7 @@ const loadOrder = async $state => {
 
                 <div>
 
-                    <Link v-if="hasAnyPermission(['add-new-package'])" :href="route('admin.orders.create')"
+                    <Link v-if="hasAnyPermission(['add-new-package'])" :href="route('admin.orders.createOrder')"
                         class="px-2 py-2 text-sm  bg-btn_green hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
                     Tạo đơn hàng
                     </Link>
@@ -298,7 +298,7 @@ const loadOrder = async $state => {
                                 <label for>Trạng thái TT</label>
                             </div>
                             <div class="">
-                                <select id="countries"  v-model="filter.payment_status" @change="Fillter()"
+                                <select id="countries" v-model="filter.payment_status" @change="Fillter()"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
 
                                     <option :value="null">Tình trạng</option>
@@ -313,7 +313,7 @@ const loadOrder = async $state => {
                                 <label for>Loại đơn</label>
                             </div>
                             <div class="">
-                                <select id="countries"  v-model="filter.type" @change="Fillter()"
+                                <select id="countries" v-model="filter.type" @change="Fillter()"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
 
                                     <option :value="null">Tất cả</option>
@@ -532,5 +532,4 @@ const loadOrder = async $state => {
     border-width: 1px;
     color: rgb(202 138 4/var(--tw-text-opacity));
 }
-
 </style>

@@ -4,6 +4,7 @@ namespace Modules\Order\Repositories;
 
 use App\BaseRepository;
 use App\Contracts\OrderContract;
+use App\Enums\OrderStatusEnum;
 use App\Models\User;
 use Cart;
 use Illuminate\Support\Facades\Auth;
@@ -115,7 +116,9 @@ class OrderRepository implements OrderContract
     }
     public function getAllOrderGift($request)
     {
-        return  Order::with(['customer', 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler', 'product_service.order_package'])->whereHas(
+        return  Order::with(['customer' => function ($q) {
+            $q->withCount('orders');
+        }, 'product_service.product', 'orderItems.product', 'shipping_history', 'discount', 'shipper', 'saler', 'product_service.order_package'])->whereHas(
             'customer',
             function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->customer . '%');
@@ -125,33 +128,33 @@ class OrderRepository implements OrderContract
         )->whereHas(
             'product_service.order_package',
             function ($q) use ($request) {
-                if (isset($request['market'])) {
+
+                if ($request->market) {
 
                     $q->where('market', $request->market);
                 }
             }
 
-        )->fillter($request->only('market', 'status', 'search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10);
+        )->fillter($request->only('status', 'search', 'fromDate', 'toDate', 'payment_status', 'payment_method', 'type'))->orderBy('created_at', 'desc')->paginate($request->per_page ? $request->per_page : 10)->appends(['status' => $request->status, 'search' => $request->search, 'fromDate' => $request->fromDate, 'toDate' => $request->toDate, 'payment_status' => $request->payment_status, 'payment_method' => $request->payment_method, 'type' => $request->type, 'market' => $request->market]);
     }
 
 
     public function groupByOrderStatus()
     {
 
-        $array_status = ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline'];
+        $array_status = OrderStatusEnum::cases();
         $statusGroup = Order::role()->whereHas('orderItems')
             ->select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
             ->get();
         foreach ($array_status as $status) {
-
-            $filtered = $statusGroup->where('status', $status)->first();
-
+            $filtered = $statusGroup->where('status', $status->value)->first();
             if ($filtered == null) {
 
                 $newCollections[] = array(
                     'status' => $status,
                     'total' => 0,
+
 
                 );
             } else {

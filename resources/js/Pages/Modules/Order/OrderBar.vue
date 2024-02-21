@@ -33,17 +33,17 @@ const handleNativeClick = () => {
             Đơn chờ
             <span class="text-gray-400 ml-1">({{ totalOrder('pending') }})</span>
             </Link>
-            <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.orders.packing')" @click.prevent
+            <Link v-if="hasAnyPermission(['order-packing'])" :href="route('admin.orders.processing')" @click.prevent
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/orders/packing') }">
-            Đóng gói
-            <span class="text-gray-400 ml-1">({{ totalOrder('packing') }})</span>
+                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/orders/processing') }">
+            Đang xử lý
+            <span class="text-gray-400 ml-1">({{ totalOrder('processing') }})</span>
             </Link>
-            <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('admin.orders.shipping')"
+            <Link v-if="hasAnyPermission(['order-shipping'])" :href="route('admin.orders.create')"
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/orders/shipping') }">
-            Đang vân chuyển
-            <span class="text-gray-400 ml-1">({{ totalOrder('shipping') }})</span>
+                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/orders/create') }">
+            Tạo mới
+            <span class="text-gray-400 ml-1">({{ totalOrder('create') }})</span>
             </Link>
 
             <Link v-if="hasAnyPermission(['order-completed'])" :href="route('admin.orders.completed')"
@@ -52,18 +52,14 @@ const handleNativeClick = () => {
             Giao thành công
             <span class="text-gray-400 ml-1">({{ totalOrder('completed') }})</span>
             </Link>
-            <Link v-if="hasAnyPermission(['order-refund'])" :href="route('admin.orders.refund')"
+
+            <Link v-if="hasAnyPermission(['order-pending'])" :href="route('admin.orders.draft')"
                 class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/orders/refund') }">
-            Hoàn đơn
-            <span class="text-gray-400 ml-1">({{ totalOrder('refund') }})</span>
+                :class="{ 'bg-white  text-blue-500': $page.url.includes('/admin/orders/draft') }">
+          Đơn nháp
+            <span class="text-gray-400 ml-1">({{ totalOrder('draft') }})</span>
             </Link>
-            <Link v-if="hasAnyPermission(['order-decline'])" :href="route('admin.orders.decline')"
-                class="min-[320px]:my-2 text-sm px-3 py-2 border rounded-lg mx-1 bg-gray-100 hover:bg-white text-gray-500"
-                :class="{ 'bg-white text-blue-500': $page.url.includes('/admin/orders/decline') }">
-            Đơn hủy
-            <span class="text-gray-400 ml-1">({{ totalOrder('decline') }})</span>
-            </Link>
+
         </div>
         <div>
 

@@ -94,8 +94,8 @@ export default [{
         icon: mdiFileTreeOutline,
         permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline', 'contract-pending', 'contract-create', 'contract-cancle', 'contract-complete'],
         route_list: ['admin.orders.package.index', 'admin.orders.package.decline', 'admin.orders.package.complete',
-            'admin.orders.package.partiallyPaid', 'admin.orders.index', 'admin.orders.create', 'admin.orders.package.create',
-            'admin.orders.pending', 'admin.orders.packing', 'admin.orders.completed', 'admin.orders.addToCart', 'admin.orders.decline', 'admin.orders.shipping',
+            'admin.orders.package.partiallyPaid', 'admin.orders.index', 'admin.orders.createOrder', 'admin.orders.package.create',
+            'admin.orders.pending', 'admin.orders.completed', 'admin.orders.addToCart', 'admin.orders.decline', 'admin.orders.create', 'admin.orders.processing',
             'visit.pending', 'visit.confirm', 'visit.completed', 'admin.review.index', 'admin.orders.refund'
         ],
         menu: [{
@@ -144,7 +144,7 @@ export default [{
         // chưởng phòng CSKH
         label: 'CSKH',
         icon: mdiFileTreeOutline,
-        permissions: ['super-admin', 'cskh-booking','cskh-gift-delivery','cskh-role-package','cskh-distribute-call','cskh-pending','cskh-call-center'],
+        permissions: ['super-admin', 'cskh-booking', 'cskh-gift-delivery', 'cskh-role-package', 'cskh-distribute-call', 'cskh-pending', 'cskh-call-center'],
         route_list: ['admin.booking.index', 'admin.booking.detail'],
         menu: [{
                 route: 'admin.booking.index',
@@ -196,8 +196,8 @@ export default [{
         icon: mdiFileTreeOutline,
         permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline', 'contract-pending', 'contract-create', 'contract-cancle', 'contract-complete'],
         route_list: ['admin.orders.package.index', 'admin.orders.package.decline', 'admin.orders.package.complete',
-            'admin.orders.package.partiallyPaid', 'admin.orders.index', 'admin.orders.create', 'admin.orders.package.create',
-            'admin.orders.pending', 'admin.orders.packing', 'admin.orders.completed', 'admin.orders.addToCart', 'admin.orders.decline', 'admin.orders.shipping',
+            'admin.orders.package.partiallyPaid', 'admin.orders.index', 'admin.orders.createOrder', 'admin.orders.package.create',
+            'admin.orders.pending', 'admin.orders.packing', 'admin.orders.completed', 'admin.orders.addToCart', 'admin.orders.decline', 'admin.orders.create', 'admin.orders.processing',
             'visit.pending', 'visit.confirm', 'visit.completed', 'admin.review.index', 'admin.orders.refund'
         ],
         menu: [{
@@ -219,12 +219,7 @@ export default [{
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
                 route_list: null
             },
-            {
-                route: 'admin.cskh.notShipperReceive',
-                label: 'Shipper không nhận',
-                permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
-                route_list: null
-            },
+
             {
                 route: 'admin.cskh.shipping',
                 label: 'Vận chuyển',

@@ -1,81 +1,54 @@
 <script setup>
-import { computed, ref, inject, reactive, toRef } from "vue";
+import { computed, ref, inject, reactive, toRef, watch } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
-import Pagination from "@/Components/Pagination.vue";
+import Pagination from "@/Pages/Modules/CSKH/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import CardBox from "@/Components/CardBox.vue";
-import CardBoxModal from "@/Components/CardBoxModal.vue";
-import OrderBar from "@/Pages/Modules/Order/OrderBar.vue";
 import VueDatepickerUi from "vue-datepicker-ui";
 import "vue-datepicker-ui/lib/vuedatepickerui.css";
 import ModelShipping from "./ModelShipping.vue";
-// import ModalDecline from "./ModalDecline.vue";
-// import ModelRefund from "./ModelRefund.vue";
-// import ModalShipping from "./ModalShipping.vue";
+import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
 import OrderStatus from "./OrderStatus.vue";
 import {
-    mdiEye,
-    mdiAccountLockOpen,
-    mdiPlus,
-    mdiFilter,
-    mdiMagnify,
-    mdiDotsVertical,
-    mdiTrashCanOutline,
-    mdiCodeBlockBrackets,
-    mdiPencil,
-    mdiLandFields,
-    mdiSquareEditOutline,
-    mdiArrowLeftBoldCircleOutline,
     mdiLayersTripleOutline,
     mdiPhone,
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
-import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-
-import Dropdown from "@/Components/Dropdown.vue";
 import BaseIcon from "@/Components/BaseIcon.vue";
-import SearchInput from "vue-search-input";
 import "vue-search-input/dist/styles.css";
-import MazInputPrice from "maz-ui/components/MazInputPrice";
-import { initFlowbite } from "flowbite";
-import OrderHome from "@/Pages/Test/OrderHome.vue";
-import OrderRow from "@/Pages/Modules/Order/OrderRow.vue";
 import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
 import { usePopOverStore } from '@/stores/popover.js'
+import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
 const props = defineProps({
-    orders: Object,
+    order_transports: Object,
     status: String,
     status: String,
     from: String,
     to: String,
     statusGroup: Array,
     shippers: Array,
-    count_orders: Number
+    count_orders: Number,
+    order_warehouse: Number
 });
 
 const { openPopover,
     closePopover } = usePopOverStore();
-const list_order = toRef(props.orders.data);
+
 const filter = reactive({
     customer: null,
     name: null,
     fromDate: null,
     toDate: null,
     search: null,
+    market: null,
     payment_status: null,
     payment_method: null,
     type: null,
     per_page: 10,
-    selectedDate: null,
+    selectedDate: null
 });
-const customer = ref();
-const searchVal = ref("");
 const swal = inject("$swal");
 const form = useForm({
     id: null,
@@ -83,107 +56,39 @@ const form = useForm({
     state: null,
     selectedDate: [new Date(), new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)],
 });
-const isModalActive = ref(false);
-const editMode = ref(false);
-const isModalDangerActive = ref(false);
 
-const state = reactive({
-    content: "<p>2333</p>",
-    _content: "",
-    editorOption: {
-        placeholder: "core",
-        modules: {},
-    },
-    disabled: false,
+
+watch(() => [form.selectedDate], (newVal) => {
+    // console.log(newVal[0][0])
+    filter.fromDate = newVal[0][0]
+    filter.toDate = newVal[0][1]
+    search()
 });
-initFlowbite();
 
-const searchCustomer = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
-
-const Fillter = (event) => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
-
-const fillterPaymentMethod = (event) => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
 const search = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
+    router.get(route(`admin.cskh.refund`),
+        filter,
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 
-const contents = ref([
-    { id: 1, text: "Content 1" },
-    { id: 2, text: "Content 2" },
-    { id: 3, text: "Content 3" },
-]);
+watch(() => [filter.market], (newVal) => {
+    search()
+});
 
-const changeDate = () => {
-    router.get(route(`admin.orders.${props.status}`), filter, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
+watch(() => [filter.type], (newVal) => {
+    search()
+});
+watch(() => [filter.per_page], (newVal) => {
+    search()
+});
 
-const loadOrder = async ($state) => {
-    // console.log("loading...");
-    // router.get(route(`admin.orders.${props.status}`),
-    //     filter,
-    //     {
-    //         preserveState: true,
-    //         preserveScroll: true,
-    //         onSuccess: page => {
-    //             if (props.orders.current_page == props.orders.last_page) $state.complete();
-    //             else {
-    //                 $state.loaded();
-    //             }
-    //             filter.per_page += 10;
-    //         },
-    //         onError: errors => {
-    //             $state.error();
-    //         },
-    //     },
-    // );
-};
-const packedOrder = (order) => {
-    let query = {
-        ids: [order.id],
-    };
-    swal
-        .fire({
-            title: "Thông báo?",
-            text: "Bạn muốn đóng gói đơn hàng này!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-        })
-        .then((result) => {
-            if (result.isConfirmed) {
-                router.post(route("admin.cskh.packedOrder"), query, {
-                    onError: () => { },
-                    onSuccess: () => {
-                        form.reset();
-                    },
-                });
-            } else {
-                return;
-            }
-        });
-};
+
+
+
 const packedOrders = () => {
     let query = {
         ids: selected.value,
@@ -210,21 +115,26 @@ const packedOrders = () => {
             }
         });
 };
-const openSHippingDetail = (order) => {
-    console.log("ModelShipping");
-    emitter.emit("ModelShipping", order);
-};
+const filterOrder = (state) => {
+    router.get(route(`admin.cskh.refund`),
+        { status: state },
+        {
+            preserveState: true,
+            preserveScroll: true
+        }
+    );
+}
 const selected = ref([]);
 const selectAll = computed({
     get() {
-        return props.orders.data ? selected.value.length == props.orders.data : false;
+        return props.order_transports.data ? selected.value.length == props.order_transports.data : false;
     },
     set(value) {
         var array_selected = [];
 
         if (value) {
-            props.orders.data.forEach(function (order) {
-                array_selected.push(order.id);
+            props.order_transports.data.forEach(function (order_transport) {
+                array_selected.push(order_transport.id);
             });
         }
         selected.value = array_selected;
@@ -275,17 +185,17 @@ const selectAll = computed({
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
+                                <select id="countries" v-model="filter.market"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả kho hàng</option>
-                                    <option value="gift_delivery">Giao quà</option>
-                                    <option value="order">Đơn lẻ</option>
+                                    <option value="MB">Miền Bắc</option>
+                                    <option value="MN">Miền Nam</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
+                                <select id="countries" v-model="filter.type"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
                                     <option value="gift_delivery">Giao quà</option>
@@ -295,18 +205,25 @@ const selectAll = computed({
                         </div>
                     </div>
                 </div>
-                <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders"></OrderStatusBar>
+                <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders" state="state"></OrderStatusBar>
+                <div class="flex" v-if="order_warehouse > 0">
+                    <span class="text-red-500 font-semibold">=>Có {{ order_warehouse }} đơn chờ hoàn bạn chưa xác
+                        nhận</span>
+                    <span @click="filterOrder('wait_warehouse')"
+                        class="ml-2 text-[#27AE60] font-semibold cursor-pointer">Xem
+                        ngay</span>
+                </div>
                 <div class="my-3 w-full flex justify-between">
-                    <button v-if="selected.length > 0" @click="packedOrders()"
+                    <!-- <button v-if="selected.length > 0" @click="packedOrders()"
                         class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
                         Xác nhận đóng gói hàng loạt ({{ selected.length }})
-                    </button>
-                    <div class="flex">
+                    </button> -->
+                    <!-- <div class="flex">
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
                             label="Tất cả (11)" />
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
                             label="Pending" />
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="w-full mt-2">
@@ -324,24 +241,25 @@ const selectAll = computed({
                                         <th scope="col" class="px-3 py-2 text-left">Loại HĐ</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tên KH</th>
                                         <th scope="col" class="px-3 py-2 text-left">SĐT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Loại hàng</th>
-                                        <th scope="col" class="px-3 py-2 text-left">SL</th>
-                                        <th scope="col" class="px-3 py-2 text-left">DVT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Trạng thái</th>
-
+                                        <th scope="col" class="px-3 py-2 text-left">Sản phẩm</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Tình Trạng</th>
                                         <th scope="col" class="px-3 py-2 text-left">Shipper</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hẹn giao</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Địa bàn</th>
+                                        <th scope="col" class="px-3 py-2 text-left">KV</th>
                                         <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Hồ sơ</th>
+                                        <th scope="col" class="px-3 py-2 text-left">CS</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã vận đơn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(order, index) in orders?.data" :key="index">
+                                    <tr v-for="(order_transport, index) in order_transports?.data" :key="index">
                                         <th scope="col" class="px-6 py-3">
                                             <div class="flex items-center">
                                                 <input id="default-checkbox" type="checkbox" v-model="selected"
-                                                    :value="order.id"
+                                                    :value="order_transport.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
                                             </div>
                                         </th>
@@ -349,20 +267,20 @@ const selectAll = computed({
                                             {{ index + 1 }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.product_service?.order_package?.idPackage }}
+                                            {{ order_transport.order?.product_service?.order_package?.idPackage }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.product_service?.product?.name }}
+                                            {{ order_transport.order?.product_service?.product?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.customer?.name }}
+                                            {{ order_transport.order?.customer?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="flex items-center">
                                                 {{
                                                     hasAnyPermission(["super-admin"])
-                                                    ? order?.customer?.phone_number
-                                                    : hidePhoneNumber(order?.customer?.phone_number)
+                                                    ? order_transport.order?.customer?.phone_number
+                                                    : hidePhoneNumber(order_transport.order?.customer?.phone_number)
                                                 }}
                                                 <!-- mdiPhone  -->
                                                 <BaseIcon :path="mdiPhone"
@@ -372,48 +290,70 @@ const selectAll = computed({
                                             </p>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order.order_items" :key="index2">
-                                                {{ item?.product?.name }}
+                                            <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
+                                                {{ item?.product?.name }} {{ item?.product?.unit }}X{{ item?.quantity }}
                                             </p>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order.order_items" :key="index2">
-                                                {{ item?.quantity }}
-                                            </p>
+                                            <OrderTransportStatus :order_transport="order_transport" />
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            hộp
+                                            {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
+                                            }}
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <OrderStatus :order="order" />
-                                        </td>
-
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.shipper ? order?.shipper?.name : "NA" }}
-                                        </td>
-
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{
-                                                order?.delivery_appointment
-                                                ? formatTimeDayMonthyear(order?.delivery_appointment)
+                                                order_transport.delivery_appointment
+                                                ? formatTimeDayMonthyear(order_transport.delivery_appointment)
                                                 : "Chưa cập nhật"
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <button @mouseover="openPopover(order)" @mouseleave="closePopover">
+                                            {{ order_transport.order.address + ',' + order_transport.order.wards + ',' +
+                                                order_transport.order.district +
+                                                ',' +
+                                                order_transport.order.city }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{
+                                                order_transport.order.product_service.order_package.market
+
+                                            }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <button @mouseover="openPopover(order_transport)" @mouseleave="closePopover">
                                                 xem
                                             </button>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            xem
+                                            <StateDocument :order="order_transport.order" />
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order?.order_number }}
+                                            {{ order_transport.order?.saler.name }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order_transport.order?.order_number }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order_transport.order_transport_number }}
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div class="w-full flex  justify-between items-center">
+                        <div class="flex items-center">
+                            <span class="mr-2">Hiển thị</span>
+                            <select v-model="filter.per_page"
+                                class="bg-gray-50 border   text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  mx-auto px-4 py-1   dark:bg-gray-700 dark:border-gray-600 ">
+                                <option :value="50">50</option>
+                                <option :value="100">100</option>
+                                <option :value="200">200</option>
+                            </select>
+                        </div>
+
+                        <Pagination :links="order_transports.links" />
                     </div>
                 </div>
             </div>

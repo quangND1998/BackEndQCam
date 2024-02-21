@@ -34,6 +34,7 @@ import "vue-search-input/dist/styles.css";
 import Multiselect from '@vueform/multiselect'
 import VueDatepickerUi from 'vue-datepicker-ui'
 import 'vue-datepicker-ui/lib/vuedatepickerui.css';
+import WareHouse from "@/Pages/Modules/Tree/ProductRetail/WareHouse.vue"
 const props = defineProps({
     product_retails: Object,
     historyAdds: Object,
@@ -232,9 +233,9 @@ const Delete = (id) => {
                         <div class="text-center px-2 py-2">{{ history.state_confirm }}</div>
                         <div class="text-center px-2 py-2">xem</div>
                         <div class="text-center px-2 py-2">
-                            <BaseButton color="contrast" :icon="mdiPencilOutline"  @click="edit(history)"
-                                        type="button" data-toggle="modal" data-target="#exampleModal" />
-                                    <BaseButton color="danger" :icon="mdiTrashCan"  @click="Delete(history.id)" />
+                            <BaseButton color="contrast" :icon="mdiPencilOutline" @click="edit(history)" type="button"
+                                data-toggle="modal" data-target="#exampleModal" />
+                            <BaseButton color="danger" :icon="mdiTrashCan" @click="Delete(history.id)" />
                         </div>
                     </div>
                 </div>
@@ -242,6 +243,8 @@ const Delete = (id) => {
 
 
             </div>
+
+            <WareHouse />
         </SectionMain>
     </LayoutAuthenticated>
 </template>

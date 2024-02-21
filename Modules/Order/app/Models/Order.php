@@ -57,7 +57,8 @@ class Order extends Model implements HasMedia
         'wards',  "created_at", "updated_at",
         'delivery_appointment',
         'order_transport_number',
-        'index'
+        'index',
+        'draft'
 
     ];
 
@@ -98,6 +99,11 @@ class Order extends Model implements HasMedia
         if (isset($filters['payment_method'])) {
 
             $query->where('payment_method', $filters['payment_method']);
+        }
+
+        if (isset($filters['state_document'])) {
+
+            $query->where('state_document', $filters['state_document']);
         }
         if (isset($filters['type'])) {
 
@@ -152,6 +158,7 @@ class Order extends Model implements HasMedia
 
     public function saler()
     {
+        //  là chăm sóc khách hàng
         return $this->belongsTo(User::class, 'sale_id');
     }
     public function scopeRole($query)

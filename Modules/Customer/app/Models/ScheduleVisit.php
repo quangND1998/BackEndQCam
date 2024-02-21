@@ -3,6 +3,7 @@
 namespace Modules\Customer\app\Models;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Modules\CustomerService\app\Models\VisitExtraService;
 use Illuminate\Support\Carbon;
@@ -12,6 +13,7 @@ class ScheduleVisit extends Model
 
     protected $fillable = [
         'id',
+        'code',
         'date_time',
         'number_adult',
         'number_children',
@@ -24,7 +26,7 @@ class ScheduleVisit extends Model
 
     public function product_owner_service()
     {
-        return $this->belongsTo(ProductServiceOwner::class,'product_service_owner_id');
+        return $this->belongsTo(ProductServiceOwner::class, 'product_service_owner_id');
     }
 
     public function creator()

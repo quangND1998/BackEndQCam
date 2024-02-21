@@ -306,8 +306,8 @@ const onFileChange = (e) => {
                         </div> -->
                         <div class="">
 
-                          <UploadImage v-if="editMode ==false" :max_files="4"  v-model="form.images" :multiple="true" :label="`Bộ sưu tập ảnh`" />
-                          <UploadImage v-else :max_files="4"  v-model="form.images" :multiple="true"  :old_images="tree?.images"  :label="`Bộ sưu tập ảnh`" />
+                          <UploadImage v-if="editMode ==false" :max_files="8"  v-model="form.images" :multiple="true" :label="`Bộ sưu tập ảnh`" />
+                          <UploadImage v-else :max_files="8"  v-model="form.images" :multiple="true"  :old_images="tree?.images"  :label="`Bộ sưu tập ảnh`" />
                           <InputError class="mt-2" :message="form.errors.images" />
                         </div>
                     </div>

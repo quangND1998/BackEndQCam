@@ -28,10 +28,11 @@ import { useCSKHStore } from '@/stores/cskh.js'
 import DialogLoading from '@/Components/CustomerService/Dialog/DialogLoading.vue';
 import Pagination from '@/Pages/Modules/CSKH/Components/Pagination.vue';
 import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
+import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
+import OrderTransportRefunding from '@/Pages/Modules/CSKH/Dialog/OrderTransportRefunding.vue'
 const { openPopover,
     closePopover } = usePopOverStore();
-const { showDetailOrder } = useOrderStore();
-
+const { showDetailOrder, showDetailOrderTransport } = useOrderStore();
 const orders_transport = computed(() => {
     return store.orders_transport;
 });
@@ -86,6 +87,7 @@ const searchCustomer = () => {
 
 
 const search = () => {
+    filter.page = 1
     store.fetchOrdersTransport(filter)
 };
 
@@ -123,13 +125,54 @@ const changePage = (page) => {
     filter.page = page;
     store.fetchOrdersTransport(filter)
 }
+const openOrderCancel = (order_transport) => {
+    console.log(order_transport)
+    showDetailOrderTransport(order_transport)
+    emitter.emit("OrderCancel", order_transport);
+};
+const openOrderRefunding = (order_transport) => {
+
+    showDetailOrderTransport(order_transport)
+    emitter.emit("OrderTransportRefunding", order_transport);
+}
+
+const isDecline = (order_transport) => {
+    if (order_transport.order.status == 'completed') {
+        return false
+    }
+    else if (order_transport.order.state_document == 'approved' && order_transport.state == 'delivered') {
+        return false
+    }
+    else if (order_transport.state == 'shipping') {
+        return false
+    } else if (order_transport.order.state_document == 'approved' && order_transport.state == 'refunding') {
+        return false
+    }
+    else if (order_transport.order.state_document == 'approved' && order_transport.state == 'refund') {
+        return false
+    }
+    else {
+        return true
+    }
+}
+const isRefunding = (order_transport) => {
+    if (order_transport.state == 'shipping') {
+        return true
+    } else if (order_transport.order.state_document !== 'approved' && order_transport.state == 'delivered') {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
 
 </script>
 <template>
     <div>
         <ModelShipping></ModelShipping>
         <OrderCancel />
-
+        <OrderTransportRefunding :errors="$page.props.errors" />
 
 
         <Head title="Quản lý đơn hàng" />
@@ -173,7 +216,7 @@ const changePage = (page) => {
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.market"
+                                <select id="market" v-model="filter.market"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả kho hàng</option>
                                     <option value="MB">Miền Bắc</option>
@@ -183,7 +226,7 @@ const changePage = (page) => {
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.type"
+                                <select id="type" v-model="filter.type"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
                                     <option value="gift_delivery">Giao quà</option>
@@ -212,17 +255,18 @@ const changePage = (page) => {
                                         <th scope="col" class="px-3 py-2 text-left">Loại HĐ</th>
                                         <th scope="col" class="px-3 py-2 text-left">Tên KH</th>
                                         <th scope="col" class="px-3 py-2 text-left">SĐT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Loại hàng</th>
-                                        <th scope="col" class="px-3 py-2 text-left">SL</th>
-                                        <th scope="col" class="px-3 py-2 text-left">DVT</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Tình trạng</th>
-
+                                        <th scope="col" class="px-3 py-2 text-left">Sản phẩm</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Tình Trạng</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Hành động</th>
                                         <th scope="col" class="px-3 py-2 text-left">Shipper</th>
                                         <th scope="col" class="px-3 py-2 text-left">Hẹn giao</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Địa bàn</th>
+                                        <th scope="col" class="px-3 py-2 text-left">KV</th>
                                         <th scope="col" class="px-3 py-2 text-left">Chi tiết</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Tạo đơn</th>
+                                        <th scope="col" class="px-3 py-2 text-left">Hồ sơ</th>
+                                        <th scope="col" class="px-3 py-2 text-left">CS</th>
                                         <th scope="col" class="px-3 py-2 text-left">Mã đơn hàng</th>
-                                        <th scope="col" class="px-3 py-2 text-left">Mã vận đơn </th>
+                                        <th scope="col" class="px-3 py-2 text-left">Mã vận đơn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -238,7 +282,8 @@ const changePage = (page) => {
                                             {{ order_transport.order?.product_service?.product?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport.order?.customer?.name }}
+                                            {{ order_transport.order?.customer?.name }}({{ order_transport.order?.index }}/{{ order_transport.order?.customer?.orders_count }})
+
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="flex items-center">
@@ -256,21 +301,29 @@ const changePage = (page) => {
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
-                                                {{ item?.product?.name }}
+                                                {{ item?.product?.name }} {{ item?.product?.unit }}X{{ item?.quantity }}
                                             </p>
                                         </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <p v-for="(item, index2) in order_transport.order.order_items" :key="index2">
-                                                {{ item?.quantity }}
-                                            </p>
-                                        </td>
-                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            hộp
-                                        </td>
+
+
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <OrderTransportStatus :order_transport="order_transport" />
                                         </td>
 
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <button v-tooltip="'Quay đầu'" v-if="isRefunding(order_transport)" class="mr-2"
+                                                data-toggle="modal" @click="openOrderRefunding(order_transport)"
+                                                data-target="#OrderTransportRefunding">
+                                                <Icon icon="fa-arrow-left"></Icon>
+                                            </button>
+                                            <button v-tooltip="'Hủy mã vận đơn'" v-if="isDecline(order_transport)"
+                                                @click="openOrderCancel(order_transport)" data-toggle="modal"
+                                                data-target="#OrderCancel">
+                                                <Icon icon="cancel"></Icon>
+                                            </button>
+
+
+                                        </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
                                             }}
@@ -284,9 +337,24 @@ const changePage = (page) => {
                                             }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{ order_transport.order.address + ',' + order_transport.order.wards + ',' +
+                                                order_transport.order.district +
+                                                ',' +
+                                                order_transport.order.city }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            {{
+                                                order_transport.order.product_service.order_package.market
+
+                                            }}
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <button @mouseover="openPopover(order_transport)" @mouseleave="closePopover">
                                                 xem
                                             </button>
+                                        </td>
+                                        <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
+                                            <StateDocument :order="order_transport.order" />
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order_transport.order.saler?.name }}

@@ -54,8 +54,13 @@ class ScheduleVisitController extends Controller
     public function getConfirm(Request $request)
     {
         $filters = $request->all('search');
-        $scheduleVisits = ScheduleVisit::with('product_owner_service.customer')->where('state', 'confirm')->orderBy('created_at', 'desc')->paginate('20');
-        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits'));
+        $status = 'confirm';
+        $scheduleVisits = ScheduleVisit::with('product_owner_service.customer')->whereHas('product_owner_service.customer',  function ($q) use ($request) {
+
+            $q->where('name', 'LIKE', '%' . $request->search . '%');
+            $q->orWhere('phone_number', 'LIKE', '%' . $request->search . '%');
+        })->fillter($request->only('fromDate', 'toDate'))->where('state', 'confirm')->orderBy('created_at', 'desc')->paginate('20');
+        return Inertia::render('Home/visit/getPending', compact('filters', 'status', 'scheduleVisits'));
     }
     public function getCancel(Request $request)
     {
@@ -91,7 +96,8 @@ class ScheduleVisitController extends Controller
             [
                 'date_time' => 'required|date|after:tomorrow',
                 'number_adult' => 'required|gt:0',
-                'number_children' => 'nullable|gt:-1',
+                'number_children' => 'required|gt:-1',
+                'code' => 'required',
                 'product_service_owner_id' => 'required',
             ]
         );
@@ -107,13 +113,13 @@ class ScheduleVisitController extends Controller
 
             return redirect()->route('visit.pending')->with('success', 'Đã đặt lịch thành công');
         } else {
-            return back()->with('warning','Không còn lượt đặt lịch');
+            return back()->with('warning', 'Không còn lượt đặt lịch');
         }
     }
 
-    public function edit(ScheduleVisit $schedule){
-        if($schedule->state =='pending')
-        {
+    public function edit(ScheduleVisit $schedule)
+    {
+        if ($schedule->state == 'pending') {
             return Inertia::render('Home/visit/Update', compact('schedule'));
         }
         return back()->with('warning', 'Lịch đặt này không thể cập nhật');
@@ -137,7 +143,6 @@ class ScheduleVisitController extends Controller
         ]);
 
         return redirect()->route('visit.pending')->with('success', 'Cập nhật đặt lịch thành công');
-
     }
     public function groupByStatus()
     {
@@ -184,7 +189,7 @@ class ScheduleVisitController extends Controller
 
         }
         $datas = $scheduleVisits->paginate('20');
-        
+
         return $datas;
 
     }

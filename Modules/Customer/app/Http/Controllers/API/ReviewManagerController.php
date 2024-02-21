@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ReviewManagement;
 use Modules\Order\app\Models\Order;
 
@@ -27,12 +28,14 @@ class ReviewManagerController extends Base2Controller
             'description' => 'nullable|string',
             'images' => 'nullable',
             'images.*' => 'mimes:jpeg,png,jpg|max:2048',
+            'product_service_owner_id' => 'required'
         ], [
             'star.required' => 'Vui lòng đánh giá'
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
+
 
         $review = ReviewManagement::create([
             'evaluate' => $request->evaluate,
@@ -47,6 +50,8 @@ class ReviewManagerController extends Base2Controller
                 $review->addMedia($image)->toMediaCollection('review_images');
             }
         }
+
+
 
         return $this->sendResponse('Cảm ơn bạn Góp ý cho chúng tôi!', 200);
     }

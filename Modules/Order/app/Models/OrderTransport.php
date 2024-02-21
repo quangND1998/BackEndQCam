@@ -3,6 +3,7 @@
 namespace Modules\Order\app\Models;
 
 use App\Enums\OrderDocument;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,7 @@ class OrderTransport extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['order_transport_number', 'state', 'status', 'order_id'];
+    protected $fillable = ['order_transport_number', 'reason', 'state', 'status', 'user_id', 'order_id', 'delivery_appointment'];
 
     protected static function newFactory(): OrderTransportFactory
     {
@@ -48,6 +49,12 @@ class OrderTransport extends Model
     }
 
 
+    public function care_staff()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+
     public function scopeFillter($query, array $filters)
     {
 
@@ -62,6 +69,11 @@ class OrderTransport extends Model
         if (isset($filters['state'])) {
 
             $query->where('state', $filters['state']);
+        }
+
+        if (isset($filters['status'])) {
+
+            $query->where('status', $filters['status']);
         }
     }
 

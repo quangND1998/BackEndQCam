@@ -60,13 +60,14 @@ Route::middleware(['auth'])->group(
 
             Route::prefix('orders')->as('orders.')->group(function () {
                 Route::get('all', [OrderController::class, 'index'])->name('index');
+                Route::get('/create', [OrderController::class, 'create'])->name('create');
                 Route::get('/pending', [OrderController::class, 'pending'])->name('pending');
-                Route::get('/packing', [OrderController::class, 'packing'])->name('packing');
-                Route::get('/shipping', [OrderController::class, 'shipping'])->name('shipping');
+                Route::get('/processing', [OrderController::class, 'processing'])->name('processing');
+                // Route::get('/shipping', [OrderController::class, 'shipping'])->name('shipping');
                 Route::get('/completed', [OrderController::class, 'completed'])->name('completed');
-                Route::get('/refund', [OrderController::class, 'refund'])->name('refund');
-                Route::get('/decline', [OrderController::class, 'decline'])->name('decline');
-
+                // Route::get('/refund', [OrderController::class, 'refund'])->name('refund');
+                // Route::get('/decline', [OrderController::class, 'decline'])->name('decline');
+                Route::get('/draft', [OrderController::class, 'draft'])->name('draft');
 
                 Route::post('orderCancel/{order}', [OrderController::class, 'orderCancel'])->name('orderCancel');
                 Route::post('orderRefund/{order}', [OrderController::class, 'orderRefund'])->name('orderRefund');
@@ -74,7 +75,7 @@ Route::middleware(['auth'])->group(
                 Route::post('orderChangeStatus/{order}', [OrderController::class, 'orderChangeStatus'])->name('orderChangeStatus');
                 Route::post('orderChangePayment', [OrderController::class, 'orderChangePayment'])->name('orderChangePayment');
 
-                Route::get('/create', [OrderController::class, 'createOrder'])->name('create');
+                Route::get('/createOrder', [OrderController::class, 'createOrder'])->name('createOrder');
                 Route::get('/{order}/update', [OrderController::class, 'edit'])->name('update');
                 Route::get('/searchUser', [OrderController::class, 'searchUser'])->name('searchUser');
                 Route::post('/addToCart', [OrderController::class, 'addToCart'])->name('addToCart');
@@ -159,9 +160,12 @@ Route::middleware(['auth'])->group(
                 Route::get('notShipperReceive', [CSKHOrderController::class, 'not_shipper_receive'])->name('notShipperReceive');
 
                 Route::prefix('order')->as('order.')->group(function () {
-                    Route::post('/{order}/decline', [CSKHOrderController::class, 'orderDecline'])->name('decline');
-                    Route::post('/{order}/refunding', [CSKHOrderController::class, 'orderRefunding'])->name('refunding');
+                    Route::post('/{order_transport}/decline', [CSKHOrderController::class, 'orderDecline'])->name('decline');
+                    Route::post('/refunding', [CSKHOrderController::class, 'orderRefunding'])->name('refunding');
                     Route::post('refund', [CSKHOrderController::class, 'orderRefund'])->name('refund');
+
+                    Route::post('/cancel', [CSKHOrderController::class, 'orderCancel'])->name('cancel');
+                    Route::post('draftOrder',[CSKHOrderController::class, 'draftOrder'])->name('draftOrder');
                 });
                 Route::post('/confirm-document', [CSKHOrderController::class, 'confirmStateDocument'])->name('confirm-document');
 
@@ -169,6 +173,8 @@ Route::middleware(['auth'])->group(
 
                 Route::get('fetchOrdersTransport', GetOrdersTransport::class)->name('fetchOrdersTransport');
                 Route::get('fetchOrdersTransportGroup', GetOrdersTransportStatus::class)->name('fetchStatusOrders');
+
+       
             });
             Route::prefix('gift_distribute')->as('gift_distribute.')->group(function () {
                 Route::get('index', [GiftDistributeController::class, 'index'])->name('index');

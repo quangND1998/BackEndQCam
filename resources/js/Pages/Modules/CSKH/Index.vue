@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive, toRef } from "vue";
+import { computed, ref, inject, reactive, toRef, watch } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Pages/Modules/CSKH/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
@@ -27,7 +27,9 @@ const props = defineProps({
     status: String,
     from: String,
     to: String,
-    shippers: Array
+    shippers: Array,
+    total: Number,
+    statusGroup: Object
 });
 const { openPopover,
     closePopover } = usePopOverStore();
@@ -39,14 +41,14 @@ const filter = reactive({
     fromDate: null,
     toDate: null,
     search: null,
+    market: null,
     payment_status: null,
     payment_method: null,
     type: null,
     per_page: 10,
+    status: null,
     selectedDate: null
 })
-const customer = ref()
-const searchVal = ref("");
 const swal = inject("$swal");
 const form = useForm({
     id: null,
@@ -59,37 +61,15 @@ const form = useForm({
 });
 
 
-const searchCustomer = () => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
+watch(() => [form.selectedDate], (newVal) => {
+    // console.log(newVal[0][0])
+    filter.fromDate = newVal[0][0]
+    filter.toDate = newVal[0][1]
+    search()
+});
 
-const Fillter = (event) => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
-
-const fillterPaymentMethod = (event) => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
-}
 const search = () => {
-    router.get(route(`admin.orders.${props.status}`),
+    router.get(route(`admin.cskh.all`),
         filter,
         {
             preserveState: true,
@@ -98,17 +78,24 @@ const search = () => {
     );
 }
 
+watch(() => [filter.market], (newVal) => {
+    search()
+});
 
-const changeDate = () => {
-    router.get(route(`admin.orders.${props.status}`),
-        filter,
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    );
+watch(() => [filter.type], (newVal) => {
+    search()
+});
+watch(() => [filter.per_page], (newVal) => {
+    search()
+});
+
+watch(() => [filter.status], (newVal) => {
+    search()
+});
+
+const fillterStatus = (status) => {
+    filter.status = status
 }
-
 
 const pushOrder = (order) => {
     let query = {
@@ -124,9 +111,12 @@ const pushOrder = (order) => {
     }).then(result => {
         if (result.isConfirmed) {
             router.post(route('admin.cskh.pushOrder'), query, {
+                preserveState: false,
                 onError: () => {
                 },
                 onSuccess: () => {
+                    filter.toDate = null;
+                    filter.fromDate = null;
                     form.reset()
 
                 }
@@ -151,9 +141,12 @@ const pushOrders = () => {
     }).then(result => {
         if (result.isConfirmed) {
             router.post(route('admin.cskh.pushOrder'), query, {
+                preserveState: false,
                 onError: () => {
                 },
                 onSuccess: () => {
+                    filter.toDate = null;
+                    filter.fromDate = null;
                     form.reset()
 
                 }
@@ -185,7 +178,45 @@ const selectAll = computed({
 
     }
 });
+const totalOrder = (status) => {
+    var findStatus = props.statusGroup.find(e => e.status == status);
 
+    if (findStatus) {
+        return findStatus.total;
+    } else {
+        return 0;
+    }
+}
+const draftOrder = (order) => {
+    let query = {
+        ids: [order.id]
+    };
+    swal.fire({
+        title: "Thông báo?",
+        text: "Bạn nháp đơn hàng này!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+    }).then(result => {
+        if (result.isConfirmed) {
+            router.post(route('admin.cskh.order.draftOrder'), query, {
+                preserveState: false,
+                onError: () => {
+                },
+                onSuccess: () => {
+                    filter.toDate = null;
+                    filter.fromDate = null;
+                    form.reset()
+
+                }
+            });
+
+        } else {
+            return
+        }
+    });
+}
 </script>
 <template>
     <LayoutAuthenticated>
@@ -234,18 +265,18 @@ const selectAll = computed({
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.type" @change="fillterPaymentMethod"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                <select id="market" v-model="filter.market"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả kho hàng</option>
-                                    <option value="gift_delivery">Giao quà</option>
-                                    <option value="order">Đơn lẻ</option>
+                                    <option value="MB">Miền Bắc</option>
+                                    <option value="MN">Miền Nam</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mr-4 flex-col flex w-[160px]">
                             <div class="">
-                                <select id="countries" v-model="filter.payment_method" @change="fillterPaymentMethod"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500">
+                                <select id="type" v-model="filter.type"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500">
                                     <option :value="null">Tất cả</option>
                                     <option value="gift_delivery">Giao quà</option>
                                     <option value="order">Đơn lẻ</option>
@@ -262,9 +293,14 @@ const selectAll = computed({
                     </button>
                     <div class="flex">
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
-                            label="Tất cả (11)" />
+                            @click="fillterStatus(null)" :label="`Tất cả (${total})`" />
+                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#4F8D06]"
+                            @click="fillterStatus('create')" class="mr-2" :label="`Tạo mới (${totalOrder('create')})`" />
+                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#F0C419]"
+                            @click="fillterStatus('processing')" class="mr-2"
+                            :label="`Đang xử lý cả (${totalOrder('processing')})`" />
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
-                            label="Pending" />
+                            @click="fillterStatus('pending')" :label="`Pending (${totalOrder('pending')})`" />
                     </div>
                 </div>
 
@@ -311,10 +347,10 @@ const selectAll = computed({
                                         }}</td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
                                             order?.product_service?.product?.name
-                                        }}</td>
+                                        }} </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">{{
                                             order?.customer?.name
-                                        }}</td>
+                                        }} ({{ order.index }}/{{ order.customer.orders_count }})</td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="flex items-center">
                                                 {{ hasAnyPermission(['super-admin']) ? order?.customer?.phone_number :
@@ -351,15 +387,17 @@ const selectAll = computed({
                                                 class="rotate-90 text-gray-400 rounded-lg mr-2 text-[#1D75FA] hover:text-blue-700"
                                                 v-tooltip.top="'Đẩy đơn'" size="22">
                                             </BaseIcon>
-                                            <BaseIcon :path="mdiLayersTripleOutline"
+                                            <BaseIcon :path="mdiLayersTripleOutline" @click="draftOrder(order)"
+                                                v-if="order.status !== 'completed'"
                                                 class=" text-gray-400 rounded-lg  mr-2 text-[#FF6100] hover:text-red-700"
                                                 v-tooltip.top="'Đơn nháp'" size="20">
                                             </BaseIcon>
+                                            <Link :href="`/customer-service/customer/${order.customer.id}/order-packages`">
                                             <BaseIcon :path="mdiSquareEditOutline"
                                                 class=" text-gray-400 rounded-lg mr-2 text-[#FF6100] hover:text-blue-700"
                                                 v-tooltip.top="'Chỉnh sửa'" size="20">
                                             </BaseIcon>
-
+                                            </Link>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order?.shipper ? order?.shipper?.name : "NA" }}
@@ -390,7 +428,7 @@ const selectAll = computed({
                     <div class="w-full flex  justify-between items-center">
                         <div class="flex items-center">
                             <span class="mr-2">Hiển thị</span>
-                            <select
+                            <select v-model="filter.per_page"
                                 class="bg-gray-50 border   text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  mx-auto px-4 py-1   dark:bg-gray-700 dark:border-gray-600 ">
                                 <option :value="50">50</option>
                                 <option :value="100">100</option>
@@ -398,7 +436,7 @@ const selectAll = computed({
                             </select>
                         </div>
 
-                        <Pagination :links="orders.meta.links" />
+                        <Pagination :links="orders.links" />
                     </div>
 
                 </div>

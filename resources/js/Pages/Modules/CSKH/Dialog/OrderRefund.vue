@@ -10,29 +10,31 @@
                         <h3 class="text-black font-semibold my-1 text-[16px]">Xác nhận hoàn đơn</h3>
 
                     </div>
-                    <button type="button" class="close" @click="closeModal" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-header" v-if="order">
+                <div class="modal-header" v-if="order_transport">
                     <div class="w-full flex justify-between">
-                        <h3 class="text-black font-semibold my-1 text-[16px]">Đơn hàng #{{ order?.order_number }}</h3>
+                        <h3 class="text-black font-semibold my-1 text-[16px]">Đơn hàng #{{
+                            order_transport.order?.order_number }}</h3>
                         <h3 class="text-black font-semibold my-1 text-[16px]">Ngày nhận đơn {{
-                            formatDateOnly(order?.delivery_appointment) }}</h3>
+                            formatDateOnly(order_transport.order?.delivery_appointment) }}</h3>
                     </div>
-                    <button @click="closeModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body  mx-1 mb-6" v-if="order">
+                <div class="modal-body  mx-1 mb-6" v-if="order_transport">
                     <div class="flex items-center ">
                         <div class="mx-1 flex flex-col items-center">
                             <img src="/assets/icon/loading-svgrepo-com.png" alt="" class="w-12 h-12 p-2">
                             <p class=" text-xl"
-                                :class="isActive(['pending', 'packed', 'delivering', 'delivered']) ? 'text-[#FF0000]' : ''">
+                                :class="isActive(['pending', 'packing', 'delivering', 'delivered']) ? 'text-[#FF0000]' : ''">
                                 Chuẩn bị</p>
                         </div>
-                        <div class=" arrow mx-1  " :class="isActive(['packed', 'delivering', 'delivered']) ? 'active' : ''">
+                        <div class=" arrow mx-1  "
+                            :class="isActive(['packing', 'delivering', 'delivered']) ? 'active' : ''">
                         </div>
                         <div class=" mx-1 flex flex-col items-center">
                             <img src="/assets/icon/box.png" alt="" class="w-12 h-12 p-2">
@@ -67,13 +69,13 @@
 
                         <p class="text-[#000000] text-base mr-4">Trạng thái hiện tại
                         </p>
-                        <OrderStatus v-if="order" :order="order" />
+                        <OrderTransportState v-if="order_transport" :order_transport="order_transport" />
                     </div>
 
 
                 </div>
                 <div class="modal-body  mx-1 mb-6">
-                    <div class="flex items-center ">
+                    <div class="flex items-center " v-if="order_transport">
                         <div class="relative overflow-x-auto">
                             <p class="text-[#000000] text-base font-semibold mr-4 mb-3">Chọn sản phẩm hoàn
                             </p>
@@ -95,7 +97,7 @@
                                 </thead>
                                 <tbody>
 
-                                    <tr v-for="(item, index) in order?.order_items" :key="index"
+                                    <tr v-for="(item, index) in order_transport?.order?.order_items" :key="index"
                                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row"
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -104,9 +106,11 @@
                                         <td class="px-6 py-4">
                                             {{ item.product.unit }}
                                         </td>
-                                        <td class="px-6 py-4">
-                                            <MazInputNumber placeholder="Enter number" :min="1" :max="10000" size="md"
-                                                color="secondary" style="width: 200px;" />
+                                        <td class="px-6 py-4" v-if="form.products.length > 0">
+
+                                            <MazInputNumber placeholder="Enter number"
+                                                v-model="form.products[index].quantity" :min="0" :max="item.quantity"
+                                                size="md" color="secondary" style="width: 200px;" />
                                         </td>
 
                                     </tr>
@@ -164,26 +168,38 @@ import { useForm, router } from "@inertiajs/vue3";
 import { useOrderStore } from '@/stores/order.js'
 import OrderStatus from '@/Pages/Modules/CSKH/OrderStatus.vue'
 import MazInputNumber from 'maz-ui/components/MazInputNumber'
+import OrderTransportState from '@/Pages/Modules/CSKH/Status/OrderTransportState.vue'
 const swal = inject("$swal");
 const props = defineProps({
     ids: Array
 })
-const { order
+const { order, order_transport
 } = storeToRefs(useOrderStore())
 const { closeModal } = useOrderStore()
 const form = useForm({
     check: false,
-    products: {}
+    products: []
 })
-const selectedProducts = ref({});
+const selectedProducts = ref([]);
+
 onMounted(() => {
 
-    emitter.on('OrderRefund', (order) => {
+    emitter.on('OrderRefund', (data) => {
+        form.products = []
+        data.order.order_items.forEach(item => {
+            form.products.push({
+                id: item.product.id,
+                name: item.product.name,
+                unit: item.product.unit,
+                quantity: item.quantity,
 
+            })
+        })
     })
+
 });
 const isActive = (status) => {
-    if (order.value && status.includes(order.value.status_transport)) {
+    if (order_transport.value && status.includes(order_transport.value.state)) {
         return true
     }
     return false
@@ -193,7 +209,8 @@ const isActive = (status) => {
 const orderRefund = () => {
     let query = {
         ids: props.ids,
-        check: form.check
+        check: form.check,
+        products: form.products
     };
 
     router.post(route("admin.cskh.order.refund"), query, {

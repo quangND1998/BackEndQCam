@@ -77,7 +77,7 @@ Route::middleware(['auth'])->group(
             // Route::get('updateDemo', [UserController::class, 'updateDemo'])->name('update-demo');
         });
 
-        Route::get('test', [TestController::class, 'index']);
+     
 
         Route::prefix('visit')->as('visit.')->group(function () {
             Route::get('all', [ScheduleVisitController::class, 'getAll'])->name('all');
@@ -149,3 +149,4 @@ Route::middleware(['auth'])->group(
 );
 require __DIR__ . '/dashboard.php';
 require __DIR__ . '/payment.php';
+Route::get('test', [TestController::class, 'index']);
