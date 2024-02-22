@@ -6,7 +6,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Modules\CustomerService\app\Models\VisitExtraService;
-use Illuminate\Support\Carbon;
 class ScheduleVisit extends Model
 {
     protected $table = 'schedule_visits';
