@@ -143,7 +143,6 @@ const Delete = (img) => {
                         <a :href="img.original_url" data-fancybox="gallery" data-caption="Single image">
                             <img :src="img.original_url" class="w-16 h-14 object-cover rounded-lg" alt="">
                         </a>
-
                     </div>
 
                     <div class="w-16 h-14 relative m-1 border border-gray-400 rounded-lg" v-for="(img, index) in images "
@@ -162,7 +161,6 @@ const Delete = (img) => {
                     <input @change="onFileChange" :disabled="disabled"
                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 hidden"
                         :id="id" type="file" :multiple="multiple" accept="image/*">
-
                 </div>
 
             </div>
