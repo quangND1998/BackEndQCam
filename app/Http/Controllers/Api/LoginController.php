@@ -70,9 +70,14 @@ class LoginController extends Base2Controller
             OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
             $message =  "Ma xac nhan dang nhap ung dung Cam Mặt Trời là " . $otp->otp_number . " Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua Cam Mặt Trời.";
             $response =  $otpService->sendSMS($access_token, $message, preg_replace('/\s+/', '', $request->phone_number));
-
+          
             if ($response->ok()) {
+                   
+                if ($response['error'] == 1014) {
+                    return response()->json("Có lỗi xảy ra", 400);
+                }
                 return response()->json('We send otp to your phone ' . $request->phone_number, 200);
+
             } else {
                 $response = $response->json();
                 if ($response['error'] == 1014) {
