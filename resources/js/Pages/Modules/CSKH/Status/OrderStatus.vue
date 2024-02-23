@@ -17,7 +17,7 @@ const status_text = {
 }
 const status_color = {
     pending: 'border-[#FF6100] text-[#FF6100] px-3',
-    processing: 'bg-[#F0C419]  text-black  px-3',
+    processing: 'bg-[#F0C419] border-0 text-black  px-3',
     completed: 'text-[#4F8D06] border-[#4F8D06]  px-3',
     create: 'text-[#27AE60] border-[#27AE60]  px-4 ',
     draft: "bg-[#b4b9bf] text-white px-3"
