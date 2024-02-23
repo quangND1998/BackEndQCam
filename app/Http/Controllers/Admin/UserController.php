@@ -18,10 +18,10 @@ class UserController extends Controller
     public function __construct()
     {
 
-        $this->middleware('permission:view-user|create-user|delete-user|update-user', ['only' => ['index']]);
-        $this->middleware('permission:create-user', ['only' => ['store']]);
-        $this->middleware('permission:update-user', ['only' => ['update']]);
-        $this->middleware('permission:delete-user', ['only' => ['destroy']]);
+        // $this->middleware('permission:view-user|create-user|delete-user|update-user', ['only' => ['index']]);
+        // $this->middleware('permission:create-user', ['only' => ['store']]);
+        // $this->middleware('permission:update-user', ['only' => ['update']]);
+        // $this->middleware('permission:delete-user', ['only' => ['destroy']]);
     }
     public function index(Request $request)
     {
@@ -96,6 +96,7 @@ class UserController extends Controller
     }
     public function create(Request $request)
     {
+
         $user = Auth::user();
         if ($user->hasRole('super-admin')) {
             $roles = Role::where('name', '!=', 'super-admin')->get();

@@ -65,7 +65,9 @@ Route::middleware(['auth'])->group(
             Route::get('', [UserController::class, 'index'])->name('index');
             Route::get('/{role}', [UserController::class, 'userRole'])->name('userRole');
             Route::post('', [UserController::class, 'store'])->name('store');
-            Route::get('create-user', [UserController::class, 'create'])->name('create');
+            Route::get('/create/user', [UserController::class, 'create'])->name('create');
+            // Route::get('create-user', [UserController::class, 'create'])->name('create');
+
             Route::get('edit-user/{user}', [UserController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [UserController::class, 'update'])->name('update');
             Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('destroy');
@@ -77,7 +79,7 @@ Route::middleware(['auth'])->group(
             // Route::get('updateDemo', [UserController::class, 'updateDemo'])->name('update-demo');
         });
 
-     
+
 
         Route::prefix('visit')->as('visit.')->group(function () {
             Route::get('all', [ScheduleVisitController::class, 'getAll'])->name('all');
