@@ -159,7 +159,6 @@ const search = () => {
                                     class="block w-full p-2 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="    Tìm lịch bằng tên hoặc sđt khách hàng" required />
                             </div>
-                            </form>
                         </div>
                     </div>
                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
