@@ -130,38 +130,38 @@ const openOrderCancel = (order_transport) => {
     showDetailOrderTransport(order_transport)
     emitter.emit("OrderCancel", order_transport);
 };
-const openOrderRefunding =(order_transport)=>{
+const openOrderRefunding = (order_transport) => {
 
     showDetailOrderTransport(order_transport)
     emitter.emit("OrderTransportRefunding", order_transport);
 }
 
-const isDecline=(order_transport)=>{
-    if(order_transport.order.status == 'completed'){
+const isDecline = (order_transport) => {
+    if (order_transport.order.status == 'completed') {
         return false
     }
-    else if(order_transport.order.state_document == 'approved' && order_transport.state == 'delivered' ){
+    else if (order_transport.order.state_document == 'approved' && order_transport.state == 'delivered') {
         return false
     }
-    else if(order_transport.state == 'shipping' ){
+    else if (order_transport.state == 'shipping') {
         return false
-    } else if(order_transport.order.state_document == 'approved' && order_transport.state == 'refunding' ){
-        return false
-    }
-    else if(order_transport.order.state_document == 'approved' && order_transport.state == 'refund' ){
+    } else if (order_transport.order.state_document == 'approved' && order_transport.state == 'refunding') {
         return false
     }
-    else{
+    else if (order_transport.order.state_document == 'approved' && order_transport.state == 'refund') {
+        return false
+    }
+    else {
         return true
     }
 }
-const isRefunding=(order_transport)=>{
-    if(order_transport.state == 'shipping' ){
+const isRefunding = (order_transport) => {
+    if (order_transport.state == 'shipping') {
         return true
-    } else if(order_transport.order.state_document !== 'approved' && order_transport.state == 'delivered' ){
+    } else if (order_transport.order.state_document !== 'approved' && order_transport.state == 'delivered') {
         return true
     }
-    else{
+    else {
         return false
     }
 }
@@ -172,8 +172,8 @@ const isRefunding=(order_transport)=>{
     <div>
         <ModelShipping></ModelShipping>
         <OrderCancel />
-        <OrderTransportRefunding  :errors="$page.props.errors"/>
-       
+        <OrderTransportRefunding :errors="$page.props.errors" />
+
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -282,7 +282,8 @@ const isRefunding=(order_transport)=>{
                                             {{ order_transport.order?.product_service?.product?.name }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            {{ order_transport.order?.customer?.name }}
+                                            {{ order_transport.order?.customer?.name }}({{ order_transport.order?.index }}/{{ order_transport.order?.customer?.orders_count }})
+
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="flex items-center">
@@ -303,26 +304,25 @@ const isRefunding=(order_transport)=>{
                                                 {{ item?.product?.name }} {{ item?.product?.unit }}X{{ item?.quantity }}
                                             </p>
                                         </td>
-                                      
-                                    
+
+
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <OrderTransportStatus :order_transport="order_transport" />
                                         </td>
-                                       
+
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <button v-tooltip="'Quay đầu'" v-if="isRefunding(order_transport)" class="mr-2"
-                                                   data-toggle="modal"
-                                                   @click="openOrderRefunding(order_transport)" 
-                                                    data-target="#OrderTransportRefunding">
-                                                    <Icon icon="fa-arrow-left"></Icon>
-                                                </button>
+                                                data-toggle="modal" @click="openOrderRefunding(order_transport)"
+                                                data-target="#OrderTransportRefunding">
+                                                <Icon icon="fa-arrow-left"></Icon>
+                                            </button>
                                             <button v-tooltip="'Hủy mã vận đơn'" v-if="isDecline(order_transport)"
-                                                    @click="openOrderCancel(order_transport)" data-toggle="modal"
-                                                    data-target="#OrderCancel">
-                                                    <Icon icon="cancel"></Icon>
-                                                </button>
-                                       
-                                                 
+                                                @click="openOrderCancel(order_transport)" data-toggle="modal"
+                                                data-target="#OrderCancel">
+                                                <Icon icon="cancel"></Icon>
+                                            </button>
+
+
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"

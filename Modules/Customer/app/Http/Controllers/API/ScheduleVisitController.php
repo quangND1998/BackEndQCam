@@ -24,7 +24,9 @@ class ScheduleVisitController extends Base2Controller
             [
                 'date_time' => 'required|date|after:tomorrow',
                 'number_adult' => 'required',
+                'number_children' => 'required|gt:-1',
                 'product_service_owner_id' => 'required',
+                'code' => 'required'
             ],
             [
                 'date_time.after' => 'Ngày đặt lịch phải là một ngày sau ngày hôm nay',

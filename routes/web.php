@@ -77,7 +77,11 @@ Route::middleware(['auth'])->group(
             // Route::get('updateDemo', [UserController::class, 'updateDemo'])->name('update-demo');
         });
 
+<<<<<<< HEAD
        
+=======
+     
+>>>>>>> origin/quangnd
 
         Route::prefix('visit')->as('visit.')->group(function () {
             Route::get('all', [ScheduleVisitController::class, 'getAll'])->name('all');
@@ -149,6 +153,7 @@ Route::middleware(['auth'])->group(
 );
 require __DIR__ . '/dashboard.php';
 require __DIR__ . '/payment.php';
+<<<<<<< HEAD
 
 
 Route::get('test', [TestController::class, 'index']);
@@ -174,3 +179,6 @@ Route::get('check', function(){
     }
     return $nums;
 });
+=======
+Route::get('test', [TestController::class, 'index']);
+>>>>>>> origin/quangnd

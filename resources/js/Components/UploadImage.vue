@@ -82,9 +82,16 @@ const listener = (data) => {
 
 const onFileChange = (e) => {
     const files = e.target.files;
-
-    if (form.images.length == props.max_files) {
-        return
+  
+    // if (form.images.length == props.max_files) {
+    //     return
+    // }
+    if(!props.max_files){
+        if (files.length > 0) {
+            if (props.max_files > 1) {
+                setFiles(files)
+            }
+        }
     }
     if (files.length > 0) {
         if (props.max_files > 1) {
@@ -175,11 +182,18 @@ const Delete = (img) => {
                         class="cursor-pointer w-16 h-16 border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg">
                         <BaseIcon :path="mdiPlus" class="" :size="16" />
                     </label>
+
+                    <label :for="id" v-else-if="max_files == null"
+                        class="cursor-pointer w-16 h-16 border-dashed items-center border-gray-500 mx-1 justify-center flex border rounded-lg">
+                        <BaseIcon :path="mdiPlus" class="" :size="16" />
+                    </label>
                     <input @change="onFileChange"
                         v-if="((old_images ? old_images.length : 0) + form.images.length) < max_files"
                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 hidden"
                         :id="id" type="file" :multiple="multiple" accept="image/*">
-
+                    <input @change="onFileChange" v-else-if="max_files == null"
+                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 hidden"
+                        :id="id" type="file" :multiple="multiple" accept="image/*">
                 </div>
 
             </div>

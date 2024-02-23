@@ -17,7 +17,7 @@ class OrderTransport extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['order_transport_number','reason', 'state', 'status', 'user_id', 'order_id','delivery_appointment'];
+    protected $fillable = ['order_transport_number', 'reason', 'state', 'status', 'user_id', 'order_id', 'delivery_appointment'];
 
     protected static function newFactory(): OrderTransportFactory
     {
@@ -47,6 +47,8 @@ class OrderTransport extends Model
     {
         return $this->belongsTo(Order::class, 'order_id');
     }
+
+
     public function care_staff()
     {
         return $this->belongsTo(User::class, 'user_id');

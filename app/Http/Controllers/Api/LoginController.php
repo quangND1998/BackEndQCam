@@ -70,9 +70,14 @@ class LoginController extends Base2Controller
             OtpEndTimeJob::dispatch($otp)->delay(Carbon::now()->addMinute(5));
             $message =  "Ma xac nhan dang nhap ung dung Cam Mặt Trời là " . $otp->otp_number . " Tuyet doi KHONG cung cap ma OTP cho bat ky ai, ke ca nhan vien cua Cam Mặt Trời.";
             $response =  $otpService->sendSMS($access_token, $message, preg_replace('/\s+/', '', $request->phone_number));
-
+          
             if ($response->ok()) {
+                   
+                if ($response['error'] == 1014) {
+                    return response()->json("Có lỗi xảy ra", 400);
+                }
                 return response()->json('We send otp to your phone ' . $request->phone_number, 200);
+
             } else {
                 $response = $response->json();
                 if ($response['error'] == 1014) {
@@ -203,7 +208,7 @@ class LoginController extends Base2Controller
 
             if ($response->ok()) {
 
-                return response()->json('We send otp to your phone ' . $user->phone_number, 200);
+                return response()->json('Mã OTP đã được gửi đến số điện thoại ' . $user->phone_number, 200);
             } else {
                 $response = $response->json();
                 if ($response['error'] == 1014) {
@@ -266,23 +271,23 @@ class LoginController extends Base2Controller
             'city' => 'required',
             'wards' => 'required',
             'district' => 'required',
-            'date_of_birth' => 'nullable|date',
+            // 'date_of_birth' => 'nullable|date',
 
-            'cic_date' => 'nullable|date',
-            'cic_date_expried' => 'nullable|date|after:cic_date',
+            // 'cic_date' => 'nullable|date',
+            // 'cic_date_expried' => 'nullable|date|after:cic_date',
             'image' => 'nullable',
             'image' => 'mimes:jpeg,png,jpg|max:4096',
         ], [
             'name.required' => 'Vui lòng nhập Họ và Tên',
-            'cic_number.required' => 'Vui lòng nhập số căn cước công dân',
-            'cic_number.unique' => 'Số căn cước này đã đăng ký với 1 tài khoản khác',
+            // 'cic_number.required' => 'Vui lòng nhập số căn cước công dân',
+            // 'cic_number.unique' => 'Số căn cước này đã đăng ký với 1 tài khoản khác',
             'email.required' => 'Vui lòng nhập địa chỉ email',
             'email.unique' => 'Địa chỉ Email này đã đăng ký với 1 tài khoản khác',
             'city.required' => 'Địa chỉ nơi ở không bỏ trống , chúng tôi sẽ căn cứ vào địa chỉ này để giao hàng',
             'wards.required' => 'Địa chỉ nơi ở không bỏ trống , chúng tôi sẽ căn cứ vào địa chỉ này để giao hàng',
             'district.required' => 'Địa chỉ nơi ở không bỏ trống , chúng tôi sẽ căn cứ vào địa chỉ này để giao hàng',
             'address.required' => 'Địa chỉ nơi ở không bỏ trống , chúng tôi sẽ căn cứ vào địa chỉ này để giao hàng',
-            'cic_date_expried.after' => 'Phải là một ngày sau Ngày Cấp trên căn cước',
+            // 'cic_date_expried.after' => 'Phải là một ngày sau Ngày Cấp trên căn cước',
             'image.mimes' => 'Ảnh đại diện phải là định dạng:jpeg,png,jpg',
             'image.max' => 'Ảnh đại diện không được lớn hơn 4MB'
         ]);
