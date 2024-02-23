@@ -13,7 +13,8 @@ import { emitter } from '@/composable/useEmitter';
 import MazInputPrice from 'maz-ui/components/MazInputPrice';
 import BaseIcon from '@/Components/BaseIcon.vue'
 import UploadImage from '@/Components/UploadImage.vue'
-
+import UploadImages from '@/Components/UploadImages.vue'
+import UploadMutipleMedia from  '@/Components/UploadMutipleMedia.vue'
 const swal = inject('$swal')
 const store = useTreeStore();
 const images = ref([]);
@@ -306,8 +307,8 @@ const onFileChange = (e) => {
                         </div> -->
                         <div class="">
 
-                          <UploadImage v-if="editMode ==false" :max_files="8"  v-model="form.images" :multiple="true" :label="`Bộ sưu tập ảnh`" />
-                          <UploadImage v-else :max_files="8"  v-model="form.images" :multiple="true"  :old_images="tree?.images"  :label="`Bộ sưu tập ảnh`" />
+                          <UploadMutipleMedia v-if="editMode ==false"  v-model="form.images" :multiple="true" :label="`Bộ sưu tập ảnh`" />
+                          <UploadMutipleMedia v-else  v-model="form.images" :multiple="true"  :old_images="tree?.images"  :label="`Bộ sưu tập ảnh`" />
                           <InputError class="mt-2" :message="form.errors.images" />
                         </div>
                     </div>
