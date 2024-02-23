@@ -132,7 +132,7 @@ const save = () => {
         <SectionMain>
             <div class="container m-auto mt-10">
                 <div class="min-[320px]:block sm:block md:block lg:grid grid-cols-3 gap-4 mt-10">
-                    <div class="col-span-2">
+                    <div class="col-span-2 my-3">
 
                         <div class="my-3">
                             <h3 class="text-[17px] font-bold">Tạo tải khoản</h3>
@@ -312,7 +312,7 @@ const save = () => {
                                 </div>
                             </div>
                         </div>
-                        <label for="phone" class="block mb-2 text-sm  text-gray-900 dark:text-white">
+                        <label for="phone" class="block mb-2 text-sm my-2 text-gray-900 dark:text-white">
                             Quyền *</label>
                         <Multiselect v-model="form.roles" mode="tags" :appendNewTag="false" :createTag="false"
                             :searchable="true" label="name" valueProp="id" trackBy="name" :options="roles"

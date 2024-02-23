@@ -287,20 +287,36 @@ const draftOrder = (order) => {
 
                 </div>
                 <div class="my-3 w-full flex justify-between ">
-                    <button v-if="selected.length > 0" @click="pushOrders()"
+                    <button :disabled="selected.length <=0"  @click="pushOrders()"
                         class="px-2 py-2 text-sm  bg-[#FF6100] hover:bg-[#EB5F0A] text-white p-2 rounded-lg border mx-1">
                         Đẩy đơn hàng loạt ({{ selected.length }})
                     </button>
                     <div class="flex">
-                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="lightDark" class="mr-2"
-                            @click="fillterStatus(null)" :label="`Tất cả (${total})`" />
-                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#4F8D06]"
-                            @click="fillterStatus('create')" class="mr-2" :label="`Tạo mới (${totalOrder('create')})`" />
-                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#F0C419]"
-                            @click="fillterStatus('processing')" class="mr-2"
-                            :label="`Đang xử lý cả (${totalOrder('processing')})`" />
-                        <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
-                            @click="fillterStatus('pending')" :label="`Pending (${totalOrder('pending')})`" />
+                        <div class="flex text-center item-center bg-[#EAEAEA] mr-2 items-center px-3 rounded-[3px] cursor-pointer" @click="fillterStatus(null)" >
+                            <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="#EAEAEA" class="mr-2 border-0"
+                             />
+                            <p>Tất cả ({{total}})</p>
+                        </div>
+                        <div class="flex text-center item-center bg-[#EAEAEA] mr-2 items-center px-3 rounded-[3px] cursor-pointer" @click="fillterStatus('create')">
+                            <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#4F8D06] "
+                             class="mr-2 border-0"  />
+                            <p>Tạo mới ({{totalOrder('create')}})</p>
+                        </div>
+                        <div class="flex text-center item-center bg-[#EAEAEA] mr-2 items-center px-3 rounded-[3px] cursor-pointer" @click="fillterStatus('processing')">
+                            <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4 " icon-h="h-4" color="text-[#F0C419]"
+                             class="mr-2 border-0"
+                            />
+                            <p>Đang xử lý ({{totalOrder('processing')}})</p>
+                        </div>
+                        <div class="flex text-center item-center bg-[#EAEAEA] mr-2 items-center px-3 rounded-[3px] cursor-pointer" @click="fillterStatus('pending')">
+                            <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]" class="mr-2 border-0"
+                              />
+                            <p>Pending ({{totalOrder('pending')}})</p>
+                        </div>
+
+
+
+
                     </div>
                 </div>
 
@@ -378,25 +394,25 @@ const draftOrder = (order) => {
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <OrderStatus :order="order" />
-
-
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <BaseIcon :path="mdiArrowLeftBoldCircleOutline" @click="pushOrder(order)"
-                                                v-if="order.status == 'create' || order.status == 'pending'"
-                                                class="rotate-90 text-gray-400 rounded-lg mr-2 text-[#1D75FA] hover:text-blue-700"
+                                            <BaseIcon :path="mdiArrowLeftBoldCircleOutline"
+                                                @click="(order.status == 'create' || order.status == 'pending') ? pushOrder(order) : null"
+                                                class="rotate-90  rounded-lg mr-2  "
+                                                :class="(order.status == 'create' || order.status == 'pending' ) ? 'text-[#1D75FA]' : 'text-gray' "
                                                 v-tooltip.top="'Đẩy đơn'" size="22">
                                             </BaseIcon>
-                                            <BaseIcon :path="mdiLayersTripleOutline" @click="draftOrder(order)"
-                                                v-if="order.status !== 'completed'"
-                                                class=" text-gray-400 rounded-lg  mr-2 text-[#FF6100] hover:text-red-700"
+                                            <BaseIcon :path="mdiLayersTripleOutline"
+                                                @click="order.status !== 'completed' ? draftOrder(order) : null"
+                                                class=" rounded-lg  mr-2 "
+                                                :class="order.status !== 'completed' ? 'text-[#FF6100] hover:text-red-700' : 'text-gray' "
                                                 v-tooltip.top="'Đơn nháp'" size="20">
                                             </BaseIcon>
                                             <Link :href="`/customer-service/customer/${order.customer.id}/order-packages`">
-                                            <BaseIcon :path="mdiSquareEditOutline"
-                                                class=" text-gray-400 rounded-lg mr-2 text-[#FF6100] hover:text-blue-700"
-                                                v-tooltip.top="'Chỉnh sửa'" size="20">
-                                            </BaseIcon>
+                                                <BaseIcon :path="mdiSquareEditOutline"
+                                                    class="  rounded-lg mr-2 text-[#FF6100]"
+                                                    v-tooltip.top="'Chỉnh sửa'" size="20">
+                                                </BaseIcon>
                                             </Link>
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">

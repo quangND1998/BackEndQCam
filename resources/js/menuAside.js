@@ -141,7 +141,7 @@ export default [{
         ]
     },
     {
-        // chưởng phòng CSKH
+        // trưởng phòng CSKH
         label: 'CSKH',
         icon: mdiFileTreeOutline,
         permissions: ['super-admin', 'cskh-booking', 'cskh-gift-delivery', 'cskh-role-package', 'cskh-distribute-call', 'cskh-pending', 'cskh-call-center'],
@@ -324,8 +324,8 @@ export default [{
     {
         label: 'Quản lý người dùng',
         icon: mdiFileTreeOutline,
-        permissions: ['view-user', 'viewer-custommer', 'leader-shipper'],
-        route_list: ['customer.index', 'shippers.index'],
+        permissions: ['viewer-custommer'],
+        route_list: ['customer.index'],
         menu: [{
                 route: 'customer.index',
                 label: 'Customer',
