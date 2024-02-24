@@ -299,6 +299,7 @@ class CSKHOrderController extends Controller
     //Yêu cầu Hủy mã vận đơn
     public function orderDecline(Request $request, OrderTransport $order_transport)
     {
+
         $this->validate(
             $request,
             [
