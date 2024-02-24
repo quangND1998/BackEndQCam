@@ -102,5 +102,12 @@ class RoleSeeder extends Seeder
 
         $telesale = Role::create(['name' => 'telesale']);
         $telesale->givePermissionTo([ 'view-news']);
+
+
+        // CSKH LEaderShipper Kho 
+
+
+        $leader_cskh = Role::create(['name' => 'leader-cskh']);
+        $leader_cskh->givePermissionTo(['view-order-all']);
     }
 }

@@ -298,7 +298,7 @@ const draftOrder = (order) => {
                             @click="fillterStatus('create')" class="mr-2" :label="`Tạo mới (${totalOrder('create')})`" />
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#F0C419]"
                             @click="fillterStatus('processing')" class="mr-2"
-                            :label="`Đang xử lý cả (${totalOrder('processing')})`" />
+                            :label="`Đang xử lý  (${totalOrder('processing')})`" />
                         <BaseButton :icon="mdiLayersTripleOutline" icon-w="w-4" icon-h="h-4" color="text-[#FF6100]"
                             @click="fillterStatus('pending')" :label="`Pending (${totalOrder('pending')})`" />
                     </div>
@@ -377,7 +377,7 @@ const draftOrder = (order) => {
                                             hộp
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
-                                            <OrderStatus :order="order" />
+                                            <OrderStatus :order="order" class="border border-orange-500" />
 
 
                                         </td>

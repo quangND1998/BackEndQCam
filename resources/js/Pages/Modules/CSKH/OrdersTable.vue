@@ -22,7 +22,7 @@ import OrderStatusBar from "./OrderStatusBar.vue";
 import OrderTransportBar from '@/Pages/Modules/CSKH/Status/OrderTransportBar.vue'
 import { usePopOverStore } from '@/stores/popover.js';
 import Icon from '@/Components/Icon.vue'
-import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
+import OrderDecline from '@/Pages/Modules/CSKH/Dialog/OrderDecline.vue';
 import { useOrderStore } from '@/stores/order.js'
 import { useCSKHStore } from '@/stores/cskh.js'
 import DialogLoading from '@/Components/CustomerService/Dialog/DialogLoading.vue';
@@ -125,10 +125,10 @@ const changePage = (page) => {
     filter.page = page;
     store.fetchOrdersTransport(filter)
 }
-const openOrderCancel = (order_transport) => {
+const openOrderDecline = (order_transport) => {
     console.log(order_transport)
     showDetailOrderTransport(order_transport)
-    emitter.emit("OrderCancel", order_transport);
+    emitter.emit("OrderDecline ", order_transport);
 };
 const openOrderRefunding = (order_transport) => {
 
@@ -171,7 +171,7 @@ const isRefunding = (order_transport) => {
 <template>
     <div>
         <ModelShipping></ModelShipping>
-        <OrderCancel />
+        <OrderDecline />
         <OrderTransportRefunding :errors="$page.props.errors" />
 
 
@@ -317,8 +317,8 @@ const isRefunding = (order_transport) => {
                                                 <Icon icon="fa-arrow-left"></Icon>
                                             </button>
                                             <button v-tooltip="'Hủy mã vận đơn'" v-if="isDecline(order_transport)"
-                                                @click="openOrderCancel(order_transport)" data-toggle="modal"
-                                                data-target="#OrderCancel">
+                                                @click="openOrderDecline(order_transport)" data-toggle="modal"
+                                                data-target="#OrderDecline">
                                                 <Icon icon="cancel"></Icon>
                                             </button>
 

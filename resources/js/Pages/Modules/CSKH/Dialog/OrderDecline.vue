@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="OrderCancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="OrderDecline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true" v-if="order_transport">
         <div class="modal-dialog modal-xl rounded-2xl mx-auto mt-10 shadow-lg max-h-modal w-8/12   md:w-9/12 lg:w-8/12 xl:w-5/12 z-50 "
             role="document">
@@ -88,7 +88,7 @@
                     </div>
                     <div class="modal-footer">
 
-                        <button type="submit" @click.prevent="orderCancel()"
+                        <button type="submit" @click.prevent="OrderDecline()"
                             class="inline-block px-3 py-4 bg-red-600 text-white font-black text-sm leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">Xác
                             nhận hủy đơn</button>
                     </div>
@@ -117,7 +117,7 @@ const form = useForm({
 })
 
 onMounted(() => {
-    emitter.on('OrderCancel', (order_transport) => {
+    emitter.on('OrderDecline', (order_transport) => {
         console.log(order_transport)
 
         form.reason = order_transport.reason,
@@ -158,7 +158,7 @@ const maxDate = computed(() => {
 
 
 
-const orderCancel = () => {
+const OrderDecline = () => {
 
     form.post(route("admin.cskh.order.decline", order_transport.value.id), {
         preserveState: true,
@@ -168,7 +168,7 @@ const orderCancel = () => {
             }
         },
         onSuccess: page => {
-            $("#OrderCancel").modal("hide");
+            $("#OrderDecline").modal("hide");
             store.fetchOrdersTransport();
             store.fetchStatusOrdersTransport();
             form.reset();
@@ -179,7 +179,7 @@ const listener = () => {
 }
 onUnmounted(() => {
 
-    emitter.off('OrderCancel', listener)
+    emitter.off('OrderDecline', listener)
 })
 </script>
 
