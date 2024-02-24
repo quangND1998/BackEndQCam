@@ -85,26 +85,19 @@ const listener = (data) => {
 const onFileChange = (e) => {
     const files = e.target.files;
     console.log(files);
+    if (files.length > 0) {
 
-    if (props.max_files > 1) {
-            setFiles(files)
-        }
-        else {
-            emit('update:modelValue', files[0])
-            form.images.push(files[0])
-            images.value.push({
-                name: files[0].name,
-                image: URL.createObjectURL(files[0])
-            });
+        setFiles(files)
+ 
+
     }
-   
 
 }
 
 const setFiles = (files) => {
     for (var i = 0; i < files.length; i++) {
-        emit('update:modelValue', form.images)
         form.images.push(files[i])
+         emit('update:modelValue', form.images)
         images.value.push({
             name: files[i].name,
             image: URL.createObjectURL(files[i])
