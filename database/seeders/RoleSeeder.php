@@ -30,11 +30,11 @@ class RoleSeeder extends Seeder
             'update-product',
             'delete-product',
             // order permission
-            'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline','order','complaint','change-state-order',
+            'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline', 'order', 'complaint', 'change-state-order',
             'contract-pending',   'contract-create',   'contract-cancle',   'contract-complete',   'create-contract-complete',   'add-new-package',   'view-news',
             'create-news', 'update-news', 'delete-news'
         ]);
-       
+
 
         $customer = Role::create(['name' => 'customer']);
         $customer->givePermissionTo(['login-app', 'order', 'review', 'complaint']);
@@ -61,46 +61,78 @@ class RoleSeeder extends Seeder
         ]);
 
         $saler = Role::create(['name' => 'saler']);
-        $saler->givePermissionTo(['saler',
-            'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline','add-new-package',
-            'contract-pending',    'contract-cancle',   'contract-complete', 
+        $saler->givePermissionTo([
+            'saler',
+            'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline', 'add-new-package',
+            'contract-pending',    'contract-cancle',   'contract-complete',
         ]);
 
 
         $Ketoan = Role::create(['name' => 'Kế toán']);
-        $Ketoan->givePermissionTo(['saler',
-            'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline','create-contract-complete',   'add-new-package', 
-            'contract-pending','contract-create',  'contract-cancle',   'contract-complete', 
+        $Ketoan->givePermissionTo([
+            'saler',
+            'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline', 'create-contract-complete',   'add-new-package',
+            'contract-pending', 'contract-create',  'contract-cancle',   'contract-complete',
         ]);
 
 
 
         $shopmanager = Role::create(['name' => 'shopmanager']);
-        $shopmanager->givePermissionTo(['saler',
+        $shopmanager->givePermissionTo([
+            'saler',
             'view-product', 'create-product', 'update-product',  'add-new-package'
         ]);
 
-        $cskh = Role::create(['name' => 'cskh']);
-        $cskh->givePermissionTo(['saler','document-custommer', 'package-custommer', 'info-customer',  'viewer-custommer']);
+
 
         $event = Role::create(['name' => 'event']);
-        $event->givePermissionTo(['order','complaint','change-state-order','order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline','saler',
-        'contract-pending','contract-create',  'contract-cancle',   'contract-complete']);
+        $event->givePermissionTo([
+            'order', 'complaint', 'change-state-order', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline', 'saler',
+            'contract-pending', 'contract-create',  'contract-cancle',   'contract-complete'
+        ]);
 
 
         $quanlytintuc = Role::create(['name' => 'quản lý tin tức']);
-        $quanlytintuc->givePermissionTo([ 'view-news',
-        'create-news', 'update-news', 'delete-news']);
+        $quanlytintuc->givePermissionTo([
+            'view-news',
+            'create-news', 'update-news', 'delete-news'
+        ]);
 
         $thongtinchung = Role::create(['name' => 'thông tin chung']);
-        $thongtinchung->givePermissionTo([ 'view-setting',
-        'view-notification', 'view-setting-privacy', 'view-setting-contact']);
+        $thongtinchung->givePermissionTo([
+            'view-setting',
+            'view-notification', 'view-setting-privacy', 'view-setting-contact'
+        ]);
 
 
         $ctv = Role::create(['name' => 'ctv']);
-        $ctv->givePermissionTo([ 'view-news']);
+        $ctv->givePermissionTo(['view-news']);
 
         $telesale = Role::create(['name' => 'telesale']);
-        $telesale->givePermissionTo([ 'view-news']);
+        $telesale->givePermissionTo(['view-news']);
+
+
+        // CSKH LEaderShipper Kho 
+        $cskh = Role::create(['name' => 'cskh']);
+        $cskh->givePermissionTo(['saler', 'document-custommer', 'package-custommer', 'info-customer',  'viewer-custommer', 'view-order-all', 'push-order', 'decline-order', 'cancel-order']);
+
+        $leader_cskh = Role::create(['name' => 'leader-cskh']);
+        $leader_cskh->givePermissionTo(['view-order-all', 'push-order', 'decline-order', 'draft-order']);
+
+
+        $kho = Role::create(['name' => 'nhân viên kho']);
+        $kho->givePermissionTo([
+            'add-order-shipper',
+            'view-order-pending',
+            'view-order-packing',
+            'view-order-shipping',
+            'view-order-completed',
+            'view-order-refunding',
+            'view-order-refund',
+            'view-order-decline',
+            'packed-order',
+            'refunding-order',
+            'refund-order'
+        ]);
     }
 }

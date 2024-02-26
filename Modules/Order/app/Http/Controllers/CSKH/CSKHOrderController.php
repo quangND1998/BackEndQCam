@@ -37,19 +37,25 @@ class CSKHOrderController extends Controller
         $this->orderRepository = $orderRepository;
         $this->shipperRepository = $shipperRepository;
         $this->orderTransportRepository = $orderTransportRepository;
-        // $this->middleware('permission:users-manager', ['only' => ['pending', 'packing', 'shipping', 'completed', 'refund', 'decline']]);
-        $this->middleware('permission:order-pending|order-packing|order-shipping|order-completed|order-refund|order-decline', ['only' => ['index']]);
 
-        $this->middleware('permission:order-pending', ['only' => ['pending']]);
-        $this->middleware('permission:order-packing', ['only' => ['packing']]);
-        $this->middleware('permission:order-shipping', ['only' => ['shipping']]);
-        $this->middleware('permission:order-completed', ['only' => ['completed']]);
-        $this->middleware('permission:order-refund', ['only' => ['refund']]);
-        $this->middleware('permission:order-decline', ['only' => ['decline']]);
-        $this->middleware('permission:order-pending', ['only' => ['pushOrder']]);
-        $this->middleware('permission:order-packing', ['only' => ['packedOrder']]);
+        //Quyền
+        $this->middleware('permission:view-order-all', ['only' => ['all']]);
+        $this->middleware('permission:view-order-pending', ['only' => ['pending']]);
+        $this->middleware('permission:view-order-packing', ['only' => ['packing']]);
+        $this->middleware('permission:view-order-shipping', ['only' => ['shipping']]);
+        $this->middleware('permission:view-order-completed', ['only' => ['completed']]);
+        $this->middleware('permission:view-order-refunding', ['only' => ['refunding']]);
+        $this->middleware('permission:view-order-refund', ['only' => ['refund']]);
+        $this->middleware('permission:view-order-decline', ['only' => ['decline']]);
+        $this->middleware('permission:push-order', ['only' => ['pushOrder']]);
+        $this->middleware('permission:packed-order', ['only' => ['packedOrder']]);
         $this->middleware('permission:add-order-shipper', ['only' => ['shipperOwner']]);
-        $this->middleware('permission:contract-complete', ['only' => ['confirmStateDocument','updloadImages']]);
+        $this->middleware('permission:decline-order', ['only' => ['orderDecline']]); //Yêu cầu Hủy mã vận đơn
+        $this->middleware('permission:cancel-order', ['only' => ['orderCancel']]); //Xác nhận hủy
+        $this->middleware('permission:refunding-order', ['only' => ['orderRefunding']]);
+        $this->middleware('permission:refund-order', ['only' => ['orderRefund']]);
+        $this->middleware('permission:contract-complete', ['only' => ['confirmStateDocument', 'updloadImages']]);
+        $this->middleware('permission:draft-order', ['only' => ['draftOrder']]);
     }
 
     public function all(Request $request)
@@ -61,30 +67,23 @@ class CSKHOrderController extends Controller
         $total = Order::count();
         $orders = $this->orderRepository->getAllOrderGift($request);
         $statusGroup = $this->orderRepository->groupByOrderStatus();
-
-        // $order_transports =   $this->orderTransportRepository->getOrdersTransport($request);
-
-        // $statusGroup = $this->orderTransportRepository->groupByCount(OrderTransportState::cases(), 'transport_state');
         $shippers = $this->shipperRepository->getShipper();
-
-        // return $orders;
-        // dd($statusGroup);
         return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to', 'shippers', 'statusGroup', 'total'));
     }
-    public function index(Request $request)
-    {
-        $count_orders = Order::where('state', true)->count();
-        $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
-        $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
-        $status = 'pending';
-        $orders =  $this->orderRepository->getOrderGift($request, $status);
-        $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportState::cases(), 'status_transport');
-        $shippers = $this->shipperRepository->getShipper();
+    // public function index(Request $request)
+    // {
+    //     $count_orders = Order::where('state', true)->count();
+    //     $from = Carbon::parse($request->from)->format('Y-m-d H:i:s');
+    //     $to = Carbon::parse($request->to)->format('Y-m-d H:i:s');
+    //     $status = 'pending';
+    //     $orders =  $this->orderRepository->getOrderGift($request, $status);
+    //     $statusGroup = $this->orderRepository->groupByOrderByStatus(OrderTransportState::cases(), 'status_transport');
+    //     $shippers = $this->shipperRepository->getShipper();
 
 
-        // dd($statusGroup);
-        return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
-    }
+    //     // dd($statusGroup);
+    //     return Inertia::render('Modules/CSKH/Index', compact('orders', 'status', 'from', 'to', 'statusGroup', 'shippers'));
+    // }
 
     public function pending(Request $request)
     {
@@ -257,7 +256,6 @@ class CSKHOrderController extends Controller
 
     public function packedOrder(Request $request,)
     {
-
         if ($request->ids && count($request->ids) > 0) {
             $order_transports = OrderTransport::find($request->ids);
             foreach ($order_transports as $order_transport) {
@@ -297,9 +295,10 @@ class CSKHOrderController extends Controller
         return back()->with('warning', "Chưa chọn shippers");
     }
 
-
+    //Yêu cầu Hủy mã vận đơn
     public function orderDecline(Request $request, OrderTransport $order_transport)
     {
+
         $this->validate(
             $request,
             [
@@ -318,6 +317,8 @@ class CSKHOrderController extends Controller
             'reason' => $request->reason,
             'delivery_appointment' => $request->delivery_appointment
         ]);
+
+
         $order_transport->update([
             'state' => OrderTransportState::decline,
             'status' => OrderTransportStatus::wait_decline,
@@ -328,7 +329,7 @@ class CSKHOrderController extends Controller
         return back()->with('success', "Đơn hàng đã hủy");
     }
 
-
+    // Xác nhận hủy mã vận đơn
     public function orderCancel(Request $request)
     {
         if ($request->ids && count($request->ids) > 0) {
@@ -351,7 +352,7 @@ class CSKHOrderController extends Controller
 
     public function orderRefunding(Request $request)
     {
-       
+
         $this->validate(
             $request,
             [
@@ -359,7 +360,7 @@ class CSKHOrderController extends Controller
                 'ids' => 'required|array'
             ]
         );
-        
+
         if ($request->ids && count($request->ids) > 0) {
             $order_transports = OrderTransport::find($request->ids);
             foreach ($order_transports as $order_transport) {
@@ -368,6 +369,9 @@ class CSKHOrderController extends Controller
                         'state' => OrderTransportState::refunding,
                         'status' => OrderTransportStatus::wait_refund,
                         'reason' => $request->reason
+                    ]);
+                    $order_transport->order->update([
+                        'state_document' => OrderDocument::not_push
                     ]);
                 }
             }
@@ -502,11 +506,11 @@ class CSKHOrderController extends Controller
 
     public function draftOrder(Request $request)
     {
-       
+
         $this->validate(
             $request,
             [
-             
+
                 'ids' => 'required|array'
             ]
         );
@@ -515,7 +519,7 @@ class CSKHOrderController extends Controller
             foreach ($orders as $order) {
                 if ($order->state_document !== OrderDocument::approved->value) {
                     $order->update([
-                       'status' =>  OrderStatusEnum::draft
+                        'status' =>  OrderStatusEnum::draft
                     ]);
                 }
             }

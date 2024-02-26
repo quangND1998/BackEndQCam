@@ -101,6 +101,7 @@ const ordersCancel = () => {
         .then((result) => {
             if (result.isConfirmed) {
                 router.post(route("admin.cskh.order.cancel"), query, {
+                    preserveState:false,
                     onError: () => { },
                     onSuccess: () => {
                         form.reset();

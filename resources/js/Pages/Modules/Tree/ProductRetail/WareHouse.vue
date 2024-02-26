@@ -14,7 +14,7 @@ import "vue-search-input/dist/styles.css";
 import { emitter } from "@/composable/useEmitter";
 import { useWareHousetore } from "@/stores/warehouse"
 import Icon from '@/Components/Icon.vue'
-import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
+import OrderDecline from '@/Pages/Modules/CSKH/Dialog/OrderDecline.vue';
 import DialogLoading from '@/Components/CustomerService/Dialog/DialogLoading.vue';
 import Pagination from '@/Pages/Modules/CSKH/Components/Pagination.vue';
 const store = useWareHousetore();
@@ -109,7 +109,7 @@ const confirm = (id) => {
 <template>
     <div>
 
-        <OrderCancel />
+        <OrderDecline />
 
 
 

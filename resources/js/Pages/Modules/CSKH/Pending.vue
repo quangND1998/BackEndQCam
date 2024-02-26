@@ -22,7 +22,7 @@ import { emitter } from "@/composable/useEmitter";
 import OrderStatusBar from "./OrderStatusBar.vue";
 import { usePopOverStore } from '@/stores/popover.js';
 import Icon from '@/Components/Icon.vue'
-import OrderCancel from '@/Pages/Modules/CSKH/Dialog/OrderCancel.vue';
+import OrderDecline from '@/Pages/Modules/CSKH/Dialog/OrderDecline.vue';
 import { useOrderStore } from '@/stores/order.js'
 import StateDocument from '@/Pages/Modules/CSKH/Status/StateDocument.vue';
 import OrderTransportStatus from '@/Pages/Modules/CSKH/Status/OrderTransportStatus.vue'
@@ -75,7 +75,7 @@ watch(() => [form.selectedDate], (newVal) => {
 });
 const search = () => {
     router.get(route('admin.cskh.pending'), filter, {
-        preserveState: true,
+        preserveState: false,
         preserveScroll: true,
     });
 };
@@ -110,6 +110,7 @@ const packedOrders = () => {
         .then((result) => {
             if (result.isConfirmed) {
                 router.post(route("admin.cskh.packedOrder"), query, {
+                    preserveState:false,
                     onError: () => { },
                     onSuccess: () => {
                         form.reset();
@@ -120,11 +121,11 @@ const packedOrders = () => {
             }
         });
 };
-const openOrderCancel = (order_transport) => {
+const openOrderDecline = (order_transport) => {
 
     console.log(order_transport)
     showDetailOrderTransport(order_transport)
-    emitter.emit("OrderCancel", order_transport);
+    emitter.emit("OrderDecline", order_transport);
 };
 
 const selected = ref([]);
@@ -173,7 +174,7 @@ const canceldeliveryNoOrder = (order_transport) => {
 <template>
     <LayoutAuthenticated>
         <ModelShipping></ModelShipping>
-        <OrderCancel />
+        <OrderDecline />
 
         <Head title="Quản lý đơn hàng" />
         <SectionMain class="p-3 mt-16">
@@ -238,7 +239,7 @@ const canceldeliveryNoOrder = (order_transport) => {
 
                 <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders" state="state"></OrderStatusBar>
                 <div class="my-3 w-full flex justify-between">
-                    <button v-if="selected.length > 0" @click="packedOrders()"
+                    <button :disabled="selected.length <= 0" @click="packedOrders()"
                         class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
                         Xác nhận đóng gói hàng loạt ({{ selected.length }})
                     </button>
@@ -288,8 +289,8 @@ const canceldeliveryNoOrder = (order_transport) => {
                                                     :value="order_transport.id"
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" />
                                                 <button v-tooltip="'Hủy mã vận đơn'"
-                                                    @click="openOrderCancel(order_transport)" data-toggle="modal"
-                                                    data-target="#OrderCancel">
+                                                    @click="openOrderDecline(order_transport)" data-toggle="modal"
+                                                    data-target="#OrderDecline">
                                                     <Icon icon="cancel"></Icon>
                                                 </button>
                                             </div>
@@ -309,10 +310,10 @@ const canceldeliveryNoOrder = (order_transport) => {
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <p class="flex items-center">
                                                 {{
-                                                    hasAnyPermission(["super-admin"])
-                                                    ? order_transport.order?.customer?.phone_number
-                                                    : hidePhoneNumber(order_transport.order?.customer?.phone_number)
-                                                }}
+                                                                                                hasAnyPermission(["super-admin"])
+                                                                                                ? order_transport.order?.customer?.phone_number
+                                                                                                : hidePhoneNumber(order_transport.order?.customer?.phone_number)
+                                                                                                }}
                                                 <!-- mdiPhone  -->
                                                 <BaseIcon :path="mdiPhone"
                                                     class="rounded-lg mr-2 text-[#4F8D06] hover:text-[#4F8D06]"
@@ -330,26 +331,26 @@ const canceldeliveryNoOrder = (order_transport) => {
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order_transport.order?.shipper ? order_transport.order?.shipper?.name : "NA"
-                                            }}
+                                                                                        }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{
-                                                order_transport.delivery_appointment
-                                                ? formatTimeDayMonthyear(order_transport.delivery_appointment)
-                                                : "Chưa cập nhật"
-                                            }}
+                                                                                        order_transport.delivery_appointment
+                                                                                        ? formatTimeDayMonthyear(order_transport.delivery_appointment)
+                                                                                        : "Chưa cập nhật"
+                                                                                        }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{ order_transport.order.address + ',' + order_transport.order.wards + ',' +
-                                                order_transport.order.district +
-                                                ',' +
-                                                order_transport.order.city }}
+                                                                                        order_transport.order.district +
+                                                                                        ',' +
+                                                                                        order_transport.order.city }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             {{
-                                                order_transport.order.product_service.order_package.market
+                                                                                        order_transport.order.product_service.order_package.market
 
-                                            }}
+                                                                                        }}
                                         </td>
                                         <td class="whitespace-nowrap text-left px-3 py-2 text-gray-500">
                                             <button @mouseover="openPopover(order_transport)" @mouseleave="closePopover">

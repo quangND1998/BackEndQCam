@@ -127,21 +127,22 @@ const Delete = (id) => {
                 <div class="left">
                     <div class="flex content-center items-center">
                         <BaseButton color="default" :icon="mdiFilter" small class="p-2 mr-2 my-2 bg-white" :iconSize="20" />
-                        <SearchInput v-model="searchVal" placeholder="Search" aria-label="Search" size="24"/>
+                        <SearchInput v-model="searchVal" placeholder="Search" aria-label="Search" size="24" />
                     </div>
                 </div>
                 <div class="right">
-                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]" :icon="mdiPlus" small @click="
-                        isModalActive = true;
-                    form.reset();
-                    " label="Create Permission" />
+                    <BaseButton color="info" class="bg-btn_green hover:bg-[#318f02] text-white p-2 hover:bg-[#008000]"
+                        :icon="mdiPlus" small @click="
+                            isModalActive = true;
+                        form.reset();
+                        " label="Create Permission" />
                 </div>
             </div>
             <CardBoxModal v-model="isModalActive" buttonLabel="Save" has-cancel @confirm="save"
                 :title="editMode ? 'Update Permission' : 'Create Permission'">
                 <InputLabel for="name" value="Name" />
-                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" :disabled="editMode" required autofocus
-                    autocomplete="name" />
+                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" :disabled="editMode" required
+                    autofocus autocomplete="name" />
                 <InputError class="mt-2" :message="form.errors.name" />
             </CardBoxModal>
             <!-- End Modal -->

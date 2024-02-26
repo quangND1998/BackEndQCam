@@ -103,5 +103,24 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'cskh-distribute-call']);
         Permission::create(['name' => 'cskh-pending']);
         Permission::create(['name' => 'cskh-call-center']);
+
+
+
+        // CSKH LEaderShipper Kho
+        Permission::create(['name' => 'view-order-all']);
+        Permission::create(['name' => 'view-order-pending']);
+        Permission::create(['name' => 'view-order-packing']);
+        Permission::create(['name' => 'view-order-shipping']);
+        Permission::create(['name' => 'view-order-completed']);
+
+        Permission::create(['name' => 'view-order-refunding']);
+        Permission::create(['name' => 'view-order-refund']);
+        Permission::create(['name' => 'view-order-decline']);
+        Permission::create(['name' => 'push-order']);
+        Permission::create(['name' => 'decline-order']);
+        Permission::create(['name' => 'cancel-order']);
+        Permission::create(['name' => 'refunding-order']);
+        Permission::create(['name' => 'refund-order']);
+        Permission::create(['name' => 'draft-order']);
     }
 }
