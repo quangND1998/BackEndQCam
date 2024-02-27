@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Modules\Order\app\Models\Order;
+use Modules\Order\app\Models\OrderTransport;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
@@ -23,7 +24,7 @@ class ShipperNewOrderNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(Order $order)
+    public function __construct(OrderTransport $order)
     {
         $this->order = $order;
     }
@@ -54,7 +55,10 @@ class ShipperNewOrderNotification extends Notification
     {
         return [
             'title' =>  '[Đơn hàng mới]  Bạn có 1 đơn hàng mới cần vận chuyển',
-            'body' => 'Đơn hàng ' . $this->order->order_number . ' cần vận chuyển.'
+            'body' => 'Đơn hàng ' . $this->order->order_transport_number . ' cần vận chuyển.',
+            'data' => [
+                'order_transport_number' => $this->order->order_transport_number
+            ]
         ];
     }
     public function toFcm($notifiable): FcmMessage
@@ -63,7 +67,8 @@ class ShipperNewOrderNotification extends Notification
             ->setData([])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
                 ->setTitle('[Đơn hàng mới]  Bạn có 1 đơn hàng mới cần vận chuyển')
-                ->setBody('Đơn hàng ' . $this->order->order_number . ' cần vận chuyển.'))
+                ->setBody('Đơn hàng ' . $this->order->order_transport_number . ' cần vận chuyển.'))
+            ->setData(['order_transport_number' => $this->order->order_transport_number])
             ->setAndroid(
                 AndroidConfig::create()
                     ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))

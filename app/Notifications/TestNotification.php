@@ -63,18 +63,22 @@ class TestNotification extends Notification
     {
         return [
             'title' =>  'Test Notification',
-            'body' => 'Your account has been activated.'
+            'body' => 'Your account has been activated.',
+            'data' => [
+                'test' => 'test'
+            ]
         ];
     }
     public function toFcm($notifiable): FcmMessage
     {
-       
+
         return FcmMessage::create()
             ->setData(['data1' => 'value', 'data2' => 'value2'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
                 ->setTitle('Follow Request')
                 ->setBody('Your account has been activated.')
                 ->setImage('https://tikers.tech/img/core-img/favicon.ico'))
+            ->setData(['test' => 'aaaaaa'])
             ->setAndroid(
                 AndroidConfig::create()
                     ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))
