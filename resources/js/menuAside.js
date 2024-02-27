@@ -174,7 +174,7 @@ export default [{
             {
                 route: 'customer-service.weekly-plan',
                 label: 'Kế hoạch CS',
-                permissions: ['super-admin', 'cskh-detail'],
+                permissions: ['cskh-detail'],
                 route_list: null
             },
             {

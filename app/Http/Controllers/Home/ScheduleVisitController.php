@@ -97,7 +97,7 @@ class ScheduleVisitController extends Controller
                 'date_time' => 'required|date|after:tomorrow',
                 'number_adult' => 'required|gt:0',
                 'number_children' => 'required|gt:-1',
-                'code' => 'required',
+                // 'code' => 'required',
                 'product_service_owner_id' => 'required',
             ]
         );

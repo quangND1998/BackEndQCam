@@ -33,7 +33,8 @@ import "vue-search-input/dist/styles.css";
 import MazInputPrice from "maz-ui/components/MazInputPrice";
 import { initFlowbite } from "flowbite";
 import LayoutBar from "@/Layouts/LayoutBar.vue";
-
+import { emitter } from '@/composable/useEmitter';
+import ModalAddService from './ModalAddService.vue';
 defineProps({
     scheduleVisits: Object,
     statusGroup: Array
@@ -90,10 +91,14 @@ const search = () => {
         }
     );
 }
+const addService = () => {
+    emitter.emit('OpenModalAddService')
+    console.log('open model');
+}
 </script>
 <template>
     <LayoutAuthenticated>
-
+        <ModalAddService></ModalAddService>
         <Head title="Quản lý đặt lịch tham quan" />
         <SectionMain class="p-3 mt-16">
             <SectionTitleLineWithButton class="font-semibold flex mr-2" title="Quản lý đặt lịch tham quan" main>
@@ -102,7 +107,6 @@ const search = () => {
 
                 <div class="px-2 flex items-center">
                     <div class=" px-3 mb-6 md:mb-0">
-
                         <div class="min-[320px]:w-full form_search sm:w-9/12  md:w-9/12">
                             <form v-on:submit.prevent>
                                 <div class="relative">
@@ -123,7 +127,7 @@ const search = () => {
                             </form>
                         </div>
                     </div>
-                    <div class=" px-3 mb-6 md:mb-0">
+                    <div class="px-3 mb-6 md:mb-0">
                         <div class="min-[320px]:w-full sm:w-9/12  md:w-9/12">
                             <div date-rangepicker class="flex items-center w-full justify-between">
                                 <div class="relative  ">
@@ -150,29 +154,29 @@ const search = () => {
                                         </svg>
                                     </div>
                                     <input name="end" type="date"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  "
                                         placeholder="Ngày kết thúc" />
                                 </div>
-                                <input type="search" id="default-search" name="search" data-toggle="hideseek"
+                                <!-- <input type="search" id="default-search" name="search" data-toggle="hideseek"
                                     v-model="filter.search" @keyup="search" laceholder="Search Menus"
                                     data-list=".menu-category"
-                                    class="block w-full p-2 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="    Tìm lịch bằng tên hoặc sđt khách hàng" required />
+                                    class="block w-full p-2 pl-5 text-xs text-gray-900 border rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 "
+                                    placeholder="    Tìm lịch bằng tên hoặc sđt khách hàng" required /> -->
                             </div>
                         </div>
                     </div>
-                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <div class="min-[320px]:w-full sm:w-3/12 md:w-3/12 mr-3 text-gray-500">
+                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 flex  items-center ">
+                        <!-- <div class="min-[320px]:w-full sm:w-3/12 md:w-3/12 mr-3 text-gray-500">
                             <label for>Đặt lịch ngày</label>
                             <div class="w-[320px]">
                                 <VueDatepickerUi range v-model="form.selectedDate" lang="vn"></VueDatepickerUi>
                             </div>
-                        </div>
+                        </div> -->
                         <div>
-                            <Link v-if="hasAnyPermission(['create-schedule'])" :href="route('visit.createShedule')"
+                            <div v-if="hasAnyPermission(['create-schedule'])"  data-target="#modelAddService" @click="addService()"
                                 class="px-3 py-2 text-sm  bg-[#27AE60] hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
                             Thêm DV
-                            </Link>
+                            </div>
                         </div>
                         <div>
                             <Link v-if="hasAnyPermission(['create-schedule'])" :href="route('visit.createShedule')"
@@ -184,7 +188,9 @@ const search = () => {
                             <Button class="px-3 py-2 bg-[#1D75FA] rounded-lg mx-1 text-white">Xuất</Button>
                         </div>
                     </div>
-                    <LayoutBar :statusGroup="statusGroup"></LayoutBar>
+                </div>
+            </div>
+            <LayoutBar :statusGroup="statusGroup"></LayoutBar>
                     <div class="p-2 rounded-lg col-md-12">
                         <div class="panel panel-default">
                             <div class="overflow-x-auto relative  sm:rounded-lg ">
@@ -249,9 +255,6 @@ const search = () => {
                                                 {{ formatTimeDayMonthyear(visit?.date_time) }}
                                             </th>
                                             <th class="py-3 px-6 text-xs">
-                                                <!-- <PillTag :color="visit.state == 'confirm' ? 'success' : 'danger'"
-                                                :label="visit.state" small>
-                                            </PillTag> -->
                                                 <span> {{ visit.state == "pending" ? 'Đặt lịch' : visit.state == "complete"
                                                     ? 'Đã checkin' : 'Hủy' }} </span>
                                             </th>
@@ -286,8 +289,6 @@ const search = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
         </SectionMain>
     </LayoutAuthenticated>
 </template>
