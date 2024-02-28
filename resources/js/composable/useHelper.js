@@ -23,10 +23,16 @@ export const useHelper = () => {
             return moment(String(value)).format('YY-M-D HH:mm:ss');
         }
     }
+    const formatDateOnly = (value) => {
+        if (value) {
+            return moment(String(value)).format('DD/MM/YYYY');
+        }
+    }
     return {
         multipleSelect,
         changePageAction,
-        formatDateTime
+        formatDateTime,
+        formatDateOnly
 
     }
 

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('schedule_visits', function (Blueprint $table) {
             $table->string('code')->nullable();
+            $table->string('log')->nullable();
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('schedule_visits', function (Blueprint $table) {
             $table->dropColumn('code');
+            $table->dropColumn('log');
         });
     }
 };

@@ -8,7 +8,6 @@ import { Head, Link } from "@inertiajs/vue3";
 import CardBox from "@/Components/CardBox.vue";
 import CardBoxModal from "@/Components/CardBoxModal.vue";
 import PillTag from "@/Components/PillTag.vue";
-
 import {
     mdiEye,
     mdiAccountLockOpen,
@@ -35,9 +34,14 @@ import { initFlowbite } from "flowbite";
 import LayoutBar from "@/Layouts/LayoutBar.vue";
 import { emitter } from '@/composable/useEmitter';
 import ModalAddService from './ModalAddService.vue';
+import ModalAddBooking from './ModalAddBooking.vue';
+import ModalBookingCancel from './ModalBookingCancel.vue';
+import ModalBookingActive from './ModalBookingActive.vue';
 defineProps({
     scheduleVisits: Object,
-    statusGroup: Array
+    statusGroup: Array,
+    serviceExtra: Object,
+    packages: Array
 });
 const searchVal = ref("");
 const swal = inject("$swal");
@@ -95,10 +99,25 @@ const addService = () => {
     emitter.emit('OpenModalAddService')
     console.log('open model');
 }
+const addBooking = () => {
+    emitter.emit('OpenModalAddBooking')
+}
+const updateBooking = (visit) => {
+    emitter.emit('OpenModalAddBooking',visit)
+}
+const activeBooking = (visit) => {
+    emitter.emit('OpenModelBookinActive', visit);
+}
+const cancalBooking = (visit) => {
+    emitter.emit('OpenModelBookincancel', visit);
+}
 </script>
 <template>
     <LayoutAuthenticated>
-        <ModalAddService></ModalAddService>
+        <ModalAddService :serviceExtra="serviceExtra"></ModalAddService>
+        <ModalAddBooking :serviceExtra="serviceExtra" :packages="packages"></ModalAddBooking>
+        <ModalBookingActive></ModalBookingActive>
+        <ModalBookingCancel></ModalBookingCancel>
         <Head title="Quản lý đặt lịch tham quan" />
         <SectionMain class="p-3 mt-16">
             <SectionTitleLineWithButton class="font-semibold flex mr-2" title="Quản lý đặt lịch tham quan" main>
@@ -166,12 +185,6 @@ const addService = () => {
                         </div>
                     </div>
                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 flex  items-center ">
-                        <!-- <div class="min-[320px]:w-full sm:w-3/12 md:w-3/12 mr-3 text-gray-500">
-                            <label for>Đặt lịch ngày</label>
-                            <div class="w-[320px]">
-                                <VueDatepickerUi range v-model="form.selectedDate" lang="vn"></VueDatepickerUi>
-                            </div>
-                        </div> -->
                         <div>
                             <div v-if="hasAnyPermission(['create-schedule'])"  data-target="#modelAddService" @click="addService()"
                                 class="px-3 py-2 text-sm  bg-[#27AE60] hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
@@ -179,14 +192,17 @@ const addService = () => {
                             </div>
                         </div>
                         <div>
-                            <Link v-if="hasAnyPermission(['create-schedule'])" :href="route('visit.createShedule')"
+                            <div v-if="hasAnyPermission(['create-schedule'])" @click="addBooking()"
                                 class="px-3 py-2 text-sm  bg-[#27AE60] hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
                             Thêm Booking
-                            </Link>
+                            </div>
                         </div>
                         <div>
                             <Button class="px-3 py-2 bg-[#1D75FA] rounded-lg mx-1 text-white">Xuất</Button>
                         </div>
+                    </div>
+                    <div class="w-[200px]">
+                        <p>A: App - H: CS - V: Vườn</p>
                     </div>
                 </div>
             </div>
@@ -255,32 +271,36 @@ const addService = () => {
                                                 {{ formatTimeDayMonthyear(visit?.date_time) }}
                                             </th>
                                             <th class="py-3 px-6 text-xs">
-                                                <span> {{ visit.state == "pending" ? 'Đặt lịch' : visit.state == "complete"
-                                                    ? 'Đã checkin' : 'Hủy' }} </span>
+                                                <span> {{ visit.state == "pending" ? 'Đặt lịch' : visit.state == "confirm" ? 'Đã xác nhận đặt lịch' : visit.state == "complete" ? 'Đã checkin' : 'Hủy' }} </span>
                                             </th>
                                             <th scope="row"
                                                 class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {{ visit.description }}
                                             </th>
                                             <th class="py-1 px-6 text-right flex items-center justify-end my-1">
-                                                <Link v-if="visit.state == 'pending'" :href="route('visit.edit', visit.id)">
-                                                <BaseIcon :path="mdiSquareEditOutline"
+                                                <!-- <Link v-if="visit.state == 'pending'" :href="route('visit.edit', visit.id)"> -->
+                                                <BaseIcon v-if="visit.state == 'pending'" :path="mdiSquareEditOutline"
+                                                    @click="updateBooking(visit)"
                                                     class=" text-[#FF6100] rounded-lg mr-2 hover:text-blue-700"
                                                     v-tooltip.top="'Chỉnh sửa'" size="20">
                                                 </BaseIcon>
-                                                </Link>
-                                                <BaseIcon :path="mdiCheckCircle" @click="changeState(visit)"
+                                                <!-- </Link> -->
+                                                <BaseIcon :path="mdiCheckCircle" @click="activeBooking(visit)"
                                                     class=" text-[#4F8D06] rounded-lg mr-2 hover:text-blue-700"
                                                     v-tooltip.top="'Xác nhận'" size="20">
                                                 </BaseIcon>
-                                                <button @click="cancelState(visit)" class="">
+                                                <button @click="cancelBooking(visit)" class="">
                                                     <BaseIcon :path="mdiCancel" class="text-[#FF0000]" size="20"></BaseIcon>
                                                 </button>
 
                                             </th>
-                                            <th></th>
-                                            <th>
-
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ visit.booking_type == 'App' ? 'A' : visit.booking_type == 'CS' ? 'H' : 'V' }}
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ visit.code }}
                                             </th>
                                         </tr>
                                         <pagination :links="scheduleVisits.links" />

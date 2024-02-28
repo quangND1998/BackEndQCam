@@ -10,6 +10,10 @@ use Inertia\Inertia;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\Customer\app\Models\ScheduleVisit;
 use Illuminate\Support\Facades\DB;
+use Modules\CustomerService\app\Http\Controllers\Api\ExtraServices\GetExtraService;
+use Modules\CustomerService\app\Models\VisitExtraService;
+use Modules\Order\app\Models\OrderPackage;
+use Illuminate\Support\Facades\Auth;
 class ScheduleVisitController extends Controller
 {
 
@@ -22,7 +26,10 @@ class ScheduleVisitController extends Controller
         $filters = $request->all('search');
         $scheduleVisits = $this->getVisitSchedule('',$request);
         $statusGroup = $this->groupByStatus();
-        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup'));
+        $serviceExtra = $this->getServiceExtra();
+        $packages = $this->getOrderPackage();
+
+        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup','serviceExtra','packages'));
     }
     //state : pending, confirm, compelete, cancel
     public function getPending(Request $request)
@@ -30,25 +37,34 @@ class ScheduleVisitController extends Controller
         $filters = $request->all('search');
         $scheduleVisits = $this->getVisitSchedule('pending',$request);        // return $scheduleVisits;
         $statusGroup = $this->groupByStatus();
-        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup'));
+        $serviceExtra = $this->getServiceExtra();
+        $packages = $this->getOrderPackage();
+
+        // return $packages;
+
+        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup','serviceExtra','packages'));
     }
     public function changeState(Request $request, $id)
     {
         $visit = ScheduleVisit::findOrFail($id);
+
         if ($visit->state == "pending") {
             $visit->state = "confirm";
         } else if ($visit->state == "confirm") {
             $visit->state = "complete";
         };
+        $visit->log = $request->note;
         $visit->save();
+
         return back()->with('success', 'xác nhận đặt lịch');
     }
     public function cancelState(Request $request, $id)
     {
         $visit = ScheduleVisit::findOrFail($id);
         $visit->state = "cancel";
+        $visit->log = $request->note;
         $visit->save();
-        return back()->with('success', 'xác nhận đặt lịch');
+        return back()->with('success', 'Hủy lịch');
     }
 
     public function getConfirm(Request $request)
@@ -60,14 +76,19 @@ class ScheduleVisitController extends Controller
             $q->where('name', 'LIKE', '%' . $request->search . '%');
             $q->orWhere('phone_number', 'LIKE', '%' . $request->search . '%');
         })->fillter($request->only('fromDate', 'toDate'))->where('state', 'confirm')->orderBy('created_at', 'desc')->paginate('20');
-        return Inertia::render('Home/visit/getPending', compact('filters', 'status', 'scheduleVisits'));
+        $serviceExtra = $this->getServiceExtra();
+        $packages = $this->getOrderPackage();
+        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup','serviceExtra','packages'));
+
     }
     public function getCancel(Request $request)
     {
         $filters = $request->all('search');
         $scheduleVisits = $this->getVisitSchedule('cancel',$request);        // return $scheduleVisits;
         $statusGroup = $this->groupByStatus();
-        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup'));
+        $serviceExtra = $this->getServiceExtra();
+        $packages = $this->getOrderPackage();
+        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup','serviceExtra','packages'));
     }
     public function getComplete(Request $request)
     {
@@ -76,7 +97,9 @@ class ScheduleVisitController extends Controller
         $scheduleVisits = $this->getVisitSchedule($state,$request);        // return $scheduleVisits;
         $statusGroup = $this->groupByStatus();
       //  return $scheduleVisits;
-        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup'));
+        $serviceExtra = $this->getServiceExtra();
+        $packages = $this->getOrderPackage();
+        return Inertia::render('Home/visit/getPending', compact('filters', 'scheduleVisits','statusGroup','serviceExtra','packages'));
     }
 
 
@@ -91,6 +114,7 @@ class ScheduleVisitController extends Controller
 
     public function saveShedule(Request $request)
     {
+
         $this->validate(
             $request,
             [
@@ -99,17 +123,23 @@ class ScheduleVisitController extends Controller
                 'number_children' => 'required|gt:-1',
                 // 'code' => 'required',
                 'product_service_owner_id' => 'required',
+                'services' => 'nullable|array|exists:visit_extra_services,id',
             ]
         );
 
 
         $product_owner = ProductServiceOwner::findOrFail($request->product_service_owner_id);
         if ($product_owner->visited_time < $product_owner->product->free_visit) {
+            $number_book = ScheduleVisit::count() + 1;
             $date_time = Carbon::parse($request->date_time)->format('Y-m-d H:i:s');
             $visit = ScheduleVisit::create($request->all());
             $visit->state = "pending";
+            $visit->booking_type = "CS" ;
+            $visit->code = "BK" . $number_book;
             $visit->date_time = $date_time;
+            $visit->user_id = Auth::user()->id;
             $visit->save();
+            $visit->extraServices()->sync($request->services);
 
             return redirect()->route('visit.pending')->with('success', 'Đã đặt lịch thành công');
         } else {
@@ -142,6 +172,7 @@ class ScheduleVisitController extends Controller
             'number_children' => $request->number_children,
         ]);
 
+        $schedule->extraServices()->sync($request->services);
         return redirect()->route('visit.pending')->with('success', 'Cập nhật đặt lịch thành công');
     }
     public function groupByStatus()
@@ -192,5 +223,19 @@ class ScheduleVisitController extends Controller
 
         return $datas;
 
+    }
+    public function getServiceExtra(){
+        return VisitExtraService::all();
+    }
+    public function getOrderPackage(){
+        // $orderPackages = OrderPackage::with('customer','product_service_owner.product')
+        // ->whereHas('product_service_owner', function($query){
+        //     $query->where('visited_time', '<', 'product.free_visit');
+        // })->where('status','complete')->get();
+
+        $orderPackages = OrderPackage::with('customer','product_service_owner')
+        ->where('status','complete')->get();
+
+        return $orderPackages;
     }
 }

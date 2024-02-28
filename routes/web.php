@@ -18,6 +18,7 @@ use App\Http\Controllers\OtpTestController;
 use App\Http\Controllers\CommissionsPackagesController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\Home\ComplaintController;
+use App\Http\Controllers\Home\ServiceExtraController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +96,9 @@ Route::middleware(['auth'])->group(
             Route::get('edit/{schedule}', [ScheduleVisitController::class, 'edit'])->name('edit');
             Route::post('saveShedule', [ScheduleVisitController::class, 'saveShedule'])->name('saveShedule');
             Route::post('updateShedule/{schedule}', [ScheduleVisitController::class, 'updateShedule'])->name('updateShedule');
+            Route::prefix('extraService')->as('extraService.')->group(function () {
+                Route::post('createService', [ServiceExtraController::class, 'createService'])->name('createService');
+            });
 
         });
         Route::prefix('complaint')->as('complaint.')->group(function () {

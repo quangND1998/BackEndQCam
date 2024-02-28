@@ -118,7 +118,7 @@ export default [{
                 route_list: null
             },
             {
-                route: 'visit.pending',
+                route: 'visit.all',
                 label: 'Đặt lịch tham quan',
 
                 permissions: ['super-admin', 'order-pending', 'order-packing', 'order-shipping', 'order-completed', 'order-refund', 'order-decline'],
