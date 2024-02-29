@@ -116,6 +116,9 @@ class OrderTransport extends Model
             }
         }
 
+        if (isset($filters['search'])) {
+            $query->where('order_transport_number', 'LIKE', '%' . $filters['search'] . '%');
+        }
         if (isset($filters['day'])) {
 
             $query->whereBetween('updated_at', [Carbon::now()->subDay($filters['day']), Carbon::now()]);

@@ -81,7 +81,6 @@ Route::middleware(['auth'])->group(
         });
 
 
-
         Route::prefix('visit')->as('visit.')->group(function () {
             Route::get('all', [ScheduleVisitController::class, 'getAll'])->name('all');
             Route::get('pending', [ScheduleVisitController::class, 'getPending'])->name('pending');

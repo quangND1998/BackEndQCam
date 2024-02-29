@@ -33,7 +33,7 @@ const changeStatus = (status) => {
     <div class="my-3">
         <div
             class="min-[320px]:grid min-[320px]:justify-between sm:justify-start md:justify-start lg:justify-start sm:flex md:flex lg:flex">
-            <div v-if="hasAnyPermission(['order-pending'])" @click="changeStatus()"
+            <div v-if="hasAnyPermission(['view-order-all'])" @click="changeStatus()"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white  text-blue-500': status == null }">
                 <Icon icon="queue"></Icon>
@@ -42,60 +42,66 @@ const changeStatus = (status) => {
                     count_orders }})</span>
             </div>
 
-            <div v-if="hasAnyPermission(['order-pending'])" @click="changeStatus('pending')"
+            <div v-if="hasAnyPermission(['view-order-pending'])" @click="changeStatus('pending')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white  text-blue-500': status == 'pending' }">
                 <Icon icon="loading"></Icon>
 
 
-                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'pending' }"> Đơn chờ({{ totalOrder('pending') }})</span>
+                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'pending' }"> Đơn chờ({{
+                    totalOrder('pending') }})</span>
             </div>
 
-            <div v-if="hasAnyPermission(['order-packing'])" @click="changeStatus('packing')"
+            <div v-if="hasAnyPermission(['view-order-packing'])" @click="changeStatus('packing')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white  text-blue-500': status == 'packing' }">
                 <Icon icon="packing"></Icon>
-                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'packing' }">Đóng gói ({{ totalOrder('packing') }})</span>
+                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'packing' }">Đóng gói ({{
+                    totalOrder('packing') }})</span>
             </div>
 
 
-            <div v-if="hasAnyPermission(['order-shipping'])" @click="changeStatus('shipping')"
+            <div v-if="hasAnyPermission(['view-order-shipping'])" @click="changeStatus('shipping')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white  text-blue-500': status == 'shipping' }">
                 <Icon icon="rocket-ship"></Icon>
-                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'shipping' }"> Đang vận chuyển({{ totalOrder('shipping') }})</span>
+                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'shipping' }"> Đang vận
+                    chuyển({{ totalOrder('shipping') }})</span>
             </div>
-            <div v-if="hasAnyPermission(['order-completed'])" @click="changeStatus('delivered')"
+            <div v-if="hasAnyPermission(['view-order-completed'])" @click="changeStatus('delivered')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white  text-blue-500': status == 'delivered' }">
                 <Icon icon="check-green"></Icon>
 
-                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'delivered' }"> Đã giao ({{ totalOrder('delivered') }})</span>
+                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'delivered' }"> Đã giao ({{
+                    totalOrder('delivered') }})</span>
             </div>
-            <div v-if="hasAnyPermission(['order-refund'])" @click="changeStatus('refunding')"
+            <div v-if="hasAnyPermission(['view-order-refunding'])" @click="changeStatus('refunding')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white  text-blue-500': status == 'refunding' }">
 
                 <Icon icon="back" color="#AEAEAE"></Icon>
-                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'refunding' }"> Chờ hoàn ({{ totalOrder('refunding') }})</span>
+                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'refunding' }"> Chờ hoàn ({{
+                    totalOrder('refunding') }})</span>
             </div>
-            <div v-if="hasAnyPermission(['order-refund'])" @click="changeStatus('refund')"
+            <div v-if="hasAnyPermission(['view-order-refund'])" @click="changeStatus('refund')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white  text-blue-500': status == 'refund' }">
 
                 <Icon icon="back"></Icon>
-                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'refund' }"> Hoàn đơn ({{ totalOrder('refund') }})</span>
+                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'refund' }"> Hoàn đơn ({{
+                    totalOrder('refund') }})</span>
             </div>
-            <div v-if="hasAnyPermission(['order-decline'])" @click="changeStatus('decline')"
+            <div v-if="hasAnyPermission(['view-order-decline'])" @click="changeStatus('decline')"
                 class="min-[320px]:my-2 text-sm px-3 py-2  mx-1 bg-gray-100 hover:bg-white text-gray-500 flex flex-wrap mr-2"
                 :class="{ 'bg-white text-blue-500': status == 'decline' }">
                 <Icon icon="cancel"></Icon>
-                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'decline' }">Hủy giao ({{ totalOrder('decline') }})</span>
+                <span class="text-gray-400 ml-2" :class="{ 'bg-white  text-red-500': status == 'decline' }">Hủy giao ({{
+                    totalOrder('decline') }})</span>
             </div>
         </div>
         <div>
 
-        </div>
     </div>
-</template>
+</div></template>
 

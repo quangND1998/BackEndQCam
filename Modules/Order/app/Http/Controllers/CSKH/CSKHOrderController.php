@@ -25,7 +25,8 @@ use Modules\Order\app\Models\RefundProducts;
 use Modules\Tree\app\Models\ProductRetail;
 use Modules\Order\Repositories\OrderTransportRepository;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ShipperNewOrderNotification;
 class CSKHOrderController extends Controller
 {
     protected $orderRepository, $shipperRepository, $orderTransportRepository;
@@ -283,6 +284,8 @@ class CSKHOrderController extends Controller
                     $order_transport->order->update([
                         'shipper_id' => $shipper->id
                     ]);
+
+                    Notification::send($shipper, new ShipperNewOrderNotification($order_transport));
                     $order_transport->update([
 
                         'status' => OrderTransportStatus::not_shipping
@@ -488,7 +491,7 @@ class CSKHOrderController extends Controller
             'images.*' => 'Ảnh phải là định dạng jepg,png,jpg'
         ]);
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), 422);
+            return response()->json($validator->errors(), 422);
         }
 
 
