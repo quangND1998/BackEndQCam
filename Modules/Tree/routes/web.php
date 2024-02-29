@@ -6,6 +6,7 @@ use Modules\Tree\app\Http\Controllers\API\ProductRefundController;
 use Modules\Tree\app\Http\Controllers\HistoryCareController;
 use Modules\Tree\app\Http\Controllers\LandController;
 use Modules\Tree\app\Http\Controllers\ProductAddController;
+use Modules\Tree\app\Http\Controllers\ProductFailController;
 use Modules\Tree\app\Http\Controllers\ProductRetailController;
 use Modules\Tree\app\Http\Controllers\ProductServiceController;
 use Modules\Tree\app\Http\Controllers\TreeController;
@@ -75,12 +76,17 @@ Route::middleware(['auth'])->group(
                 Route::get('index', [ProductAddController::class, 'index'])->name('index');
                 Route::post('store', [ProductAddController::class, 'store'])->name('store');
                 Route::post('update/{id}', [ProductAddController::class, 'update'])->name('update');
+                Route::delete('destroy/{id}', [ProductAddController::class, 'destroy'])->name('destroy');
+                Route::post('confirm/{id}', [ProductAddController::class, 'confirm'])->name('confirm');
             });
-
-
             Route::prefix('warehouse')->as('warehouse.')->group(function () {
                 Route::get('', ProductRefundController::class)->name('index');
                 Route::post('product/{id}/confirm', [ProductRefundController::class, 'confirm'])->name('confirm');
+            });
+            Route::prefix('product_fail')->as('product_fail.')->group(function () {
+                Route::get('index', [ProductFailController::class,'index'])->name('index');
+                Route::post('store', [ProductFailController::class, 'store'])->name('store');
+                Route::delete('destroy/{id}', [ProductFailController::class, 'destroy'])->name('destroy');
             });
         });
     }

@@ -35,11 +35,14 @@ class ProductAddController extends Controller
     public function store(Request $request)
     {
         $productHistory = ProductHistory::create($request->all());
-        $product_retail = ProductRetail::findOrFail($request->product_retail_id);
-        if($product_retail){
-            $product_retail->available_quantity += $request->actual_quantity;
-            $product_retail->save();
-        }
+        $productHistory->state = 'Chưa về';
+        $productHistory->state_confirm = "Chờ hàng";
+        $productHistory->save();
+        // $product_retail = ProductRetail::findOrFail($request->product_retail_id);
+        // if($product_retail){
+        //     $product_retail->available_quantity += $request->actual_quantity;
+        //     $product_retail->save();
+        // }
         return back()->with('success', 'Create succesfully');
     }
 
@@ -50,7 +53,9 @@ class ProductAddController extends Controller
         $productHistory->update($request->all());
         $product_retail = ProductRetail::findOrFail($request->product_retail_id);
         if($product_retail){
-            $product_retail->avaliable_quantity += $request->actual_quantity;
+            // check lai cho này, vì đã + lúc thêm r
+            $product_retail->available_quantity -= $productHistory->actual_quantity;
+            $product_retail->available_quantity += $request->actual_quantity;
             $product_retail->save();
         }
         return back()->with('success', 'update succesfully');
@@ -61,6 +66,28 @@ class ProductAddController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $productHistory = ProductHistory::findOrFail($id);
+        $product_retail = $productHistory->product_retail;
+        if($product_retail){
+            // check lai cho này, vì đã + lúc thêm r
+            $product_retail->available_quantity -= $productHistory->actual_quantity;
+            $product_retail->save();
+        }
+        $productHistory->delete();
+        return back()->with('success', 'remove succesfully');
     }
+    public function confirm($id)
+    {
+        $productHistory = ProductHistory::findOrFail($id);
+        $productHistory->state = 'Nhập kho';
+        $productHistory->state_confirm = 'Đã xác nhận';
+        $productHistory->save();
+        $product_retail = $productHistory->product_retail;
+        if($product_retail){
+            $product_retail->available_quantity += $productHistory->actual_quantity;
+            $product_retail->save();
+        }
+        return back()->with('success', 'confirm succesfully');
+    }
+
 }

@@ -496,6 +496,10 @@ class OrderController extends Controller
                             'total_price' => $item->getPriceSum(),
                         ]);
                         $order->orderItems()->save($orderItem);
+                        $product = ProductRetail::findOrFail($item->id);
+                        $product->available_quantity -= $item->quantity;
+                        $product->orderd_quantity += $item->quantity;
+                        $product->save();
                     }
                 }
             }
@@ -630,6 +634,10 @@ class OrderController extends Controller
                             'total_price' => $item->getPriceSum(),
                         ]);
                         $order->orderItems()->save($orderItem);
+                        $product = ProductRetail::findOrFail($item->id);
+                        $product->available_quantity -= $item->quantity;
+                        $product->orderd_quantity += $item->quantity;
+                        $product->save();
                     }
                 }
             }

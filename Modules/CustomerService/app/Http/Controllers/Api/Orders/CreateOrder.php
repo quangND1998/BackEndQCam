@@ -81,6 +81,7 @@ class CreateOrder extends Controller
             OrderItem::insert($orderItems);
             $data['products']->each(function ($product) use ($data) {
                 $product->available_quantity -= $data['map'][$product->id];
+                $product->orderd_quantity += $data['map'][$product->id];
                 $product->save();
             });
 

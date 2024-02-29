@@ -81,6 +81,7 @@ class CreateRetailOrder extends Controller
             })->toArray());
             $products->each(function ($product) use ($map) {
                 $product->available_quantity -= $map[$product->id]['quantity'];
+                $product->orderd_quantity += $map[$product->id]['quantity'];
                 $product->save();
             });
 
