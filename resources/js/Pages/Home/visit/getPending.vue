@@ -5,22 +5,43 @@ import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import SectionMain from "@/Components/SectionMain.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import PillTag from '@/Components/PillTag.vue'
-import 'vue-datepicker-ui/lib/vuedatepickerui.css';
+import CardBox from "@/Components/CardBox.vue";
+import CardBoxModal from "@/Components/CardBoxModal.vue";
+import PillTag from "@/Components/PillTag.vue";
 import {
-
-    mdiCancel
+    mdiEye,
+    mdiAccountLockOpen,
+    mdiPlus,
+    mdiFilter,
+    mdiMagnify,
+    mdiDotsVertical,
+    mdiTrashCanOutline,
+    mdiCodeBlockBrackets,
+    mdiPencil,
+    mdiLandFields,
+    mdiCancel,
+    mdiSquareEditOutline,
+    mdiCheckCircle
 } from "@mdi/js";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
-import BaseIcon from '@/Components/BaseIcon.vue'
-import "vue-search-input/dist/styles.css";
-import VueDatepickerUi from 'vue-datepicker-ui'
-import { initFlowbite } from 'flowbite'
-import LayoutBar from '@/Layouts/LayoutBar.vue';
 
-const props = defineProps({
+import Dropdown from "@/Components/Dropdown.vue";
+import BaseIcon from "@/Components/BaseIcon.vue";
+import SearchInput from "vue-search-input";
+import "vue-search-input/dist/styles.css";
+import MazInputPrice from "maz-ui/components/MazInputPrice";
+import { initFlowbite } from "flowbite";
+import LayoutBar from "@/Layouts/LayoutBar.vue";
+import { emitter } from '@/composable/useEmitter';
+import ModalAddService from './ModalAddService.vue';
+import ModalAddBooking from './ModalAddBooking.vue';
+import ModalBookingCancel from './ModalBookingCancel.vue';
+import ModalBookingActive from './ModalBookingActive.vue';
+defineProps({
     scheduleVisits: Object,
-    status: String
+    statusGroup: Array,
+    serviceExtra: Object,
+    packages: Array
 });
 const searchVal = ref("");
 const swal = inject("$swal");
@@ -28,17 +49,45 @@ const form = useForm({
     id: null,
     name: null,
     state: null,
-    selectedDate: []
 });
-
 const filter = reactive({
+    from: null,
+    to: null,
     search: null,
-    fromDate: null,
-    toDate: null,
 
 })
+const isModalActive = ref(false);
+const editMode = ref(false);
+const isModalDangerActive = ref(false);
+
+const state = reactive({
+    content: "<p>2333</p>",
+    _content: "",
+    editorOption: {
+        placeholder: "core",
+        modules: {},
+    },
+    disabled: false,
+});
+initFlowbite();
+const changeState = (visit) => {
+    console.log(visit.id);
+    form.post(route("visit.changeStateToConfirm", visit.id), {
+        onFinish: () => {
+            form.reset();
+        },
+    });
+};
+const cancelState = (visit) => {
+    console.log(visit.id);
+    form.post(route("visit.cancelState", visit.id), {
+        onFinish: () => {
+            form.reset();
+        },
+    });
+};
 const search = () => {
-    router.get(route(`visit.${props.status}`),
+    router.get(route('visit.all'),
         filter,
         {
             preserveState: true,
@@ -46,59 +95,37 @@ const search = () => {
         }
     );
 }
-watch(() => [form.selectedDate], (newVal) => {
-    filter.fromDate = newVal[0][0]
-    filter.toDate = newVal[0][1]
-    search()
-});
-initFlowbite();
-const changeState = (visit) => {
-    console.log(visit.id);
-    form.post(route('visit.changeStateToConfirm', visit.id), {
-        onFinish: () => {
-            form.reset();
-        },
-    });
+const addService = () => {
+    emitter.emit('OpenModalAddService')
+    console.log('open model');
 }
-const cancelState = (visit) => {
-    console.log(visit.id);
-    form.post(route('visit.cancelState', visit.id), {
-        onFinish: () => {
-            form.reset();
-        },
-    });
+const addBooking = () => {
+    emitter.emit('OpenModalAddBooking')
+}
+const updateBooking = (visit) => {
+    emitter.emit('OpenModalAddBooking',visit)
+}
+const activeBooking = (visit) => {
+    emitter.emit('OpenModelBookinActive', visit);
+}
+const cancalBooking = (visit) => {
+    emitter.emit('OpenModelBookincancel', visit);
 }
 </script>
 <template>
     <LayoutAuthenticated>
-
+        <ModalAddService :serviceExtra="serviceExtra"></ModalAddService>
+        <ModalAddBooking :serviceExtra="serviceExtra" :packages="packages"></ModalAddBooking>
+        <ModalBookingActive></ModalBookingActive>
+        <ModalBookingCancel></ModalBookingCancel>
         <Head title="Quản lý đặt lịch tham quan" />
         <SectionMain class="p-3 mt-16">
             <SectionTitleLineWithButton class="font-semibold flex mr-2" title="Quản lý đặt lịch tham quan" main>
             </SectionTitleLineWithButton>
             <div>
-                <LayoutBar></LayoutBar>
-                <div class="min-[320px]:block sm:block md:block lg:flex lg:justify-between">
-                    <div>
-                        <h2 class="font-semibold  flex mr-2">
-                            Quản lý Lịch tham quan
-                            <!-- <p class="text-gray-400">( {{ $page.props.auth.total_order }} )</p> -->
-                        </h2>
-                    </div>
 
-                    <div>
-
-                        <Link v-if="hasAnyPermission(['create-schedule'])" :href="route('visit.createShedule')"
-                            class="px-2 py-2 text-sm  bg-btn_green hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
-                        Tạo lịch tham quan
-                        </Link>
-                    </div>
-                </div>
-                <div class="px-2 flex">
-                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <div class="min-[320px]:w-full sm:w-3/12  md:w-3/12 mr-3 text-gray-500">
-                            <label for>Khách hàng</label>
-                        </div>
+                <div class="px-2 flex items-center">
+                    <div class=" px-3 mb-6 md:mb-0">
                         <div class="min-[320px]:w-full form_search sm:w-9/12  md:w-9/12">
                             <form v-on:submit.prevent>
                                 <div class="relative">
@@ -114,95 +141,174 @@ const cancelState = (visit) => {
                                         v-model="filter.search" @keyup="search" laceholder="Search Menus"
                                         data-list=".menu-category"
                                         class="block w-full p-2 pl-5 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="    Tìm lịch bằng tên hoặc sđt khách hàng" required />
+                                        placeholder="  Tìm HĐ, SĐT" required />
                                 </div>
                             </form>
                         </div>
                     </div>
-                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <div class="min-[320px]:w-full sm:w-3/12 md:w-3/12 mr-3 text-gray-500">
-                            <label for>Đặt lịch ngày</label>
-                            <div class="w-[320px]">
-                                <VueDatepickerUi range v-model="form.selectedDate" lang="vn"></VueDatepickerUi>
+                    <div class="px-3 mb-6 md:mb-0">
+                        <div class="min-[320px]:w-full sm:w-9/12  md:w-9/12">
+                            <div date-rangepicker class="flex items-center w-full justify-between">
+                                <div class="relative  ">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 text-gray-400"
+                                            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input name="start" type="date"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  border-gray-600 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Ngày bắt đầu" />
+                                </div>
+                                <span class="mx-4 text-gray-500">đến</span>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 text-gray-400"
+                                            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input name="end" type="date"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  "
+                                        placeholder="Ngày kết thúc" />
+                                </div>
+                                <!-- <input type="search" id="default-search" name="search" data-toggle="hideseek"
+                                    v-model="filter.search" @keyup="search" laceholder="Search Menus"
+                                    data-list=".menu-category"
+                                    class="block w-full p-2 pl-5 text-xs text-gray-900 border rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  border-gray-600 "
+                                    placeholder="    Tìm lịch bằng tên hoặc sđt khách hàng" required /> -->
                             </div>
                         </div>
-
                     </div>
-                </div>
-                <div class="p-2 rounded-lg col-md-12">
-                    <div class="panel panel-default">
-                        <div class="overflow-x-auto relative  sm:rounded-lg ">
-                            <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
-                                <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="py-3 px-6 text-xs">STT</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Khách hàng</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">SĐT</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Thời gian tạo</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Đặt lịch ngày</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">Chi tiết</th>
-                                        <th scope="col" class="py-3 px-6 text-xs">
-                                            <span class="sr-only">Edit</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody v-if="scheduleVisits">
-                                    <tr v-for="(visit, index) in scheduleVisits.data" :key="index"
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                        <th scope="row"
-                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{ index + 1 }}
-                                        </th>
-                                        <th scope="row"
-                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{ visit?.product_owner_service?.customer?.name }}
-                                        </th>
-                                        <th scope="row"
-                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{ visit?.product_owner_service?.customer?.phone_number }}
-                                        </th>
-                                        <th class="py-3 px-6 text-xs">
-                                            <PillTag :color="visit.state == 'confirm' ? 'success' : 'danger'"
-                                                :label="visit.state" small>
-                                            </PillTag>
-                                        </th>
-                                        <th scope="row"
-                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{ formatTimeDayMonthyear(visit?.created_at) }}
-                                        </th>
-                                        <th scope="row"
-                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{ formatTimeDayMonthyear(visit?.date_time) }}
-                                        </th>
-                                        <th scope="row"
-                                            class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-
-                                        </th>
-                                        <th class="py-1 px-6 text-right flex justify-end my-1">
-                                            <Link v-if="visit.state == 'pending'" :href="route('visit.edit', visit.id)"
-                                                class="inline-block px-6 py-2 bg-gray-200 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
-                                            Chỉnh sửa
-                                            </Link>
-                                            <button @click="changeState(visit)"
-                                                class="inline-block px-6 py-2 bg-gray-200 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
-                                                Xác nhận
-                                            </button>
-                                            <button @click="cancelState(visit)"
-                                                class="inline-block flex justify-center items-center p-1 px-2 item-center text-center px-6 py-2.5 text-white bg-red-600 text-gray-700 font-black text-xs leading-tight  rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out mx-2">
-                                                <BaseIcon :path="mdiCancel" class="text-white" size="16"></BaseIcon>
-                                                Hủy
-                                            </button>
-
-                                        </th>
-                                    </tr>
-                                    <pagination :links="scheduleVisits.links" />
-                                </tbody>
-                            </table>
+                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 flex  items-center ">
+                        <div>
+                            <div v-if="hasAnyPermission(['create-schedule'])"  data-target="#modelAddService" @click="addService()"
+                                class="px-3 py-2 text-sm  bg-[#27AE60] hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
+                            Thêm DV
+                            </div>
                         </div>
+                        <div>
+                            <div v-if="hasAnyPermission(['create-schedule'])" @click="addBooking()"
+                                class="px-3 py-2 text-sm  bg-[#27AE60] hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
+                            Thêm Booking
+                            </div>
+                        </div>
+                        <div>
+                            <Button class="px-3 py-2 bg-[#1D75FA] rounded-lg mx-1 text-white">Xuất</Button>
+                        </div>
+                    </div>
+                    <div class="w-[200px]">
+                        <p>A: App - H: CS - V: Vườn</p>
                     </div>
                 </div>
             </div>
+            <LayoutBar :statusGroup="statusGroup"></LayoutBar>
+                    <div class="p-2 rounded-lg col-md-12">
+                        <div class="panel panel-default">
+                            <div class="overflow-x-auto relative  sm:rounded-lg ">
+                                <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="py-3 px-6 text-xs">STT</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">Mã HĐ</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">Tên KH</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">SĐT</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">T. Phần</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">Dịch vụ</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">Ngày tạo</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">Ngày thăm</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">Note</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">Hạnh động</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">Log</th>
+                                            <th scope="col" class="py-3 px-6 text-xs">Code</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody v-if="scheduleVisits">
+                                        <tr v-for="(visit, index) in scheduleVisits.data" :key="index"
+                                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ index + 1 }}
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white text-red-500">
+                                                {{ visit.product_owner_service?.order_package?.idPackage }}
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ visit?.product_owner_service?.customer?.name }}
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ hasAnyPermission(['super-admin']) ?
+                                                    visit?.product_owner_service?.customer?.phone_number :
+                                                    hidePhoneNumber(visit?.product_owner_service?.customer?.phone_number) }}
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-col">
+                                                <span>NL: {{ visit.number_adult }} </span>
+                                                <span>TE: {{ visit.number_children }}</span>
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <span v-for="sevice in visit.extra_services" :key="sevice.id"
+                                                    class="flex flex-col">
+                                                    {{ sevice.name }}
+                                                </span>
+
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ formatTimeDayMonthyear(visit?.created_at) }}
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ formatTimeDayMonthyear(visit?.date_time) }}
+                                            </th>
+                                            <th class="py-3 px-6 text-xs">
+                                                <span> {{ visit.state == "pending" ? 'Đặt lịch' : visit.state == "confirm" ? 'Đã xác nhận đặt lịch' : visit.state == "complete" ? 'Đã checkin' : 'Hủy' }} </span>
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ visit.description }}
+                                            </th>
+                                            <th class="py-1 px-6 text-right flex items-center justify-end my-1">
+                                                <!-- <Link v-if="visit.state == 'pending'" :href="route('visit.edit', visit.id)"> -->
+                                                <BaseIcon v-if="visit.state == 'pending'" :path="mdiSquareEditOutline"
+                                                    @click="updateBooking(visit)"
+                                                    class=" text-[#FF6100] rounded-lg mr-2 hover:text-blue-700"
+                                                    v-tooltip.top="'Chỉnh sửa'" size="20">
+                                                </BaseIcon>
+                                                <!-- </Link> -->
+                                                <BaseIcon :path="mdiCheckCircle" @click="activeBooking(visit)"
+                                                    class=" text-[#4F8D06] rounded-lg mr-2 hover:text-blue-700"
+                                                    v-tooltip.top="'Xác nhận'" size="20">
+                                                </BaseIcon>
+                                                <button @click="cancelBooking(visit)" class="">
+                                                    <BaseIcon :path="mdiCancel" class="text-[#FF0000]" size="20"></BaseIcon>
+                                                </button>
+
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ visit.booking_type == 'App' ? 'A' : visit.booking_type == 'CS' ? 'H' : 'V' }}
+                                            </th>
+                                            <th scope="row"
+                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {{ visit.code }}
+                                            </th>
+                                        </tr>
+                                        <pagination :links="scheduleVisits.links" />
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
         </SectionMain>
     </LayoutAuthenticated>
 </template>

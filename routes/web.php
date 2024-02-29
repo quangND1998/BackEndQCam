@@ -18,6 +18,7 @@ use App\Http\Controllers\OtpTestController;
 use App\Http\Controllers\CommissionsPackagesController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\Home\ComplaintController;
+use App\Http\Controllers\Home\ServiceExtraController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,7 +66,9 @@ Route::middleware(['auth'])->group(
             Route::get('', [UserController::class, 'index'])->name('index');
             Route::get('/{role}', [UserController::class, 'userRole'])->name('userRole');
             Route::post('', [UserController::class, 'store'])->name('store');
-            Route::get('create-user', [UserController::class, 'create'])->name('create');
+            Route::get('/create/user', [UserController::class, 'create'])->name('create');
+            // Route::get('create-user', [UserController::class, 'create'])->name('create');
+
             Route::get('edit-user/{user}', [UserController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [UserController::class, 'update'])->name('update');
             Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('destroy');
@@ -77,7 +80,6 @@ Route::middleware(['auth'])->group(
             // Route::get('updateDemo', [UserController::class, 'updateDemo'])->name('update-demo');
         });
 
-     
 
         Route::prefix('visit')->as('visit.')->group(function () {
             Route::get('all', [ScheduleVisitController::class, 'getAll'])->name('all');
@@ -93,6 +95,9 @@ Route::middleware(['auth'])->group(
             Route::get('edit/{schedule}', [ScheduleVisitController::class, 'edit'])->name('edit');
             Route::post('saveShedule', [ScheduleVisitController::class, 'saveShedule'])->name('saveShedule');
             Route::post('updateShedule/{schedule}', [ScheduleVisitController::class, 'updateShedule'])->name('updateShedule');
+            Route::prefix('extraService')->as('extraService.')->group(function () {
+                Route::post('createService', [ServiceExtraController::class, 'createService'])->name('createService');
+            });
 
         });
         Route::prefix('complaint')->as('complaint.')->group(function () {

@@ -73,7 +73,7 @@ const search = () => {
     router.get(route(`admin.cskh.packing`),
         filter,
         {
-            preserveState: true,
+            preserveState: false,
             preserveScroll: true
         }
     );
@@ -146,6 +146,7 @@ const ownerOrders = () => {
 
                 if (result.isConfirmed) {
                     router.post(route("admin.cskh.shipperOwner"), query, {
+                        preserveState:false,
                         onError: () => { },
                         onSuccess: () => {
                             form.reset();

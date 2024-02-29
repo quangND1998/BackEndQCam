@@ -154,6 +154,7 @@ const packedOrder = (order) => {
         .then((result) => {
             if (result.isConfirmed) {
                 router.post(route("admin.cskh.packedOrder"), query, {
+                    preserveState:false,
                     onError: () => { },
                     onSuccess: () => {
                         form.reset();

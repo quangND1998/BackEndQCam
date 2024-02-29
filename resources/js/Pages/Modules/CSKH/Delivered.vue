@@ -106,6 +106,7 @@ const ordersConfirm = () => {
         .then((result) => {
             if (result.isConfirmed) {
                 router.post(route("admin.cskh.confirm-document"), query, {
+                    preserveState:false,
                     onError: () => { },
                     onSuccess: () => {
                         form.reset();

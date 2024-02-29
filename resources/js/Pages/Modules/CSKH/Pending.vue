@@ -75,7 +75,7 @@ watch(() => [form.selectedDate], (newVal) => {
 });
 const search = () => {
     router.get(route('admin.cskh.pending'), filter, {
-        preserveState: true,
+        preserveState: false,
         preserveScroll: true,
     });
 };
@@ -110,6 +110,7 @@ const packedOrders = () => {
         .then((result) => {
             if (result.isConfirmed) {
                 router.post(route("admin.cskh.packedOrder"), query, {
+                    preserveState:false,
                     onError: () => { },
                     onSuccess: () => {
                         form.reset();
@@ -238,7 +239,7 @@ const canceldeliveryNoOrder = (order_transport) => {
 
                 <OrderStatusBar :statusGroup="statusGroup" :count_orders="count_orders" state="state"></OrderStatusBar>
                 <div class="my-3 w-full flex justify-between">
-                    <button v-if="selected.length > 0" @click="packedOrders()"
+                    <button :disabled="selected.length <= 0" @click="packedOrders()"
                         class="px-2 py-2 text-sm bg-[#27AE60] hover:bg-[#27AE60] text-white p-2 rounded-lg border mx-1">
                         Xác nhận đóng gói hàng loạt ({{ selected.length }})
                     </button>

@@ -16,13 +16,11 @@ const status_text = {
 
 }
 const status_color = {
-    pending: 'border-[#FF6100] text-gray-800',
-    processing: 'bg-[#FF6100] text-white',
-    completed: 'bg-[#4F8D06] text-white',
-    create: 'bg-[#27AE60] text-white',
-    draft: "bg-[#b4b9bf] text-white"
-
-
+    pending: 'border-[#FF6100] text-[#FF6100] bg-white px-3',
+    processing: 'bg-[#F0C419] border-0 text-black  px-3',
+    completed: 'text-[#4F8D06] border-[#4F8D06] bg-white px-3',
+    create: 'text-[#27AE60] border-[#27AE60] bg-white px-4 ',
+    draft: "bg-[#b4b9bf] text-white bg-white px-3"
 }
 
 
@@ -39,7 +37,7 @@ const order_color = computed(() => {
 
 </script>
 <template>
-    <span class="px-1 py-1 border rounded-md " :class="order_color">{{
+    <span class="px-1 py-1 border-[1px] rounded-md font-normal" :class="order_color">{{
         order_text }} </span>
 </template>
 <style ></style>

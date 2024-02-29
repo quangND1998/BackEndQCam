@@ -52,7 +52,7 @@ class CSKHOrderController extends Controller
         $this->middleware('permission:packed-order', ['only' => ['packedOrder']]);
         $this->middleware('permission:add-order-shipper', ['only' => ['shipperOwner']]);
         $this->middleware('permission:decline-order', ['only' => ['orderDecline']]); //Yêu cầu Hủy mã vận đơn
-        $this->middleware('permission:cancel-order', ['only' => ['orderCancel']]); //Xác nhận hủy 
+        $this->middleware('permission:cancel-order', ['only' => ['orderCancel']]); //Xác nhận hủy
         $this->middleware('permission:refunding-order', ['only' => ['orderRefunding']]);
         $this->middleware('permission:refund-order', ['only' => ['orderRefund']]);
         $this->middleware('permission:contract-complete', ['only' => ['confirmStateDocument', 'updloadImages']]);
@@ -257,7 +257,6 @@ class CSKHOrderController extends Controller
 
     public function packedOrder(Request $request,)
     {
-
         if ($request->ids && count($request->ids) > 0) {
             $order_transports = OrderTransport::find($request->ids);
             foreach ($order_transports as $order_transport) {

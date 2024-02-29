@@ -106,7 +106,7 @@ class PermissionSeeder extends Seeder
 
 
 
-        // CSKH LEaderShipper Kho 
+        // CSKH LEaderShipper Kho
         Permission::create(['name' => 'view-order-all']);
         Permission::create(['name' => 'view-order-pending']);
         Permission::create(['name' => 'view-order-packing']);
