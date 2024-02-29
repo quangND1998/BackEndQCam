@@ -77,11 +77,7 @@ Route::middleware(['auth'])->group(
             // Route::get('updateDemo', [UserController::class, 'updateDemo'])->name('update-demo');
         });
 
-<<<<<<< HEAD
-       
-=======
      
->>>>>>> origin/quangnd
 
         Route::prefix('visit')->as('visit.')->group(function () {
             Route::get('all', [ScheduleVisitController::class, 'getAll'])->name('all');
@@ -153,32 +149,4 @@ Route::middleware(['auth'])->group(
 );
 require __DIR__ . '/dashboard.php';
 require __DIR__ . '/payment.php';
-<<<<<<< HEAD
-
-
 Route::get('test', [TestController::class, 'index']);
-Route::get('check', function(){
-    $nums = [1,1,1,2,2,3];
-     $lastNum = $nums[0];
-    $numCount = 1;
-    foreach ($nums as $key => $num)
-    {
-        if ($key === 0) continue;
-
-        if ($num === $lastNum) $numCount++;
-        else
-        {
-            $lastNum = $num;
-            $numCount = 1;
-        }
-
-        if ($numCount > 2)
-        {
-            unset($nums[$key]);
-        }
-    }
-    return $nums;
-});
-=======
-Route::get('test', [TestController::class, 'index']);
->>>>>>> origin/quangnd

@@ -19,6 +19,7 @@ use Modules\Order\app\Models\Order;
 use Modules\Order\app\Models\OrderTransport;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Modules\Order\Repositories\OrderTransportRepository;
+use Illuminate\Support\Facades\Cache;
 
 class ApiShipperController extends Controller
 {
@@ -75,9 +76,21 @@ class ApiShipperController extends Controller
     public function fetchOrders(Request $request)
     {
         $user = Auth::user();
-        $orders = OrderTransport::with('order', 'order.customer',  'order.shipper')->whereHas('order', function ($q) use ($user, $request) {
+        // if (Cache::has('search_' . $request->search)) {
+        //     $orders = Cache::get('search_' . $request->search);
+        // } else {
+
+        //     $orders = Cache::remember('search_' . $request->search, 30, function () use ($request, $user) {
+        //         return OrderTransport::with('order', 'order.customer',  'order.shipper')->whereHas('order', function ($q) use ($user) {
+        //             $q->where('shipper_id', $user->id);
+        //         })->fillterApi($request->only('date', 'day', 'status', 'search'))->paginate(1)->appends(['page' => $request->page, 'search' => $request->search]);;
+        //     });
+        // }
+
+        $orders = OrderTransport::with('order', 'order.customer',  'order.shipper')->whereHas('order', function ($q) use ($user) {
             $q->where('shipper_id', $user->id);
-        })->search($request->search, null, true)->fillterApi($request->only('date', 'day', 'status'))->paginate(10);
+        })->fillterApi($request->only('date', 'day', 'status', 'search'))->paginate(10)->appends(['page' => $request->page, 'search' => $request->search]);;
+
         return response()->json($orders, 200);
     }
 

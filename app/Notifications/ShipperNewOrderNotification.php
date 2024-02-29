@@ -57,7 +57,8 @@ class ShipperNewOrderNotification extends Notification
             'title' =>  '[Đơn hàng mới]  Bạn có 1 đơn hàng mới cần vận chuyển',
             'body' => 'Đơn hàng ' . $this->order->order_transport_number . ' cần vận chuyển.',
             'data' => [
-                'order_transport_number' => $this->order->order_transport_number
+                'orderId' => $this->order->id,
+                'title' =>  $this->order->updated_at,
             ]
         ];
     }
