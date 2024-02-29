@@ -491,7 +491,7 @@ class CSKHOrderController extends Controller
             'images.*' => 'Ảnh phải là định dạng jepg,png,jpg'
         ]);
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), 422);
+            return response()->json($validator->errors(), 422);
         }
 
 
