@@ -10,6 +10,11 @@ use Modules\CustomerService\app\Models\VisitService;
 class ServiceExtraController extends Controller
 {
     //
+    public function getService(){
+        $extraAll = VisitExtraService::where('is_active',1)->get();
+        return $extraAll;
+    }
+
     public function createService(Request $request){
         $request->validate([
             'name' => 'required|string|unique:visit_extra_services,name',

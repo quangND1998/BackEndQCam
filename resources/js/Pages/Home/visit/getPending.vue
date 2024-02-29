@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, reactive, watch } from "vue";
+import { computed, ref, inject, reactive, watch, toRef } from "vue";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { useForm, router } from "@inertiajs/vue3";
@@ -37,7 +37,7 @@ import ModalAddService from './ModalAddService.vue';
 import ModalAddBooking from './ModalAddBooking.vue';
 import ModalBookingCancel from './ModalBookingCancel.vue';
 import ModalBookingActive from './ModalBookingActive.vue';
-defineProps({
+const props = defineProps({
     scheduleVisits: Object,
     statusGroup: Array,
     serviceExtra: Object,
@@ -45,6 +45,7 @@ defineProps({
 });
 const searchVal = ref("");
 const swal = inject("$swal");
+const service_extra = toRef(props.serviceExtra)
 const form = useForm({
     id: null,
     name: null,
@@ -95,15 +96,32 @@ const search = () => {
         }
     );
 }
+const fetchService = () => {
+    axios.post(`/visit/extraService/getService`, form, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    })
+        .then(response => {
+            console.log(response);
+            service_extra.value = response.data
+            form.reset();
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
 const addService = () => {
     emitter.emit('OpenModalAddService')
     console.log('open model');
 }
 const addBooking = () => {
+    fetchService();
     emitter.emit('OpenModalAddBooking')
 }
 const updateBooking = (visit) => {
-    emitter.emit('OpenModalAddBooking',visit)
+    fetchService();
+    emitter.emit('OpenModalAddBooking', visit)
 }
 const activeBooking = (visit) => {
     emitter.emit('OpenModelBookinActive', visit);
@@ -114,10 +132,11 @@ const cancalBooking = (visit) => {
 </script>
 <template>
     <LayoutAuthenticated>
-        <ModalAddService :serviceExtra="serviceExtra"></ModalAddService>
-        <ModalAddBooking :serviceExtra="serviceExtra" :packages="packages"></ModalAddBooking>
+        <ModalAddService :serviceExtra="service_extra"></ModalAddService>
+        <ModalAddBooking :serviceExtra="service_extra" :packages="packages"></ModalAddBooking>
         <ModalBookingActive></ModalBookingActive>
         <ModalBookingCancel></ModalBookingCancel>
+
         <Head title="Quản lý đặt lịch tham quan" />
         <SectionMain class="p-3 mt-16">
             <SectionTitleLineWithButton class="font-semibold flex mr-2" title="Quản lý đặt lịch tham quan" main>
@@ -186,15 +205,16 @@ const cancalBooking = (visit) => {
                     </div>
                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 flex  items-center ">
                         <div>
-                            <div v-if="hasAnyPermission(['create-schedule'])"  data-target="#modelAddService" @click="addService()"
+                            <div v-if="hasAnyPermission(['create-schedule'])" data-target="#modelAddService"
+                                @click="addService()"
                                 class="px-3 py-2 text-sm  bg-[#27AE60] hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
-                            Thêm DV
+                                Thêm DV
                             </div>
                         </div>
                         <div>
                             <div v-if="hasAnyPermission(['create-schedule'])" @click="addBooking()"
                                 class="px-3 py-2 text-sm  bg-[#27AE60] hover:bg-[#318f02] text-white p-2 rounded-lg border mx-1">
-                            Thêm Booking
+                                Thêm Booking
                             </div>
                         </div>
                         <div>
@@ -207,108 +227,107 @@ const cancalBooking = (visit) => {
                 </div>
             </div>
             <LayoutBar :statusGroup="statusGroup"></LayoutBar>
-                    <div class="p-2 rounded-lg col-md-12">
-                        <div class="panel panel-default">
-                            <div class="overflow-x-auto relative  sm:rounded-lg ">
-                                <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
-                                    <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                            <th scope="col" class="py-3 px-6 text-xs">STT</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">Mã HĐ</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">Tên KH</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">SĐT</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">T. Phần</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">Dịch vụ</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">Ngày tạo</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">Ngày thăm</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">Note</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">Hạnh động</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">Log</th>
-                                            <th scope="col" class="py-3 px-6 text-xs">Code</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody v-if="scheduleVisits">
-                                        <tr v-for="(visit, index) in scheduleVisits.data" :key="index"
-                                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {{ index + 1 }}
-                                            </th>
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white text-red-500">
-                                                {{ visit.product_owner_service?.order_package?.idPackage }}
-                                            </th>
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {{ visit?.product_owner_service?.customer?.name }}
-                                            </th>
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {{ hasAnyPermission(['super-admin']) ?
-                                                    visit?.product_owner_service?.customer?.phone_number :
-                                                    hidePhoneNumber(visit?.product_owner_service?.customer?.phone_number) }}
-                                            </th>
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-col">
-                                                <span>NL: {{ visit.number_adult }} </span>
-                                                <span>TE: {{ visit.number_children }}</span>
-                                            </th>
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                <span v-for="sevice in visit.extra_services" :key="sevice.id"
-                                                    class="flex flex-col">
-                                                    {{ sevice.name }}
-                                                </span>
+            <div class="p-2 rounded-lg col-md-12">
+                <div class="panel panel-default">
+                    <div class="overflow-x-auto relative  sm:rounded-lg ">
+                        <table class="w-full text-xs text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="py-3 px-6 text-xs">STT</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">Mã HĐ</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">Tên KH</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">SĐT</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">T. Phần</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">Dịch vụ</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">Ngày tạo</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">Ngày thăm</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">Trạng thái</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">Note</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">Hạnh động</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">Log</th>
+                                    <th scope="col" class="py-3 px-6 text-xs">Code</th>
+                                </tr>
+                            </thead>
+                            <tbody v-if="scheduleVisits">
+                                <tr v-for="(visit, index) in scheduleVisits.data" :key="index"
+                                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ index + 1 }}
+                                    </th>
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white text-red-500">
+                                        {{ visit.product_owner_service?.order_package?.idPackage }}
+                                    </th>
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ visit?.product_owner_service?.customer?.name }}
+                                    </th>
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ hasAnyPermission(['super-admin']) ?
+                                            visit?.product_owner_service?.customer?.phone_number :
+                                            hidePhoneNumber(visit?.product_owner_service?.customer?.phone_number) }}
+                                    </th>
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-col">
+                                        <span>NL: {{ visit.number_adult }} </span>
+                                        <span>TE: {{ visit.number_children }}</span>
+                                    </th>
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        <span v-for="sevice in visit.extra_services" :key="sevice.id" class="flex flex-col">
+                                            {{ sevice.name }}
+                                        </span>
 
-                                            </th>
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {{ formatTimeDayMonthyear(visit?.created_at) }}
-                                            </th>
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {{ formatTimeDayMonthyear(visit?.date_time) }}
-                                            </th>
-                                            <th class="py-3 px-6 text-xs">
-                                                <span> {{ visit.state == "pending" ? 'Đặt lịch' : visit.state == "confirm" ? 'Đã xác nhận đặt lịch' : visit.state == "complete" ? 'Đã checkin' : 'Hủy' }} </span>
-                                            </th>
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {{ visit.description }}
-                                            </th>
-                                            <th class="py-1 px-6 text-right flex items-center justify-end my-1">
-                                                <!-- <Link v-if="visit.state == 'pending'" :href="route('visit.edit', visit.id)"> -->
-                                                <BaseIcon v-if="visit.state == 'pending'" :path="mdiSquareEditOutline"
-                                                    @click="updateBooking(visit)"
-                                                    class=" text-[#FF6100] rounded-lg mr-2 hover:text-blue-700"
-                                                    v-tooltip.top="'Chỉnh sửa'" size="20">
-                                                </BaseIcon>
-                                                <!-- </Link> -->
-                                                <BaseIcon :path="mdiCheckCircle" @click="activeBooking(visit)"
-                                                    class=" text-[#4F8D06] rounded-lg mr-2 hover:text-blue-700"
-                                                    v-tooltip.top="'Xác nhận'" size="20">
-                                                </BaseIcon>
-                                                <button @click="cancelBooking(visit)" class="">
-                                                    <BaseIcon :path="mdiCancel" class="text-[#FF0000]" size="20"></BaseIcon>
-                                                </button>
+                                    </th>
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ formatTimeDayMonthyear(visit?.created_at) }}
+                                    </th>
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ formatTimeDayMonthyear(visit?.date_time) }}
+                                    </th>
+                                    <th class="py-3 px-6 text-xs">
+                                        <span> {{ visit.state == "pending" ? 'Đặt lịch' : visit.state == "confirm" ? 'Đã xác nhận đặt lịch' : visit.state == "complete" ? 'Đã checkin' : 'Hủy' }} </span>
+                                    </th>
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ visit.description }}
+                                    </th>
+                                    <th class="py-1 px-6 text-right flex items-center justify-end my-1">
+                                        <!-- <Link v-if="visit.state == 'pending'" :href="route('visit.edit', visit.id)"> -->
+                                        <BaseIcon v-if="visit.state == 'pending'" :path="mdiSquareEditOutline"
+                                            @click="updateBooking(visit)"
+                                            class=" text-[#FF6100] rounded-lg mr-2 hover:text-blue-700"
+                                            v-tooltip.top="'Chỉnh sửa'" size="20">
+                                        </BaseIcon>
+                                        <!-- </Link> -->
+                                        <BaseIcon :path="mdiCheckCircle" @click="activeBooking(visit)"
+                                            class=" text-[#4F8D06] rounded-lg mr-2 hover:text-blue-700"
+                                            v-tooltip.top="'Xác nhận'" size="20">
+                                        </BaseIcon>
+                                        <button @click="cancelBooking(visit)" class="">
+                                            <BaseIcon :path="mdiCancel" class="text-[#FF0000]" size="20"></BaseIcon>
+                                        </button>
 
-                                            </th>
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {{ visit.booking_type == 'App' ? 'A' : visit.booking_type == 'CS' ? 'H' : 'V' }}
-                                            </th>
-                                            <th scope="row"
-                                                class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {{ visit.code }}
-                                            </th>
-                                        </tr>
-                                        <pagination :links="scheduleVisits.links" />
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                                    </th>
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ visit.booking_type == 'App' ? 'A' : visit.booking_type == 'CS' ? 'H' : 'V' }}
+                                    </th>
+                                    <th scope="row"
+                                        class="py-1 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ visit.code }}
+                                    </th>
+                                </tr>
+                                <pagination :links="scheduleVisits.links" />
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+            </div>
         </SectionMain>
     </LayoutAuthenticated>
 </template>
