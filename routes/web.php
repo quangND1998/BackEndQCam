@@ -98,6 +98,8 @@ Route::middleware(['auth'])->group(
             Route::post('updateShedule/{schedule}', [ScheduleVisitController::class, 'updateShedule'])->name('updateShedule');
             Route::prefix('extraService')->as('extraService.')->group(function () {
                 Route::post('createService', [ServiceExtraController::class, 'createService'])->name('createService');
+                // deleteService
+                Route::delete('deleteService/{id}', [ServiceExtraController::class, 'deleteService'])->name('deleteService');
             });
 
         });

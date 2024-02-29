@@ -18,11 +18,19 @@ class ServiceExtraController extends Controller
         $request->merge([
             'is_active' => true
         ]);
-        $visitExtraService = VisitExtraService::create($request->all());
+        VisitExtraService::create($request->all());
 
         $extraAll = VisitExtraService::all();
 
         return $extraAll;
 
+    }
+    public function deleteService($id){
+        $service = VisitExtraService::find($id);
+        $service->delete();
+
+        $extraAll = VisitExtraService::all();
+
+        return $extraAll;
     }
 }

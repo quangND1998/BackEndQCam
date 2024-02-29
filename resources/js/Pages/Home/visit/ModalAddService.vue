@@ -16,7 +16,7 @@
                     </button>
                 </div>
                 <div class="modal-body mx-3">
-                    <form @submit.prevent="addService">
+                    <div >
 
                         <div class="form-group" :class="form.errors.name ? 'has-error' : ''">
 
@@ -44,7 +44,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="justify-between  bg-white border"
-                                        v-for="(service, index) in form?.serviceExtra" :key="service.id">
+                                        v-for="(service, index) in serviceE_extra" :key="service.id">
                                         <td class="border border-[#000000]">
                                             {{ index + 1 }}
                                         </td>
@@ -52,8 +52,8 @@
                                             {{ service.name }}
                                         </td>
                                         <td class="border border-[#000000]">
-                                            <BaseButton color="gray"
-                                                class=" text=gray=300 hover:text-black" :icon="mdiTrashCanOutline" small
+                                            <BaseButton color="#FF0000"
+                                                class=" text-[#FF0000] hover:text-black border-0" :icon="mdiCloseThick" small
                                                 @click="deleteService(service.id)" />
                                         </td>
                                     </tr>
@@ -61,7 +61,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -70,17 +70,19 @@
 
 <script setup>
 import { emitter } from '@/composable/useEmitter';
-import { computed, ref, inject, onMounted, onUnmounted } from "vue";
-
+import { computed, ref, inject, onMounted, onUnmounted, toRef } from "vue";
+import BaseButton from '@/Components/BaseButton.vue'
 import { useForm } from "@inertiajs/vue3";
 import {
     mdiSquareEditOutline, mdiDeleteOutline, mdiCashMultiple, mdiEyeOutline, mdiCheckCircle, mdiCheckAll, mdiTrashCanOutline, mdiCheck
-    , mdiOpenInNew, mdiRefresh, mdiBellRingOutline
+    , mdiOpenInNew, mdiRefresh, mdiBellRingOutline,mdiCloseThick
 } from '@mdi/js'
 const swal = inject("$swal");
 const props = defineProps({
     serviceExtra: Object
 });
+
+const serviceE_extra = toRef(props.serviceExtra)
 const form = useForm({
     name: null,
     serviceExtra: props.serviceExtra
@@ -92,19 +94,6 @@ onMounted(() => {
     })
 });
 const addService = () => {
-    // form.post(route("visit.extraService.createService"), {
-    //     preserveState: true,
-    //     onError: errors => {
-    //         if (Object.keys(errors).length > 0) {
-
-    //         }
-    //     },
-    //     onSuccess: page => {
-    //         $("#modelAddService").modal("hide");
-    //         // emitter.off('OpenModalDecline', listener)
-    //         form.reset();
-    //     }
-    // });
     axios.post(`/visit/extraService/createService`, form, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -112,7 +101,7 @@ const addService = () => {
             })
             .then(response => {
                 console.log(response);
-                form.serviceExtra = response.data
+                serviceE_extra.value = response.data
                 form.reset();
             })
             .catch(error => {
@@ -133,15 +122,19 @@ const deleteService = (id) => {
         .then((result) => {
             if (result.isConfirmed) {
                 console.log(id);
-                // form.post(route("admin.orders.package.deleteHistoryPayment", [form.order?.id, id]), { preserveState: false }, {
-                //     onSuccess: () => {
-                //         swal.fire(
-                //             "Deleted!",
-                //             "Your tree has been deleted.",
-                //             "success"
-                //         );
-                //     },
-                // });
+                axios.delete(`/visit/extraService/deleteService/${id}`, form, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    })
+                    .then(response => {
+                        console.log(response);
+                        serviceE_extra.value = response.data
+                        form.reset();
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             }
         });
 }
