@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Tree\Database\factories\ProductFailFactory;
 
-class Product_Fail extends Model
+class ProductFail extends Model
 {
     use HasFactory;
 
@@ -18,7 +18,7 @@ class Product_Fail extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ["id", "id_priority", "name",'quality','reason', 'code','user_add'];
+    protected $fillable = ["id", "id_priority", "name",'quality','reason', 'code','unit','user_add'];
 
     public function user(){
         return $this->belongsTo(User::class, 'user_add');

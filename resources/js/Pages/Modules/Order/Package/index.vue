@@ -302,18 +302,6 @@ const openAcceptDocument = (id) => {
 
 
 const save = () => {
-    // console.log(form);
-    // form.post(route("admin.orders.package.historyPayment", form.order?.id), {
-    //     onError: () => {
-    //         isModalActive.value = true;
-    //         editMode.value = false;
-    //     },
-    //     onSuccess: () => {
-    //         form.reset('id', 'payment_method', 'payment_date', 'amount_received', 'note');
-    //         isModalActive.value = false;
-    //         editMode.value = false;
-    //     },
-    // });
     axios.post(`/admin/orders/package/historyPayment/${form.order?.id}`, form, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -895,6 +883,7 @@ td {
     top: 0;
     z-index: 9;
     background: #fff;
-}</style>
+}
+</style>
 
 

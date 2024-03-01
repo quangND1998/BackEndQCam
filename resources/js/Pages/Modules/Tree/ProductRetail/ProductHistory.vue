@@ -36,6 +36,7 @@ import Multiselect from '@vueform/multiselect'
 import VueDatepickerUi from 'vue-datepicker-ui'
 import 'vue-datepicker-ui/lib/vuedatepickerui.css';
 import WareHouse from "@/Pages/Modules/Tree/ProductRetail/WareHouse.vue"
+import FailProduct from "./FailProduct.vue";
 const props = defineProps({
     product_retails: Object,
     historyAdds: Object,
@@ -311,7 +312,6 @@ const Confirm = (id) => {
                         <div class="text-center py-2 ">Đã lên đơn</div>
                         <div class="text-center py-2 ">SL sẵn có</div>
                         <div class="text-center py-2"></div>
-
                     </div>
                     <div v-for="(product_retail, index2) in product_retails" :key="product_retail.id"
                         class="grid grid-cols-12 text-center  divide-x divide-black border-gray-400 border text-sm bg-white">
@@ -326,6 +326,7 @@ const Confirm = (id) => {
                 <pagination :links="historyAdds.links" />
             </div>
 
+            <FailProduct :product_retails="product_retails" />
             <WareHouse />
         </SectionMain>
     </LayoutAuthenticated>

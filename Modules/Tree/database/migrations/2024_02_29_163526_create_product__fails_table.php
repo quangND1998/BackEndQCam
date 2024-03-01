@@ -16,6 +16,7 @@ return new class extends Migration
             $table->bigInteger('id_priority')->nullable();
             $table->string('name')->nullable();
             $table->string('code')->nullable();
+            $table->string('unit')->nullable();
             $table->integer('quality')->nullable();
             $table->string('reason')->nullable();
             $table->unsignedBigInteger('product_retail_id')->nullable();

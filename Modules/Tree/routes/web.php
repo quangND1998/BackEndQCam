@@ -85,8 +85,9 @@ Route::middleware(['auth'])->group(
             });
             Route::prefix('product_fail')->as('product_fail.')->group(function () {
                 Route::get('index', [ProductFailController::class,'index'])->name('index');
+                Route::get('getProduct', [ProductFailController::class,'getProduct'])->name('getProduct');
                 Route::post('store', [ProductFailController::class, 'store'])->name('store');
-                Route::delete('destroy/{id}', [ProductFailController::class, 'destroy'])->name('destroy');
+                Route::post('destroyProduct/{id}', [ProductFailController::class, 'destroy'])->name('destroyProduct');
             });
         });
     }
