@@ -19,6 +19,7 @@ use App\Http\Controllers\CommissionsPackagesController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\Home\ComplaintController;
 use App\Http\Controllers\Home\ServiceExtraController;
+use App\Http\Controllers\PendingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -117,8 +118,6 @@ Route::middleware(['auth'])->group(
             Route::delete('delete/{id}', [MediaController::class, 'delete'])->name('delete');
         });
 
-
-
         Route::get('otp/token', [OtpTestController::class,'test'])->name('otp.test');
         Route::get('checkOtp/{otp}', [OtpTestController::class,'checkOtp'])->name('otp.checkOtp');
 
@@ -153,6 +152,9 @@ Route::middleware(['auth'])->group(
             });
         });
 
+        Route::prefix('pending')->as('pending.')->group(function () {
+            Route::get('index', [PendingController::class, 'index'])->name('index');
+        });
     }
 
 );
