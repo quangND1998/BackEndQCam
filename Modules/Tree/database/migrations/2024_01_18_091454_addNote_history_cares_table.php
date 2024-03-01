@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('history_cares', function (Blueprint $table) {
-            $table->longText('note')->nullable();
-        });
+        // Schema::table('history_cares', function (Blueprint $table) {
+        //     $table->longText('note')->nullable();
+        // });
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('history_cares', function (Blueprint $table) {
-            $table->dropColumn('note');
-        });
+        // Schema::table('history_cares', function (Blueprint $table) {
+        //     $table->dropColumn('note');
+        // });
     }
 };
