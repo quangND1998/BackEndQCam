@@ -20,7 +20,7 @@ use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\Home\ComplaintController;
 use App\Http\Controllers\Home\ServiceExtraController;
 use App\Http\Controllers\PendingController;
-
+use App\Http\Controllers\API\Connect\CGVTeleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -154,6 +154,10 @@ Route::middleware(['auth'])->group(
 
         Route::prefix('pending')->as('pending.')->group(function () {
             Route::get('index', [PendingController::class, 'index'])->name('index');
+        });
+
+        Route::prefix('callcenter')->as('callcenter.')->group(function () {
+            Route::get('getToken', [CGVTeleController::class, 'getToken'])->name('getToken');
         });
     }
 
