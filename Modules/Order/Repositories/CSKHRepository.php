@@ -30,7 +30,7 @@ class CSKHRepository
         }
         $results = OrderPackage::with(['customer','product_service','product_service_owner.product','distributeCall' => function($q) use ($fromDate,$todate) {
             $q->whereBetween('date_call', [$fromDate, $todate]);
-        }, 'distributeCall.cskh'])->role()
+        }, 'distributeCall.cskh'])
         ->whereHas(
             'distributeCall',
             function ($q) use ($fromDate,$todate) {

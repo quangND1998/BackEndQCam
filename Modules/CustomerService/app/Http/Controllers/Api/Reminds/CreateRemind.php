@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Customer\app\Models\ProductServiceOwner;
 use Modules\CustomerService\app\Models\Remind;
-
+use Modules\CustomerService\app\Models\DistributeCall;
 class CreateRemind extends Controller
 {
     public function __invoke(Request $request)
@@ -25,6 +25,11 @@ class CreateRemind extends Controller
         ]);
         $remind = Remind::create($request->all());
 
+        $distributeCall = new DistributeCall;
+        $distributeCall->date_call = $request->remind_at;
+        $distributeCall->order_package_id = $productServiceOwner->order_package->id;
+        $distributeCall->save();
+        
         return response()->json([
             'message' => 'OK',
             'remind' => $remind
