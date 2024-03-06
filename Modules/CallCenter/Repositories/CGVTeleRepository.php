@@ -7,10 +7,12 @@ use App\Http\Controllers\Traits\FileUploadTrait;
 use Illuminate\Support\Facades\Http;
 class CGVTeleRepository
 {
-    use ConnectHttpFunction;
-    use FileUploadTrait;
+    use ConnectHttpFunction, FileUploadTrait;
+
     public $API_KEY_CALL = "b484af9e-4293-4943-b195-e32b626dcb2f";
-    public function getToken(){
+
+    public function getToken()
+    {
         $url = "https://api.mobilesip.vn/v1/auth/token";
         $result = Http::post($url, [
             'api_key' => $this->API_KEY_CALL
@@ -20,14 +22,17 @@ class CGVTeleRepository
             session(['access_token' => $token]);
             return $token;
         }
+
         return $result;
 
     }
-    public function getCdr(){
+    public function getCdr()
+    {
         $token = session('access_token');
         if($token == null){
             $token = $this->getToken();
         }
+
         $url = "https://api.mobilesip.vn/v1/cdr";
         $params = [
             'api_key' => $this->API_KEY_CALL
@@ -35,27 +40,31 @@ class CGVTeleRepository
         $result =  Http::withToken($token)->get($url,[
             $params
         ]);
+
         return $result;
     }
-    public function getCallDetail($idCall){
 
+    public function getCallDetail($sipCallId, $distributeCallIds)
+    {
         $token = session('access_token');
         if($token == null){
             $token = $this->getToken();
         }
 
-        $url = "https://api.mobilesip.vn/v1/cdr/" .$idCall;
-
+        $url = "https://api.mobilesip.vn/v1/cdr/" .$sipCallId;
         $result =  Http::withToken($token)->get($url,[
             'api_key' => $this->API_KEY_CALL
         ]);
 
         if($result['id']){
-            return $historyCall = $this->saveCallDetail($result);
+            return $this->saveCallDetail($result);
         }
+
         return $result;
     }
-    public function saveCallDetail($data){
+
+    public function saveCallDetail($data)
+    {
         $historyCall = $this->saveData($data);
         $Path = 'callcenter';
         $this->makeFolder($Path);
@@ -67,9 +76,12 @@ class CGVTeleRepository
             $historyCall->recording_url = $this->downloadFile($destinationPath,$fileName,$fileContents);
         }
         $historyCall->save();
+
         return $historyCall;
     }
-    public function saveData($data){
+
+    public function saveData($data)
+    {
         $historyCall = HistoryCall::create([
             "call_id" =>  $data['id'],
             "status" => $data['status'],
@@ -87,6 +99,12 @@ class CGVTeleRepository
             "billsec" => $data['billsec'],
             "called_count" => $data['called_count']
         ]);
+
         return $historyCall;
+    }
+
+    public function updateDistributeCall($distributeCallIds)
+    {
+        //
     }
 }

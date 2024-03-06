@@ -13,15 +13,15 @@ use Modules\CallCenter\Repositories\CGVTeleRepository;
 class saveDataCall implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public $cgvTeleRepository;
-    public $idCall;
-    /**
-     * Create a new job instance.
-     */
-    public function __construct($idCall)
+    public $sipCallId;
+    public $distributeCallIds;
+
+    public function __construct($sipCallId, $distributeCallIds)
     {
-        $this->idCall = $idCall;
-        //
+        $this->sipCallId = $sipCallId;
+        $this->distributeCallIds = $distributeCallIds;
     }
 
     /**
@@ -29,6 +29,6 @@ class saveDataCall implements ShouldQueue
      */
     public function handle(CGVTeleRepository $cgvTeleRepository): void
     {
-        $cgvTeleRepository->getCallDetail($this->idCall);
+        $cgvTeleRepository->getCallDetail($this->sipCallId, $this->distributeCallIds);
     }
 }
