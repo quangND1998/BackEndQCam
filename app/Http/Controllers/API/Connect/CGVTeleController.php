@@ -6,40 +6,45 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Traits\ConnectHttpFunction;
 use Illuminate\Support\Facades\Http;
+use Modules\CallCenter\app\Models\HistoryCall;
+use App\Http\Controllers\Traits\FileUploadTrait;
+use App\Jobs\saveDataCall;
+use Carbon\Carbon;
+
 class CGVTeleController extends Controller
 {
     use ConnectHttpFunction;
+    use FileUploadTrait;
+    public $API_KEY_CALL = "b484af9e-4293-4943-b195-e32b626dcb2f";
     public function getToken(){
         $url = "https://api.mobilesip.vn/v1/auth/token";
-        $params = [
-            'api_key' => "b484af9e-4293-4943-b195-e32b626dcb2f"
-        ];
-        // $result = $this->httpPost($url,$params);
         $result = Http::post($url, [
-            'api_key' => "b484af9e-4293-4943-b195-e32b626dcb2f"
+            'api_key' => $this->API_KEY_CALL
         ]);
-
-        $token =  $result['data']['token'];
-        if($token != null){
-            $data_cdr = $this->getCdr($token);
-            return ($data_cdr);
+        if($result['data']){
+            $token =  $result['data']['token'];
+            session(['access_token' => $token]);
+            return $token;
         }
-        return $token;
-        
+        return $result;
+
     }
-    public function getCdr($token){
-        // dd($data_cdr);
+    public function getCdr(){
+        $token = session('access_token');
+        if($token == null){
+            $token = $this->getToken();
+        }
         $url = "https://api.mobilesip.vn/v1/cdr";
         $params = [
-            'api_key' => "b484af9e-4293-4943-b195-e32b626dcb2f"
+            'api_key' => $this->API_KEY_CALL
         ];
-        Http::get('http://example.com/users', [
-            'name' => 'Taylor',
-            'page' => 1,
-        ]);
         $result =  Http::withToken($token)->get($url,[
-            'api_key' => "b484af9e-4293-4943-b195-e32b626dcb2f"
+            $params
         ]);
         return $result;
+    }
+    public function getCallDetail($idCall){
+        saveDataCall::dispatch($idCall);
+        return $idCall;
     }
 }

@@ -13,10 +13,15 @@ class HistoryCall extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
-    
+    protected $table = 'history_calls';
+    protected $fillable = [
+        "id", "call_id" ,"status", "cause", "duration","receive_dest","time_started","time_answered","time_ended","time_ringging","billsec","called_count",
+         "direction" ,"recording_url","extension", 'from_number','to_number','created_at', 'updated_at'
+    ];
+
     protected static function newFactory(): HistoryCallFactory
     {
         //return HistoryCallFactory::new();
     }
+
 }

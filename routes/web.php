@@ -158,6 +158,8 @@ Route::middleware(['auth'])->group(
 
         Route::prefix('callcenter')->as('callcenter.')->group(function () {
             Route::get('getToken', [CGVTeleController::class, 'getToken'])->name('getToken');
+            Route::get('getCdr', [CGVTeleController::class, 'getCdr'])->name('getCdr');
+            Route::get('getCdr/{id}', [CGVTeleController::class, 'getCallDetail'])->name('getCallDetail');
         });
     }
 

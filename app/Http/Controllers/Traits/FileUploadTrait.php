@@ -30,6 +30,14 @@ trait FileUploadTrait
 
         return $path;
     }
+    public function downloadFile($destinationPath,$fileName,$fileContents){
+        // $path = Storage::disk('public/')->put($fileName, $fileContents);
+         // Lưu tệp vào đường dẫn đích
+        $storedFile =  Storage::put($destinationPath . $fileName . '.mp3', $fileContents);
+        // Lấy đường dẫn công khai của tệp đã lưu
+        $publicPath = Storage::url($destinationPath.'/'.$fileName .'.mp3');
+        return  $publicPath;
+    }
 
     public function deleteFile($path)
     {
