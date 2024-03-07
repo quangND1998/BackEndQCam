@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\CustomerService\app\Http\Controllers\Api\Complaints\CreateComplaint;
+use Modules\CustomerService\app\Http\Controllers\Api\CreateCallData;
 use Modules\CustomerService\app\Http\Controllers\Api\DistributeCalls\GetDistributeCall;
 use Modules\CustomerService\app\Http\Controllers\Api\ExtraServices\CreateExtraService;
 use Modules\CustomerService\app\Http\Controllers\Api\ExtraServices\GetExtraService;
@@ -57,6 +58,7 @@ Route::middleware(['auth'])->group(
             Route::get('/product-retails', GetProductRetails::class);
             Route::get('/find-user-by-phone-number', GetUserByPhoneNumber::class);
             Route::get('/plans', GetDistributeCall::class);
+            Route::post('/create-call', CreateCallData::class);
         });
 
         Route::prefix('/extra-services')->group(function () {

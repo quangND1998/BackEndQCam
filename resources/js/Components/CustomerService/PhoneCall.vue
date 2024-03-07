@@ -1,5 +1,7 @@
 <script setup>
+import axios from "axios";
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+
 import useQuery, { CUSTOMER_SERVICE_API_MAKER } from './composables/useQuery';
 
 const props = defineProps({
@@ -23,9 +25,16 @@ const onPhoneCallReady = () => {
   phoneCallReady.value = true;
 }
 
-const onCallCreated = () => {
+const onCallCreated = async (e) => {
   phoneCallStatus.value = 'CREATED';
   isActiveCall.value = true;
+  const sipCallId = e?.detail?.sipCallId;
+  if (sipCallId) {
+    await axios.post('/customer-service/create-call', {
+      sip_call_id: sipCallId,
+      customer_id: props.customer.id,
+    });
+  }
 }
 
 const onCallAnswered = () => {

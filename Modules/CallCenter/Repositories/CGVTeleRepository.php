@@ -5,6 +5,10 @@ use App\Http\Controllers\Traits\ConnectHttpFunction;
 use Modules\CallCenter\app\Models\HistoryCall;
 use App\Http\Controllers\Traits\FileUploadTrait;
 use Illuminate\Support\Facades\Http;
+use Modules\CustomerService\app\Models\DistributeCall;
+use Modules\CustomerService\app\Models\Remind;
+use Modules\Order\app\Models\Order;
+
 class CGVTeleRepository
 {
     use ConnectHttpFunction, FileUploadTrait;
@@ -57,6 +61,8 @@ class CGVTeleRepository
         ]);
 
         if($result['id']){
+            $status = $this->getExpectedStaus($result['status'], $result['duration']);
+            $this->updateDistributeCall($distributeCallIds, $status);
             return $this->saveCallDetail($result);
         }
 
@@ -103,8 +109,47 @@ class CGVTeleRepository
         return $historyCall;
     }
 
-    public function updateDistributeCall($distributeCallIds)
+    public function updateDistributeCall($distributeCallIds, $status)
     {
-        //
+        $distributeCalls = DistributeCall::whereIn('id', $distributeCallIds)
+            ->with('orderPackage.product_service_owner')
+            ->get();
+        $distributeCalls->each(function ($distributeCall) use ($status) {
+            if (is_array($status)) {
+                $productServiceOwnerId = $distributeCall->orderPackag->product_service_owner->id;
+                $order = Order::where('created_at', $distributeCall->date_call)
+                    ->where('product_service_owner_id', $productServiceOwnerId)
+                    ->first();
+                if ($order) {
+                    $distributeCall->state = 'done';
+                }
+                $remind = Remind::where('created_at', $distributeCall->date_call)
+                    ->where('product_service_owner_id', $productServiceOwnerId)
+                    ->first();
+                if ($remind) {
+                    $distributeCall->state = 'remind_call_back';
+                }
+            } else {
+                $distributeCall->state = $status;
+            }
+            $distributeCall->save();
+        });
+    }
+
+    public function getExpectedStaus($status, $duration)
+    {
+        if ($status == "ANSWERED" && $duration > 10) {
+            return ["done", "remind_call_back"];
+        }
+
+        if ($status == 'NO-ANSWERED') {
+            return 'dontAnswer';
+        }
+
+        if ($status === 'ANSWERED' && $duration <= 10) {
+            return 'hangup';
+        }
+
+        return 'no_action';
     }
 }
