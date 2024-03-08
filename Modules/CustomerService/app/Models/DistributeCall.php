@@ -14,7 +14,7 @@ class DistributeCall extends Model
     protected $fillable = [
         "id",
         "date_call",
-        "state",
+        "state", // pending, dontAnswer, hangup, no_action, done, remind_call_back,
         "order_package_id",
         "cskh_id"
     ];
