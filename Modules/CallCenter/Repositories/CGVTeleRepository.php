@@ -50,12 +50,17 @@ class CGVTeleRepository
 
     public function getCallDetail($sipCallId, $distributeCallIds)
     {
+        // dd($sipCallId);
         $token = session('access_token');
         if($token == null){
             $token = $this->getToken();
         }
+        $url = "https://api.mobilesip.vn/v1/cdr/" . $sipCallId;
 
-        $url = "https://api.mobilesip.vn/v1/cdr/" .$sipCallId;
+        // dd($url);
+        // $url = "https://api.mobilesip.vn/v1/cdr/" ."6lsju60lp03cvn1el8t0";
+
+        // $url = "https://api.mobilesip.vn/v1/cdr/9a661e4e-9594-4cdd-8cf9-411e85be141b";
         $result =  Http::withToken($token)->get($url,[
             'api_key' => $this->API_KEY_CALL
         ]);
@@ -63,6 +68,7 @@ class CGVTeleRepository
         if($result['id']){
             $status = $this->getExpectedStaus($result['status'], $result['duration']);
             $this->updateDistributeCall($distributeCallIds, $status);
+
             return $this->saveCallDetail($result);
         }
 
