@@ -18,6 +18,7 @@
         "maatwebsite/excel": "^3.1",
         "nicolaslopezj/searchable": "^1.13",
         "nwidart/laravel-modules": "^10.0",
+        "predis/predis": "^2.2",
         "spatie/laravel-medialibrary": "*",
         "spatie/laravel-permission": "^5.11",
         "staudenmeir/eloquent-has-many-deep": "1.18",

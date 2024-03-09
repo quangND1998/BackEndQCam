@@ -20,14 +20,11 @@ class CreateCallData extends Controller
         $orderPackages = OrderPackage::where('user_id', $request->customer_id)
             ->where('status', 'complete')
             ->get();
-        $distributeCalls = DistributeCall::whereIn('order_package_id', [$orderPackages->pluck('id')->toArray()])
+        $distributeCalls = DistributeCall::whereIn('order_package_id', $orderPackages->pluck('id')->toArray())
             ->whereNotIn('state', ['done', 'remind_call_back'])
             ->where('date_call', date('Y-m-d'))
             ->get();
-        if ($distributeCalls->count() > 0) {
-            dispatch(new saveDataCall($request->sip_call_id, $distributeCalls->pluck('id')->toArray()))
-                ->delay(now()->addMinutes(15));
-        }
+        dispatch(new saveDataCall($request->sip_call_id, $distributeCalls->pluck('id')->toArray()));
 
         return response()->json([
             'message' => 'OK',
