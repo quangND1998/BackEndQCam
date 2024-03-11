@@ -59,8 +59,6 @@ class CGVTeleRepository
 
         // dd($url);
         // $url = "https://api.mobilesip.vn/v1/cdr/" ."6lsju60lp03cvn1el8t0";
-
-        // $url = "https://api.mobilesip.vn/v1/cdr/9a661e4e-9594-4cdd-8cf9-411e85be141b";
         $result =  Http::withToken($token)->get($url,[
             'api_key' => $this->API_KEY_CALL
         ]);

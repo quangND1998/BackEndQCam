@@ -9,7 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Modules\CallCenter\Repositories\CGVTeleRepository;
-
+use Illuminate\Support\Facades\Http;
 class saveDataCall implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -17,6 +17,7 @@ class saveDataCall implements ShouldQueue
     public $cgvTeleRepository;
     public $sipCallId;
     public $distributeCallIds;
+    public $url;
 
     public function __construct($sipCallId, $distributeCallIds)
     {
