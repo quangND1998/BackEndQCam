@@ -49,7 +49,7 @@ import OrderHome from "@/Pages/Test/OrderHome.vue"
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
 import { emitter } from '@/composable/useEmitter';
 import  calWeekOffset  from "@/composable/weekOffset";
-const { getWeekOffset,getOffset } = calWeekOffset();
+const { getWeekOffset,MonthOffset } = calWeekOffset();
 const props = defineProps({
     reminds: Object,
     offsetWeek: Number
@@ -95,7 +95,7 @@ const state = reactive({
 initFlowbite();
 
 const search = () => {
-    router.get(route(`admin.call_distribute.schedule`),
+    router.get(route(`pending.index`),
         filter,
         {
             preserveState: true,
@@ -164,7 +164,7 @@ const cacularOffSet = (index) => {
             <div class="w-full">
                 <div>
                     <h2 class="font-semibold  flex mr-2">
-                        Pending tháng
+                        Pending tháng {{ MonthOffset(offset) }}
                     </h2>
                     <div class="flex w-full justify-between">
                         <div class="flex ">
@@ -184,7 +184,7 @@ const cacularOffSet = (index) => {
             </div>
             <div class="mt-3">
                 <div class="w-full mt-2 h-[60vh] ">
-                    <div class="bg-[#5C5C5C] text-white  grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x">
+                    <div class="bg-[#5C5C5C] text-white  grid grid-cols-[repeat(7,_minmax(0,_1fr))] divide-x">
                         <div class="text-center py-2 border">STT</div>
                         <div class="text-center py-2 border">Mã HĐ</div>
                         <div class="text-center py-2 border">Loại HĐ</div>
@@ -195,14 +195,14 @@ const cacularOffSet = (index) => {
 
                     </div>
                     <div v-for="(remind, index) in reminds.data" :key="remind.id" :index="index"
-                        class="grid grid-cols-[repeat(14,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
+                        class="grid grid-cols-[repeat(7,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white">
                         <div class="text-center border">{{ index + reminds.from }}</div>
                         <div class="pl-2 text-[#FF0000] border">{{ remind.product_service_owner?.order_package.idPackage }}</div>
                         <div class="text-center border">{{ remind.product_service_owner?.order_package?.product_service.life_time }} năm</div>
                         <div class="text-center border">{{ remind.product_service_owner?.customer?.name }}</div>
                         <div class="text-center border">{{ remind.remind_at }}</div>
                         <div class="text-center border">{{ remind.csr?.name }}</div>
-                        <div class="text-center border"></div>
+                        <div class="text-center border">{{ remind.csr?.pending }}</div>
                     </div>
                 </div>
                 <pagination :links="reminds.links" />

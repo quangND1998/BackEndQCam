@@ -62,10 +62,16 @@ import { router } from '@inertiajs/vue3'
 
             return distance
         }
+        const MonthOffset = (fromdate) => {
+            console.log(fromdate);
+            var currentMonth = moment(fromdate).format('M');
+            return currentMonth;
+        }
 
         return {
             getWeekOffset,
-            getOffset
+            getOffset,
+            MonthOffset
         }
     }
     export default calWeekOffset;

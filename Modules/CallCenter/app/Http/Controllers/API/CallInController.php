@@ -14,7 +14,7 @@ class CallInController extends Controller
     public function dataCallInBack(Request $request){
         $Path = 'logs';
         $this->makeFolder($Path);
-        Storage::prepend('/logs/callin.txt',  $request);
-        dd("ngaaa");
+        // Storage::prepend('/logs/callin.txt',  $request);
+        Storage::prepend('/logs/callin.txt',  "ngaaaaa");
     }
 }

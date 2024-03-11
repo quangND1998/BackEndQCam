@@ -178,7 +178,7 @@ export default [{
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'pending.index',
                 label: 'Pending',
                 permissions: ['super-admin', 'cskh-pending'],
                 route_list: null
