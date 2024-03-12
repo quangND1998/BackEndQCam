@@ -12,9 +12,11 @@ class CallInController extends Controller
 {
     use FileUploadTrait;
     public function dataCallInBack(Request $request){
-        $Path = 'logs';
-        $this->makeFolder($Path);
-        // Storage::prepend('/logs/callin.txt',  $request);
-        Storage::prepend('/logs/callin.txt',  "ngaaaaa");
+        // $Path = 'logs';
+        // $this->makeFolder($Path);
+        // Storage::disk('public')->put('logs/callin.txt', "ngaa");
+        Storage::disk('public')->append('logs/callin.txt', $request);
+        return $request;
+        // dd("ngaaa");
     }
 }
