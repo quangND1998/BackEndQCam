@@ -16,7 +16,6 @@ class CartController extends Controller
     public function getCart(){
         $cart = Cart::getContent();
         $response = [
-            
             'cart' => Cart::getContent(),
             'subTotal' =>Cart::getSubTotal()
         ];
@@ -27,13 +26,12 @@ class CartController extends Controller
         $this->addProduct($product,$request);
 
         $response = [
-            
             'cart' => Cart::getContent(),
             'subTotal' =>Cart::getSubTotal()
         ];
         return response()->json($response, 200);
     }
- 
+
     public function addProduct($product,$request){
         if($product->checkSale()){
             $sale_event = Sale::with('sale_items')->where('state', 'running')->first();
@@ -65,13 +63,13 @@ class CartController extends Controller
                 // 'conditions' => $saleCondition
             ));
         }
- 
+
     }
 
     public function clearCart(){
         Cart::clear();
         $response = [
-            
+
             'cart' => Cart::getContent(),
             'subTotal' =>Cart::getSubTotal()
         ];
@@ -83,7 +81,7 @@ class CartController extends Controller
             'quantity' => $request->quantity_cart, // so if the current product has a quantity of 4, another 2 will be added so this will result to 6
         ));
         $response = [
-            
+
             'cart' => Cart::getContent(),
             'subTotal' =>Cart::getSubTotal()
         ];
