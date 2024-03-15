@@ -19,5 +19,5 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function 
     Route::get('callcenter', fn (Request $request) => $request->user())->name('callcenter');
 });
 Route::prefix('v1')->name('api.')->group(function () {
-    Route::get('dataCallInBack', [CallInController::class, 'dataCallInBack']);
+    Route::post('dataCallInBack', [CallInController::class, 'dataCallInBack']);
 });
