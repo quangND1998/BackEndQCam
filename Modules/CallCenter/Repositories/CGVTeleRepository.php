@@ -50,7 +50,6 @@ class CGVTeleRepository
 
     public function getCallDetail($sipCallId, $distributeCallIds)
     {
-        // dd($sipCallId);
         $token = session('access_token');
         if($token == null){
             $token = $this->getToken();
