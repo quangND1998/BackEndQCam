@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Modules\Customer\app\Models\ProductServiceOwner;
+use Modules\CustomerService\app\Models\DistributeCall;
 use Modules\Order\app\Models\Order;
 use Modules\Order\app\Models\OrderItem;
 use Modules\Order\app\Models\ShipingHistory;

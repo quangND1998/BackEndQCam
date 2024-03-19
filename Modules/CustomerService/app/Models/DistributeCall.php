@@ -18,7 +18,8 @@ class DistributeCall extends Model
         "date_call",
         "state", // pending, dontAnswer, hangup, no_action, done, remind_call_back,
         "order_package_id",
-        "cskh_id"
+        "cskh_id",
+        "history_call_id",
     ];
 
     public function orderPackage()

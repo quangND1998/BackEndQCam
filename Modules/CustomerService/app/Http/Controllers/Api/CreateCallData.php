@@ -16,10 +16,7 @@ class CreateCallData extends Controller
             'sip_call_id' => 'required|string',
             'customer_id' => 'required|integer|exists:users,id',
         ]);
-        $call_id = "6lsju60lp03cvn1el8t0";
 
-        // return $request->sip_call_id;
-        // dd($request->sip_call_id);
         $orderPackages = OrderPackage::where('user_id', $request->customer_id)
             ->where('status', 'complete')
             ->get();

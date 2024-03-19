@@ -57,17 +57,15 @@ class CGVTeleRepository
         }
         $url = "https://api.mobilesip.vn/v1/cdr/" . $sipCallId;
 
-        // dd($url);
-        // $url = "https://api.mobilesip.vn/v1/cdr/" ."6lsju60lp03cvn1el8t0";
         $result =  Http::withToken($token)->get($url,[
             'api_key' => $this->API_KEY_CALL
         ]);
 
         if($result['id']){
-            $status = $this->getExpectedStaus($result['status'], $result['duration']);
-            $this->updateDistributeCall($distributeCallIds, $status);
+            $callHistory = $this->saveCallDetail($result);
+            $status = $this->getExpectedStatus($result['status'], $result['duration']);
+            $this->updateDistributeCall($callHistory->id, $distributeCallIds, $status);
 
-            return $this->saveCallDetail($result);
         }
 
         return $result;
@@ -113,34 +111,37 @@ class CGVTeleRepository
         return $historyCall;
     }
 
-    public function updateDistributeCall($distributeCallIds, $status)
+    public function updateDistributeCall($callHistoryId, $distributeCallIds, $status)
     {
         $distributeCalls = DistributeCall::whereIn('id', $distributeCallIds)
             ->with('orderPackage.product_service_owner')
             ->get();
-        $distributeCalls->each(function ($distributeCall) use ($status) {
-            if (is_array($status)) {
-                $productServiceOwnerId = $distributeCall->orderPackag->product_service_owner->id;
+        $distributeCalls->each(function ($distributeCall) use ($callHistoryId, $status) {
+            $distributeCall->history_call_id = $callHistoryId;
+            if (is_array($status)) { // Call success check if order or remind was created
+                $productServiceOwnerId = $distributeCall->orderPackage->product_service_owner->id;
                 $order = Order::where('created_at', $distributeCall->date_call)
                     ->where('product_service_owner_id', $productServiceOwnerId)
                     ->first();
-                if ($order) {
+                if ($order) { // Call success and order created
                     $distributeCall->state = 'done';
-                }
-                $remind = Remind::where('created_at', $distributeCall->date_call)
+                } else {
+                    $remind = Remind::where('created_at', $distributeCall->date_call)
                     ->where('product_service_owner_id', $productServiceOwnerId)
                     ->first();
-                if ($remind) {
-                    $distributeCall->state = 'remind_call_back';
+                    if ($remind) { // Call success and remind created
+                        $distributeCall->state = 'remind_call_back';
+                    }
                 }
             } else {
+                // Update status normally
                 $distributeCall->state = $status;
             }
             $distributeCall->save();
         });
     }
 
-    public function getExpectedStaus($status, $duration)
+    public function getExpectedStatus($status, $duration)
     {
         if ($status == "ANSWERED" && $duration > 10) {
             return ["done", "remind_call_back"];
