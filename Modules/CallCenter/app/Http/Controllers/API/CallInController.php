@@ -38,7 +38,7 @@ class CallInController extends Controller
             ]);
             $Path = 'callcenter';
             $this->makeFolder($Path);
-            $destinationPath = '/public/callcenter/'; // Đường dẫn đích để lưu trữ tệp
+            $destinationPath = 'callcenter'; // Đường dẫn đích để lưu trữ tệp
             if ($request['recording_url']) {
                 // Tải tệp từ URL
                 $fileContents = file_get_contents($request['recording_url']);

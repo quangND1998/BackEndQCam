@@ -78,7 +78,7 @@ class CGVTeleRepository
         $historyCall = $this->saveData($data);
         $Path = 'callcenter';
         $this->makeFolder($Path);
-        $destinationPath = '/public/callcenter/'; // Đường dẫn đích để lưu trữ tệp
+        $destinationPath = 'callcenter'; // Đường dẫn đích để lưu trữ tệp
         if ($data['recording_url']) {
             // Tải tệp từ URL
             $fileContents = file_get_contents($data['recording_url']);

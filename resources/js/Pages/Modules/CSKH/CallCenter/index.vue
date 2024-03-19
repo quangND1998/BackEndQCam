@@ -15,7 +15,7 @@ import ModelShipping from '../ModelShipping.vue'
 // import ModelRefund from "./ModelRefund.vue";
 // import ModalShipping from "./ModalShipping.vue";
 import {
-    mdiVolumeHigh
+    mdiVolumeHigh,mdiVolumeOff
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -138,6 +138,25 @@ const cacularOffSet = (index) => {
     console.log(offset);
     search();
 }
+const isURLPlaying = ref()
+const playSound =  (sound) => {
+      if(sound) {
+        var audio = new Audio(sound);
+        audio.play();
+        isURLPlaying.value = sound;
+      }else{
+        var audio = new Audio(sound);
+        audio.pause();
+        isURLPlaying.value = null;
+      }
+    }
+const offSound =  (sound) => {
+      if(sound) {
+        var audio = new Audio(sound);
+        audio.pause();
+        isURLPlaying.value = null;
+      }
+    }
 </script>
 <template>
     <LayoutAuthenticated>
@@ -195,9 +214,13 @@ const cacularOffSet = (index) => {
                         <div class="text-center border">{{ call.direction == "outbound" ? 'Đi' : 'Đến'}}</div>
                         <div class="text-center border">{{ call.note }}</div>
                         <div class="text-center border "  v-if="call.recording_url != null">
-                                <BaseIcon :path="mdiVolumeHigh "
-                                                    class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700"
-                                                    v-tooltip.top="'Chỉnh sửa'" size="20">
+                                <BaseIcon v-if="isURLPlaying == call.recording_url" :path=" mdiVolumeHigh"
+                                @click="offSound(call.recording_url)"
+                                    class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" size="20">
+                                </BaseIcon>
+                                <BaseIcon v-else :path="mdiVolumeOff"
+                                @click="playSound(call.recording_url)"
+                                    class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" size="20">
                                 </BaseIcon>
                         </div>
                         <div class="text-center border" v-else></div>
