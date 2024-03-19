@@ -37,6 +37,11 @@ export const helper = {
                 return moment(String(value)).format('DD/MM/YYYY HH:mm:ss')
             }
         },
+        formatHourDate: function(value) {
+            if (value) {
+                return moment(String(value)).format('  HH:mm:ss DD/MM/YYYY')
+            }
+        },
         formatDateOnly: function(value) {
             if (value) {
                 return moment(String(value)).format('DD/MM/YYYY')

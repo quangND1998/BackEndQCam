@@ -5,7 +5,9 @@ namespace Modules\CustomerService\app\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\CallCenter\app\Models\HistoryCall;
 use Modules\Order\app\Models\OrderPackage;
+
 class DistributeCall extends Model
 {
     use HasFactory;
@@ -27,5 +29,9 @@ class DistributeCall extends Model
     public function cskh()
     {
         return $this->belongsTo(User::class, 'cskh_id');
+    }
+    public function historycall()
+    {
+        return $this->hasMany(HistoryCall::class);
     }
 }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('call_id');
             $table->string('status');
-            $table->string('cause');
+            $table->string('cause')->nullable();
             $table->float('duration');
             $table->string('direction'); //inbound or outbound
             // recording_url
@@ -27,8 +27,8 @@ return new class extends Migration
             $table->timestampTz('time_answered')->nullable();
             $table->timestampTz('time_ended')->nullable();
             $table->timestampTz('time_ringging')->nullable();
-            $table->integer('billsec');
-            $table->integer('called_count');
+            $table->integer('billsec')->nullable();
+            $table->integer('called_count')->nullable();
             $table->timestamps();
         });
     }

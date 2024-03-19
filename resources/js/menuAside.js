@@ -184,7 +184,7 @@ export default [{
                 route_list: null
             },
             {
-                route: 'admin.orders.package.all',
+                route: 'callcenter.index',
                 label: 'Call Center',
                 permissions: ['super-admin', 'cskh-call-center'],
                 route_list: null

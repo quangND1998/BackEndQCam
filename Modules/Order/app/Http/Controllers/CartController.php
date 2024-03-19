@@ -11,8 +11,6 @@ use Modules\Tree\app\Models\ProductRetail;
 
 class CartController extends Controller
 {
-
-
     public function getCart(){
         $cart = Cart::getContent();
         $response = [
