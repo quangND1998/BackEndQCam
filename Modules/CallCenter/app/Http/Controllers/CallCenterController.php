@@ -26,6 +26,7 @@ class CallCenterController extends Controller
         }
         $offsetWeek = $this->getOffsetWeek($todate);
         $history_calls = HistoryCall::with('distributeCall.cskh','distributeCall.orderPackage.customer','distributeCall.orderPackage.product_service')->whereBetween('created_at', [$fromDate, $todate])
+        ->orderBy('created_at','desc')
         ->paginate(10);
         // return $history_calls;
         return Inertia::render('Modules/CSKH/CallCenter/index',compact('history_calls','offsetWeek'));
