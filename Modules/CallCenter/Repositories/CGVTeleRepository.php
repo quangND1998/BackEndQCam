@@ -89,23 +89,30 @@ class CGVTeleRepository
 
     public function saveData($data)
     {
-        $historyCall = HistoryCall::create([
-            "call_id" =>  $data['id'],
-            "status" => $data['status'],
-            "cause" =>  $data['cause'],
-            "duration" => $data['duration'],
-            "direction" => $data['direction'],
-            "extension" => $data['extension'],
-            "from_number" =>$data['from_number'],
-            "to_number" => $data['to_number'],
-            "receive_dest" => $data['receive_dest'],
-            "time_started" => $data['time_started'],
-            "time_answered" => $data['time_answered'],
-            "time_ended" => $data['time_ended'],
-            "time_ringging" => $data['time_ringging'],
-            "billsec" => $data['billsec'],
-            "called_count" => $data['called_count']
-        ]);
+        $historyCall = HistoryCall::where('sip_call_id',$data['sip_call_id'])->first();
+        if($historyCall){
+
+        }else{
+
+            $historyCall = HistoryCall::create([
+                "call_id" =>  $data['id'],
+                "sip_call_id" => $data['sip_call_id'],
+                "status" => $data['status'],
+                "cause" =>  $data['cause'],
+                "duration" => $data['duration'],
+                "direction" => $data['direction'],
+                "extension" => $data['extension'],
+                "from_number" =>$data['from_number'],
+                "to_number" => $data['to_number'],
+                "receive_dest" => $data['receive_dest'],
+                "time_started" => $data['time_started'],
+                "time_answered" => $data['time_answered'],
+                "time_ended" => $data['time_ended'],
+                "time_ringging" => $data['time_ringging'],
+                "billsec" => $data['billsec'],
+                "called_count" => $data['called_count']
+            ]);
+        }
 
         return $historyCall;
     }
