@@ -25,24 +25,5 @@ class CallInController extends Controller
         // $idCall = "7302a522-24eb-4340-96bf-36acc37932c0";
         // dispatch(new saveDataCall($idCall, null));
          saveDataCallBack::dispatch($request->all());
-        // if($request['application'] == "dial"){
-        //     // dd($request['sip_call_id']);
-        //     $historyCall = HistoryCall::create([
-        //         "call_id" =>  $request['call_id'],
-        //         "sip_call_id" => $request['sip_call_id'],
-        //         "status" => $request['status'],
-        //         "duration" => $request['duration'],
-        //         "direction" => $request['direction'],
-        //         "from_number" =>$request['from_number'],
-        //         "to_number" => $request['to_number'],
-        //         "time_started" => $request['time_started'],
-        //         "time_answered" => $request['time_answered'],
-        //         "time_ended" => $request['time_ended'],
-        //         "billsec" => $request['billsec'],
-        //         "called_count" => $request['called_count']
-        //     ]);
-        //     dd($historyCall);
-
-        // }
     }
 }

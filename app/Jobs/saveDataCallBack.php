@@ -65,15 +65,15 @@ class saveDataCallBack implements ShouldQueue
                 ]);
             }
         }
-        $Path = 'callcenter';
-        $this->makeFolder($Path);
-        $destinationPath = 'callcenter/'; // Đường dẫn đích để lưu trữ tệp
-        if ($this->dataCall['recording_url']) {
-            // Tải tệp từ URL
-            $fileContents = file_get_contents($this->dataCall['recording_url']);
-            $fileName = 'voice_'.$this->dataCall['call_id'];
-            $historyCall->recording_url = $this->downloadFile($destinationPath,$fileName,$fileContents);
-        }
-        $historyCall->save();
+        // $Path = 'callcenter';
+        // $this->makeFolder($Path);
+        // $destinationPath = '/callcenter/'; // Đường dẫn đích để lưu trữ tệp
+        // if ($this->dataCall['recording_url']) {
+        //     // Tải tệp từ URL
+        //     $fileContents = file_get_contents($this->dataCall['recording_url']);
+        //     $fileName = 'voice_'.$this->dataCall['call_id'];
+        //     $historyCall->recording_url = $this->downloadFile($destinationPath,$fileName,$fileContents);
+        // }
+        // $historyCall->save();
     }
 }
