@@ -65,7 +65,7 @@ class saveDataCallBack implements ShouldQueue
                 ]);
             }
         }
-        $Path = 'callcenter';
+        $Path = 'callcenter/';
         $this->makeFolder($Path);
         $destinationPath = 'callcenter'; // Đường dẫn đích để lưu trữ tệp
         if ($this->dataCall['recording_url']) {
