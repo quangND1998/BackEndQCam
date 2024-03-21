@@ -31,6 +31,7 @@ class saveDataCallBack implements ShouldQueue
          $this->saveData();
     }
     public function saveData(){
+        if($this->dataCall['application'] == "dial"){
         $historyCall = HistoryCall::where('sip_call_id',$this->dataCall['sip_call_id'])->first();
 
         if($historyCall){
@@ -49,7 +50,7 @@ class saveDataCallBack implements ShouldQueue
             ]);
         }else{
 
-            if($this->dataCall['application'] == "dial"){
+
                 $historyCall = HistoryCall::create([
                     "call_id" =>  $this->dataCall['call_id'],
                     "sip_call_id" => $this->dataCall['sip_call_id'],
@@ -63,8 +64,9 @@ class saveDataCallBack implements ShouldQueue
                     "time_ended" => $this->dataCall['time_ended'],
                     "billsec" => $this->dataCall['billsec'],
                 ]);
-            }
+
         }
+    }
         // $Path = 'callcenter';
         // $this->makeFolder($Path);
         // $destinationPath = '/callcenter/'; // Đường dẫn đích để lưu trữ tệp
