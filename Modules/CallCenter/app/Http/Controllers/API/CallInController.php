@@ -20,10 +20,10 @@ class CallInController extends Controller
         // $this->makeFolder($Path);
         // Storage::disk('public')->put('logs/callin.txt', "ngaa");
         // logger($request);
-        // Storage::disk('public')->append('logs/callin.txt', $request);
+        Storage::disk('public')->append('logs/callin.txt', $request);
 
         // $idCall = "7302a522-24eb-4340-96bf-36acc37932c0";
         // dispatch(new saveDataCall($idCall, null));
-         saveDataCallBack::dispatch($request->all());
+        //  saveDataCallBack::dispatch($request->all());
     }
 }
