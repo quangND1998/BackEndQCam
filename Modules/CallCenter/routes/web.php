@@ -16,7 +16,7 @@ use Modules\CallCenter\app\Http\Controllers\CallCenterController;
 
 Route::middleware(['auth'])->group(
     function () {
-        // Route::prefix('callcenter')->as('callcenter.')->group(function () {
-        //     Route::get('index', [CallCenterController::class, 'index'])->name('index');
-        // });
+        Route::prefix('callcenter')->as('callcenter.')->group(function () {
+            Route::get('index', [CallCenterController::class, 'index'])->name('index');
+        });
     });
