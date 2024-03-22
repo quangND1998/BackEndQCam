@@ -24,6 +24,6 @@ class CallInController extends Controller
 
         // $idCall = "7302a522-24eb-4340-96bf-36acc37932c0";
         // dispatch(new saveDataCall($idCall, null));
-        //  saveDataCallBack::dispatch($request->all());
+         saveDataCallBack::dispatch($request->all());
     }
 }
