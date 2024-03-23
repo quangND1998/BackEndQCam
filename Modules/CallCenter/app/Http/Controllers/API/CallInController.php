@@ -22,9 +22,16 @@ class CallInController extends Controller
         // logger($request);
         // Storage::disk('public')->append('logs/callin.txt', $request);
 
-        saveDataCallBack::dispatch($request->all())->delay(30);
-        return response()->json([
-            'message' => 'OK',
-        ]);
+        if(isset($request['application'])){
+            if($request['application'] == "dial"){
+                saveDataCallBack::dispatch($request->all())->delay(30);
+                return response()->json([
+                    'message' => 'OK',
+                ]);
+            }
+            return response()->json([
+                'message' => 'not dial',
+            ]);
+        }
     }
 }
