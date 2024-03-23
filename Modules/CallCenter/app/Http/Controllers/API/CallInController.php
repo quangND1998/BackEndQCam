@@ -22,6 +22,6 @@ class CallInController extends Controller
         // logger($request);
         // Storage::disk('public')->append('logs/callin.txt', $request);
 
-        saveDataCallBack::dispatch($request->all());
+        saveDataCallBack::dispatch($request->all())->delay(30);
     }
 }
