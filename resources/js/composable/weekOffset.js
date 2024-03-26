@@ -19,6 +19,7 @@ import { router } from '@inertiajs/vue3'
                         + ' TỪ NGÀY ' + targetStartDate.format('DD/MM/YYYY') + ' ĐẾN NGÀY ' + targetEndDate.format('DD/MM/YYYY');
             let text_week = 'Tuần ' + weekNumber + ' (T' + month + ')';
             let text_week_detail = 'Tuần ' + weekNumber + ' (Tuần thứ ' + weekMonth + ')';
+            let text_full_week = 'Tuần ' + weekNumber + ' (Tuần thứ ' + weekMonth + ')';
             let list_date = [];
             let list_date_detail = [];
             const currentDate = targetStartDate.clone();
@@ -34,7 +35,7 @@ import { router } from '@inertiajs/vue3'
                 currentDateDetail.add(1, 'day');
                 // console.log(currentDateDetail);
             }
-            // console.log(offset);
+            console.log(list_date_detail);
             return  [
                 text,
                 text_week,
@@ -62,6 +63,26 @@ import { router } from '@inertiajs/vue3'
 
             return distance
         }
+        const getWeekNumber = (date) => {
+            var d = new Date(date.getFullYear(), 0, 1);
+            var dayNum = date.getDay();
+            if (dayNum == 0) dayNum = 7;
+            d.setDate(d.getDate() + (7 - dayNum));
+            return Math.ceil(d.getTime() / 604800000);
+          }
+        const getFormatDay = (date) => {
+            var inputDate = moment(date);
+
+            // Lấy thứ của ngày
+            var dayOfWeek = inputDate.day();
+            var weekOfYear = inputDate.week();
+
+            // // Lấy tháng của ngày (từ 0-11, 0 là tháng 1)
+            var month = inputDate.month() + 1;
+
+            return dayOfWeek + "/" + weekOfYear + "/" + month;
+            //  console.log(dayOfWeek + "/" + weekOfYear + "/" + month);
+        }
         const MonthOffset = (fromdate) => {
             console.log(fromdate);
             var currentMonth = moment(fromdate).format('M');
@@ -71,7 +92,8 @@ import { router } from '@inertiajs/vue3'
         return {
             getWeekOffset,
             getOffset,
-            MonthOffset
+            MonthOffset,
+            getFormatDay
         }
     }
     export default calWeekOffset;

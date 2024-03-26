@@ -15,7 +15,7 @@ import ModelShipping from '../ModelShipping.vue'
 // import ModelRefund from "./ModelRefund.vue";
 // import ModalShipping from "./ModalShipping.vue";
 import {
-    mdiVolumeHigh,mdiVolumeOff
+    mdiVolumeHigh, mdiVolumeOff
 } from "@mdi/js";
 import BaseButton from "@/Components/BaseButton.vue";
 import InputError from "@/Components/InputError.vue";
@@ -32,16 +32,17 @@ import { initFlowbite } from 'flowbite'
 import OrderHome from "@/Pages/Test/OrderHome.vue"
 import OrderRow from "@/Pages/Modules/Order/OrderRow.vue"
 import { emitter } from '@/composable/useEmitter';
-import  calWeekOffset  from "@/composable/weekOffset";
-const { getWeekOffset,MonthOffset } = calWeekOffset();
+import calWeekOffset from "@/composable/weekOffset";
+import moment from 'moment';
+const { getWeekOffset, getFormatDay } = calWeekOffset();
 const props = defineProps({
     history_calls: Object,
     offsetWeek: Number
 });
 let offset = props.offsetWeek;
 const filter = reactive({
-    fromDate:  getWeekOffset(props)[4],
-    toDate:  getWeekOffset(props)[5],
+    fromDate: getWeekOffset(props)[4],
+    toDate: getWeekOffset(props)[5],
     per_page: 10,
 })
 
@@ -57,8 +58,8 @@ const form = useForm({
     name: null,
     state: null,
     cskh_selected: [],
-    fromDate:  filter.fromDate,
-    toDate:  filter.toDate,
+    fromDate: filter.fromDate,
+    toDate: filter.toDate,
 });
 const isModalActive = ref(false);
 const editMode = ref(false);
@@ -115,8 +116,8 @@ const selectAll = computed({
 });
 const save = () => {
     // console.log(form);
-    form.fromDate =  filter.fromDate;
-    form.toDate =  filter.toDate;
+    form.fromDate = filter.fromDate;
+    form.toDate = filter.toDate;
     form.post(route("admin.call_distribute.deviceSchedule"), filter, {
         onError: () => {
             isModalActive.value = true;
@@ -139,24 +140,76 @@ const cacularOffSet = (index) => {
     search();
 }
 const isURLPlaying = ref()
-const playSound =  (sound) => {
-      if(sound) {
+const playSound = (sound) => {
+    if (sound) {
         var audio = new Audio(sound);
         audio.play();
         isURLPlaying.value = sound;
-      }else{
+    } else {
         var audio = new Audio(sound);
         audio.pause();
         isURLPlaying.value = null;
-      }
     }
-const offSound =  (sound) => {
-      if(sound) {
+}
+const offSound = (sound) => {
+    if (sound) {
         var audio = new Audio(sound);
         audio.pause();
         isURLPlaying.value = null;
-      }
     }
+}
+const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9','Tháng 10', 'Tháng 11', 'Tháng 12'];
+const days = ref([]);
+const weeks = ref([]);
+// const selectedMonth = moment().month();
+const selectedMonth =ref(0);
+const selectedWeek = ref(0);
+const selectedDay= ref(0);
+
+
+const updateDaysAndWeeks = () => {
+        const year = new Date().getFullYear();
+        const month = selectedMonth.value;
+        const startDate = moment().year(year).month(month).startOf('month'); // Lấy ngày đầu tiên của tháng
+        const endDate = moment().year(year).month(month).endOf('month'); // Lấy ngày cuối cùng của tháng
+
+        const weeks_arr = [];
+        const weeks_arr_number = [];
+        let currentDate = startDate.clone().startOf('week'); // Lấy ngày đầu tiên của tuần của ngày đầu tiên trong tháng
+
+        while (currentDate.isSameOrBefore(endDate)) {
+            const weekNumber = currentDate.week();
+            weeks_arr.push("Tuần " + weekNumber);
+            weeks_arr_number.push(weekNumber);
+            currentDate.add(1, 'week');
+        }
+        // return weeks;
+        weeks.value = weeks_arr;
+        selectedWeek.value = weeks_arr[0];
+        filteredWeeks();
+    }
+    const filteredDays = computed(() => {
+
+    });
+    const filteredWeeks = () => {
+        const year = new Date().getFullYear();
+        const weekNumber = selectedWeek.value.split(" ")[1];
+        console.log(weekNumber);
+
+        const startDate = moment().week(weekNumber).startOf('week');
+        const endDate = moment().week(weekNumber).endOf('week');
+
+        const weekDays = [];
+        for (let date = startDate; date <= endDate; date = date.clone().add(1, 'day')) {
+            weekDays.push(date.format('DD/MM/YYYY'));
+        }
+
+        console.log(weekDays);
+        days.value = weekDays;
+        selectedDay.value = weekDays[0];
+
+    };
+
 </script>
 <template>
     <LayoutAuthenticated>
@@ -167,20 +220,25 @@ const offSound =  (sound) => {
             <div class="w-full">
                 <div>
                     <h2 class="font-semibold  flex mr-2">
-                        Lịch sử gọi đến
+                        Lịch sử gọi điện
                     </h2>
-                    <div class="flex w-full justify-between">
-                        <div class="flex ">
-                            <BaseIcon :path="mdiArrowLeftCircleOutline" class="  rounded-lg  mr-1 hover:text-red-700"
-                                size="30" @click="cacularOffSet(-1)"></BaseIcon>
-                            <BaseIcon :path="mdiArrowRightCircleOutline" class=" rounded-lg  mr-2 hover:text-red-700"
-                                size="30" @click="cacularOffSet(1)"></BaseIcon>
-
-                        </div>
+                    <div class="flex w-full justify-end">
                         <div class="flex right-0">
-                            <button class="w-[120px] py-1 rounded bg-[#E9E9E9] mr-2">{{ getWeekOffset(offset)[1]
-                            }}</button>
-                            <button class="w-[80px] py-1 rounded bg-[#1D75FA] text-white ">Xem</button>
+                            <select v-model="selectedDay"
+                                class="bg-gray-50 mx-3 border text-gray-900 text-sm rounded-lg block w-full p-2  border-gray-600 placeholder-gray-400 ">
+                                <option v-for="day in days" :key="day"  > {{ day }}</option>
+                            </select>
+                            <select @change="filteredWeeks" v-model="selectedWeek"
+                                class="bg-gray-50 p-2  px-4 border text-gray-900 text-sm rounded-lg block w-[240px]   border-gray-600 placeholder-gray-400 ">
+                                <option v-for="week in weeks" :key="week"  > {{ week }}</option>
+                            </select>
+                            <select v-model="selectedMonth" @change="updateDaysAndWeeks"
+                            class="bg-gray-50 mx-3 border text-gray-900 text-sm rounded-lg block w-full p-2  border-gray-600 placeholder-gray-400 ">
+                                <option v-for="(month, index) in months" :value="index" :key="index">
+                                    {{ month }}
+                                </option>
+                            </select>
+                            <button class="w-[80px] py-1 px-3 rounded bg-[#1D75FA] text-white ">Xem</button>
                         </div>
                     </div>
                 </div>
@@ -202,26 +260,33 @@ const offSound =  (sound) => {
                     <div v-for="(call, index) in history_calls.data" :key="call.id" :index="index"
                         class="grid grid-cols-[repeat(10,_minmax(0,_1fr))] divide-x divide-gray-400 border-gray-400 border-b border-x text-sm bg-white text-center ">
                         <div class="text-center border py-2">{{ index + history_calls.from }}</div>
-                        <div class="pl-2 text-[#FF0000] border">{{ call.distribute_call?.order_package.idPackage }}</div>
-                        <div class="text-center border">{{ call.distribute_call?.order_package?.product_service?.life_time }} năm</div>
+                        <div class="pl-2 text-[#FF0000] border">{{ call.distribute_call?.order_package.idPackage }}
+                        </div>
+                        <div class="text-center border">{{
+                                call.distribute_call?.order_package?.product_service?.life_time }} năm
+                        </div>
                         <div class="text-center border px-2 ">{{ formatHourDate(call.created_at) }}</div>
                         <div class="text-center border">{{ call.distribute_call?.cskh?.name }}</div>
                         <div class="text-center border flex items-center justify-center">
-                            <div class=" w-4 h-4 mx-2 rounded" :class="call.status== 'answered' ? 'bg-[#4F8D06]' : call.status== 'no-answered' ? 'bg-[#FF0303]' : call.status== 'not-available' ? 'bg-[#3D3C3C]' : 'bg-[#1D75FA]' "></div>
+                            <div class=" w-4 h-4 mx-2 rounded"
+                                :class="call.status == 'answered' ? 'bg-[#4F8D06]' : call.status == 'no-answered' ? 'bg-[#FF0303]' : call.status == 'not-available' ? 'bg-[#3D3C3C]' : 'bg-[#1D75FA]'">
+                            </div>
                             <!-- {{ call.status }} -->
                         </div>
-                        <div class="text-center border"></div>
-                        <div class="text-center border">{{ call.direction == "outbound" ? 'Đi' : 'Đến'}}</div>
+                        <div class="text-center border">
+                            {{ getFormatDay(formatDate2(call.created_at)) }} <br>
+                            <!-- {{ formatDate2(call.created_at) }} -->
+                        </div>
+                        <div class="text-center border">{{ call.direction == "outbound" ? 'Đi' : 'Đến' }}</div>
                         <div class="text-center border">{{ call.note }}</div>
-                        <div class="text-center border "  v-if="call.recording_url != null">
-                                <BaseIcon v-if="isURLPlaying == call.recording_url" :path=" mdiVolumeHigh"
+                        <div class="text-center border " v-if="call.recording_url != null">
+                            <BaseIcon v-if="isURLPlaying == call.recording_url" :path="mdiVolumeHigh"
                                 @click="offSound(call.recording_url)"
-                                    class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" size="20">
-                                </BaseIcon>
-                                <BaseIcon v-else :path="mdiVolumeOff"
-                                @click="playSound(call.recording_url)"
-                                    class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" size="20">
-                                </BaseIcon>
+                                class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" size="20">
+                            </BaseIcon>
+                            <BaseIcon v-else :path="mdiVolumeOff" @click="playSound(call.recording_url)"
+                                class=" text-gray-400 rounded-lg mr-2 hover:text-blue-700" size="20">
+                            </BaseIcon>
                         </div>
                         <div class="text-center border" v-else></div>
                     </div>
@@ -231,28 +296,28 @@ const offSound =  (sound) => {
 
         </SectionMain>
         <div class="absolute right-6 mt-6 ">
-                            <div class="px-4">
-                                <div class="flex items-center">
-                                    <div class="bg-[#4F8D06] w-4 h-4 mx-2 rounded"></div>
-                                    Đã gọi điện
-                                </div>
-                                <div class="flex items-center ">
-                                    <div class="bg-[#3D3C3C] w-4 h-4 mx-2 rounded"></div>
-                                    Chưa gọi điện
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="bg-[#FF0303] w-4 h-4 mx-2 rounded"></div>
-                                    Không nghe máy
-                                </div>
-                                <div class="flex items-center ">
-                                    <div class="bg-[#1D75FA] w-4 h-4 mx-2 rounded"></div>
-                                    Bắt máy, không trả lời
-                                </div>
-                            </div>
-                        </div>
+            <div class="px-4">
+                <div class="flex items-center">
+                    <div class="bg-[#4F8D06] w-4 h-4 mx-2 rounded"></div>
+                    Đã gọi điện
+                </div>
+                <div class="flex items-center ">
+                    <div class="bg-[#3D3C3C] w-4 h-4 mx-2 rounded"></div>
+                    Chưa gọi điện
+                </div>
+                <div class="flex items-center">
+                    <div class="bg-[#FF0303] w-4 h-4 mx-2 rounded"></div>
+                    Không nghe máy
+                </div>
+                <div class="flex items-center ">
+                    <div class="bg-[#1D75FA] w-4 h-4 mx-2 rounded"></div>
+                    Bắt máy, không trả lời
+                </div>
+            </div>
+        </div>
     </LayoutAuthenticated>
 </template>
-<style >
+<style>
 .list_icon_crud {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
@@ -292,4 +357,5 @@ const offSound =  (sound) => {
 
 .v-calendar .input-field svg.datepicker {
     fill: #65716b;
-}</style>
+}
+</style>

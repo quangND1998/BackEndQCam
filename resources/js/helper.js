@@ -47,6 +47,11 @@ export const helper = {
                 return moment(String(value)).format('DD/MM/YYYY')
             }
         },
+        formatDate2: function(value) {
+            if (value) {
+                return moment(String(value)).format('YYYY-MM-DD')
+            }
+        },
         formatPrice(value) {
             let val = (value / 1).toFixed(0).replace('.', ',')
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")

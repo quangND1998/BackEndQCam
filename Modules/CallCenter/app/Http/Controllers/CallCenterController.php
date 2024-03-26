@@ -25,7 +25,8 @@ class CallCenterController extends Controller
             $todate =  Carbon::createFromFormat('d/m/Y',$request->toDate)->format('Y-m-d H:i');
         }
         $offsetWeek = $this->getOffsetWeek($todate);
-        $history_calls = HistoryCall::with('distributeCall.cskh','distributeCall.orderPackage.customer','distributeCall.orderPackage.product_service')->whereBetween('created_at', [$fromDate, $todate])
+        $history_calls = HistoryCall::with('distributeCall.cskh','distributeCall.orderPackage.customer','distributeCall.orderPackage.product_service')
+        // ->whereBetween('created_at', [$fromDate, $todate])
         ->orderBy('created_at','desc')
         ->paginate(10);
         // return $history_calls;
