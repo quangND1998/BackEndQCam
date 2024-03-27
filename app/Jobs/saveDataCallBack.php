@@ -20,6 +20,7 @@ class saveDataCallBack implements ShouldQueue
     public $dataCall;
     public function __construct($dataCall)
     {
+        $this->queue = 'saveDataCallBack';
         $this->dataCall = $dataCall;
     }
 

@@ -24,7 +24,7 @@ class CallInController extends Controller
 
         if(isset($request['application'])){
             if($request['application'] == "dial"){
-                saveDataCallBack::dispatch($request->all())->delay(30);
+                saveDataCallBack::dispatch($request->all())->delay(30)->onQueue('saveDataCallBack');
                 return response()->json([
                     'message' => 'OK',
                 ]);
