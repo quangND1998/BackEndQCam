@@ -73,10 +73,10 @@ class LoginController extends Base2Controller
           
             if ($response->ok()) {
                 $data = $response->json();
-                if(array_key_exists('error', $data) && $data['error']== 1014) {
+                return $data;
+                if ($response['error'] && $response['error']== 1014) {
                     return response()->json("Có lỗi xảy ra", 400);
                 }
-              
                 return response()->json('We send otp to your phone ' . $request->phone_number, 200);
 
             } else {
