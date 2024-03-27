@@ -33,23 +33,23 @@ class saveDataCallBack implements ShouldQueue
     public function saveData(){
         if(isset($this->dataCall['application'])){
             if($this->dataCall['application'] == "dial"){
-                // $historyCall = HistoryCall::where('sip_call_id',$this->dataCall['sip_call_id'])->first();
+                $historyCall = HistoryCall::where('sip_call_id',$this->dataCall['sip_call_id'])->first();
 
-                // if($historyCall){
-                //     $historyCall->updated([
-                //         "call_id" =>  $this->dataCall['call_id'],
-                //         "sip_call_id" => $this->dataCall['sip_call_id'],
-                //         "status" => $this->dataCall['status'],
-                //         "duration" => $this->dataCall['duration'],
-                //         "direction" => $this->dataCall['direction'],
-                //         "from_number" =>$this->dataCall['from_number'],
-                //         "to_number" => $this->dataCall['to_number'],
-                //         "time_started" => $this->dataCall['time_started'],
-                //         "time_answered" => $this->dataCall['time_answered'],
-                //         "time_ended" => $this->dataCall['time_ended'],
-                //         "billsec" => $this->dataCall['billsec'],
-                //     ]);
-                // }else{
+                if($historyCall){
+                    // $historyCall->updated([
+                    //     "call_id" =>  $this->dataCall['call_id'],
+                    //     "sip_call_id" => $this->dataCall['sip_call_id'],
+                    //     "status" => $this->dataCall['status'],
+                    //     "duration" => $this->dataCall['duration'],
+                    //     "direction" => $this->dataCall['direction'],
+                    //     "from_number" =>$this->dataCall['from_number'],
+                    //     "to_number" => $this->dataCall['to_number'],
+                    //     "time_started" => $this->dataCall['time_started'],
+                    //     "time_answered" => $this->dataCall['time_answered'],
+                    //     "time_ended" => $this->dataCall['time_ended'],
+                    //     "billsec" => $this->dataCall['billsec'],
+                    // ]);
+                }else{
 
 
                         $historyCall = HistoryCall::create([
@@ -66,7 +66,7 @@ class saveDataCallBack implements ShouldQueue
                             "billsec" => $this->dataCall['billsec'],
                         ]);
 
-            //     }
+                }
             }
         }
         // $Path = 'callcenter';
