@@ -18,6 +18,6 @@ use Modules\CallCenter\app\Http\Controllers\API\CallInController;
 Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
     Route::get('callcenter', fn (Request $request) => $request->user())->name('callcenter');
 });
-Route::prefix('v1')->name('api.')->group(function () {
-    Route::post('dataCallInBack', [CallInController::class, 'dataCallInBack']);
-});
+// Route::prefix('v1')->name('api.')->group(function () {
+//     Route::post('dataCallInBack', [CallInController::class, 'dataCallInBack']);
+// });
